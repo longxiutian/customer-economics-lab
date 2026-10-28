@@ -1,0 +1,391 @@
+{
+  "definitions": {
+    "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
+    "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
+    "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
+    "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
+    "business": "Fully synthetic individual monthly subscription service; standard/premium tiers and optional add-on orders.",
+    "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
+    "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
+    "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
+    "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
+    "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
+    "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
+    "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
+    "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
+    "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
+    "synthetic_trends": "Gradually lower acquisition costs and renewal hazards, modest acquisition mix changes, explicit premium upgrades/add-on quantities and incurred costs. Random month-to-month variation remains.",
+    "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
+    "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
+    "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
+  },
+  "schema_version": "1.0",
+  "tables": {
+    "acquisition_attribution.csv": {
+      "columns": [
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "first_paid_transaction_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "credited_campaign_id",
+          "nullable": true,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "source_type",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "attribution_rule",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "credited_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        }
+      ],
+      "grain": "One acquired person and the recorded credit for the first successful payment.",
+      "primary_key": [
+        "person_id"
+      ]
+    },
+    "campaign_spend.csv": {
+      "columns": [
+        {
+          "name": "campaign_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "spend_date",
+          "nullable": false,
+          "type": "DATE"
+        },
+        {
+          "name": "channel",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "target_need",
+          "nullable": true,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "media_spend",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "other_acquisition_spend",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        }
+      ],
+      "grain": "One campaign per spending date; aggregate before joining to customer outcomes.",
+      "primary_key": [
+        "campaign_id",
+        "spend_date"
+      ]
+    },
+    "experiment_assignments.csv": {
+      "columns": [
+        {
+          "name": "experiment_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tested_campaign_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "assigned_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "arm",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "followup_end_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        }
+      ],
+      "grain": "One eligible person per randomized experiment, including all nonbuyers.",
+      "primary_key": [
+        "experiment_id",
+        "person_id"
+      ]
+    },
+    "feedback.csv": {
+      "columns": [
+        {
+          "name": "response_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "submitted_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "journey_stage",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "ease_rating",
+          "nullable": true,
+          "type": "INTEGER"
+        },
+        {
+          "name": "value_rating",
+          "nullable": true,
+          "type": "INTEGER"
+        },
+        {
+          "name": "main_difficulty",
+          "nullable": true,
+          "type": "VARCHAR"
+        }
+      ],
+      "grain": "One completed linked survey response; nonresponse is missing, not a zero rating.",
+      "primary_key": [
+        "response_id"
+      ]
+    },
+    "people.csv": {
+      "columns": [
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "record_created_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "attributes_recorded_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "age_band",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "household_type",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "primary_need",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "region",
+          "nullable": false,
+          "type": "VARCHAR"
+        }
+      ],
+      "grain": "One person, including eligible prospects who never purchase.",
+      "primary_key": [
+        "person_id"
+      ]
+    },
+    "product_events.csv": {
+      "columns": [
+        {
+          "name": "event_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "occurred_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "event_type",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "platform",
+          "nullable": false,
+          "type": "VARCHAR"
+        }
+      ],
+      "grain": "One observed product/support interaction; no event does not mean no subscription.",
+      "primary_key": [
+        "event_id"
+      ]
+    },
+    "subscription_periods.csv": {
+      "columns": [
+        {
+          "name": "period_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "subscription_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "period_start",
+          "nullable": false,
+          "type": "DATE"
+        },
+        {
+          "name": "period_end",
+          "nullable": false,
+          "type": "DATE"
+        },
+        {
+          "name": "renewal_due_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "renewal_outcome",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "cancellation_effective_at",
+          "nullable": true,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "plan_tier",
+          "nullable": false,
+          "type": "VARCHAR"
+        }
+      ],
+      "grain": "One scheduled monthly cycle; a paid outcome establishes retained membership for that cycle.",
+      "primary_key": [
+        "period_id"
+      ]
+    },
+    "transactions.csv": {
+      "columns": [
+        {
+          "name": "transaction_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "person_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "period_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "occurred_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "transaction_type",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "related_transaction_id",
+          "nullable": true,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "order_id",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "charge_type",
+          "nullable": false,
+          "type": "VARCHAR"
+        },
+        {
+          "name": "quantity",
+          "nullable": true,
+          "type": "INTEGER"
+        },
+        {
+          "name": "unit_price",
+          "nullable": true,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "gross_amount",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "discount_amount",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "refund_amount",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "variable_cost",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        }
+      ],
+      "grain": "One payment or refund event; each payment is one order and refunds reuse its order ID.",
+      "primary_key": [
+        "transaction_id"
+      ]
+    }
+  }
+}

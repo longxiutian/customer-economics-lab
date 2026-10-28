@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+build/
+runs/
+outputs/
+lab_state.json
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+.DS_Store
+

@@ -1,0 +1,3 @@
+# Frozen data, vendor sources and reproducibility manifests are byte-addressed.
+# Preserve the released bytes on every OS; do not apply checkout newline conversion.
+* -text

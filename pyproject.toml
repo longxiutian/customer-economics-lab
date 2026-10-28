@@ -1,0 +1,16 @@
+[project]
+name = "customer-economics-lab"
+version = "1.0.0"
+description = "A reproducible, guided customer-cohort economics lab for AI agents and students."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "duckdb>=1.4,<3", "numpy>=2,<3", "pandas>=2.2,<3",
+  "matplotlib>=3.9,<4", "scipy>=1.14,<2", "jax[cpu]>=0.6,<1",
+  "numpyro>=0.19,<1", "jinja2>=3.1,<4", "pypdf>=5,<7",
+  "pytest>=8,<10", "pillow>=11,<13", "python-pptx>=1,<2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+

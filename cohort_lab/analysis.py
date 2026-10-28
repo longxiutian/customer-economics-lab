@@ -1,0 +1,178 @@
+"""Local DuckDB SQL, validated source joins and deterministic teaching outputs."""
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import shutil
+from decimal import Decimal
+from pathlib import Path
+
+import duckdb
+
+from cohort_lab.data import SCHEMAS, validate_data
+
+SQL_DIR = Path(__file__).resolve().parents[1] / "sql"
+TABLE_SORTS = {
+    "customer_month": "person_id, age_month",
+    "cohort_age_summary": "cohort_month, channel, primary_need, age_month",
+    "cohort_acquisition_costs": "cohort_month, channel, primary_need",
+    "company_month": "calendar_month, cohort_month",
+    "experiment_summary": "experiment_id, arm",
+    "segmentation_comparison": "scheme",
+    "cohort_totals": "cohort_month, age_month",
+    "cohort_cash_economics": "cohort_month, age_month",
+    "company_totals": "calendar_month",
+    "experiment_effects": "experiment_id",
+    "cohort_six_month_comparison": "cohort_month",
+}
+
+
+def _hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def _json_value(value):
+    if isinstance(value, Decimal): return float(value)
+    if hasattr(value, "isoformat"): return value.isoformat()
+    return value
+
+
+def _records(con, query: str) -> list[dict]:
+    result = con.execute(query)
+    names = [d[0] for d in result.description]
+    return [{name: _json_value(value) for name, value in zip(names, row)} for row in result.fetchall()]
+
+
+def _source_sql(data_dir: Path, manifest: dict) -> str:
+    lines = ["-- Executed source loading SQL; DuckDB is embedded locally, with no database server.",
+             "SET threads=1;", "SET TimeZone='UTC';",
+             f"CREATE OR REPLACE VIEW lab_settings AS SELECT TIMESTAMP {_quote(manifest['data_as_of'].replace('T',' ').replace('Z',''))} AS data_as_of;"]
+    for name, columns in SCHEMAS.items():
+        types = ", ".join(f"{_quote(k)}: {_quote(v)}" for k, v in columns.items())
+        path = (data_dir / name).resolve().as_posix()
+        lines.append(f"CREATE OR REPLACE VIEW {Path(name).stem} AS SELECT * FROM read_csv({_quote(path)}, header=true, columns={{{types}}}, nullstr='', strict_mode=true);")
+    return "\n".join(lines) + "\n"
+
+
+def _assert_analysis(con) -> dict:
+    checks = {}
+    assertions = {
+        "customer_month_unique": "SELECT count(*) - count(DISTINCT (person_id, age_month)) FROM customer_month",
+        "no_future_months": "SELECT count(*) FROM customer_month WHERE calendar_month >= (SELECT data_as_of FROM lab_settings)",
+        "month_zero_coherent": "SELECT count(*) FROM cohort_age_summary WHERE age_month=0 AND (n_retained<>n_acquired OR n_paying<>n_acquired)",
+        "retention_monotone": "SELECT count(*) FROM (SELECT n_retained, lag(n_retained) OVER (PARTITION BY cohort_month,channel,primary_need ORDER BY age_month) AS prev FROM cohort_age_summary) WHERE n_retained>prev",
+        "positive_payment_cells": "SELECT count(*) FROM cohort_age_summary WHERE n_retained>0 AND gross_payment_revenue<=0",
+        "observed_age_contiguous": "SELECT count(*) FROM (SELECT person_id,count(*) n,max(age_month)+1 expected FROM customer_month GROUP BY person_id) WHERE n<>expected",
+        "ledger_revenue_reconciles": "SELECT (SELECT sum(net_revenue) FROM customer_month) - (SELECT sum(gross_amount-discount_amount-refund_amount) FROM transactions)",
+        "ledger_cost_reconciles": "SELECT (SELECT sum(variable_cost) FROM customer_month) - (SELECT sum(variable_cost) FROM transactions)",
+        "company_revenue_reconciles": "SELECT (SELECT sum(net_revenue) FROM company_totals) - (SELECT sum(net_revenue) FROM customer_month)",
+        "company_spend_reconciles": "SELECT (SELECT sum(acquisition_spend) FROM company_totals) - (SELECT sum(media_spend+other_acquisition_spend) FROM campaign_spend)",
+        "all_assigned_counted": "SELECT (SELECT sum(n_assigned) FROM experiment_summary) - (SELECT count(*) FROM experiment_assignments)",
+        "one_spend_per_experiment": "SELECT (SELECT sum(media_spend) FROM experiment_summary) - (SELECT sum(media_spend) FROM experiment_spend)",
+        "organic_CAC_unsupported": "SELECT count(*) FROM cohort_acquisition_costs WHERE channel IN ('organic','unknown') AND cac IS NOT NULL",
+        "gross_minus_refunds_reconciles": "SELECT (SELECT sum(gross_payment_revenue-net_revenue) FROM customer_month) - (SELECT sum(refund_amount) FROM transactions)",
+    }
+    for name, query in assertions.items():
+        result = con.execute(query).fetchone()[0]
+        result = 0 if result is None else result
+        if abs(Decimal(str(result))) > Decimal("0.000001"):
+            raise ValueError(f"SQL validation failed: {name} = {result}")
+        checks[name] = "passed"
+    return checks
+
+
+def build_views(data_dir: Path, output_dir: Path) -> dict:
+    """Validate frozen inputs, execute saved SQL, and export canonical sorted CSVs."""
+    data_dir, output_dir = Path(data_dir), Path(output_dir)
+    source_validation = validate_data(data_dir)
+    manifest = json.loads((data_dir / "data_manifest.json").read_text(encoding="utf-8"))
+    tables, executed = output_dir / "tables", output_dir / "sql"
+    tables.mkdir(parents=True, exist_ok=True)
+    executed.mkdir(parents=True, exist_ok=True)
+    load_sql = _source_sql(data_dir, manifest)
+    (executed / "00_sources.sql").write_text(load_sql, encoding="utf-8", newline="\n")
+    view_sql = (SQL_DIR / "01_views.sql").read_text(encoding="utf-8")
+    (executed / "01_views.sql").write_text(view_sql, encoding="utf-8", newline="\n")
+    con = duckdb.connect(":memory:")
+    try:
+        con.execute(load_sql)
+        con.execute(view_sql)
+        checks = _assert_analysis(con)
+        select_sql = []
+        for name, order in TABLE_SORTS.items():
+            query = f"SELECT * FROM {name} ORDER BY {order}"
+            select_sql.append(query + ";")
+            result = con.execute(query)
+            columns = [c[0] for c in result.description]
+            with (tables / f"{name}.csv").open("w", encoding="utf-8", newline="") as stream:
+                writer = csv.writer(stream, lineterminator="\n")
+                writer.writerow(columns)
+                for row in result.fetchall():
+                    writer.writerow(["" if v is None else v.isoformat() if hasattr(v, "isoformat") else v for v in row])
+        (executed / "02_exports.sql").write_text("\n\n".join(select_sql) + "\n", encoding="utf-8", newline="\n")
+        summary_queries = {
+            "cohort_overview": "SELECT cohort_month,n_acquired,acquisition_spend,cac,observed_months,first_observed_payback_age,cash_payback_month FROM cohort_cash_economics WHERE age_month=0 ORDER BY cohort_month",
+            "six_month_comparison": "SELECT cohort_month,n_acquired,retained_share,revenue_retention,cac,cumulative_contribution_per_customer,balance_per_customer FROM cohort_six_month_comparison ORDER BY cohort_month",
+            "experiment_effects": "SELECT * FROM experiment_effects ORDER BY experiment_id",
+            "segmentation": "SELECT * FROM segmentation_comparison ORDER BY scheme",
+        }
+        summaries = {key: _records(con, query) for key, query in summary_queries.items()}
+        (executed / "03_summary.sql").write_text("\n\n".join(q + ";" for q in summary_queries.values()) + "\n", encoding="utf-8", newline="\n")
+        row_counts = {name: con.execute(f"SELECT count(*) FROM {name}").fetchone()[0] for name in TABLE_SORTS}
+    finally:
+        con.close()
+    summary = {
+        "schema_version": "1.0", "data_as_of": manifest["data_as_of"], "timezone": manifest["timezone"],
+        "currency": manifest["currency"], "definitions": manifest["definitions"],
+        "source_validation": source_validation, "sql_checks": checks, "table_row_counts": row_counts,
+        "experiment_interval": "Purchase-rate difference: unpooled normal standard error and approximate 95% interval; each experiment retains its own controls. No correction for comparing different tests.",
+        "segmentation_scope": "All people with six complete observed acquisition-age months; outcome is six-month contribution. All three baseline schemes have two groups. This is descriptive discrimination, not a treatment effect.",
+        "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
+        **summaries,
+    }
+    (output_dir / "analysis_summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    input_manifest = {"data_manifest_sha256": _hash(data_dir / "data_manifest.json"), "files": manifest["files"]}
+    (output_dir / "analysis_input_manifest.json").write_text(json.dumps(input_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    audit = {
+        "schema_version": "1.0", "input_data_manifest_sha256": _hash(data_dir / "data_manifest.json"),
+        "input_csv_hashes": {name: spec["sha256"] for name, spec in manifest["files"].items()},
+        "source_sql_hashes": {"01_views.sql": _hash(SQL_DIR / "01_views.sql")},
+        "executed_sql_hashes": {p.name: _hash(p) for p in sorted(executed.glob("*.sql"))},
+        "output_table_hashes": {f"{name}.csv": _hash(tables / f"{name}.csv") for name in TABLE_SORTS},
+        "summary_sha256": _hash(output_dir / "analysis_summary.json"),
+        "input_receipt_sha256": _hash(output_dir / "analysis_input_manifest.json"),
+        "analysis_code_sha256": _hash(Path(__file__)), "duckdb_version": duckdb.__version__,
+    }
+    (output_dir / "analysis_manifest.json").write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    validate_analysis(output_dir)
+    return summary
+
+
+def validate_analysis(output_dir: Path) -> dict:
+    """Refuse mutated SQL-derived model/report inputs before downstream work."""
+    output_dir = Path(output_dir)
+    path = output_dir / "analysis_manifest.json"
+    if not path.is_file(): raise ValueError("Missing analysis_manifest.json; build verified SQL views first.")
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    if set(manifest.get("output_table_hashes", {})) != {f"{name}.csv" for name in TABLE_SORTS}:
+        raise ValueError("Unexpected analysis output contract.")
+    for filename, expected in manifest["output_table_hashes"].items():
+        p = output_dir / "tables" / filename
+        if not p.is_file() or _hash(p) != expected:
+            raise ValueError(f"Analysis table hash mismatch: {filename}. Rebuild from frozen inputs.")
+    for filename, expected in manifest.get("executed_sql_hashes", {}).items():
+        p = output_dir / "sql" / filename
+        if not p.is_file() or _hash(p) != expected: raise ValueError(f"Executed SQL hash mismatch: {filename}")
+    for filename, key in [("analysis_summary.json", "summary_sha256"), ("analysis_input_manifest.json", "input_receipt_sha256")]:
+        p = output_dir / filename
+        if not p.is_file() or _hash(p) != manifest.get(key): raise ValueError(f"Analysis receipt hash mismatch: {filename}")
+    if manifest.get("source_sql_hashes", {}).get("01_views.sql") != _hash(SQL_DIR / "01_views.sql"):
+        raise ValueError("Analysis SQL changed since tables were built; rebuild verified views.")
+    if manifest.get("analysis_code_sha256") != _hash(Path(__file__)):
+        raise ValueError("Analysis code changed since tables were built; rebuild verified views.")
+    return {"status": "passed", "tables_checked": len(TABLE_SORTS), "analysis_manifest_sha256": _hash(path)}

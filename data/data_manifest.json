@@ -1,0 +1,102 @@
+{
+  "currency": "USD",
+  "data_as_of": "2026-01-01T00:00:00Z",
+  "dataset_version": "1.0",
+  "definitions": {
+    "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
+    "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
+    "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
+    "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
+    "business": "Fully synthetic individual monthly subscription service; standard/premium tiers and optional add-on orders.",
+    "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
+    "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
+    "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
+    "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
+    "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
+    "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
+    "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
+    "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
+    "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
+    "synthetic_trends": "Gradually lower acquisition costs and renewal hazards, modest acquisition mix changes, explicit premium upgrades/add-on quantities and incurred costs. Random month-to-month variation remains.",
+    "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
+    "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
+    "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
+  },
+  "experiment_specs": [
+    {
+      "assigned_at": "2025-05-01 00:00:00",
+      "assigned_per_arm": 250,
+      "channel": "search",
+      "control": "Withhold this focal campaign; record purchases through every route. Own controls are not shared with the other experiment.",
+      "cost_scope": "Focal campaign media only; treatment spends the recorded campaign budget, control spends zero focal media.",
+      "eligibility": "CRM and baseline attributes exist before assignment; no prior payment; no person enters another test.",
+      "experiment_id": "EXP-01",
+      "followup_end_at": "2025-06-01 00:00:00",
+      "primary_need": "save_time",
+      "randomization": "Seeded shuffled balanced assignment among preexisting, never-paid eligible prospects.",
+      "tested_campaign_id": "TEST-01-search-save_time"
+    },
+    {
+      "assigned_at": "2025-09-01 00:00:00",
+      "assigned_per_arm": 250,
+      "channel": "partner",
+      "control": "Withhold this focal campaign; record purchases through every route. Own controls are not shared with the other experiment.",
+      "cost_scope": "Focal campaign media only; treatment spends the recorded campaign budget, control spends zero focal media.",
+      "eligibility": "CRM and baseline attributes exist before assignment; no prior payment; no person enters another test.",
+      "experiment_id": "EXP-02",
+      "followup_end_at": "2025-10-01 00:00:00",
+      "primary_need": "build_skill",
+      "randomization": "Seeded shuffled balanced assignment among preexisting, never-paid eligible prospects.",
+      "tested_campaign_id": "TEST-02-partner-build_skill"
+    }
+  ],
+  "files": {
+    "acquisition_attribution.csv": {
+      "row_count": 4617,
+      "sha256": "bd32d75c8eaaf8b573c3137d169dda0533d11f205b63de0e812d982129723ebe"
+    },
+    "campaign_spend.csv": {
+      "row_count": 294,
+      "sha256": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057"
+    },
+    "experiment_assignments.csv": {
+      "row_count": 1000,
+      "sha256": "b9bb80c1275a0ed8ffa2e35af566aef947a0a3b730590f49e82658f338521fc1"
+    },
+    "feedback.csv": {
+      "row_count": 2591,
+      "sha256": "694fb5c9948a0df4215ebcb4500f783ea0af29f1926102d3d56682a451d79944"
+    },
+    "people.csv": {
+      "row_count": 5449,
+      "sha256": "7d91da008484efbd18a225af55fd458ff5363cf6cbc0ff9a5f9678c11d6f39ab"
+    },
+    "product_events.csv": {
+      "row_count": 58889,
+      "sha256": "3071ed6afa5ed8e0ab7ee22e98bead70f3987f4b527255b09567599da64cdad7"
+    },
+    "subscription_periods.csv": {
+      "row_count": 36870,
+      "sha256": "ce3bc3c5dba95e5e65fc87fba2a0b1e699cc01350675792d37b54678aaac4961"
+    },
+    "transactions.csv": {
+      "row_count": 45476,
+      "sha256": "178173cdf8aeb85776d5f951fafe34071099f4c1e2c4a07230b93588bf88ded2"
+    }
+  },
+  "generator": "cohort_lab.data.generate_data; Python standard-library random.Random, integer-cent generation",
+  "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
+  "schema_version": "1.0",
+  "source_cutoffs": {
+    "acquisition_attribution.csv": "2026-01-01T00:00:00Z",
+    "campaign_spend.csv": "2026-01-01T00:00:00Z",
+    "experiment_assignments.csv": "2026-01-01T00:00:00Z",
+    "feedback.csv": "2026-01-01T00:00:00Z",
+    "people.csv": "2026-01-01T00:00:00Z",
+    "product_events.csv": "2026-01-01T00:00:00Z",
+    "subscription_periods.csv": "2026-01-01T00:00:00Z",
+    "transactions.csv": "2026-01-01T00:00:00Z"
+  },
+  "synthetic_seed": 20261116,
+  "timezone": "UTC"
+}

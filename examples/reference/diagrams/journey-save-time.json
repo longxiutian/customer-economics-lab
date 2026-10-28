@@ -1,0 +1,201 @@
+{
+  "cards": [
+    {
+      "dot": "orange",
+      "items": [
+        "Hypothesis: a shorter route to first useful output matters more than feature breadth.",
+        "Investigate: among people who state save_time, which onboarding steps delay their first useful action?",
+        "Ask in research: what task did you hope to complete, how long did it take, and what remained difficult?"
+      ],
+      "title": "Proposed interpretation \u2014 test it"
+    },
+    {
+      "dot": "cyan",
+      "items": [
+        "The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.",
+        "The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.",
+        "Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."
+      ],
+      "title": "What is recorded and what is missing"
+    }
+  ],
+  "diagram_type": "workflow",
+  "edges": [
+    {
+      "from": "step0",
+      "id": "look0",
+      "to": "evidence0",
+      "variant": "dashed"
+    },
+    {
+      "from": "step0",
+      "id": "sequence1",
+      "to": "step1",
+      "variant": "default"
+    },
+    {
+      "from": "step1",
+      "id": "look1",
+      "to": "evidence1",
+      "variant": "dashed"
+    },
+    {
+      "from": "step1",
+      "id": "sequence2",
+      "to": "step2",
+      "variant": "default"
+    },
+    {
+      "from": "step2",
+      "id": "look2",
+      "to": "evidence2",
+      "variant": "dashed"
+    },
+    {
+      "from": "step2",
+      "id": "sequence3",
+      "to": "step3",
+      "variant": "default"
+    },
+    {
+      "from": "step3",
+      "id": "look3",
+      "to": "evidence3",
+      "variant": "dashed"
+    },
+    {
+      "from": "step3",
+      "id": "sequence4",
+      "to": "step4",
+      "variant": "default"
+    },
+    {
+      "from": "step4",
+      "id": "look4",
+      "to": "evidence4",
+      "variant": "dashed"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "hypothesis",
+      "label": "Conceptual customer experience"
+    },
+    {
+      "id": "evidence",
+      "label": "Where to look for evidence"
+    }
+  ],
+  "meta": {
+    "animation": "none",
+    "legend": {
+      "entries": {
+        "database": {
+          "label": "Evidence source"
+        },
+        "frontend": {
+          "label": "Proposed experience"
+        }
+      }
+    },
+    "locale": "en",
+    "output": "journey-save-time.html",
+    "quality_profile": "standard",
+    "subtitle": "Hypotheses to examine, not an observed path or a population funnel",
+    "title": "Save time: a conceptual customer journey",
+    "visual_preset": "editorial"
+  },
+  "nodes": [
+    {
+      "col": 0,
+      "id": "step0",
+      "label": "Recognize friction",
+      "lane": "hypothesis",
+      "sublabel": "repetitive task feels costly",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 0,
+      "id": "evidence0",
+      "label": "Need + source",
+      "lane": "evidence",
+      "sublabel": "CRM / attributed source",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 1,
+      "id": "step1",
+      "label": "Evaluate fit",
+      "lane": "hypothesis",
+      "sublabel": "compare ease and effort",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 1,
+      "id": "evidence1",
+      "label": "Early interactions",
+      "lane": "evidence",
+      "sublabel": "product event sequence",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 2,
+      "id": "step2",
+      "label": "Get first value",
+      "lane": "hypothesis",
+      "sublabel": "complete one useful task",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 2,
+      "id": "evidence2",
+      "label": "Payment + usage",
+      "lane": "evidence",
+      "sublabel": "billing / product events",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 3,
+      "id": "step3",
+      "label": "Build a routine",
+      "lane": "hypothesis",
+      "sublabel": "repeat with less effort",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 3,
+      "id": "evidence3",
+      "label": "Experience + voice",
+      "lane": "evidence",
+      "sublabel": "events / feedback",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 4,
+      "id": "step4",
+      "label": "Review renewal",
+      "lane": "hypothesis",
+      "sublabel": "is the time saving worth it?",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 4,
+      "id": "evidence4",
+      "label": "Continue or leave",
+      "lane": "evidence",
+      "sublabel": "renewal system / billing",
+      "type": "database",
+      "width": 180
+    }
+  ],
+  "schema_version": 2
+}

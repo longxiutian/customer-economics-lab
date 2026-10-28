@@ -1,0 +1,201 @@
+{
+  "cards": [
+    {
+      "dot": "orange",
+      "items": [
+        "Hypothesis: visible progress and a credible next challenge matter more than immediate speed.",
+        "Investigate: among people who state build_skill, does the observed sequence include practice and return visits?",
+        "Ask in research: what did you want to learn, what can you do now, and where did you get stuck?"
+      ],
+      "title": "Proposed interpretation \u2014 test it"
+    },
+    {
+      "dot": "cyan",
+      "items": [
+        "The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.",
+        "The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.",
+        "Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."
+      ],
+      "title": "What is recorded and what is missing"
+    }
+  ],
+  "diagram_type": "workflow",
+  "edges": [
+    {
+      "from": "step0",
+      "id": "look0",
+      "to": "evidence0",
+      "variant": "dashed"
+    },
+    {
+      "from": "step0",
+      "id": "sequence1",
+      "to": "step1",
+      "variant": "default"
+    },
+    {
+      "from": "step1",
+      "id": "look1",
+      "to": "evidence1",
+      "variant": "dashed"
+    },
+    {
+      "from": "step1",
+      "id": "sequence2",
+      "to": "step2",
+      "variant": "default"
+    },
+    {
+      "from": "step2",
+      "id": "look2",
+      "to": "evidence2",
+      "variant": "dashed"
+    },
+    {
+      "from": "step2",
+      "id": "sequence3",
+      "to": "step3",
+      "variant": "default"
+    },
+    {
+      "from": "step3",
+      "id": "look3",
+      "to": "evidence3",
+      "variant": "dashed"
+    },
+    {
+      "from": "step3",
+      "id": "sequence4",
+      "to": "step4",
+      "variant": "default"
+    },
+    {
+      "from": "step4",
+      "id": "look4",
+      "to": "evidence4",
+      "variant": "dashed"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "hypothesis",
+      "label": "Conceptual customer experience"
+    },
+    {
+      "id": "evidence",
+      "label": "Where to look for evidence"
+    }
+  ],
+  "meta": {
+    "animation": "none",
+    "legend": {
+      "entries": {
+        "database": {
+          "label": "Evidence source"
+        },
+        "frontend": {
+          "label": "Proposed experience"
+        }
+      }
+    },
+    "locale": "en",
+    "output": "journey-build-skill.html",
+    "quality_profile": "standard",
+    "subtitle": "Hypotheses to examine, not an observed path or a population funnel",
+    "title": "Build skill: a conceptual customer journey",
+    "visual_preset": "editorial"
+  },
+  "nodes": [
+    {
+      "col": 0,
+      "id": "step0",
+      "label": "Set a learning goal",
+      "lane": "hypothesis",
+      "sublabel": "identify a capability gap",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 0,
+      "id": "evidence0",
+      "label": "Need + source",
+      "lane": "evidence",
+      "sublabel": "CRM / attributed source",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 1,
+      "id": "step1",
+      "label": "Evaluate guidance",
+      "lane": "hypothesis",
+      "sublabel": "look for useful practice",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 1,
+      "id": "evidence1",
+      "label": "Early interactions",
+      "lane": "evidence",
+      "sublabel": "product event sequence",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 2,
+      "id": "step2",
+      "label": "Try the first lesson",
+      "lane": "hypothesis",
+      "sublabel": "complete guided practice",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 2,
+      "id": "evidence2",
+      "label": "Payment + usage",
+      "lane": "evidence",
+      "sublabel": "billing / product events",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 3,
+      "id": "step3",
+      "label": "Notice progress",
+      "lane": "hypothesis",
+      "sublabel": "apply a learned skill",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 3,
+      "id": "evidence3",
+      "label": "Experience + voice",
+      "lane": "evidence",
+      "sublabel": "events / feedback",
+      "type": "database",
+      "width": 180
+    },
+    {
+      "col": 4,
+      "id": "step4",
+      "label": "Review renewal",
+      "lane": "hypothesis",
+      "sublabel": "is there a useful next step?",
+      "type": "frontend",
+      "width": 180
+    },
+    {
+      "col": 4,
+      "id": "evidence4",
+      "label": "Continue or leave",
+      "lane": "evidence",
+      "sublabel": "renewal system / billing",
+      "type": "database",
+      "width": 180
+    }
+  ],
+  "schema_version": 2
+}

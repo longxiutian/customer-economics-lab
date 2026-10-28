@@ -1,0 +1,206 @@
+{
+  "figures": {
+    "channel-segment-retention": {
+      "display_values": {
+        "channels": [
+          "search",
+          "partner"
+        ],
+        "max_display_age": 11,
+        "primary_needs": [
+          "save_time",
+          "build_skill"
+        ],
+        "selected_cohorts": [
+          "2024-01-01",
+          "2025-01-01",
+          "2025-07-01"
+        ]
+      },
+      "files": [
+        "channel-segment-retention.pdf",
+        "channel-segment-retention.png"
+      ],
+      "notes": "Same axes and selected joining cohorts in each channel-by-pre-acquisition-need cell. Only observed ages 0\u201311 are shown; the July2025 curves stop at their last observed age.",
+      "sha256": {
+        "channel-segment-retention.pdf": "04b6b53de147eb95ab78272697829c7c05133f8bce15e32234ca45f5e12739a3",
+        "channel-segment-retention.png": "9d271fae9ec3d0eac149ddec277e4b770b2678662b1c520de31c99d8544bf1c0"
+      },
+      "sources": [
+        "cohort_age_summary.csv"
+      ]
+    },
+    "cohort-triangles": {
+      "display_values": {
+        "age_months": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "cohorts": [
+          "2024-01-01",
+          "2024-05-01",
+          "2024-10-01",
+          "2025-02-01",
+          "2025-07-01",
+          "2025-12-01"
+        ],
+        "unobserved_cells": 18
+      },
+      "files": [
+        "cohort-triangles.pdf",
+        "cohort-triangles.png"
+      ],
+      "notes": "Future ages remain blank, not zero. Cash balance is divided by the saved original cohort size.",
+      "sha256": {
+        "cohort-triangles.pdf": "48d887021dc5f743d08d91337f81a7accd1fe32c884cece3e42ba23812abc28c",
+        "cohort-triangles.png": "0f6b4cb0d444895e10138d54c05d863541032cd07d88c8676f56ad06f926d1d7"
+      },
+      "sources": [
+        "cohort_totals.csv",
+        "cohort_cash_economics.csv"
+      ]
+    },
+    "company-cohort-layers": {
+      "display_values": {
+        "cohort_layers": 24,
+        "latest_active": 2576.0
+      },
+      "files": [
+        "company-cohort-layers.pdf",
+        "company-cohort-layers.png"
+      ],
+      "notes": "Stacks use exact saved monthly values. No forecast and no smoothing.",
+      "sha256": {
+        "company-cohort-layers.pdf": "eb4a1bf96d5013f35ca1380c5b0f24ace71f97346b33327ddc7ad869836b5f95",
+        "company-cohort-layers.png": "c7ad5622073ae6b55c472eb99b74625d3bc83becaadb7ff67a8329b677c1d101"
+      },
+      "sources": [
+        "company_month.csv",
+        "company_totals.csv"
+      ]
+    },
+    "company-economics": {
+      "files": [
+        "company-economics.pdf",
+        "company-economics.png"
+      ],
+      "notes": "Calendar-period contribution and acquisition costs; neither is company profit.",
+      "sha256": {
+        "company-economics.pdf": "8546d407e9836a9925729dc21a0e50911598a729a6a131f8d55f8593cd6c3502",
+        "company-economics.png": "04665b363a7cefd8ccde3c1588d5ca4a3db1c37622b62a073d4ac9b749a053ce"
+      },
+      "sources": [
+        "company_totals.csv"
+      ]
+    },
+    "experiment-effects": {
+      "display_values": {
+        "field": "incremental_contribution_after_media_per_prospect",
+        "values": [
+          0.0352000000000002,
+          1.0466000000000004
+        ]
+      },
+      "files": [
+        "experiment-effects.pdf",
+        "experiment-effects.png"
+      ],
+      "notes": "Point estimates over each prespecified experiment window, not lifetime effects.",
+      "sha256": {
+        "experiment-effects.pdf": "586dab17d2b134b791aff772ea2ac11d6bfa2afa2cfa2cc2c0e31a95d1c4dd38",
+        "experiment-effects.png": "b050e36420a7137c10d603348c40ca5df1e2f0003ea81b36dc70eeebc89c5abb"
+      },
+      "sources": [
+        "experiment_effects.csv"
+      ]
+    },
+    "forecast-detail": {
+      "files": [
+        "forecast-detail.pdf",
+        "forecast-detail.png"
+      ],
+      "notes": "Solid points are observed; dashed continuation and shaded intervals are predictions. Values retain the model output units.",
+      "sha256": {
+        "forecast-detail.pdf": "f099348938b69532de054819fd2cb984801b96062deeec5db9632f550eb657ad",
+        "forecast-detail.png": "18ffe8b1120c0ccc70b61879ce8e0c24f5e7f5e7c4ce086361f52f1325b282ed"
+      },
+      "sources": [
+        "forecast_curve.csv"
+      ]
+    },
+    "ltv-and-cac": {
+      "files": [
+        "ltv-and-cac.pdf",
+        "ltv-and-cac.png"
+      ],
+      "notes": "Common 12-month discounted contribution horizon; CAC is not a marginal-spend estimate.",
+      "sha256": {
+        "ltv-and-cac.pdf": "c5256d8b50c8c6aa49023e02662fdf7c72ba1a4b23e775446c1deaf63b97551a",
+        "ltv-and-cac.png": "ef424965cbd9eedb0b28b51f6433ccb218274ef3178447d2c1dd0cb33e4cbd52"
+      },
+      "sources": [
+        "cohort_valuation.csv"
+      ]
+    },
+    "recent-cohort-fit-check": {
+      "files": [
+        "recent-cohort-fit-check.pdf",
+        "recent-cohort-fit-check.png"
+      ],
+      "notes": "In-sample one-step fitted residuals for recent observed cohorts, conditional on the previous observed count. This is not a held-out backtest. It can flag cell-specific departures from the shared cohort trend.",
+      "sha256": {
+        "recent-cohort-fit-check.pdf": "d58f0682dff210222be7e573e3009e5074e2810200f463d546a5835b65b69b5c",
+        "recent-cohort-fit-check.png": "8969ec846c98e9f451abc405fdd4fe3ad5c9fe18c6d3bec7d7ba457f8d526856"
+      },
+      "sources": [
+        "model_fit_checks.csv"
+      ]
+    },
+    "retention-and-revenue": {
+      "display_values": {
+        "selected_cohorts": [
+          "2024-01-01",
+          "2024-10-01",
+          "2025-07-01"
+        ]
+      },
+      "files": [
+        "retention-and-revenue.pdf",
+        "retention-and-revenue.png"
+      ],
+      "notes": "Same joining cohorts and age axis; revenue is normalized to first-period cohort revenue.",
+      "sha256": {
+        "retention-and-revenue.pdf": "3f7bfb8a6da1f27383711c1bf5f17fd55de6186f0106ced154c8bd2bd99dfe51",
+        "retention-and-revenue.png": "da7a11737026225d1a661bfb62c20c801121f19af4290b05d2923d0368d45208"
+      },
+      "sources": [
+        "cohort_totals.csv"
+      ]
+    }
+  },
+  "model_summary_sha256": "aaae7c19e9466eedb2103435e4ffa074ee92a04bdb6aff0877b9930df494f4e9",
+  "numerical_policy": "Select/pivot saved SQL/model outputs; never recalculate source aggregates.",
+  "source_date_epoch": 1794787200,
+  "sources": {
+    "cohort_age_summary.csv": "daf929a4b0964a8c3769446a913a3ffc222cf7b5312c683697597ceda6d12dd8",
+    "cohort_cash_economics.csv": "cfbb8c03ddad84aa799ccca60d6f3d7e8e874472e7657c98e4d7260009753ebb",
+    "cohort_totals.csv": "1e7633342e73f36aa153fe43e40d309e55be7777507d60aaaee5d70cb0dfe0b0",
+    "cohort_valuation.csv": "1dff0c7b1aafa6b1fc347ecf1a6013f1971ff2671b700ee4bd67fd230f107175",
+    "company_month.csv": "01ecc05f904dda0bfb934924c20aac786b84765ea82887c32e5640ca63a240a7",
+    "company_totals.csv": "2c4384492a90338a95afbc14e73940b62b25b8a14ff79ea9cbd1850e21239145",
+    "experiment_effects.csv": "8e1ba9861cdc90f290701164bae544bb9964c3cc109731bf55c686e00bdcaaa5",
+    "forecast_curve.csv": "235ee2758b69051fa12392eb3630865b2e265a25582957acfdb38bc1f70ff5f8",
+    "model_fit_checks.csv": "2ca7dfc0123f58563845520df934beb7949c3d4501908be31a45294316e317fe"
+  },
+  "version": 1
+}

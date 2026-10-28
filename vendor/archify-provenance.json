@@ -1,0 +1,10 @@
+{
+  "project": "Archify",
+  "version": "3.2.0",
+  "commit": "25cf37080fc8b1dbe758a4efc3935b55f3327083",
+  "archive_url": "https://codeload.github.com/tt-a1i/archify/zip/25cf37080fc8b1dbe758a4efc3935b55f3327083",
+  "archive_sha256": "0b95ed9a76fbbbc00c0725852b99bde99f8f22ae5d74e22146b0a0b130447628",
+  "license": "MIT",
+  "files": 203,
+  "local_license": "vendor/archify/LICENSE"
+}

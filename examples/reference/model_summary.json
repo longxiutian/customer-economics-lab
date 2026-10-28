@@ -1,0 +1,91 @@
+{
+  "backend": "cpu",
+  "backtest": {
+    "baseline_retention_mae": 2.0517767497233943,
+    "baseline_revenue_wape": 0.11795650909186176,
+    "diagnostic": {
+      "actual_backend": "cpu",
+      "actual_x64": true,
+      "final_loss_mean": 2411.10155678,
+      "final_two_window_relative_loss_change": 0.00060105,
+      "init_scale": 0.05,
+      "initial_loss_mean": 3292.60278674,
+      "n_retention_cells": 844,
+      "n_revenue_cells": 930,
+      "retention_pearson_dispersion": 1.08450312,
+      "revenue_pearson_dispersion": 1.01084537
+    },
+    "held_out_calendar_months": [
+      "2025-10-01",
+      "2025-11-01",
+      "2025-12-01"
+    ],
+    "n_cells": 258,
+    "new_holdout_cohorts_excluded": true,
+    "retention_mae": 1.0949285419180517,
+    "revenue_wape": 0.05505405038854522,
+    "training_last_calendar_month": "2025-09-01"
+  },
+  "cost_scope": "Tracked acquisition spending; organic cell CAC unsupported; whole-cohort CAC is tracked spend divided by all acquired customers, not fully loaded company cost.",
+  "diagnostic": {
+    "actual_backend": "cpu",
+    "actual_x64": true,
+    "final_loss_mean": 3087.53896966,
+    "final_two_window_relative_loss_change": 0.00281558,
+    "init_scale": 0.05,
+    "initial_loss_mean": 4276.2337021,
+    "n_retention_cells": 1114,
+    "n_revenue_cells": 1212,
+    "retention_pearson_dispersion": 1.06443338,
+    "revenue_pearson_dispersion": 1.00649492
+  },
+  "discount_rate": 0.01,
+  "draws": 400,
+  "economics_assumption": "Future net revenue and contribution shares of payment revenue use observed channel-by-need-by-age shares, with the same group's observed renewal ages (age>=1) as fallback. Shares are fixed assumptions, not causally identified or assigned posterior uncertainty.",
+  "float_precision": "float64",
+  "guide": "AutoNormal",
+  "horizon_months": 12,
+  "init_scale": 0.05,
+  "interpretation": "Twelve-month contribution value, not an infinite-lifetime claim. Cash payback is the first undiscounted crossing; payback_age is zero-based and payback_month counts receipts from 1. Discounting uses t=age+1. A separate flag identifies later recrossing below cost. The model shares one linear cohort trend across groups; in-sample fit diagnostics are separate from backtests. No causal long-run campaign value is inferred from customer LTV.",
+  "model": "Conditional binomial survival + Gamma gross revenue; NumPyro SVI",
+  "optimizer": "ClippedAdam(0.008)",
+  "seed": 20261116,
+  "source": "https://juanitorduz.github.io/revenue_retention_numpyro/",
+  "steps": 3000,
+  "uncertainty_label": "Approximate posterior parameter uncertainty conditional on model and fixed future economics; not a full predictive interval",
+  "valuation_backtest": {
+    "baseline": "Naive frozen last-three-period renewal rate and revenue per retained customer; a one-period cohort uses an explicit 0.8 renewal fallback.",
+    "baseline_ltv_mae": 34.86989456651607,
+    "diagnostic": {
+      "actual_backend": "cpu",
+      "actual_x64": true,
+      "final_loss_mean": 833.40820578,
+      "final_two_window_relative_loss_change": 0.00137049,
+      "init_scale": 0.05,
+      "initial_loss_mean": 1116.77395334,
+      "n_retention_cells": 264,
+      "n_revenue_cells": 312,
+      "retention_pearson_dispersion": 1.02003154,
+      "revenue_pearson_dispersion": 1.01672863
+    },
+    "forecast_tail_value_mae": 6.7184515809129115,
+    "forecast_tail_value_wape": 0.06654557301430407,
+    "limitation": "One historical year-end origin, not proof of accuracy for every future cohort or business regime.",
+    "ltv_mae": 6.71845158091281,
+    "n_both_recovered": 4,
+    "n_forecast_cohorts": 11,
+    "n_payback_after_origin": 4,
+    "n_payback_already_observed": 7,
+    "payback_mae_months_for_both_recovered": 0.0,
+    "training_last_calendar_month": "2024-12-01",
+    "training_only_economics": true
+  },
+  "versions": {
+    "jax": "0.12.0.1",
+    "jaxlib": "0.12.0.1",
+    "numpy": "2.5.4",
+    "numpyro": "0.22.0",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1"
+  }
+}

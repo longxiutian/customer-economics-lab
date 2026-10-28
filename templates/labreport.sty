@@ -1,0 +1,43 @@
+% Original public report style for the Customer Economics Lab.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labreport}[2026/10/28 v1.0 Customer Economics Lab]
+\RequirePackage[letterpaper,left=.68in,right=.68in,top=.62in,bottom=.62in]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[default]{sourcesans}
+\RequirePackage{microtype,graphicx,xcolor,booktabs,tabularx,array,amsmath,fancyhdr,tikz}
+\RequirePackage[hidelinks]{hyperref}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\definecolor{Ink}{HTML}{172D3C}
+\definecolor{Teal}{HTML}{087F8C}
+\definecolor{Gold}{HTML}{B78431}
+\definecolor{Muted}{HTML}{526875}
+\definecolor{Pale}{HTML}{EAF4F3}
+\definecolor{Rule}{HTML}{CEDBDC}
+\definecolor{Orange}{HTML}{B75C22}
+\definecolor{LightGold}{HTML}{FBF3E5}
+\color{Ink}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.16}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\color{Muted}\scriptsize CUSTOMER ECONOMICS LAB}
+\fancyhead[R]{\color{Muted}\scriptsize SYNTHETIC DATA / REPRODUCIBLE EVIDENCE}
+\fancyfoot[L]{\color{Muted}\scriptsize Observed, predicted and experimental evidence are labeled separately.}
+\fancyfoot[R]{\color{Teal}\bfseries\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\newcommand{\PageTitle}[3]{\vspace*{-7pt}{\color{Teal}\bfseries\small #1}\par\vspace{-4pt}{\color{Teal}\rule{\linewidth}{.7pt}}\par\vspace{3pt}{\fontsize{23}{26}\selectfont\bfseries #2}\par\vspace{2pt}{\color{Muted}\fontsize{11}{14}\selectfont #3}\par\vspace{6pt}}
+\newcommand{\Section}[1]{\par\vspace{5pt}{\color{Teal}\fontsize{12}{14}\selectfont\bfseries #1}\par\vspace{-3pt}}
+\newcommand{\Evidence}[1]{\par{\color{Muted}\fontsize{8}{10}\selectfont #1}\par}
+\newcommand{\Takeaway}[1]{\par\vspace{5pt}\begingroup\setlength{\fboxsep}{9pt}\colorbox{Pale}{\parbox{\dimexpr\linewidth-18pt\relax}{\color{Ink}\bfseries #1}}\endgroup\par}
+\newcommand{\Boundary}[1]{\par\vspace{4pt}\begingroup\setlength{\fboxsep}{8pt}\colorbox{LightGold}{\parbox{\dimexpr\linewidth-16pt\relax}{\color{Ink}\small #1}}\endgroup\par}
+\newcommand{\Metric}[3]{\begin{minipage}[t]{.31\linewidth}{\color{Muted}\small #1}\par{\color{Teal}\fontsize{22}{24}\selectfont\bfseries #2}\par{\color{Muted}\footnotesize #3}\end{minipage}}
+\newcommand{\FullFig}[2]{\begin{center}\includegraphics[width=\linewidth,height=#2,keepaspectratio]{figures/#1}\end{center}\vspace{-6pt}}
+\newcommand{\NewPage}{\clearpage}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\hypersetup{pdftitle={Are we moving in the right direction?},pdfauthor={Customer Economics Lab},pdfsubject={Synthetic subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab}}
+\ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
+\ifdefined\pdftrailerid\pdftrailerid{}\fi
+\ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi

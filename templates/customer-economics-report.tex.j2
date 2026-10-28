@@ -1,0 +1,128 @@
+\documentclass[10pt]{article}
+\usepackage{labreport}
+\begin{document}
+\PageTitle{01 / THE QUESTION}{Are we moving in\newline the right direction?}{One subscription business. Eight separate exports. A diagnosis that connects customer experience, acquisition and durable contribution.}
+\Metric{Latest observed month}{\VAR{latest_active}}{retained subscribers}\hfill
+\Metric{Latest observed month}{\VAR{latest_revenue}}{net revenue}\hfill
+\Metric{Latest observed month}{\VAR{latest_contribution}}{contribution before acquisition spending}
+\Section{The Universal Customer View connects meanings and keys}
+\begin{center}
+\begin{tikzpicture}[font=\small,box/.style={draw=Rule,fill=Pale,align=center,text width=2.65cm,minimum height=1.15cm,inner sep=5pt},arr/.style={-{Stealth[length=2mm]},Teal,thick}]
+\node[box] (a) at (0,0) {CRM\\People and needs};
+\node[box] (b) at (3.5,0) {Billing + renewal\\Payments and retention};
+\node[box] (c) at (7,0) {Experience\\Events and feedback};
+\node[box] (d) at (10.5,0) {Marketing\\Spend, credit, assignment};
+\node[box,fill=Teal,text=white,text width=5.8cm] (e) at (5.25,-1.8) {Tested SQL views\\Person / cohort / period};
+\draw[arr] (a.south)--++(0,-.35)-|(e.north west);
+\draw[arr] (b.south)--(e.north west);
+\draw[arr] (c.south)--(e.north east);
+\draw[arr] (d.south)--++(0,-.35)-|(e.north east);
+\end{tikzpicture}
+\end{center}
+\Evidence{Interactive source-system and customer-journey diagrams are generated with the bundled, pinned Archify package. This report schematic is an original companion view of the same data domains.}
+\par\begin{tabularx}{\linewidth}{@{}p{.2\linewidth}Y@{}}\toprule
+\textbf{UCV category}&\textbf{What the exported records mean}\\\midrule
+Identifiers&\texttt{person\_id} connects documented records. Transaction, period and event IDs identify different objects.\\
+Relationship&Subscription period, tier and renewal outcome describe the arrangement and when it applies.\\
+Engagement&Payments, product actions and support contacts are observed events, not inferred motives.\\
+Perceptions&Survey responses describe the respondents' evaluations. No response remains missing.\\\bottomrule
+\end{tabularx}\par
+\Section{What would count as progress?}
+Compare customers at the same age since first payment, inspect contribution after acquisition spending, then connect joining cohorts to the firm's calendar-time results. The experiment asks a separate question: did the tested campaign add value relative to its control?
+\Takeaway{A larger business is not sufficient evidence of better customer economics. We need age-aligned cohorts, a stated cost scope, and a credible comparison for marketing effects.}
+\Evidence{Data as of \VAR{data_as_of}. All records are original synthetic teaching data. Forecast horizon: 12 monthly periods from acquisition. Detailed file and SQL hashes are recorded in the report manifest.}
+
+\NewPage
+\PageTitle{02 / OBSERVED COHORTS}{Start with a cohort,\newline not a company average}{A cohort contains people who first paid in the same month. Age index 0 is the first paid month; blank future cells are unobserved.}
+\FullFig{cohort-triangles.pdf}{3.65in}
+\Evidence{Source: saved SQL tables \texttt{cohort\_totals.csv} and \texttt{cohort\_cash\_economics.csv}. The display selects joining cohorts for legibility; it does not interpolate missing future observations.}
+\Section{Read across, then compare down}
+Across a row, follow one joining cohort as it ages. Down an age column, compare different cohorts at the same stage of their relationship. A newest cohort's short history cannot be compared with an older cohort's accumulated total.
+\par\begin{tabularx}{\linewidth}{@{}p{.26\linewidth}Y@{}}\toprule
+\textbf{Quantity}&\textbf{Denominator and interpretation}\\\midrule
+Retained share&Retained subscriptions divided by the original acquired cohort; product inactivity is not cancellation.\\
+Paying customers&People with a successful payment in the period; this is a purchase measure, not a substitute for contractual retention.\\
+Cash after acquisition&Cumulative observed contribution less the cohort's tracked acquisition spending. Cash payback is the first nonnegative balance.\\\bottomrule
+\end{tabularx}\par
+\Boundary{First-paid month is derived from complete payment history. CRM creation, product signup and marketing attribution are separate events. Refund rows reduce value; they do not create extra orders or new people.}
+
+\NewPage
+\PageTitle{03 / CUSTOMER DIFFERENCES}{People and revenue\newline can tell different stories}{A falling customer count can coexist with stronger spending among those who remain. Interpret both curves before describing retention as good or bad.}
+\FullFig{retention-and-revenue.pdf}{3.25in}
+\Evidence{Observed SQL ratios use original cohort membership for people and the cohort's first-period revenue for revenue retention. Selected cohorts are labeled; all plotted observations are saved SQL outputs.}
+\Section{Segmentation represents selected differences}
+The pre-acquisition need groups and age groups organize the same customers differently. The comparison below uses mature customers at a common six-month horizon. Smaller within-group variation can make a grouping more informative; it does not make everyone within a segment identical.
+\VAR{segmentation_table}
+\Section{Use the journey to interpret, not invent, explanations}
+An onboarding event records an action. A survey rating records an expressed evaluation. Their timing can suggest a question worth investigating, but a customer path alone does not establish why someone renewed or left.
+\Takeaway{Joining month defines a cohort. Stated need or age defines a segment. Customer heterogeneity exists before we choose either representation.}
+
+\NewPage
+\PageTitle{04 / CHANNELS AND NEEDS}{Check the trend\newline within customer groups}{Compare the same joining cohorts inside each channel and pre-acquisition need. The axes stay fixed across all four panels.}
+\FullFig{channel-segment-retention.pdf}{4.7in}
+\Evidence{Source: \texttt{cohort\_age\_summary.csv}. Each curve divides retained customers by its original cohort--channel--need cell. Only observed ages appear; the July 2025 curves stop at age 5. No future zeros or filled-in retention paths are added.}
+\Section{What survives the breakdown?}
+\VAR{facet_sentence}
+\Section{Use the differences to ask a better question}
+If a channel's aggregate curve changes, examine both its customer mix and the trajectories within the same needs. Different curves can guide a diagnostic question or a new test; they do not show that the acquisition channel caused the difference.
+\Takeaway{A cohort controls the joining clock. A segment organizes customer differences. Use both before explaining a company-wide trend.}
+
+\NewPage
+\PageTitle{05 / COMPANY DYNAMICS}{Cohort layers build\newline the company over time}{Each colored layer is a joining cohort. The firm grows when new customer inflows and retained older cohorts together outweigh departures.}
+\FullFig{company-cohort-layers.pdf}{3.2in}
+\Evidence{Source: \texttt{company\_month.csv} cohort layers and independently saved SQL company totals. Layer sums are checked against totals before plotting.}
+\FullFig{company-economics.pdf}{1.75in}
+\Section{Separate scale from economic quality}
+The upper figure shows active customers at each calendar month, not cumulative acquisitions. The lower figure compares contribution before acquisition spending with the spending incurred to acquire customers. A growing active base can still require substantial acquisition investment.
+\Boundary{Contribution subtracts recorded variable costs. Fixed operating costs, financing and taxes are outside this dataset. These figures do not establish company profitability.}
+
+\NewPage
+\PageTitle{06 / FORECAST VALUE}{Make the horizon explicit\newline before comparing LTV}{Observed contribution is retained. Only the unobserved remainder of the common 12-month horizon is forecast.}
+\FullFig{ltv-and-cac.pdf}{2.4in}
+\Evidence{Bands are approximate 5th--95th posterior parameter percentiles. They exclude optimization, model-structure and future-economics uncertainty; they are not full predictive intervals.}
+\[
+\text{LTV}_{12}=\sum_{m=1}^{12}\frac{\operatorname{E}[c_m]}{(1.01)^m},
+\qquad \text{net LTV}_{12}=\text{LTV}_{12}-\text{CAC}.
+\]
+\Evidence{$c_m$ is monthly contribution per original acquired customer, including zeros for those who have left. The first receipt is discounted at $m=1$ (saved age index 0). \VAR{economics_assumption}}
+\FullFig{forecast-detail.pdf}{1.7in}
+\Section{Test prediction against outcomes we withheld}
+\VAR{backtest_sentence}
+\VAR{latest_valuation_sentence}
+\Boundary{The shared joining-cohort trend may miss deterioration within a particular segment; inspect the separate recent-cohort fit diagnostic. Forecast LTV and historical average CAC do not identify the causal return on the next advertising dollar. Cash payback remains undiscounted.}
+
+\NewPage
+\PageTitle{07 / RANDOMIZED EVIDENCE}{A campaign must beat\newline its no-campaign baseline}{Start from every assigned eligible prospect, including people who never buy. Their zero outcomes belong in the denominator.}
+\VAR{experiment_table}
+\Evidence{Source: \texttt{experiment\_summary.csv} and \texttt{experiment\_effects.csv}. Each experiment keeps its own assignment roster, control and prespecified follow-up window. Organic purchases by control members remain control outcomes.}
+\FullFig{experiment-effects.pdf}{2.45in}
+\Evidence{These are point estimates over the tested window, not certain rankings. The analysis tables separately report uncertainty for the conversion-rate difference.}
+\Section{Compare contribution using the same transformation}
+For each arm, net revenue less variable costs gives contribution. Compare arm means per eligible prospect; then subtract the treatment's additional media cost per assigned prospect. Purchases that would have occurred without the campaign are part of the baseline.
+\[
+\Delta\text{contribution after media per prospect}
+=\frac{C_T-M_T}{N_T}-\frac{C_C-M_C}{N_C}.
+\]
+\Boundary{The experimental window is not a lifetime horizon. Do not multiply a conversion lift by the average predicted LTV of observed buyers and call the result experimentally established lifetime incrementality.}
+
+\NewPage
+\PageTitle{08 / THE MANAGEMENT DECISION}{Connect the evidence\newline before choosing the next move}{The task is to judge whether the business is improving and identify the next measurement or operating action.}
+\VAR{decision_table}
+\Section{A defensible conclusion}
+\VAR{progress_sentence}
+\Section{Learner judgment and next action}
+\textbf{Judgment:} \VAR{learner_verdict}
+\par\textbf{Recommended action:} \VAR{learner_action}
+\Section{Carry the decision into action}
+\par\begin{tabularx}{\linewidth}{@{}p{.23\linewidth}Y@{}}\toprule
+\textbf{Responsibility}&\textbf{Output needed before acting}\\\midrule
+Marketing + Product&State the customer objective, eligible population and definition of success.\\
+Engineering + Analytics&Preserve source meaning, the person key, observation cutoffs and tested SQL transformations.\\
+Operations + Marketing&Verify the final recipients or rollout configuration and own the release decision.\\
+Evaluation&Keep assignment and nonconverters; assess the outcome over the prespecified comparison window.\\\bottomrule
+\end{tabularx}\par
+\Takeaway{Decide from the evidence that exists. Name the uncertainty that could change the decision, and make the next action produce the missing evidence.}
+\Section{Reproducibility and sources}
+All numerical tables are saved SQL or model outputs. The chart manifest binds each figure to those files. The report manifest records file hashes, model metadata and the compiler. SQL scripts, editable \LaTeX{} and original diagram sources accompany this PDF.
+\Evidence{Conceptual references: Juan Orduz, \emph{Revenue Retention and Customer Lifetime Value with NumPyro} (public walkthrough); Gil Bouhnick, \emph{Cohort Analysis} (MobileSpoon, 2019). This lab uses original synthetic data and explicit contribution costs; it does not copy article images or treat an article's transaction commission as its own contribution margin. Archify 3.2.0, MIT, pinned source included with notices. See \texttt{docs/visual-sources.md} for links and license details.}
+\end{document}

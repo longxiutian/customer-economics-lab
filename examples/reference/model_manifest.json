@@ -1,0 +1,39 @@
+{
+  "code_sha256": "8bd9e740f743aaa9aa51e8489cfc242cf17ab03f5ebaf4906a600b225f1d85cf",
+  "input_hashes": {
+    "cohort_acquisition_costs.csv": "f6e281bf5dc350639f6dbc6c7ed030893d1e37d2e12d7e3bb1f3d09f7fc5837f",
+    "cohort_age_summary.csv": "daf929a4b0964a8c3769446a913a3ffc222cf7b5312c683697597ceda6d12dd8",
+    "cohort_cash_economics.csv": "cfbb8c03ddad84aa799ccca60d6f3d7e8e874472e7657c98e4d7260009753ebb"
+  },
+  "output_hashes": {
+    "model_summary.json": "aaae7c19e9466eedb2103435e4ffa074ee92a04bdb6aff0877b9930df494f4e9",
+    "posterior_draws.json": "021cdfdfac22911277ca84687222f57d19d4416d31e83407e043cd2e1c13a44b",
+    "tables/backtest.csv": "45d50c461421f12bc58c61e4dc93f1fa6f7984998188ec5bd339c94bec049e2e",
+    "tables/cohort_valuation.csv": "1dff0c7b1aafa6b1fc347ecf1a6013f1971ff2671b700ee4bd67fd230f107175",
+    "tables/cohort_valuation_by_segment.csv": "d2aac0610ec26f887f0cd78067e422892253582bd4da1a943d373d329ee504a2",
+    "tables/forecast_curve.csv": "235ee2758b69051fa12392eb3630865b2e265a25582957acfdb38bc1f70ff5f8",
+    "tables/model_fit_checks.csv": "2ca7dfc0123f58563845520df934beb7949c3d4501908be31a45294316e317fe",
+    "tables/valuation_backtest.csv": "ab4ad826d8f5eb26252fab59581f5758e38d53a5eddd1f543446423fb47aad53"
+  },
+  "schema_version": 1,
+  "settings": {
+    "backend": "cpu",
+    "discount_rate": 0.01,
+    "draws": 400,
+    "float_precision": "float64",
+    "guide": "AutoNormal",
+    "horizon_months": 12,
+    "init_scale": 0.05,
+    "optimizer": "ClippedAdam(0.008)",
+    "seed": 20261116,
+    "steps": 3000
+  },
+  "versions": {
+    "jax": "0.12.0.1",
+    "jaxlib": "0.12.0.1",
+    "numpy": "2.5.4",
+    "numpyro": "0.22.0",
+    "pandas": "2.3.3",
+    "scipy": "1.18.1"
+  }
+}

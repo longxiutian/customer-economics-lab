@@ -1,0 +1,97 @@
+{
+  "archify": {
+    "archive_sha256": "0b95ed9a76fbbbc00c0725852b99bde99f8f22ae5d74e22146b0a0b130447628",
+    "archive_url": "https://codeload.github.com/tt-a1i/archify/zip/25cf37080fc8b1dbe758a4efc3935b55f3327083",
+    "commit": "25cf37080fc8b1dbe758a4efc3935b55f3327083",
+    "files": 203,
+    "license": "MIT",
+    "local_license": "vendor/archify/LICENSE",
+    "project": "Archify",
+    "version": "3.2.0"
+  },
+  "diagrams": {
+    "customer-journey": {
+      "html": "diagrams/customer-journey.html",
+      "json": "diagrams/customer-journey.json",
+      "renderer": "native Archify timeline",
+      "sha256": "87a6d1c24eef7004692ec1ad1e43b6dcd6813098eca53c71b41173acd199df8f"
+    },
+    "journey-build-skill": {
+      "html": "diagrams/journey-build-skill.html",
+      "json": "diagrams/journey-build-skill.json",
+      "renderer": "native Archify workflow",
+      "sha256": "084ee37f91410c4329921215f475ca1be436f6adb9094022e879199a3165e5ef"
+    },
+    "journey-save-time": {
+      "html": "diagrams/journey-save-time.html",
+      "json": "diagrams/journey-save-time.json",
+      "renderer": "native Archify workflow",
+      "sha256": "e357b990b65c6fec0ed9bebd1122e7a05305ab63b368ecf8f4502a529857b135"
+    },
+    "source-systems": {
+      "html": "diagrams/source-systems.html",
+      "json": "diagrams/source-systems.json",
+      "renderer": "native Archify dataflow",
+      "sha256": "ce7c444cc1ef6e699be4f05b60ab1e446010ed076dc624bdeb6a5f0e39a34e7e"
+    }
+  },
+  "sources": [
+    {
+      "file": "people.csv",
+      "grain": "one person, including nonbuyers",
+      "rows": 5449,
+      "sha256": "7d91da008484efbd18a225af55fd458ff5363cf6cbc0ff9a5f9678c11d6f39ab",
+      "source": "CRM"
+    },
+    {
+      "file": "subscription_periods.csv",
+      "grain": "one scheduled subscription period",
+      "rows": 36870,
+      "sha256": "ce3bc3c5dba95e5e65fc87fba2a0b1e699cc01350675792d37b54678aaac4961",
+      "source": "Renewal system"
+    },
+    {
+      "file": "transactions.csv",
+      "grain": "one payment or refund event",
+      "rows": 45476,
+      "sha256": "178173cdf8aeb85776d5f951fafe34071099f4c1e2c4a07230b93588bf88ded2",
+      "source": "Finance"
+    },
+    {
+      "file": "product_events.csv",
+      "grain": "one observed interaction",
+      "rows": 58889,
+      "sha256": "3071ed6afa5ed8e0ab7ee22e98bead70f3987f4b527255b09567599da64cdad7",
+      "source": "Product"
+    },
+    {
+      "file": "feedback.csv",
+      "grain": "one submitted response",
+      "rows": 2591,
+      "sha256": "694fb5c9948a0df4215ebcb4500f783ea0af29f1926102d3d56682a451d79944",
+      "source": "Customer research"
+    },
+    {
+      "file": "campaign_spend.csv",
+      "grain": "one campaign-spending date",
+      "rows": 294,
+      "sha256": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057",
+      "source": "Marketing"
+    },
+    {
+      "file": "acquisition_attribution.csv",
+      "grain": "one acquired person and credited source",
+      "rows": 4617,
+      "sha256": "bd32d75c8eaaf8b573c3137d169dda0533d11f205b63de0e812d982129723ebe",
+      "source": "Marketing"
+    },
+    {
+      "file": "experiment_assignments.csv",
+      "grain": "one eligible person per experiment",
+      "rows": 1000,
+      "sha256": "b9bb80c1275a0ed8ffa2e35af566aef947a0a3b730590f49e82658f338521fc1",
+      "source": "Experiment platform"
+    }
+  ],
+  "verification": "Native renderer validation passed; browser and visual review are separate development checks."
+}
