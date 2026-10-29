@@ -17,7 +17,7 @@ Use this supporting skill at the reporting stage of the repository's main `SKILL
 
 ## Write for an executive who will hand the work to a team
 
-Begin with a concise business description: what is sold, who buys it, how renewal and revenue occur, the decision horizon and what management needs to decide. Give the recommendation and the two or three facts that justify it on the first page. State the evidence period separately from the report build date.
+Begin with the cover titled "Studio North: are we moving in the right direction? A customer-base analysis of cohort-based LTV", followed by an automatic table of contents. The executive summary is the first substantive page. Give a concise business description, the recommendation and the two or three facts that justify it there. State the evidence period separately from the report build date. The cover credit is three lines: "Kenan-Flagler Business School", "MBA 743: Managing Customer Data", and "Mod II 2026". Use "Studio North and the customer journey" for the opening section. Include explicit author-year citations at each adapted method and a linked references page in the contents. Cite Fader and Hardie for sBG, Orduz for the adapted Gamma revenue and separate neural comparison, and link the bundled source-notebook asset and its license/provenance. Distinguish source methods from lab adaptations.
 
 The organizing question is whether successive acquisition cohorts are producing a more durable and economically attractive business. Connect retention, contribution, acquisition efficiency and cash recovery. Acquisition-channel decisions are subordinate to this company-level question.
 
@@ -35,7 +35,7 @@ Provide dedicated separator pages between major report sections and before the t
 
 Explain the business mechanism and observed data the model represents before displaying forecast curves or LTV results. Name the likelihood, parameter meanings, sources of heterogeneity, right-censoring treatment, estimation method, extrapolation horizon and economic conversion. Distinguish customer retention from revenue per retained customer and contribution from revenue. Do not imply that the model is the source article's exact implementation when it is an adaptation.
 
-Motivate extrapolation early in the report: explain how a model extends an immature cohort beyond its observed history, then show solid observed paths and dashed forecast continuations. A plain-language model description must precede that figure; detailed parameters and validation belong later. Do not bury the purpose of the model in an appendix after presenting its LTV results.
+After the observed cohort, segmentation and company-economics sections, use the section "Model-based forecasting of cohort trajectories" to explain how the model extends immature cohorts beyond their observed history. Bring the renewal-risk and expected-revenue equations into that explanation, then show solid observed paths and dashed forecast continuations. Detailed parameter estimates and validation remain in the appendix. The model explanation must precede every forecast exhibit.
 
 Use observed data at comparable ages to establish the diagnosis. Label forecasts and intervals. State what uncertainty the intervals include and omit. Keep a fitted-value diagnostic distinct from a genuinely held-out prediction check. A predictive LTV model does not identify causal acquisition effects.
 
@@ -52,6 +52,14 @@ Use one broad business journey in the opening firm description, inspired by a to
 Keep heatmap fills light so all retention numerals use the same dark ink. In the cash-after-CAC triangle, numerals are red below zero and dark green at zero or above. Do not switch black/white merely because a cell fill becomes dark. Preserve the sign of values close to break-even after rounding.
 
 Compare segmentation strategies on the same customers, outcome horizon and group count. Show reduction in within-group variance relative to the unsegmented outcome, with sample sizes and residual heterogeneity. A larger number of cells is not evidence of a better operational segmentation by itself. Distinguish baseline group differences from improvement within a group over acquisition cohorts; channel differences remain descriptive.
+
+## Return to journey evidence and strategic segments
+
+Connect conceptual friction hypotheses to recorded events and expressed perceptions. Use a fully observed exposure window before the outcome; audit renewal timing, effective cancellations and refunds. Preserve original-customer denominators and distinguish censored outcomes from zeros after churn. Exclude both experimental arms. A refund does not itself prove that access ended; do not infer unrecorded cancellation decisions.
+
+For this snapshot, use days [0,27) after first payment, first-renewal retention as primary, and age-5 retention plus ages 1–5 contribution as follow-through. Retain raw nominal survey categories, no recorded response and unanswered items separately. Invitations are unknown. Exclude later ongoing-use feedback from early groups. Show all cohorts within need, contrasts with uncertainty, common-support coverage and group composition. Survey contrasts align acquisition month, channel and need; event contrasts align acquisition year, channel and need. A small difference is not equivalence or a causal conclusion about friction.
+
+After estimation, add a decision-relevant acquisition-segment breakout using saved posterior draws and the original model path functions. Reconcile every saved baseline cell before display. Select examples by maturity and assignment, not favorable outcomes. Show sample sizes, tracked CAC, discounted value, forecast share and observed versus forecast payback. Check rankings across cohorts and separately for fully observed pairs. Do not assign costs or model LTV to post-acquisition diagnostic groups, treat average CAC as marginal CAC, or infer an intervention effect from the observational model.
 
 ## Required appendices
 

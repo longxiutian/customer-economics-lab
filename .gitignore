@@ -10,6 +10,7 @@ outputs-v2-audit/
 tools/node_modules/
 lab_state.json
 *.aux
+*.toc
 *.log
 *.out
 *.fls

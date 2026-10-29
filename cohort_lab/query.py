@@ -86,6 +86,13 @@ def run_query(data_dir: Path, output_dir: Path, sql: str, *, max_rows: int = 100
             receipt["model_manifest_sha256"] = _hash(output_dir / "model_manifest.json")
             table_files.update({Path(name).name: digest for name, digest in model["output_hashes"].items()
                                 if name.startswith("tables/") and name.endswith(".csv")})
+        for filename, module, validator in [("diagnostics_manifest.json", "diagnostics", "validate_diagnostics"),
+                                            ("postestimation_manifest.json", "postestimation", "validate_postestimation")]:
+            if (output_dir / filename).exists():
+                import importlib
+                extra = getattr(importlib.import_module("cohort_lab." + module), validator)(output_dir)
+                table_files.update(extra["output_hashes"])
+                receipt[filename.replace(".json", "_sha256")] = _hash(output_dir / filename)
         receipt["analytical_table_hashes"] = table_files
         connection = duckdb.connect(":memory:", config={"threads": 1, "memory_limit": "512MB",
                                                           "autoload_known_extensions": False,

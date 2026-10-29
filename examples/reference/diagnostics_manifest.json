@@ -1,0 +1,35 @@
+{
+  "code_sha256": "5593b671ef741a468e2d4b168647b3018aaa02a699709b1bafe5882c44bbd8dc",
+  "estimator": "Descriptive differences standardized to empirical channel \u00d7 need \u00d7 acquisition-year (events) or acquisition-month (survey groups) frequencies among outcome-observed members, restricted to common-support strata with n>=2 per comparison group. Pooled and adjusted comparisons use that same support; full-sample crude differences are also saved. Approximate unadjusted 95% normal intervals use sample variances, independent people and fixed weights; no equivalence or causal claim. Residual confounding remains.",
+  "input_hashes": {
+    "friction_subjects.csv": "a4fed44132628a96499558d5ec22ecac0b5f9b5cf2aeea30dc2667e6fc321a23",
+    "friction_timing_audit.csv": "7db7c4e05c74b3d4e0470a241ea10dc420e45057e9c0d7761d76314ac0a7a35d"
+  },
+  "output_hashes": {
+    "friction_balance.csv": "591cc205299a54f776aa44e52c2b575f76d9298fe09db481a3c1079c5a79cc17",
+    "friction_contrasts.csv": "ce8e63208ead4a188b84af6ad0bf61bd42dbcbb75a98065c38e6d1efa49aa4ad",
+    "friction_refund_sensitivity.csv": "a87224f3f984e6648f1d56415386b51e96b63e91454746db4bacfe41c93b1a1f"
+  },
+  "refund_sensitivity": "Primary denominators retain members with in-window refunds; refunds do not establish exit. A separate descriptive sensitivity excludes them. Cancellation-request times are unavailable; the window precedes recorded renewal outcomes, not necessarily unrecorded decisions.",
+  "scope": "Recorded behaviour and perceptions in days [0,27) after first payment; both experimental arms excluded. No survival selection. First renewal primary; age5 retention and ages1\u20135 contribution secondary. No CAC assigned to diagnostic groups.",
+  "survey": "Earliest onboarding response inside the window; timestamp ties use response_id. Raw nominal categories, no-response and unanswered-item remain distinct. Invitations are unobserved. The ongoing-use wave is not pooled into these diagnostics.",
+  "timing_audit": {
+    "acquired_experimental": 188.0,
+    "age1_observed_customers": 5410.0,
+    "all_acquired": 5891.0,
+    "diagnostic_customers": 5703.0,
+    "earliest_renewal_days": 27.95833333333333,
+    "eligible_paid_non_test": 5703.0,
+    "exposure_days": 27.0,
+    "feature_window_violations": 0.0,
+    "in_window_effective_cancellations": 0.0,
+    "in_window_period_ends": 0.0,
+    "in_window_refunds": 342.0,
+    "incomplete_exposure": 0.0,
+    "mature_customers": 4278.0,
+    "other_nonexperimental_channels": 0.0,
+    "outcome_transactions_before_landmark": 0.0,
+    "renewals_before_landmark": 0.0
+  },
+  "version": 1
+}

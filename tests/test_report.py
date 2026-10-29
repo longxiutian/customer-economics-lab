@@ -35,7 +35,7 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
         return actual_save(fig,directory,name)
     monkeypatch.setattr(report,"_save",capture)
     manifest=report.build_charts(output)
-    assert len(manifest["figures"])==8
+    assert len(manifest["figures"])==9
     experiment=manifest["figures"]["experiment-effects"]["display_values"]
     effects=pd.read_csv(output/"tables/experiment_effects.csv")
     np.testing.assert_allclose(experiment["ci_lower"],effects.incremental_contribution_after_media_per_prospect_ci_lower)
@@ -171,7 +171,7 @@ def test_ucv_report_preserves_four_categories_and_explicit_missingness():
 def test_executive_template_has_business_model_and_required_appendices():
     template = (report.ROOT / "templates/customer-economics-report.tex.j2").read_text()
     assert "Studio North sells a monthly creative-work membership" in template
-    assert template.index(r"\VAR{model_description}") < template.index("ltv-and-cac.pdf")
+    assert template.index("The renewal mechanism") < template.index("ltv-and-cac.pdf")
     assert r"\VAR{parameter_table}" in template
     assert r"\VAR{ucv_tables_first}" in template and r"\VAR{ucv_tables_second}" in template
     assert "Management actions and accountability" in template

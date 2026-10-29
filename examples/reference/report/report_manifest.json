@@ -1,23 +1,24 @@
 {
-  "analysis_summary_sha256": "f73bb7932c43da67dbfc391770d1c5e48b7a2d7d23a79479fb0586cfae3aead3",
+  "analysis_summary_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898",
   "benchmark_manifest_sha256": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83",
   "build": {
     "engine": "WSL pdflatex",
     "overfull_boxes": 0,
-    "pdf_sha256": "1ea5b971b7fe8b140bd9ab2611673e5f7b22d2972ef7beea66f5d27ffdfad0ae",
+    "pdf_sha256": "243667d8469f74fd7411e9932318fb0ce423dda32c59a4656d775b9cabb1df64",
     "source_date_epoch": 1794787200
   },
-  "chart_manifest_sha256": "b32f32c0214c980fe8940a38f763d9d136259d0f043260ba2851c88fb9db61ed",
+  "chart_manifest_sha256": "ac94ff1c3771efbbc93921292bc80c4a2edba4eac4f4fe6baa23fe8e7c2975b4",
   "compiled": true,
-  "diagram_manifest_sha256": "ffe5806c841b3f8a3945349aa89e3ea33e5e33b119a6aea05407cd454289fc33",
+  "diagnostics_manifest_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
+  "diagram_manifest_sha256": "bf054922ca2fd7f6b25aa905900ac2539456b7d1c7f242ff2d034f0491059e70",
   "display_formatter_sha256": "ed900a6583350a2e867c353734045409e76e261038be75354794dc0f1a066372",
   "executive_metrics_sha256": "b7f521c70979b5a88ae9f8cfbf0cda9c34e396c86abdfc39fe153f006abb1694",
-  "exhibit_registry_sha256": "405db3077c4698fac13ce71ffbced2ff3f7df0cc6a3c63702ee0595eb5d872d2",
-  "figure_count": 15,
+  "exhibit_registry_sha256": "191e49746cd68fdeb9faaf28a0e899b29d1eb8b55a3ffd2be32de43271780505",
+  "figure_count": 17,
   "learner_choices_sha256": null,
   "matched_cohort_comparison_sha256": "cf105f234fbf384aa142756c3e62f4636aa9aa0ab942fdc0346ae82fab59d2f7",
   "model_summary_sha256": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6",
-  "pages": 33,
+  "pages": 43,
   "parameter_summary_sha256": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6",
   "pdf": "report/customer-economics-report.pdf",
   "pdf_copyability": {
@@ -27,6 +28,7 @@
     "source_filenames": 8,
     "status": "passed"
   },
+  "postestimation_manifest_sha256": "d264235587604b71405433be0b9233af3317f33e1ade05404dc70578d2de450c",
   "renewal_window_evidence": {
     "age_month": 5,
     "earlier": {
@@ -202,11 +204,11 @@
     "total_cells": 4,
     "weighting": "Original acquired customer counts within each six-cohort window"
   },
-  "report_skill_sha256": "da80b5e1e06173e101f2bcfc3e7dfd33914721d60f54475493ff3784346761c1",
-  "report_source_sha256": "07cb9c9c249c0ca9744581750c590759290712c8d202b8c6f48715e349dfa97e",
+  "report_skill_sha256": "fd7240d088c42fa6d41126a560e24f902f7f1f262645da5684d48d269441fae4",
+  "report_source_sha256": "ca93af1a82d7fa18e78ef2f850df2238691d954f76434ba58246757e7fac7ec3",
   "source_date_epoch": 1794787200,
-  "style_sha256": "bc4757cafb2353a78f6d5632b85b5076bc28f6a0502f45418b071834e177b19f",
-  "table_count": 20,
+  "style_sha256": "0db51ce59cae1c8b4481582e1307ccb5c971f1f069b3e7a84d1db3f94a57598f",
+  "table_count": 28,
   "tables": {
     "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
     "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
@@ -217,9 +219,12 @@
     "company_totals.csv": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
     "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
     "forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b",
-    "model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3"
+    "friction_cohort_summary.csv": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
+    "model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3",
+    "segment_forecast_curves.csv": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
+    "strategic_segment_breakout.csv": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
   },
-  "template_sha256": "e98e1d6cb796536bba25384346c7fa3148ab8dad7ee71ce6b1903c9a172afb9a",
+  "template_sha256": "b3a9ccfb2142fb3dc72c6fa52510817268b749847e2b85c3e0985436b384abf9",
   "ucv_sha256": "38e82c54d8359f9516219946bcd4e921621fce067bba93bd3894f8f574cec978",
   "upstream_style_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
   "upstream_style_version": "2026-08-22-v1.1",

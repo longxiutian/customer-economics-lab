@@ -1,4 +1,5 @@
 {
+  "diagnostics_manifest_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
   "figures": {
     "channel-segment-retention": {
       "display_values": {
@@ -356,6 +357,53 @@
         "forecast_curve.csv"
       ]
     },
+    "journey-cohort-diagnostics": {
+      "display_values": {
+        "cohorts": [
+          "2024-01-01",
+          "2024-02-01",
+          "2024-03-01",
+          "2024-04-01",
+          "2024-05-01",
+          "2024-06-01",
+          "2024-07-01",
+          "2024-08-01",
+          "2024-09-01",
+          "2024-10-01",
+          "2024-11-01",
+          "2024-12-01",
+          "2025-01-01",
+          "2025-02-01",
+          "2025-03-01",
+          "2025-04-01",
+          "2025-05-01",
+          "2025-06-01",
+          "2025-07-01",
+          "2025-08-01",
+          "2025-09-01",
+          "2025-10-01",
+          "2025-11-01",
+          "2025-12-01"
+        ],
+        "future_outcomes_imputed": false,
+        "needs": [
+          "save_time",
+          "build_skill"
+        ]
+      },
+      "files": [
+        "journey-cohort-diagnostics.pdf",
+        "journey-cohort-diagnostics.png"
+      ],
+      "notes": "All 24 acquisition cohorts within each need; paid non-experimental people. Features in [0,27 days). First-renewal and age5 outcomes are separate; future outcomes stay missing. Channels are pooled here; adjusted contrasts retain channel and year.",
+      "sha256": {
+        "journey-cohort-diagnostics.pdf": "f762fc1ec43553ddc7a2aae021b52b602561b08bd8617923b35d8d51373ae885",
+        "journey-cohort-diagnostics.png": "d0cfc57e7995c16f7c425eff67ac06e2d34cfa239197936d4ea9a6863c541102"
+      },
+      "sources": [
+        "friction_cohort_summary.csv"
+      ]
+    },
     "ltv-and-cac": {
       "display_values": {
         "experiment_months": [
@@ -523,10 +571,37 @@
         "forecast_curve.csv",
         "cohort_valuation.csv"
       ]
+    },
+    "strategic-segment-paths": {
+      "display_values": {
+        "reconciliation": {
+          "atol": 1e-08,
+          "cells": 98,
+          "cohorts": 24,
+          "rtol": 1e-09,
+          "status": "passed"
+        },
+        "refit": false,
+        "selected_cohort": "2025-07-01"
+      },
+      "files": [
+        "strategic-segment-paths.pdf",
+        "strategic-segment-paths.png"
+      ],
+      "notes": "Frozen posterior expected paths, no refit; observed solid points, forecast dashed continuations, 5th\u201395th parameter bands. CAC is acquisition-cell tracked spending / original customers; cash undiscounted. Selection by maturity and assignment.",
+      "sha256": {
+        "strategic-segment-paths.pdf": "a8062f535f2bf6f6ec3370e37c1f411dc7213818fcb96d8ab641ba8baa28b8a1",
+        "strategic-segment-paths.png": "dd3707ff1f6a8fdfde167d71a4d3cfa5de9b8580a4e0fb429fa6a4b26a298310"
+      },
+      "sources": [
+        "segment_forecast_curves.csv",
+        "strategic_segment_breakout.csv"
+      ]
     }
   },
   "model_summary_sha256": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6",
   "numerical_policy": "Select/pivot saved SQL/model outputs; explicit season-matched presentation comparisons retain windows, weights and source hashes.",
+  "postestimation_manifest_sha256": "d264235587604b71405433be0b9233af3317f33e1ade05404dc70578d2de450c",
   "source_date_epoch": 1794787200,
   "sources": {
     "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
@@ -538,7 +613,10 @@
     "company_totals.csv": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
     "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
     "forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b",
-    "model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3"
+    "friction_cohort_summary.csv": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
+    "model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3",
+    "segment_forecast_curves.csv": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
+    "strategic_segment_breakout.csv": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
   },
   "version": 1
 }

@@ -4,7 +4,7 @@
   "all96_retention_series_checked": true,
   "all_slides_visually_reviewed": true,
   "business": "Studio North",
-  "changes": "Refreshed all numerical exhibits from version 4 observed records; one broad introductory business map; 24 cohort table rows, 96 within-cell curves and 24 company layers; report section and semantic-color guidance.",
+  "changes": "Updated report handoff and speaker notes for cover, contents, observed economics, model explanation, journey diagnostics and strategic post-estimation. All numerical exhibits are unchanged from the v4 release.",
   "cohorts": "January 2024\u2013December 2025",
   "editable_chart_count": 5,
   "editable_table_count": 5,
@@ -13,10 +13,11 @@
   "numbered_tables": 5,
   "observation_cutoff": "2026-01-01 exclusive",
   "pdf_page_count": 12,
-  "pdf_sha256": "58dfcab8aad0f17cc425bd99d543a43cd1be4e1477ca166d8a400119c0494c42",
-  "pptx_sha256": "fb53a57718373cd96343c3e33aacd790d9a252ae7f3ba90e48a3fc3eb05fd91f",
+  "pdf_sha256": "fbb8705a4da14127e2d835fa8ccd2247b555bd99c27f5f1a4edb3d0f612392fb",
+  "pptx_sha256": "20b2f4408a980732ad08b705fa96536fcfbf7eec997289a134fa5bd9f07bfa9c",
   "slide_count": 12,
-  "source_output_run": "v4-release-verified-r2/run-a",
+  "slides_1_to_11_native_render_pixel_identical": true,
+  "source_output_run": "v5-release-publish/run-a",
   "source_table_hashes": {
     "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
     "cohort_totals.csv": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c",
@@ -25,7 +26,9 @@
     "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
     "experiment_summary.csv": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc"
   },
+  "unchanged_native_chart_and_workbook_parts": 15,
+  "unchanged_numerical_tables": 4,
   "validation_receipt_status": "pass",
-  "version": "4.0.0",
-  "visual_qa_note": "All twelve native PowerPoint renders were inspected. The conservative table-height warning on slide 7 was checked: all 24 cohort rows, explanation and footer fit without overlap."
+  "version": "5.0.0",
+  "visual_qa_note": "Native PowerPoint renders inspected. Slides 1\u201311 are pixel-identical to v4. Slide 12 guidance fits. The conservative slide-7 table-height warning was checked against the native render: all 24 cohort rows and the footer fit."
 }
