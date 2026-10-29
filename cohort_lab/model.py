@@ -1,7 +1,7 @@
 """Hierarchical shifted-Beta-Geometric retention and Gamma revenue forecasts.
 
 Persistent customer heterogeneity is integrated out of the conditional renewal
-likelihood. The inference model is not the simulator's Beta mixture. The Gamma
+likelihood. Source generation is separate from the inference workflow. The Gamma
 revenue component adapts Orduz; his neural-network approach is a separately
 labelled validation comparison, never the source of executive valuations.
 """
@@ -13,8 +13,10 @@ import json
 import os
 from pathlib import Path
 
-os.environ.setdefault("JAX_PLATFORMS", "cpu")
-os.environ.setdefault("JAX_ENABLE_X64", "true")
+# The released classroom model has a fixed CPU/float64 execution contract.
+# Override inherited accelerator defaults before JAX is imported.
+os.environ["JAX_PLATFORMS"] = "cpu"
+os.environ["JAX_ENABLE_X64"] = "true"
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import numpy as np

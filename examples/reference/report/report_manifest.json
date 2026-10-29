@@ -1,39 +1,226 @@
 {
-  "analysis_summary_sha256": "d91a64257dc1bc291981ad62cc338c927b888f803e8595c53d9257582cceda79",
-  "benchmark_manifest_sha256": "d71ae0fcc90d13deade992f7652937ce5cdb3e885bd249696bd34ae9bff66a9e",
+  "analysis_summary_sha256": "1123bafa372d49517dc73d935a6e50cf900bedd3a0ff436059fd3c9590157b53",
+  "benchmark_manifest_sha256": "54eaebebbfc139cba741795a2522b078de35d1c41376bf2a0f9d15f068a7bad6",
   "build": {
     "engine": "WSL pdflatex",
     "overfull_boxes": 0,
-    "pdf_sha256": "bdebc11d72824807c7f506cf8bc1279a7f195174b86d2cb518fdeaa1c297ecae",
+    "pdf_sha256": "d6fda1de1e7b96b047438dcbaf50aca4e0a7178a9476703c38c5cd69db3beaa3",
     "source_date_epoch": 1794787200
   },
-  "chart_manifest_sha256": "882bc4c3391dcae8ade3b6a35d0833032f9541ea05bca388055c11de65a036ba",
+  "chart_manifest_sha256": "02d2edd541b39279a12f082047510ccdcbde7576cd67d4d1f2be79862e351120",
   "compiled": true,
-  "diagram_manifest_sha256": "b67193f5c4168fb98bf33426bce9aa0e7d6569ab5e423258b5b9873fa4b08203",
-  "executive_metrics_sha256": "a650dd0fb745341a4b0d8f8952a4cc41f64c187ed07b632efab2902b7c8c3a36",
+  "diagram_manifest_sha256": "82c33999539535c96c9326eeb03c3232b2a0d6a458f9e77bfc17dfc26730616f",
+  "executive_metrics_sha256": "262b7e56abebf1f7026a20cc94d40027b5ccda7a070a4a74777f6535fa7b9007",
+  "exhibit_registry_sha256": "75bbb241d96039433b2ea512b60bc83524181bbc0217163f3ff917956e5d95f6",
+  "figure_count": 16,
   "learner_choices_sha256": null,
-  "model_summary_sha256": "f7614537a7c613ac54ff8cec303f227338f6a618e5e2ebe7bd5e715de717e990",
-  "pages": 14,
-  "parameter_summary_sha256": "fd7d9ae6857cc427e9472c77a8fd188dd3d4594287d13483e6b9cbe7e8e44603",
+  "matched_cohort_comparison_sha256": "33c0ae4011047c0c3f3e85b5ffba8fc972e51e0fd94eb7f5ed83d8d559dff88d",
+  "model_summary_sha256": "73c72f5d81fbc805418defd5cb98d80275b2715ddfeb101ddede212e11a98bf3",
+  "pages": 22,
+  "parameter_summary_sha256": "8e0d628a5e0264c378ad3037b44dc444ea4f2c20285961a65acaa2b3d9164a54",
   "pdf": "report/customer-economics-report.pdf",
-  "report_skill_sha256": "b8e5fa69aaee13e80f3d3637125ececa2c54597560e52d611f996c3e8b56c264",
-  "report_source_sha256": "abf77c3e0ff4e2e439505319f37cd66d1cb7f0228cf37b9986462fc2acab6388",
-  "source_date_epoch": 1794787200,
-  "style_sha256": "083ce442deed64da933834cbf69ecaaf739e79a2ed6579759079c76b60a209c1",
-  "tables": {
-    "cohort_age_summary.csv": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a",
-    "cohort_cash_economics.csv": "e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8",
-    "cohort_totals.csv": "58268416b9677bfd613bf506d5116788d50a22b931630d65931f91beb2f6a471",
-    "cohort_valuation.csv": "7f4efac9dd4a17cd9d7600cb4079f3e0885cfe2bee672b12236f4667b95e9f0c",
-    "company_month.csv": "349f078771d9413d5029d159eff58e320e4aaf84979a97ce9f2970f0ba8c73f3",
-    "company_totals.csv": "47ce2d8f100f8ac9ead68e031becdb2adc82a13e6cbb759f11e193c690c284b6",
-    "experiment_effects.csv": "bad9d7363b979bbaea8a74d6ed0909dad57bc8f6aa50c80204ac5c9f799fd406",
-    "forecast_curve.csv": "c61e51e5d5f3149843d2bcb786ced698ac2e4da10c9469a559c6b3b64c0dc58f",
-    "model_fit_checks.csv": "325eec81ccf3d3dd0077d4ee76714e98f4dc8cad91360058d18c5911eb3b04b0"
+  "pdf_copyability": {
+    "commands": 2,
+    "distinct_fields": 52,
+    "extractor": "pypdf",
+    "source_filenames": 8,
+    "status": "passed"
   },
-  "template_sha256": "daf8339eb10f89863d2eb33e00170d246ade01c7ad774e6417d4aa2705a269c7",
-  "ucv_sha256": "d70d705c3a64f1c99247a1aca2c46ba9d72f028d6707934a47b8e2c0e5d6d320",
+  "renewal_window_evidence": {
+    "age_month": 5,
+    "earlier": {
+      "age_month": 5,
+      "blended_cac": 108.79461875547764,
+      "cash_after_cac_per_customer": 1.534259421560035,
+      "cohort_weights": {
+        "2024-01-01": 0.15687992988606486,
+        "2024-02-01": 0.1691498685363716,
+        "2024-03-01": 0.17002629272567923,
+        "2024-04-01": 0.17002629272567923,
+        "2024-05-01": 0.16739702015775634,
+        "2024-06-01": 0.16652059596844873
+      },
+      "cohorts": [
+        "2024-01-01",
+        "2024-02-01",
+        "2024-03-01",
+        "2024-04-01",
+        "2024-05-01",
+        "2024-06-01"
+      ],
+      "contribution_per_customer": 110.3288781770377,
+      "n_acquired": 1141,
+      "n_cohorts": 6,
+      "paid_cells": [
+        {
+          "channel": "search",
+          "n_acquired": 362,
+          "n_retained": 181,
+          "primary_need": "save_time",
+          "retained_share": 0.5
+        },
+        {
+          "channel": "search",
+          "n_acquired": 299,
+          "n_retained": 167,
+          "primary_need": "build_skill",
+          "retained_share": 0.5585284280936454
+        },
+        {
+          "channel": "partner",
+          "n_acquired": 278,
+          "n_retained": 148,
+          "primary_need": "save_time",
+          "retained_share": 0.5323741007194245
+        },
+        {
+          "channel": "partner",
+          "n_acquired": 202,
+          "n_retained": 123,
+          "primary_need": "build_skill",
+          "retained_share": 0.6089108910891089
+        }
+      ],
+      "paid_fixed_mix_retention": 0.5425065731814198,
+      "paid_raw_retention": 0.5425065731814198,
+      "retained_share": 0.5425065731814198,
+      "year": 2024
+    },
+    "experiment_excluded": {
+      "earlier": {
+        "blended_cac": 108.79461875547766,
+        "cash_after_cac_per_customer": 1.5342594215600354,
+        "contribution_per_customer": 110.32887817703768,
+        "excluded_test_buyers": 0,
+        "excluded_test_spend": 0.0,
+        "n_acquired": 1141,
+        "retained_share": 0.5425065731814198
+      },
+      "later": {
+        "blended_cac": 85.66339973439575,
+        "cash_after_cac_per_customer": 47.50894422310757,
+        "contribution_per_customer": 133.1723439575033,
+        "excluded_test_buyers": 86,
+        "excluded_test_spend": 650.0,
+        "n_acquired": 1506,
+        "retained_share": 0.6367861885790173
+      },
+      "scope": "Same joining windows and age; exclude both experimental arms' buyers and all their observed contribution, and test-window campaign spending. Descriptive sensitivity, not causal adjustment."
+    },
+    "fixed_paid_mix": [
+      {
+        "channel": "search",
+        "primary_need": "save_time",
+        "weight": 0.3172655565293602
+      },
+      {
+        "channel": "search",
+        "primary_need": "build_skill",
+        "weight": 0.26205083260297984
+      },
+      {
+        "channel": "partner",
+        "primary_need": "save_time",
+        "weight": 0.24364592462751972
+      },
+      {
+        "channel": "partner",
+        "primary_need": "build_skill",
+        "weight": 0.17703768624014024
+      }
+    ],
+    "improved_cells": 4,
+    "joining_months": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "later": {
+      "age_month": 5,
+      "blended_cac": 81.4441457286432,
+      "cash_after_cac_per_customer": 51.05500628140703,
+      "cohort_weights": {
+        "2025-01-01": 0.146356783919598,
+        "2025-02-01": 0.146356783919598,
+        "2025-03-01": 0.15389447236180903,
+        "2025-04-01": 0.16268844221105527,
+        "2025-05-01": 0.22989949748743718,
+        "2025-06-01": 0.16080402010050251
+      },
+      "cohorts": [
+        "2025-01-01",
+        "2025-02-01",
+        "2025-03-01",
+        "2025-04-01",
+        "2025-05-01",
+        "2025-06-01"
+      ],
+      "contribution_per_customer": 132.49915201005024,
+      "n_acquired": 1592,
+      "n_cohorts": 6,
+      "paid_cells": [
+        {
+          "channel": "search",
+          "n_acquired": 485,
+          "n_retained": 274,
+          "primary_need": "save_time",
+          "retained_share": 0.5649484536082474
+        },
+        {
+          "channel": "search",
+          "n_acquired": 404,
+          "n_retained": 260,
+          "primary_need": "build_skill",
+          "retained_share": 0.6435643564356436
+        },
+        {
+          "channel": "partner",
+          "n_acquired": 336,
+          "n_retained": 212,
+          "primary_need": "save_time",
+          "retained_share": 0.6309523809523809
+        },
+        {
+          "channel": "partner",
+          "n_acquired": 336,
+          "n_retained": 243,
+          "primary_need": "build_skill",
+          "retained_share": 0.7232142857142857
+        }
+      ],
+      "paid_fixed_mix_retention": 0.6296504210337341,
+      "paid_raw_retention": 0.6335682254964766,
+      "retained_share": 0.6331658291457286,
+      "year": 2025
+    },
+    "observed_receipts": 6,
+    "standardization": "Paid channel-by-stated-need composition fixed to the earlier window; organic customers excluded",
+    "total_cells": 4,
+    "weighting": "Original acquired customer counts within each six-cohort window"
+  },
+  "report_skill_sha256": "d5c427cbb2feb6bc244dea41c4c21a71a297c428e185056c60ee3adb9149043c",
+  "report_source_sha256": "c458ec9340121987c7eeb4dcaad657de30e579d49a0b24b9fab0d66d46e23521",
+  "source_date_epoch": 1794787200,
+  "style_sha256": "2ae25d4ebd8ecd8dc42307bddffd9be2e607fa17d522b2cdf250a2d149c7a96f",
+  "table_count": 18,
+  "tables": {
+    "cohort_age_summary.csv": "08d1ce215a9cd9650ed1eb076f88df370ad22b13761d36ca1f8e77ccb1a8c99f",
+    "cohort_cash_economics.csv": "21e2b2803e85cb18aca9808dcd2d8af35d77ecfbb0e8a0d9e7869f5c04efde9e",
+    "cohort_economics_ex_tests.csv": "9dfcf2ebdcdeb20a478aa1de83ff1639823f91522b52ad9d7b1c835b337f1ccd",
+    "cohort_totals.csv": "41aaeb91c9ac00b2cfddaac722ff81896da28441276397be5253c73f39cfdb75",
+    "cohort_valuation.csv": "cf4daa7e31a6f82671938ad09179d883f04f939826e7965139dff057a3a0eafe",
+    "company_month.csv": "ec7e2af37ce42b1d89aaf07cc2fb68e99f66499a48c76d7b4fc353d35ac4be40",
+    "company_totals.csv": "d977ce194ea0c509d54bb71f808dc2226fefbba0e57531cabd6161343df6a5a2",
+    "experiment_effects.csv": "393a67fd85ead20f66a8c7608b19ad53848c90c5331022c7b6d77d881258d88b",
+    "forecast_curve.csv": "4c699ae4ea00ae0dde145505f861a84438ba2337712fa73114d79e89510c4078",
+    "model_fit_checks.csv": "1bcdb73ee7e6dd2912a0eaaf563dbd5b7828123fe4221d6ec949e3c4d22e8b13"
+  },
+  "template_sha256": "998a37ba3f0fb23e8f63f377d8f2ac0955e050989a682ad14071943112f3d3bb",
+  "ucv_sha256": "d378abd08ab82bc2aa13533979c6625b8d5d6a513e67f3065a96f078571e96c6",
   "upstream_style_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
   "upstream_style_version": "2026-08-22-v1.1",
-  "version": 2
+  "version": 3
 }

@@ -1,0 +1,18 @@
+{
+  "artifacts": [
+    "challenge/prediction_grid.csv",
+    "challenge/submission_template.csv",
+    "challenge/template_manifest.json"
+  ],
+  "code_sha256": "8b4ca1cdc9f0ed8f209f758e972d862579fce4a8c87859790ff80e21c610f9c4",
+  "cohort_input_sha256": "08d1ce215a9cd9650ed1eb076f88df370ad22b13761d36ca1f8e77ccb1a8c99f",
+  "future_months": 12,
+  "origin_month": "2025-12-01",
+  "output_hashes": {
+    "challenge/prediction_grid.csv": "65616c6bc6b4125f5facd4e07a2f8b7fdeae47aa9c7ca7728c22480731eca92e",
+    "challenge/submission_template.csv": "b345d2127888328dbe83c68d0fe7525954fc61cd72e93dfe51d0bd378367b4f7"
+  },
+  "rows": 1176,
+  "scope": "Next twelve calendar months for the existing observed acquisition cohorts; no new cohorts or future labels.",
+  "version": 1
+}

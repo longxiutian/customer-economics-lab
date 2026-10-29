@@ -23,6 +23,10 @@ The organizing question is whether successive acquisition cohorts are producing 
 
 The opening indicators must measure acquisition efficiency, customer value and cash recovery at matched cohort ages. A latest-month customer count or revenue total can provide scale context, but cannot substitute for the economic diagnosis. Bind the displayed indicators to a saved evidence CSV. Label company-wide tracked-spend/all-acquired-customer cost as **blended CAC**, including the treatment of organic buyers; do not silently call it paid-channel or incremental CAC.
 
+Compare the same acquisition months across years, rather than selecting the earliest and latest favorable endpoints or unmatched seasonal windows. Here the primary comparison is January–June 2024 versus January–June 2025 at age 5, meaning six observed monthly receipts. Weight cohort-level per-customer economics by original acquired counts so that contribution less CAC still equals cash. To assess composition, show paid retention both raw and standardized to the earlier channel-by-need mix. Save exact windows, weights, source hashes and results; this descriptive standardization does not identify a causal effect or eliminate every customer difference.
+
+Check whether experimental buyers change the accounting comparison. Keep the reported whole-company measures and the original windows, mark test months, and disclose a saved-SQL sensitivity excluding both assigned test arms, all their later contribution, and spending inside the test design. Do not exclude only treatment buyers, leave their later receipts behind, remove ordinary campaign spending or call the sensitivity a causal adjustment. Finance's monitoring benchmark should use the comparable ex-test figure when ordinary future cohorts will not contain those tests.
+
 Write complete conclusions, not instructions to a learner. Do not put prompts such as "choose a next action," blank judgment fields, course-stage descriptions, "in this exercise," or an instructor reference-build placeholder in the PDF. The chat skill owns guided questions and stage gates. The report owns the management diagnosis and a concrete action plan. A saved student's judgment may appear as a management recommendation, with its evidence and limitations intact.
 
 ## Establish the model before presenting its results
@@ -30,6 +34,14 @@ Write complete conclusions, not instructions to a learner. Do not put prompts su
 Explain the business mechanism and observed data the model represents before displaying forecast curves or LTV results. Name the likelihood, parameter meanings, sources of heterogeneity, right-censoring treatment, estimation method, extrapolation horizon and economic conversion. Distinguish customer retention from revenue per retained customer and contribution from revenue. Do not imply that the model is the source article's exact implementation when it is an adaptation.
 
 Use observed data at comparable ages to establish the diagnosis. Label forecasts and intervals. State what uncertainty the intervals include and omit. Keep a fitted-value diagnostic distinct from a genuinely held-out prediction check. A predictive LTV model does not identify causal acquisition effects.
+
+## Number and preserve the complete exhibit sequence
+
+Give every report figure and table a consecutive number, a descriptive caption, and a stable cross-reference label. This includes architecture and knowledge-asset diagrams, customer journey maps, parameter and validation tables, and every dataset-specific UCV table. Refer to exhibits by number in the prose. Bind the numbered exhibit registry to the report manifest and fail on duplicate labels or unresolved references.
+
+Show all 24 acquisition cohorts in the observed retention and cash triangles, with all observed ages 0–23. Leave future cells blank; never replace them with zero or truncate the report to a few favorable cohorts. Split dense triangles onto separate pages instead of shrinking labels. For many cohort curves, use aligned small multiples, common tenure/retention axes, a continuous chronological color key, and lines ending at observed ages. An acquisition cohort with no observed renewal can only contribute its age-zero point. Do not smooth away actual variability or create a 24-item legend that consumes the figure.
+
+Retain the need-specific customer journey maps in the management report and connect them explicitly to the raw-data UCV classification. Label journeys as hypotheses and distinguish them from observed event timelines. Keep the eight field-level UCV tables discoverable through numbered references from the main report, rather than leaving their existence implicit in an appendix.
 
 ## Required appendices
 
@@ -49,7 +61,9 @@ Use the bundled Archify-rendered data architecture to show table grain, join key
 
 ## Numerical and reproducibility contract
 
-All report quantities come from saved, hash-verified SQL/model outputs. Display-selection and formatting may occur in `cohort_lab/report.py`; do not silently recompute a competing aggregate from raw data. Derive narrative direction, dates, comparisons and recommendations from the same saved evidence used by figures. No hardcoded empirical result or arbitrary current date.
+All report quantities come from saved, hash-verified SQL/model outputs. Display selection, formatting and explicit weighted presentation summaries may occur in `cohort_lab/report.py`; do not silently recompute a competing aggregate from raw data. Preserve the windows and weights of those summaries in audit outputs. Derive narrative direction, dates, comparisons and recommendations from the same saved evidence used by figures. No hardcoded empirical result or arbitrary current date.
+
+Use `uv sync --frozen` and `uv run --frozen` for Python setup and execution. The student analysis is CPU-capable and starts from the released records. Data generation and the next-twelve-month competition holdout are maintained privately in a separate instructor skill; neither belongs in the analysis skill, report assets or public repository. The report may state that the records are original and synthetic, but must not reveal private simulation parameters or future outcomes.
 
 Preserve the full compiler input, bundled style package, rendered figures, parameter table and manifests. Fix metadata dates through the documented build epoch. Compare complete report output from independent builds, not only an in-memory rerun. Record hashes of both the upstream package and the report wrapper. A changed input invalidates its downstream result.
 
@@ -60,3 +74,5 @@ Use the repository's report command and supported native TeX engine. Source Sans
 Render every PDF page. Inspect a contact sheet and every changed page at full resolution. Verify US Letter portrait dimensions for the main report and appendices, except the explicitly labeled A3 landscape schema foldout. Check selectable text, correct page count, no accidental blank pages, no clipping, no overfull boxes, and a readable hierarchy. Keep the maintained body size; repair overflow through content organization and space allocation rather than globally shrinking text.
 
 Check that all claims in the executive summary are supported later, model explanation precedes model results, every dataset has all four UCV categories, appendices contain actual parameter output, and the report can be reproduced after downloading and extracting the public repository without a private skill installation.
+
+Check literal commands and field names in the actual PDF text layer. Require exact extraction of `uv sync --frozen`, `uv run --frozen`, every source filename and every schema field. A visually plausible dash or spaced monospace token is not sufficient. Use the wrapper's literal `Code` macro with monospace ligatures and expansion disabled, and keep contextual daggers outside field tokens. Give dense journey maps and residual diagnostics sufficient page space; do not hide tiny labels inside large white figure margins.

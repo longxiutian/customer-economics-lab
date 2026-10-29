@@ -14,7 +14,6 @@
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
     "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
     "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
-    "synthetic_trends": "Changing acquisition cost and observable need/channel mix; persistent individual churn propensities from a two-Beta mixture whose composition varies across acquisition cohorts, needs and channels; a temporary common service disruption; explicit premium upgrades/add-on quantities and incurred costs. Random variation remains, and aggregate improvement does not by itself establish within-segment improvement.",
     "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."

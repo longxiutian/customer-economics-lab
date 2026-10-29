@@ -1,6 +1,6 @@
 # Executive report formatting provenance
 
-The v2 report uses Longxiu Tian's maintained **build-longxiu-research-briefs** visual system, not a newly approximated report theme. The author requested that the system be included in this public workflow so another team can reproduce it without access to a private skill installation.
+The report uses Longxiu Tian's maintained **build-longxiu-research-briefs** visual system. The author requested that the system be included in this public workflow so another team can reproduce it without access to a private skill installation.
 
 `templates/longxiu-research-brief.sty` is the unmodified, source-free visual package, version `2026-08-22-v1.1`. Its SHA-256 is pinned in `templates/report-style-manifest.json`. The file defines US Letter portrait geometry, Source Sans typography, the forest-green/ochre palette, page furniture and restrained callouts. It contains no private paper content or empirical claims.
 

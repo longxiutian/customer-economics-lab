@@ -246,3 +246,42 @@ SELECT t.*, c.acquisition_spend, c.cac, c.cumulative_contribution,
        c.first_observed_payback_age, c.cash_payback_month
 FROM cohort_totals t JOIN cohort_cash_economics c USING (cohort_month, cohort_index, age_month, calendar_month, n_acquired)
 WHERE t.age_month = 5;
+
+-- Presentation sensitivity check: retain the same joining windows, but exclude
+-- experiment-assigned buyers (both arms) and spending within the test designs.
+-- This is descriptive comparability, not a replacement causal estimand or model input.
+CREATE OR REPLACE VIEW cohort_economics_ex_tests AS
+WITH regular_people AS (
+ SELECT c.cohort_month, c.cohort_index, c.age_month, c.calendar_month,
+        count(*)::INTEGER AS n_acquired, sum(c.retained)::INTEGER AS n_retained,
+        sum(c.contribution)::DECIMAL(18,2) AS contribution
+ FROM customer_month c
+ WHERE NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
+ GROUP BY c.cohort_month,c.cohort_index,c.age_month,c.calendar_month
+), test_spending AS (
+ SELECT CAST(date_trunc('month', s.spend_date) AS DATE) AS cohort_month,
+        sum(s.media_spend+s.other_acquisition_spend)::DECIMAL(18,2) AS excluded_test_spend
+ FROM campaign_spend s
+ WHERE EXISTS (SELECT 1 FROM experiment_assignments e
+               WHERE e.tested_campaign_id=s.campaign_id
+               AND s.spend_date>=CAST(e.assigned_at AS DATE)
+               AND s.spend_date<CAST(e.followup_end_at AS DATE))
+ GROUP BY cohort_month
+), cumulative AS (
+ SELECT p.*, raw.n_acquired-p.n_acquired AS excluded_test_buyers,
+        coalesce(s.excluded_test_spend,0)::DECIMAL(18,2) AS excluded_test_spend,
+        (raw.acquisition_spend-coalesce(s.excluded_test_spend,0))::DECIMAL(18,2) AS acquisition_spend,
+        sum(p.contribution) OVER (PARTITION BY p.cohort_month ORDER BY p.age_month
+             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DECIMAL(18,2) AS cumulative_contribution
+ FROM regular_people p JOIN cohort_cash_economics raw
+ USING (cohort_month,cohort_index,age_month,calendar_month)
+ LEFT JOIN test_spending s USING (cohort_month)
+)
+SELECT cohort_month,cohort_index,age_month,calendar_month,n_acquired,n_retained,
+       n_retained::DOUBLE/n_acquired AS retained_share,
+       excluded_test_buyers,excluded_test_spend,acquisition_spend,
+       acquisition_spend/n_acquired AS cac,cumulative_contribution,
+       cumulative_contribution/n_acquired AS cumulative_contribution_per_customer,
+       (cumulative_contribution-acquisition_spend)::DECIMAL(18,2) AS balance_after_acquisition,
+       (cumulative_contribution-acquisition_spend)/n_acquired AS balance_per_customer
+FROM cumulative;

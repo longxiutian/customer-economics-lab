@@ -13,6 +13,7 @@
       "dot": "cyan",
       "items": [
         "The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.",
+        "Identifiers such as person_id connect evidence across the source records. Evidence boxes name the relevant UCV category and actual field; field provenance remains in the full UCV tables.",
         "The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.",
         "Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."
       ],
@@ -23,67 +24,101 @@
   "edges": [
     {
       "from": "step0",
+      "fromSide": "right",
       "id": "look0",
       "to": "evidence0",
+      "toSide": "left",
       "variant": "dashed"
     },
     {
       "from": "step0",
+      "fromSide": "bottom",
       "id": "sequence1",
+      "route": "drop",
       "to": "step1",
+      "toSide": "top",
       "variant": "default"
     },
     {
       "from": "step1",
+      "fromSide": "right",
       "id": "look1",
       "to": "evidence1",
+      "toSide": "left",
       "variant": "dashed"
     },
     {
       "from": "step1",
+      "fromSide": "bottom",
       "id": "sequence2",
+      "route": "drop",
       "to": "step2",
+      "toSide": "top",
       "variant": "default"
     },
     {
       "from": "step2",
+      "fromSide": "right",
       "id": "look2",
       "to": "evidence2",
+      "toSide": "left",
       "variant": "dashed"
     },
     {
       "from": "step2",
+      "fromSide": "bottom",
       "id": "sequence3",
+      "route": "drop",
       "to": "step3",
+      "toSide": "top",
       "variant": "default"
     },
     {
       "from": "step3",
+      "fromSide": "right",
       "id": "look3",
       "to": "evidence3",
+      "toSide": "left",
       "variant": "dashed"
     },
     {
       "from": "step3",
+      "fromSide": "bottom",
       "id": "sequence4",
+      "route": "drop",
       "to": "step4",
+      "toSide": "top",
       "variant": "default"
     },
     {
       "from": "step4",
+      "fromSide": "right",
       "id": "look4",
       "to": "evidence4",
+      "toSide": "left",
       "variant": "dashed"
     }
   ],
   "lanes": [
     {
-      "id": "hypothesis",
-      "label": "Conceptual customer experience"
+      "id": "stage0",
+      "label": "Need"
     },
     {
-      "id": "evidence",
-      "label": "Where to look for evidence"
+      "id": "stage1",
+      "label": "Evaluation"
+    },
+    {
+      "id": "stage2",
+      "label": "First value"
+    },
+    {
+      "id": "stage3",
+      "label": "Ongoing value"
+    },
+    {
+      "id": "stage4",
+      "label": "Renewal"
     }
   ],
   "meta": {
@@ -108,93 +143,103 @@
   "nodes": [
     {
       "col": 0,
+      "height": 70,
       "id": "step0",
       "label": "Recognize friction",
-      "lane": "hypothesis",
+      "lane": "stage0",
       "sublabel": "repetitive task feels costly",
       "type": "frontend",
-      "width": 180
+      "width": 245
+    },
+    {
+      "col": 1,
+      "height": 70,
+      "id": "evidence0",
+      "label": "Perception: stated goal",
+      "lane": "stage0",
+      "sublabel": "people.primary_need",
+      "type": "database",
+      "width": 245
     },
     {
       "col": 0,
-      "id": "evidence0",
-      "label": "Need + source",
-      "lane": "evidence",
-      "sublabel": "CRM / attributed source",
-      "type": "database",
-      "width": 180
-    },
-    {
-      "col": 1,
+      "height": 70,
       "id": "step1",
       "label": "Evaluate fit",
-      "lane": "hypothesis",
+      "lane": "stage1",
       "sublabel": "compare ease and effort",
       "type": "frontend",
-      "width": 180
+      "width": 245
     },
     {
       "col": 1,
+      "height": 70,
       "id": "evidence1",
-      "label": "Early interactions",
-      "lane": "evidence",
-      "sublabel": "product event sequence",
+      "label": "Engagement: early actions",
+      "lane": "stage1",
+      "sublabel": "product_events.event_type",
       "type": "database",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 2,
+      "col": 0,
+      "height": 70,
       "id": "step2",
       "label": "Get first value",
-      "lane": "hypothesis",
+      "lane": "stage2",
       "sublabel": "complete one useful task",
       "type": "frontend",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 2,
+      "col": 1,
+      "height": 70,
       "id": "evidence2",
-      "label": "Payment + usage",
-      "lane": "evidence",
-      "sublabel": "billing / product events",
+      "label": "Engagement: payment + use",
+      "lane": "stage2",
+      "sublabel": "transaction_type / event_type",
       "type": "database",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 3,
+      "col": 0,
+      "height": 70,
       "id": "step3",
       "label": "Build a routine",
-      "lane": "hypothesis",
+      "lane": "stage3",
       "sublabel": "repeat with less effort",
       "type": "frontend",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 3,
+      "col": 1,
+      "height": 70,
       "id": "evidence3",
-      "label": "Experience + voice",
-      "lane": "evidence",
-      "sublabel": "events / feedback",
+      "label": "Engagement + Perception",
+      "lane": "stage3",
+      "sublabel": "event_type / value_rating",
       "type": "database",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 4,
+      "col": 0,
+      "height": 70,
       "id": "step4",
       "label": "Review renewal",
-      "lane": "hypothesis",
+      "lane": "stage4",
       "sublabel": "is the time saving worth it?",
       "type": "frontend",
-      "width": 180
+      "width": 245
     },
     {
-      "col": 4,
+      "col": 1,
+      "height": 70,
       "id": "evidence4",
-      "label": "Continue or leave",
-      "lane": "evidence",
-      "sublabel": "renewal system / billing",
+      "label": "Relationship: renewal",
+      "lane": "stage4",
+      "sublabel": "renewal_outcome / plan_tier",
       "type": "database",
-      "width": 180
+      "width": 245
     }
   ],
   "schema_version": 2

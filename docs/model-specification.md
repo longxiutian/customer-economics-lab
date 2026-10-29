@@ -25,13 +25,13 @@ The retention cohort trend is `(cohort_index − 11.5)/11.5`, with January 2024 
 | Cohort effect scale | HalfNormal(0.25) | Variation around the shared trend |
 | Standardized cohort effects | Normal(0, 1) | 24 cohort deviations, multiplied by the scale |
 
-The retention covariates are a fixed whitelist. Latent simulation propensity, mixture membership, future outcomes, usage after acquisition and survey responses do not enter the fitted model.
+The retention covariates are a fixed whitelist. Latent simulator variables, future outcomes, usage after acquisition and survey responses do not enter the fitted model.
 
 ### Prior provenance and information from the data
 
-The `Normal(log(4), 1)` prior for the log-concentration intercept was selected during the Opus-assisted model-design review **before the first inference fit**. It was not estimated from, moment-matched to, or calibrated against the simulation's hidden mixture parameters. Its standard deviation of 1 on the log scale allows a broad range of baseline concentrations; concentration is not fixed at 4.
+The `Normal(log(4), 1)` prior for the log-concentration intercept was selected during the Opus-assisted model-design review **before the first inference fit**. It was not estimated from, moment-matched to, or calibrated against hidden generator parameters. Its standard deviation of 1 on the log scale allows a broad range of baseline concentrations; concentration is not fixed at 4.
 
-In the first audited development fit, that coefficient's posterior standard deviation was approximately **0.127**, compared with prior standard deviation **1.0** (about an 87% reduction). This is evidence of substantial updating from the observed renewal records under the fitted model, not proof that the model recovers the true latent distribution. The release's `parameter_summary.csv` records the final run's value, full interval and diagnostics. The data generator is not retuned to improve that contraction or a backtest score.
+The release's `parameter_summary.csv` records posterior means, standard deviations, intervals and diagnostics. Compare these with the stated priors to assess how much the observed renewal records inform the parameters; this is not evidence that the model recovers an unobserved true distribution.
 
 ## Revenue and contribution
 
@@ -51,9 +51,9 @@ Keep actual contribution for observed ages, then forecast from the last actual s
 
 Company CAC includes the whole acquisition spending ledger, including zero-conversion and unallocated spending. Unsupported organic-cell CAC is missing, not free. Randomized campaign evidence has its own eligible population and horizon; buyer-only LTV comparisons cannot identify causal advertising lifetime value.
 
-## Different generation and inference models
+## Observed-data boundary
 
-The frozen generator uses a **mixture of two Beta distributions**, changes cohort/need/channel composition and includes a temporary calendar disturbance. Inference uses **one Beta distribution per cell** with pooled regressions and does not observe that disturbance. Thus the models differ structurally. A good fit is allowed; a perfect fit is neither expected nor engineered. Simulator details are published for reproducibility, but they are not analyst features or observed causal explanations.
+This analysis begins with a frozen synthetic observed-data release. Its generation workflow and future evaluation outcomes are instructor-held outside this repository. Model fitting uses only the declared observed SQL outputs; it never reads simulator settings or future labels. The model is an approximation whose assumptions must be checked against observed history and chronological backtests.
 
 The [Orduz benchmark](orduz-benchmark.md) provides a different flexible retention model on the same chronological holdout. It never supplies the executive LTV numbers. Validation compares both models with a transparent carry-forward baseline. Forecast bands in the management report describe parameter uncertainty conditional on the model and fixed economics; they omit renewal process noise, future cost uncertainty and regime change.
 
@@ -63,4 +63,4 @@ Full coefficients, priors, means, standard deviations, 5th–95th percentiles, R
 
 The persistent-propensity survival mechanism is grounded in [Fader and Hardie (2007)](https://www.brucehardie.com/papers/021/); the implications of survivor selection for customer-base value are developed in [Fader and Hardie (2010)](https://www.brucehardie.com/papers/022/). The observed covariate structure, cohort random effects and Bayesian priors are explicit lab design choices. [McCarthy, Fader and Hardie (2017)](https://journals.sagepub.com/doi/10.1509/jm.15.0519) motivates linking acquisition, retention and spending to business value, but the lab does not implement that paper's complete enterprise-valuation system.
 
-The Gamma revenue component adapts [Orduz's NumPyro walkthrough](https://juanitorduz.github.io/revenue_retention_numpyro/), with an estimated per-member dispersion parameter and explicit conversion to contribution. The separate neural comparison uses his four-unit sigmoid architecture and Laplace weight priors, adapted to conditional contractual churn. These different roles are stated separately so the reader can distinguish source methods from this implementation's choices.
+The Gamma revenue component adapts [Orduz's NumPyro walkthrough](../assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf), with an estimated per-member dispersion parameter and explicit conversion to contribution. The separate neural comparison uses his four-unit sigmoid architecture and Laplace weight priors, adapted to conditional contractual churn. These different roles are stated separately so the reader can distinguish source methods from this implementation's choices.

@@ -1,12 +1,12 @@
 # Modeling decisions and verification
 
-## Different generation and inference mechanisms
+## Observed release and independent evaluation
 
-The v2 sources contain individual monthly renewal decisions for 24 acquisition cohorts. Each acquired member receives one persistent latent churn propensity from a two-component Beta mixture. Group composition and a temporary calendar disturbance vary the observed curves. These simulation variables never appear in the eight analyst-facing CSVs.
+The student workflow starts from eight frozen source exports spanning 24 monthly acquisition cohorts. It contains no generation command, private simulation settings or future evaluation outcomes. A separate instructor workflow creates and checks the observed snapshot and the next twelve calendar months of continuation data. Private generation tests and keys remain outside the public repository.
 
-Inference uses one Beta distribution per cohort/need/channel cell, covariates and partially pooled cohort effects. This structural difference permits misspecification without injecting arbitrary errors or selecting a seed after inspecting forecasts. Gamma revenue inference also differs from the generator's explicit plan, upgrade and add-on purchases.
+The main model and its priors are specified independently of the hidden generation process. Cohort improvement must appear in the observed matched-age evidence; the report must not assert a trend merely because the scenario was designed to explore one. Neither the model nor its priors may be tuned on the private future evaluation labels.
 
-The design was deliberated with Claude Opus 5.5 at **xhigh** effort. Codex implemented and executed the tests; the reviewer receives supplied code and test evidence rather than running local tests itself. v1 remains available under its immutable tag. Its earlier linear hazard and SVI checks do not validate the new NUTS model.
+The revision is deliberated with Claude Opus 5.5 at xhigh effort. Codex executes the tests locally; provider consultation is not represented as test execution. Prior releases remain historical artifacts and do not validate this release's new data or fits.
 
 ## Main model and comparison
 
@@ -18,10 +18,10 @@ The four-chain convergence gate requires finite diagnostics, R-hat at most 1.01,
 
 | Risk | Verification |
 |---|---|
-| Propensity is redrawn monthly | One latent draw per acquired person, mixture-moment and survivor-selection tests. |
+| Source generation enters the student analysis | Public export/schema/hash tests and a separate instructor-only generation workflow. |
 | Censoring becomes artificial churn | Acquisition supplies no renewal trial; future/pending periods are excluded; exactly 24 entry cohorts. |
 | Cumulative counts reuse customers incorrectly | Conditional hazard products equal Beta-function survival; individual and aggregate likelihoods agree after count combinatorics. |
-| Simulator truth or future outcomes leak | Explicit feature whitelist and held-out outcome mutation tests. |
+| Future outcomes leak | Declared feature whitelist, chronology/mutation tests and an observed-only submission grid; evaluation labels are not shipped. |
 | CAC drops zero-conversion or unallocated spend | Spending perturbations distinguish whole-company from supported cell CAC; unknown organic CAC stays missing. |
 | Forecasts borrow future economics | Training-only backtests and age-aligned contribution-ratio fixtures. |
 | Numerical completion is called convergence | Finite diagnostics, R-hat, ESS and divergence gates apply to all three historical/full fits. |

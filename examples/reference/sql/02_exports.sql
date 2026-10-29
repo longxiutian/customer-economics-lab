@@ -19,3 +19,5 @@ SELECT * FROM company_totals ORDER BY calendar_month;
 SELECT * FROM experiment_effects ORDER BY experiment_id;
 
 SELECT * FROM cohort_six_month_comparison ORDER BY cohort_month;
+
+SELECT * FROM cohort_economics_ex_tests ORDER BY cohort_month, age_month;

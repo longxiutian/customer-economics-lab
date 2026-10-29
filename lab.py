@@ -33,10 +33,12 @@ def parser() -> argparse.ArgumentParser:
     query.add_argument("--timeout", type=float, default=20.0)
     query.add_argument("--instructor", action="store_true", help="Allow verified batch output without guided state.")
     sub.add_parser("validate-data", help="Validate frozen CSV hashes and the full data contract.")
+    sub.add_parser("challenge-template", help="Create observed-only future keys and a blank submission without advancing.")
+    sub.add_parser("challenge-baseline", help="Forecast the next twelve calendar months using an existing verified fit.")
+    submission = sub.add_parser("validate-submission", help="Check future prediction format against observed-only keys; no hidden labels are read.")
+    submission.add_argument("--csv", type=Path, required=True)
     batch = sub.add_parser("batch", help="Explicit instructor reproducibility run; not for guided learner sessions.")
     batch.add_argument("--instructor", action="store_true", required=True)
-    generate = sub.add_parser("generate-data", help="Instructor-only regeneration into an explicitly chosen empty directory.")
-    generate.add_argument("--instructor", action="store_true", required=True)
     return p
 
 
@@ -68,11 +70,20 @@ def main(argv=None) -> int:
             result = validate_data(args.data)
         elif args.command == "batch":
             result = run_batch(args.data, args.output, seed=args.seed, steps=args.steps, compile_pdf=not args.no_pdf)
-        elif args.command == "generate-data":
-            if args.data.exists() and any(args.data.iterdir()):
-                raise WorkflowError("Regenerate into an empty directory; do not replace the frozen student dataset.")
-            from cohort_lab.data import generate_data
-            result = generate_data(args.data, seed=args.seed)
+        elif args.command == "challenge-template":
+            from cohort_lab.challenge import write_template
+            result = {"advanced": False, **write_template(args.output)}
+        elif args.command == "challenge-baseline":
+            from cohort_lab.challenge import baseline_predictions
+            result = {"advanced": False, **baseline_predictions(args.output)}
+        elif args.command == "validate-submission":
+            import pandas as pd
+            from cohort_lab.analysis import validate_analysis
+            from cohort_lab.challenge import prediction_grid, validate_predictions
+            validate_analysis(args.output)
+            grid = prediction_grid(pd.read_csv(args.output/'tables/cohort_age_summary.csv'))
+            checked = validate_predictions(pd.read_csv(args.csv),grid)
+            result = {"advanced": False, "status": "passed", "rows": len(checked), "future_outcomes_read": False}
         else:
             raise WorkflowError("Unknown command.")
         print(json.dumps(result, indent=2, sort_keys=True, default=str))

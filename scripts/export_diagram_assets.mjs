@@ -36,7 +36,7 @@ try {
         el.style.animation = 'none'; el.style.transition = 'none';
       }
     });
-    const asset = await page.evaluate((reportOverview) => {
+    const asset = await page.evaluate(({reportOverview,journey,knowledge}) => {
       const source = [...document.querySelectorAll('svg')].find(el => el.hasAttribute('data-quality-profile'));
       if (!source) throw new Error('Native Archify diagram SVG is missing.');
       // The portrait edition preserves native nodes/edges, but omits the wide
@@ -45,6 +45,10 @@ try {
       if (reportOverview) {
         source.querySelectorAll('[data-node-id] text.t-primary').forEach(el=>el.style.fontSize='12px');
         source.querySelectorAll('[data-node-id] text.t-muted').forEach(el=>el.style.fontSize='9px');
+      }
+      if (journey || knowledge) {
+        source.querySelectorAll('[data-node-id] text.t-primary').forEach(el=>el.style.fontSize=knowledge?'14px':'13px');
+        source.querySelectorAll('[data-node-id] text.t-muted').forEach(el=>el.style.fontSize=knowledge?'13px':'11px');
       }
       const copy = source.cloneNode(true);
       const original = [source, ...source.querySelectorAll('*')];
@@ -57,9 +61,27 @@ try {
         cloned[i].removeAttribute('style');
         for (const property of properties) cloned[i].style.setProperty(property, computed.getPropertyValue(property));
       });
-      copy.querySelectorAll('script,style,animate,animateMotion,animateTransform').forEach(el => el.remove());
+      // Interactive legend hitboxes/badges are measured from screen coordinates
+      // by the reader UI. Their subpixel bounds can vary between fresh browser
+      // runs. Keep the authored legend labels, swatches, nodes and edges, but
+      // omit these nonsemantic UI overlays from the frozen print asset.
+      copy.querySelectorAll('script,style,animate,animateMotion,animateTransform,[data-legend-bridge-runtime]').forEach(el => el.remove());
       const vb = source.viewBox.baseVal;
       let x=vb.x,y=vb.y,width=vb.width,height=vb.height;
+      if (journey) {
+        // The native workflow reader reserves a broad swimlane canvas even
+        // when this print layout uses only two columns. Trim that empty right
+        // margin, retaining the authored stages, labels, arrows and legend.
+        const boxes=[...source.querySelectorAll('[data-node-id]')].map(el=>el.getBBox());
+        const right=Math.ceil(Math.max(...boxes.map(b=>b.x+b.width))+20);
+        copy.querySelectorAll('[data-graph-role="structural-frame"]').forEach(el=>{
+          el.setAttribute('width',String(right-10-Number(el.getAttribute('x'))));
+        });
+        x=10;y=32;width=right-x;
+        const lastLabel=Math.max(...[...copy.querySelectorAll('text')].map(el=>Number(el.getAttribute('y')||0)));
+        height=Math.ceil(lastLabel+20-y);
+        copy.setAttribute('viewBox',`${x} ${y} ${width} ${height}`);
+      }
       if (reportOverview) {
         for (const el of [...copy.children]) {
           if (['rect','text'].includes(el.tagName.toLowerCase()) || el.hasAttribute('data-legend')) el.remove();
@@ -74,7 +96,9 @@ try {
       copy.setAttribute('width', String(width)); copy.setAttribute('height', String(height));
       copy.style.display = 'block'; copy.style.background = '#ffffff';
       return {svg: new XMLSerializer().serializeToString(copy), width: Math.ceil(width), height: Math.ceil(height)};
-    },path.basename(html)==='source-systems-report.html');
+    },{reportOverview:path.basename(html)==='source-systems-report.html',
+       journey:['journey-save-time.html','journey-build-skill.html'].includes(path.basename(html)),
+       knowledge:path.basename(html)==='knowledge-assets.html'});
     const stem = html.replace(/\.html$/i, '');
     await fs.writeFile(stem+'.svg', asset.svg+'\n', 'utf8');
     // A fresh page with the frozen SVG avoids controls, timers and responsive-fit drift.

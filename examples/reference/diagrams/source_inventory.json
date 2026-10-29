@@ -2,57 +2,57 @@
   {
     "file": "people.csv",
     "grain": "one person, including nonbuyers",
-    "rows": 5476,
-    "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214",
+    "rows": 6690,
+    "sha256": "5eaf9fc192e8eabfeda92093f610f670a81616923eb1057cb58a60d381b81224",
     "source": "CRM"
   },
   {
     "file": "subscription_periods.csv",
     "grain": "one scheduled subscription period",
-    "rows": 37244,
-    "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411",
+    "rows": 44658,
+    "sha256": "84a2f2be62633241d1b8588a278f8470c249677e4763534022ef45093284f7a8",
     "source": "Renewal system"
   },
   {
     "file": "transactions.csv",
     "grain": "one payment or refund event",
-    "rows": 45746,
-    "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5",
+    "rows": 54421,
+    "sha256": "6753bd538e04305e1e8ea18ca454136439e8f5af10a53e1ef6f4790daaea80d7",
     "source": "Finance"
   },
   {
     "file": "product_events.csv",
     "grain": "one observed interaction",
-    "rows": 59828,
-    "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53",
+    "rows": 72107,
+    "sha256": "cc36b2091bfba839624b2af14ffe6f2c9fc164e3bd712465eadf4fe0dee82bcd",
     "source": "Product"
   },
   {
     "file": "feedback.csv",
     "grain": "one submitted response",
-    "rows": 2654,
-    "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822",
+    "rows": 3372,
+    "sha256": "cb9af94e783a656341b76f27281f25475e168b1e18b28c5b3a81917406274b21",
     "source": "Customer research"
   },
   {
     "file": "campaign_spend.csv",
     "grain": "one campaign-spending date",
     "rows": 294,
-    "sha256": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057",
+    "sha256": "05a544edf793a17fa1ac00884a983597f41ed7214f057bab3edbd6db0a326a61",
     "source": "Marketing"
   },
   {
     "file": "acquisition_attribution.csv",
     "grain": "one acquired person and credited source",
-    "rows": 4672,
-    "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca",
+    "rows": 5857,
+    "sha256": "c54ec7122d9738f2fab436aa811ca697d6d9f602a9e59c53f0649bd432f10c8c",
     "source": "Marketing"
   },
   {
     "file": "experiment_assignments.csv",
     "grain": "one eligible person per experiment",
     "rows": 1000,
-    "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262",
+    "sha256": "22ae91f174ec349a048bfa0fe55c07d0ecac95d770d210b461c34e2ef05983a2",
     "source": "Experiment platform"
   }
 ]

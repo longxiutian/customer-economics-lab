@@ -27,7 +27,7 @@ def _neural_draws():
             "output_weights":np.zeros((d,4)),"output_bias":np.full(d,np.log(.1/.9))}
 
 
-def test_actual_frozen_data_produces_identical_258_holdout_cells(tmp_path,monkeypatch):
+def test_actual_frozen_data_produces_identical_holdout_cells(tmp_path,monkeypatch):
     """Use real source/ETL observations; stub only expensive parameter estimation."""
     build_views(ROOT/"data",tmp_path)
     frame = pd.read_csv(tmp_path/"tables"/"cohort_age_summary.csv")
@@ -36,8 +36,10 @@ def test_actual_frozen_data_produces_identical_258_holdout_cells(tmp_path,monkey
     main, main_summary = model._backtest(model._validate(frame),20261116,3000)
     main.to_csv(tmp_path/"tables"/"backtest.csv",index=False)
     neural_summary = benchmark.run_benchmark(frame,tmp_path)
-    check = benchmark.validate_retention_comparison(tmp_path,expected_cells=258)
-    assert check == {"status":"passed","matched_cells":258,"identical_actual_counts":True}
+    eligible = frame[frame.calendar_month.le('2025-09-01')][['cohort_month','channel','primary_need']].drop_duplicates()
+    expected = len(frame[frame.calendar_month.gt('2025-09-01')].merge(eligible))
+    check = benchmark.validate_retention_comparison(tmp_path,expected_cells=expected)
+    assert check == {"status":"passed","matched_cells":expected,"identical_actual_counts":True}
     assert main_summary["training_last_calendar_month"] == neural_summary["training_last_calendar_month"] == "2025-09-01"
     assert main_summary["held_out_calendar_months"] == neural_summary["held_out_calendar_months"]
 

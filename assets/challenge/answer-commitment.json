@@ -1,0 +1,8 @@
+{
+  "algorithm": "SHA256(exact private answer CSV bytes || private 32-byte salt)",
+  "created_utc": "2026-10-29T14:22:12.610420+00:00",
+  "purpose": "Commits a sealed evaluation answer file without publishing outcomes or its salt.",
+  "sha256": "d5a1b1d351899cf3999c8949072988d08c6c11686b05a3bf3b5d5aba9b337373",
+  "type": "future_answer_commitment",
+  "version": 1
+}

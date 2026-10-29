@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-DATASET_VERSION = "2.0"
+DATASET_VERSION = "3.0"
 DATA_FILES = (
     "people.csv", "subscription_periods.csv", "transactions.csv",
     "product_events.csv", "feedback.csv", "campaign_spend.csv",
@@ -58,7 +58,7 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     """Fingerprint the executable contract, excluding learner output SQL."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("assets/articles", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
@@ -116,6 +116,19 @@ def _preview_csv(path: Path, limit: int = 6) -> dict:
 def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
     packages = ("duckdb", "numpy", "pandas", "jax", "numpyro", "matplotlib", "jinja2")
     missing = [name for name in packages if importlib.util.find_spec(name) is None]
+    cpu_ready = False
+    cpu_detail = None
+    if not missing:
+        # Run a real device check with accelerators hidden. Merely finding the
+        # Python packages does not establish that the CPU runtime loads.
+        environment = os.environ.copy()
+        environment.update(JAX_PLATFORMS="cpu", JAX_ENABLE_X64="true", CUDA_VISIBLE_DEVICES="-1")
+        probe = subprocess.run([sys.executable, "-c",
+            "import jax,json; print(json.dumps({'backend':jax.default_backend(),'x64':bool(jax.config.x64_enabled)}))"],
+            env=environment,text=True,capture_output=True,timeout=30)
+        if probe.returncode == 0:
+            cpu_detail = json.loads(probe.stdout)
+            cpu_ready = cpu_detail.get("backend") == "cpu" and cpu_detail.get("x64") is True
     node = shutil.which("node")
     node_version = None
     if node:
@@ -141,10 +154,13 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
             tex_engine = "WSL pdflatex"
     manifest = json.loads((data_dir / "data_manifest.json").read_text(encoding="utf-8"))
     return {
-        "ready": python_ready and not missing and node_ready and diagram_ready and (bool(tex_engine) or not need_pdf),
+        "ready": python_ready and not missing and cpu_ready and node_ready and diagram_ready and (bool(tex_engine) or not need_pdf),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "python_ready": python_ready,
         "missing_python_packages": missing,
+        "cpu_model_ready": cpu_ready,
+        "cpu_runtime": cpu_detail,
+        "gpu_required": False,
         "node": node_version,
         "node_ready": node_ready,
         "diagram_renderer_ready": diagram_ready,
@@ -178,8 +194,9 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
                 "Stage 4 will check the proposal against older age-aligned cohorts; do not claim an outcome comparison yet.",
             ],
             "choices": choices,
-            "diagrams": ["diagrams/source-systems.html", "diagrams/customer-journey.html",
+            "diagrams": ["diagrams/source-systems.html", "diagrams/knowledge-assets.html", "diagrams/customer-journey.html",
                          "diagrams/journey-save-time.html", "diagrams/journey-build-skill.html"],
+            "ucv_tables": ["diagrams/ucv-tables.md", "diagrams/ucv-tables.json"],
         }
         _write_json(output_dir / "stage2_customer_reasoning.json", result)
         return result
@@ -215,7 +232,10 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
         model_result = fit_and_forecast(output_dir, seed=seed, steps=steps)
         benchmark = run_benchmark(pd.read_csv(output_dir/'tables/cohort_age_summary.csv'), output_dir, seed=seed)
         validate_retention_comparison(output_dir)
-        return {"model": model_result, "benchmark": benchmark, "charts": build_charts(output_dir)}
+        from .challenge import baseline_predictions
+        challenge = baseline_predictions(output_dir)
+        return {"model": model_result, "benchmark": benchmark, "charts": build_charts(output_dir),
+                "optional_model_challenge": challenge}
     if stage == 7:
         from .report import build_report
         if choices:
@@ -280,7 +300,7 @@ class LabWorkflow:
         """Keep old evidence recoverable while preventing stale previews."""
         names = ["report"]
         if from_stage <= 6:
-            names += ["model_summary.json", "model_manifest.json", "model", "tables/cohort_valuation.csv",
+            names += ["model_summary.json", "model_manifest.json", "model", "challenge", "tables/cohort_valuation.csv",
                       "tables/cohort_valuation_by_segment.csv", "tables/backtest.csv", "tables/valuation_backtest.csv", "tables/forecast_curve.csv",
                       "tables/forecast_curves.csv", "tables/model_predictions.csv", "model_artifacts",
                       "model_draws.npz", "posterior_draws.json"]

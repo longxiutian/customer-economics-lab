@@ -12,6 +12,12 @@ from pathlib import Path
 from .data import GRAINS, SCHEMAS
 
 CATEGORIES = ("Identifiers", "Engagement", "Relationship", "Perception")
+CATEGORY_DEFINITIONS = {
+    "Identifiers": "Keys and profile descriptors identify or link people, groups and records; not every identifier is unique.",
+    "Engagement": "Observed customer interactions and their measurement context. Firm marketing activity and attribution metadata are retained as explicitly marked contextual evidence; they do not establish individual exposure, action or a causal effect.",
+    "Relationship": "Contractual and commercial arrangements, customer status, and explicitly marked operational context for relationship economics.",
+    "Perception": "Customer-reported views or intentions, distinguished from behavior and analyst inference.",
+}
 SOURCE_NAMES = {
     "people.csv": "CRM", "subscription_periods.csv": "Renewal system",
     "transactions.csv": "Finance", "product_events.csv": "Product and support",
@@ -59,6 +65,19 @@ FIELD_GROUPS = {
     },
 }
 
+# These fields retain their best-fit category but require an explicit qualifier.
+# A dagger is display metadata, never part of the actual source field name.
+CONTEXT_ONLY_FIELDS = {
+    "people.csv": ["record_created_at", "attributes_recorded_at"],
+    "subscription_periods.csv": [],
+    "transactions.csv": ["unit_price", "variable_cost"],
+    "product_events.csv": [],
+    "feedback.csv": ["journey_stage"],
+    "campaign_spend.csv": ["target_need", "spend_date", "channel", "media_spend", "other_acquisition_spend"],
+    "acquisition_attribution.csv": ["source_type", "credited_at", "attribution_rule"],
+    "experiment_assignments.csv": ["assigned_at", "arm", "followup_end_at"],
+}
+
 RATIONALE = {
     "people.csv": {
         "age_band": "Profile descriptor; it identifies a demographic group, not a unique person.",
@@ -74,8 +93,8 @@ RATIONALE = {
         "cancellation_effective_at": "Contractual exit timing; a blank is not proof of indefinite survival.",
     },
     "transactions.csv": {
-        "unit_price": "Commercial terms of the purchased item; the billed quantity and amounts are observed engagement.",
-        "variable_cost": "Operational accounting support for relationship economics, not a customer-reported perception.",
+        "unit_price": "The item's commercial price term is Relationship context; billed quantity and realized amounts record transaction Engagement.",
+        "variable_cost": "Firm-side accounting context for relationship economics; unlike billed amounts, it does not record a customer payment or reported perception.",
         "related_transaction_id": "A refund links to the original payment; it does not identify another customer.",
         "refund_amount": "Observed financial reversal; a reason for dissatisfaction is not recorded here.",
     },
@@ -88,11 +107,11 @@ RATIONALE = {
         "main_difficulty": "Customer-reported difficulty; a hypothesis about causes, not causal evidence.",
     },
     "campaign_spend.csv": {
-        "target_need": "Campaign targeting descriptor; no individual stated preference is observed in this aggregate ledger.",
+        "target_need": "Identifies the campaign's target group; unlike a person's primary_need, it is not an individually stated intention. Channel describes the firm's marketing activity, so it is Engagement context instead.",
         "spend_date": "Timing of firm marketing activity, not a customer touchpoint timestamp.",
         "channel": "Context of firm marketing activity; it does not prove an individual's exposure.",
-        "media_spend": "Campaign-level operational support for acquisition economics, not individual engagement.",
-        "other_acquisition_spend": "Campaign-level creative/vendor costs; aggregate once before joining customers.",
+        "media_spend": "Firm-side campaign spending is retained as Engagement context, not individual engagement or evidence of exposure.",
+        "other_acquisition_spend": "Firm-side creative/vendor costs are Engagement context, not observed customer activity; aggregate once before joining customers.",
     },
     "acquisition_attribution.csv": {
         "source_type": "Recorded acquisition-path credit; an attribution label does not establish incrementality.",
@@ -125,8 +144,14 @@ def build_ucv_tables(data_dir: Path) -> list[dict]:
             raise ValueError(f"UCV classification must cover each field exactly once: {filename}")
         if not set(RATIONALE[filename]).issubset(fields):
             raise ValueError(f"UCV rationale references an unknown field: {filename}")
+        contextual = list(CONTEXT_ONLY_FIELDS[filename])
+        if not set(contextual).issubset(fields) or len(contextual) != len(set(contextual)):
+            raise ValueError(f"UCV contextual marker references an unknown or duplicate field: {filename}")
+        if not set(contextual).issubset(RATIONALE[filename]):
+            raise ValueError(f"UCV contextual placement requires a rationale: {filename}")
         tables.append({"file": filename, "source": SOURCE_NAMES[filename], "grain": GRAINS[filename],
                        "columns": groups, "rationale": dict(RATIONALE[filename]),
+                       "context_only_fields": contextual,
                        "source_sha256": hashlib.sha256(path.read_bytes()).hexdigest()})
     return tables
 
@@ -134,14 +159,13 @@ def build_ucv_tables(data_dir: Path) -> list[dict]:
 def ucv_markdown(tables: list[dict]) -> str:
     """Portable appendix with field names, explicit gaps and classification notes."""
     lines = ["# Universal Customer View by source dataset", "",
-             "Identifiers include record-linking keys and descriptive profile fields (such as age, household, region or campaign target group); not every identifier is unique. "
-             "Engagement describes observed interactions and their measurement context. Relationship describes contractual/commercial context. Perception records stated views or intentions.", "",
+             *[f"**{category}:** {CATEGORY_DEFINITIONS[category]}" for category in CATEGORIES], "",
              "Each field appears once in the best-fitting category. Empty categories are evidence gaps, not zeros. "
-             "Some accounting and experiment-design fields support analysis without directly describing a customer; notes identify those cases.", ""]
+             "A dagger (†) marks contextual or operational placement. Such a field supports interpretation without itself establishing a customer action or attitude; its rationale follows the table. The dagger is not part of the field name.", ""]
     for table in tables:
         lines.extend([f"## {table['file']}", "", f"**{table['source']}** — {table['grain']}", "",
                       "| " + " | ".join(CATEGORIES) + " |", "| " + " | ".join(["---"] * 4) + " |",
-                      "| " + " | ".join("<br>".join(f"`{f}`" for f in table['columns'][c]) or "—" for c in CATEGORIES) + " |", ""])
+                      "| " + " | ".join("<br>".join(f"`{f}`" + ("†" if f in table["context_only_fields"] else "") for f in table['columns'][c]) or "—" for c in CATEGORIES) + " |", ""])
         for field, note in table["rationale"].items():
             lines.append(f"- `{field}`: {note}")
         lines.append("")

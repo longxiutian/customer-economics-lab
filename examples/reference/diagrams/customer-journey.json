@@ -35,29 +35,22 @@
     },
     {
       "at": "2024-01-03T09:00:00Z",
-      "detail": "Financial event T0000039; refunds remain separate ledger events.",
+      "detail": "Financial event T-PC00-p-b-0002-00-subscription; refunds remain separate ledger events.",
       "id": "event2",
       "lane": "billing",
       "title": "payment: subscription"
     },
     {
-      "at": "2024-01-08T16:00:00Z",
+      "at": "2024-01-04T10:00:00Z",
       "detail": "Observed interaction on app; motive is not supplied.",
       "id": "event3",
       "lane": "product",
-      "title": "core action"
-    },
-    {
-      "at": "2024-01-14T16:00:00Z",
-      "detail": "Observed interaction on app; motive is not supplied.",
-      "id": "event4",
-      "lane": "product",
-      "title": "core action"
+      "title": "onboarding completed"
     },
     {
       "at": "2024-01-15T09:00:00Z",
-      "detail": "Financial event T0000040; refunds remain separate ledger events.",
-      "id": "event5",
+      "detail": "Financial event T-PC00-p-b-0002-00-add_on; refunds remain separate ledger events.",
+      "id": "event4",
       "lane": "billing",
       "title": "payment: add_on"
     }
@@ -86,7 +79,7 @@
     "output": "customer-journey.html",
     "quality_profile": "showcase",
     "timezone": "UTC",
-    "title": "One observed customer journey: P0000002"
+    "title": "One observed customer journey: PC00-p-b-0002"
   },
   "schema_version": 1
 }

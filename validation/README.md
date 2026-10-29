@@ -1,51 +1,58 @@
-# Release validation — v2.0.0
+# Release validation — v3.0.0
 
-The release passed **139 tests**. Two independent processes computed the
-statistical pipeline, including three NUTS fits and a Bayesian neural benchmark.
-After report-layout repair and added experimental uncertainty columns, the ETL
-and report stages were independently replayed for both runs. The three model-input
-CSV hashes remained unchanged. **60 canonical artifacts match byte-for-byte**,
-including analytical tables, posterior draws, diagrams, figures, TeX and PDF.
-See `reproducibility.json` for the precise scope and hashes and `release.json`
-for implementation fingerprints. Diagnostic page screenshots are not canonical
-scientific outputs.
+The public release passed **164 tests**. Two independent CPU processes
+computed source ETL, three NUTS fits, an Orduz-derived neural comparison and
+observed-only future forecasts. After an additive experiment-exclusion comparison,
+outcome-validator and visual/static-export repairs, ETL, challenge metadata,
+diagrams and reports were independently replayed. Model source and all three
+statistical input CSV hashes remained unchanged. **94
+canonical artifacts match byte-for-byte**, including the tables, posterior draws,
+future predictions, diagram exports, figures, TeX, PDF and audit metadata.
+See `reproducibility.json` for precise scope and hashes, and `release.json` for
+the executable source fingerprints. Page screenshots are visual QA evidence,
+not additional scientific outputs.
 
-The tests cover frozen-data regeneration, persistent latent churn heterogeneity,
-conditional renewal likelihoods, censoring, acquisition timing, UCV field coverage,
-SQL reconciliations, future-data leakage, spending without conversions, unequal
-experimental arms and nonbuyers, uncertainty intervals, seeded dispersed NUTS
-starts, finite diagnostics, matched holdouts, one-stage-at-a-time behavior,
-saved judgments, logged read-only SQL, and ZIP extraction without Git.
+Tests cover frozen observed inputs, censoring, acquisition timing, UCV coverage,
+SQL reconciliation, experiments and nonbuyers, uncertainty, sampling diagnostics,
+same-age/same-season financial comparisons, fixed-mix retention, all 24 cohort
+trajectories, missing future cells, numbered exhibits, explicit stage gates,
+saved judgments, read-only SQL, safe ZIP extraction and CPU operation even when
+an inherited environment requests CUDA. Future-scoring tests use small public
+fixtures, not the private evaluation outcomes.
 
-The main full-data fit has R-hat **1.0009**, minimum effective sample size
-**1412**, and **0 divergences**. The separate historical fits also
-pass the documented convergence gate. These are sampling diagnostics, not evidence
-that the statistical model is exactly correct.
+The full-data model has maximum R-hat **1.0018**, minimum effective
+sample size **1114**, and **0 divergences**. Historical
+fits also pass the convergence gate. Sampling diagnostics do not establish that
+the model's business assumptions are true.
 
-Twelve-month historical contribution-value MAE is **$3.13 per acquired customer**
-across 11 cohorts, versus **$25.21** for the stated baseline.
-Only 4 cohorts had payback still in the future at that origin; their zero
-month error is a small synthetic-data result, not broad validation. Seven already
-recovered cohorts are excluded from that forecast score. Shorter-period held-out
-revenue WAPE is **6.11%**, versus **10.81%** for the baseline.
+Historical twelve-receipt contribution-value MAE is **$2.87** per
+acquired customer versus **$23.43** for the simple baseline.
+On the same 258 held-out retention observations, the main model's MAE
+is **1.291**, the neural comparison's **1.180**,
+and the simple baseline's **2.633**. The neural model
+does not supply executive LTV. Historical validation is distinct from the
+unreleased 2026 evaluation window, which was not used to choose these models.
 
-The actual Orduz-derived neural benchmark and the main retention model use the
-same **258** held-out observations. Retained-member MAE is **1.112**
-for the main model and **1.146** for the neural comparison. The benchmark
-does not supply executive LTV. Its architecture and changes from the source are
-documented in `docs/orduz-benchmark.md`.
+The report contains 22 pages, 16
+numbered figures and 18 numbered tables. It has one A3 schema
+foldout, otherwise Letter pages, no overfull TeX boxes, and was visually checked.
+The companion contains 12 slides and was checked
+against the saved SQL output, including all 24 cohort rows and 96 paid-group
+retention series. The maintained report style, local licensed Orduz source reading,
+journey maps and knowledge-assets diagram are bundled.
 
-The report has 14 pages, with an A3 schema foldout and otherwise US Letter
-pages; all were visually inspected. It has no overfull TeX boxes. The companion
-has 12 slides, 5 editable native charts and 5 native tables.
-The actual maintained report style is bundled and hash-pinned.
+Data generation belongs to a separate private instructor workflow. It has its
+own 12 generation/holdout tests and repeated byte-identity check. Six boundary
+checker tests exercise key/path/label leakage detection. Only the observed data,
+blank future template, baseline forecasts and salted commitments are public.
+The generation key, private skill, hidden parameters and future outcomes are
+excluded from this release. Earlier tags retain their previously public generators;
+an audit of 534 reachable objects and eight prior release assets found no current
+private key or hidden answer data. History was preserved. Source reconstruction
+is not part of the student analysis skill.
 
-Intervals describe conditional parameter uncertainty, not all future economic
-risk. Campaign contribution intervals are approximate 95% sampling intervals
-over their actual 31- and 30-day follow-up windows; both include zero.
-
-This evidence covers the documented Windows/CPU environment and WSL pdfLaTeX.
-It does not establish bitwise equality on every platform or predictive accuracy
-for another business. v1 remains under its immutable tag. Its old sensitivity
-receipt is not part of v2 validation. The optional starting-value sensitivity
-script has not been claimed as an additional executed release check.
+The public skill pauses after each stage. The separate guided-flow receipt covers
+real stages 0–3 plus a logged query; the two instructor runs cover later numerical
+and reporting work. These checks concern the documented Windows CPU environment;
+they do not establish equal bytes on other platforms or accuracy for another
+business. Earlier releases remain under their immutable tags.

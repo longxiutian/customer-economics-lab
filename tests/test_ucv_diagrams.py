@@ -7,15 +7,15 @@ import shutil
 
 import pytest
 
-from cohort_lab.data import SCHEMAS, PRIMARY_KEYS, generate_data
-from cohort_lab.diagrams import _erd_candidate, _report_erd_candidate, build_diagrams
-from cohort_lab.ucv import CATEGORIES, FIELD_GROUPS, build_ucv_tables, ucv_markdown
+from cohort_lab.data import SCHEMAS, PRIMARY_KEYS
+from cohort_lab.diagrams import _erd_candidate, _report_erd_candidate, _knowledge_assets_candidate, _conceptual_journey, build_diagrams
+from cohort_lab.ucv import CATEGORIES, CATEGORY_DEFINITIONS, CONTEXT_ONLY_FIELDS, FIELD_GROUPS, build_ucv_tables, ucv_markdown
 
 
 @pytest.fixture(scope="module")
 def sources(tmp_path_factory):
     folder=tmp_path_factory.mktemp("ucv")
-    generate_data(folder)
+    shutil.copytree(Path(__file__).resolve().parents[1]/'data',folder,dirs_exist_ok=True)
     return folder
 
 
@@ -36,6 +36,17 @@ def test_ucv_classifies_every_actual_field_once_and_preserves_evidence_gaps(sour
     text=ucv_markdown(tables)
     assert "Universal Customer View" in text and "Unified Customer View" not in text
     assert text.count("| Identifiers | Engagement | Relationship | Perception |")==8
+    assert set(CATEGORY_DEFINITIONS)==set(CATEGORIES)
+    assert "Firm marketing activity" in CATEGORY_DEFINITIONS["Engagement"]
+    assert "do not establish individual exposure" in CATEGORY_DEFINITIONS["Engagement"]
+    for table in tables:
+        assert table["context_only_fields"]==CONTEXT_ONLY_FIELDS[table["file"]]
+        for field in table["context_only_fields"]:
+            assert field in table["rationale"] and table["rationale"][field].strip()
+            assert f"`{field}`†" in text
+            assert f"`{field}†`" not in text
+    assert "Channel describes the firm's marketing activity" in by_name["campaign_spend.csv"]["rationale"]["target_need"]
+    assert "realized amounts record transaction Engagement" in by_name["transactions.csv"]["rationale"]["unit_price"]
 
 
 def test_ucv_refuses_schema_drift_and_duplicate_classification(sources,tmp_path,monkeypatch):
@@ -88,15 +99,58 @@ def test_native_assets_and_ucv_manifest_are_reproducible(sources,tmp_path):
     ucv=json.loads((one/first["ucv"]["json"]).read_text(encoding="utf-8"))
     assert ucv["framework"]=="Universal Customer View"
     assert len(ucv["tables"])==8
-    for stem in ("source-systems","source-tables","source-tables-report","source-systems-report"):
+    assert ucv["category_definitions"]==CATEGORY_DEFINITIONS
+    for stem in ("source-systems","source-tables","source-tables-report","source-systems-report","knowledge-assets","journey-save-time","journey-build-skill"):
         info=first["diagrams"][stem]
         assert (one/info["png"]).read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
         svg=(one/info["svg"]).read_text(encoding="utf-8")
         assert '<svg' in svg and 'data-quality-profile="standard"' in svg
         assert '<script' not in svg
+        assert 'data-legend-bridge-runtime' not in svg
     svg=(one/"diagrams/source-tables.svg").read_text(encoding="utf-8")
     assert "related_transaction_id" in svg and "campaign_metadata" in svg
     report_svg=(one/"diagrams/source-systems-report.svg").read_text(encoding="utf-8")
     assert "font-size: 12px" in report_svg
     assert "Company direction and next action</text>" not in report_svg
     assert "person_id / period_id / campaign_id" in report_svg
+    journey_svg=(one/"diagrams/journey-save-time.svg").read_text(encoding="utf-8")
+    assert 'font-size: 13px' in journey_svg and 'font-size: 11px' in journey_svg
+    assert "people.primary_need" in journey_svg and "renewal_outcome / plan_tier" in journey_svg
+    for relative,digest in first["knowledge_asset_hashes"].items():
+        assert hashlib.sha256((Path(__file__).resolve().parents[1]/relative).read_bytes()).hexdigest()==digest
+
+
+def test_knowledge_assets_distinguish_roles_without_distributing_private_generation():
+    candidate=_knowledge_assets_candidate()
+    by_id={node["id"]:node for node in candidate["components"]}
+    assert by_id["article"]["type"]=="external"
+    assert by_id["csv"]["type"]=="database"
+    assert by_id["student"]["type"]=="frontend"
+    assert by_id["model"]["type"]=="backend"
+    assert "CPU" in by_id["model"]["label"]
+    assert "uv.lock" in by_id["uv"]["label"]
+    assert len(candidate["meta"]["legend"]["entries"])==6
+    text=json.dumps(candidate)
+    assert "generate_data" not in text and "seed" not in text and "DGP" not in text
+    assert "Instructor-only future outcomes" in text
+    for need in ("save_time","build_skill"):
+        journey=_conceptual_journey(need)
+        assert len(journey["nodes"])==10
+        assert "Hypotheses" in journey["meta"]["subtitle"]
+        evidence=[edge for edge in journey["edges"] if edge["id"].startswith("look")]
+        assert len(evidence)==5 and all(edge["variant"]=="dashed" for edge in evidence)
+
+
+def test_local_method_reference_is_a_frozen_licensed_source_notebook():
+    folder=Path(__file__).resolve().parents[1]/"assets/articles/orduz-2024-cohort-revenue-retention"
+    provenance=json.loads((folder/"provenance.json").read_text(encoding="utf-8"))
+    assert provenance["license"]=="MIT" and provenance["executed"] is False
+    assert len(provenance["source_commit"])==40
+    assert "associated documentation" in (folder/"LICENSE.txt").read_text(encoding="utf-8")
+    notebook=json.loads((folder/"source.ipynb").read_text(encoding="utf-8"))
+    assert len(notebook["cells"])==provenance["notebook_cells"]
+    assert (folder/"orduz-source-notebook.pdf").read_bytes().startswith(b"%PDF-")
+    for relative,record in provenance["files"].items():
+        payload=(folder/relative).read_bytes()
+        assert len(payload)==record["bytes"]
+        assert hashlib.sha256(payload).hexdigest()==record["sha256"]

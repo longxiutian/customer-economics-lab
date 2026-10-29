@@ -1,0 +1,8 @@
+{
+  "algorithm": "SHA256(canonical JSON of frozen private design/code manifest || private 32-byte salt)",
+  "created_utc": "2026-10-29T14:17:26.823296+00:00",
+  "purpose": "Commits the instructor's private synthetic scenario before the production random key is drawn; details may be revealed after evaluation closes.",
+  "sha256": "25e29138ad08a049b8818d050b08d9bca0c5b6446a5d520008e5c619f7a16c02",
+  "type": "instructor_design_commitment",
+  "version": 1
+}

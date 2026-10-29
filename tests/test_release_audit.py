@@ -132,11 +132,12 @@ def test_report_preserves_the_learners_distinct_judgment(tmp_path, monkeypatch):
         "segmentation_comparison.csv": pd.DataFrame([dict(scheme="primary_need", weighted_within_variance=2, n_groups=2, min_group_size=10)]),
         "experiment_effects.csv": pd.DataFrame(),
         "experiment_summary.csv": pd.DataFrame(),
-        "cohort_totals.csv": pd.DataFrame([dict(cohort_month="2024-01-01",age_month=5,retained_share=.5),dict(cohort_month="2025-07-01",age_month=5,retained_share=.7)]),
-        "cohort_cash_economics.csv": pd.DataFrame([dict(cohort_month="2024-01-01",cac=100),dict(cohort_month="2025-07-01",cac=80)]),
-        "cohort_age_summary.csv": pd.DataFrame([dict(cohort_month=cohort,channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=retained)
-            for cohort,retained in [('2024-01-01',5),('2025-07-01',7)]
+        "cohort_totals.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,retained_share=.5 if year==2024 else .7) for year in [2024,2025] for month in range(1,7)]),
+        "cohort_cash_economics.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,cac=100 if year==2024 else 80,cumulative_contribution_per_customer=120 if year==2024 else 140,balance_per_customer=20 if year==2024 else 60) for year in [2024,2025] for month in range(1,7)]),
+        "cohort_age_summary.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=5 if year==2024 else 7)
+            for year in [2024,2025] for month in range(1,7)
             for channel in ['search','partner'] for need in ['save_time','build_skill']]),
+        "cohort_economics_ex_tests.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,excluded_test_buyers=0,excluded_test_spend=0,acquisition_spend=4000 if year==2024 else 3200,cumulative_contribution=4800 if year==2024 else 5600,balance_after_acquisition=800 if year==2024 else 2400) for year in [2024,2025] for month in range(1,7)]),
     }
     monkeypatch.setattr(report, "_table", lambda output, name: fixtures[name].copy())
     context = report._context(tmp_path)

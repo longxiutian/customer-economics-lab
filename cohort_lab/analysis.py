@@ -25,6 +25,7 @@ TABLE_SORTS = {
     "company_totals": "calendar_month",
     "experiment_effects": "experiment_id",
     "cohort_six_month_comparison": "cohort_month",
+    "cohort_economics_ex_tests": "cohort_month, age_month",
 }
 
 
@@ -76,6 +77,8 @@ def _assert_analysis(con) -> dict:
         "one_spend_per_experiment": "SELECT (SELECT sum(media_spend) FROM experiment_summary) - (SELECT sum(media_spend) FROM experiment_spend)",
         "organic_CAC_unsupported": "SELECT count(*) FROM cohort_acquisition_costs WHERE channel IN ('organic','unknown') AND cac IS NOT NULL",
         "gross_minus_refunds_reconciles": "SELECT (SELECT sum(gross_payment_revenue-net_revenue) FROM customer_month) - (SELECT sum(refund_amount) FROM transactions)",
+        "ex_test_customer_counts_reconcile": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE x.n_acquired+x.excluded_test_buyers<>c.n_acquired",
+        "ex_test_spending_reconciles": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE abs(x.acquisition_spend+x.excluded_test_spend-c.acquisition_spend)>0.000001",
     }
     for name, query in assertions.items():
         result = con.execute(query).fetchone()[0]

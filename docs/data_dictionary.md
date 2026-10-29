@@ -6,7 +6,7 @@ time or guided learning to build skills. Standard/premium plans renew monthly;
 paid workshops and other add-ons appear as separate purchases.
 There are 24 first-paid joining cohorts, January 2024 through December 2025.
 The exclusive observation cutoff is **2026-01-01 00:00:00 UTC**. All money is USD.
-The default generation seed is `20261116`. No real customer or course records are included.
+The observed exports are frozen and hash-verified. Data generation is maintained separately by the instructor; the student workflow does not require a generation seed or future outcomes. No real customer or course records are included.
 
 `data/data_dictionary.json` contains the exact columns, types, nullability and
 primary keys. `data/data_manifest.json` records file hashes, row counts, source

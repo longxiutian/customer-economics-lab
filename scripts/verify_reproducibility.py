@@ -30,11 +30,15 @@ def compared_files(run: Path, pdf: bool) -> list[str]:
               'report/customer-economics-report.tex']
     names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'report').glob('*.sty')]
     names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'report').glob('*.csv')]
+    names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'report').glob('*.json')]
     names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'diagrams').glob('*') if p.suffix in {'.html','.svg','.png'}]
     names += ['diagrams/ucv-tables.json']
+    names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'challenge').glob('*.csv')]
+    names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'challenge').glob('*.json')]
     # Only canonical report figures belong to the scientific/presentation
     # contract. Ad hoc contact sheets and page renders are visual QA evidence.
     names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'report/figures').glob('*.png')]
+    names += [str(p.relative_to(run)).replace('\\', '/') for p in (run/'report/figures').glob('*.pdf')]
     if pdf:
         names.append('report/customer-economics-report.pdf')
     return sorted(set(names))

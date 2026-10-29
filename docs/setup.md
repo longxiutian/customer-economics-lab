@@ -1,6 +1,6 @@
 # Setup before class
 
-The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v2.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
+The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v3.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
 
 ## Python environment
 
@@ -16,7 +16,7 @@ If the machine has several interpreters, select a verified Python 3.12 explicitl
 uv sync --frozen --python /path/to/python3.12
 ```
 
-The exact resolved package versions are in `uv.lock`. The core model uses CPU JAX/NumPyro; a GPU is not required. Keep the environment inside the repository's `.venv`, rather than changing unrelated global packages. Network access is needed for the initial package download.
+Use uv for all Python dependency management and execution (`uv sync`, `uv run --frozen python`, and, only in an explicitly separate experiment, `uv add`). Do not install packages with pip or Conda. The exact resolved package versions are in `uv.lock`. Both released models explicitly select CPU JAX/NumPyro with float64. Four NUTS chains run sequentially on one CPU device; a GPU, CUDA, and accelerator drivers are not required. The source article contains its author's original settings; follow this repository's CPU configuration. Keep the environment inside the repository's `.venv`, rather than changing unrelated global packages. Network access is needed for the initial package download.
 
 ## Diagram and report tools
 

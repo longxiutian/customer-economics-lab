@@ -15,7 +15,7 @@ from scripts.bootstrap import archive_url, install_archive
 def data_dir(tmp_path):
     directory = tmp_path / "data"
     directory.mkdir()
-    manifest = {"dataset_version": "2.0", "schema_version": "2.0", "data_as_of": "2026-01-01T00:00:00Z", "files": {}}
+    manifest = {"dataset_version": "3.0", "schema_version": "2.0", "data_as_of": "2026-01-01T00:00:00Z", "files": {}}
     for name in DATA_FILES:
         content = "person_id,value\np1,1\n"
         (directory / name).write_bytes(content.encode("utf-8"))
@@ -237,7 +237,7 @@ def test_archive_download_install_requires_no_git(tmp_path, monkeypatch):
     destination = install_archive(_archive(tmp_path), tmp_path / "extracted")
     assert (destination / "SKILL.md").is_file()
     assert not (destination / ".git").exists()
-    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v2.0.0.zip"
+    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v3.0.0.zip"
 
 
 def test_archive_rejects_traversal_before_extracting(tmp_path):

@@ -14,7 +14,7 @@ In one AI-agent chat, students inspect the exports, classify each dataset's Univ
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v2.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v3.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
@@ -64,7 +64,7 @@ Use the [business brief](docs/business_brief.md), [data dictionary](docs/data_di
 
 ## Instructor reproducibility
 
-The frozen data release is version **2.0**, generated from seed **20261116**. The source manifest records every CSV's hash, definitions and simulation design. The generator uses persistent customer propensities from a Beta mixture; inference uses a different single-Beta hierarchical model. Hidden simulation variables never enter analyst features. The canonical SQL pipeline generates the tables; plotting and reporting consume those results.
+The frozen observed data release is version **3.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
 
 For an explicitly requested full reproducibility run:
 
@@ -76,6 +76,10 @@ uv run --frozen python scripts/verify_reproducibility.py --output outputs/replay
 
 Batch mode intentionally runs all computations and is not the student-chat workflow. Choose a fresh empty output folder for each run. Use `--no-pdf` before the command only when an editable TeX result is intentionally sufficient. A different model step budget or seed is recorded and invalidates dependent guided outputs. Changes to core code, SQL, templates, or the frozen environment fail closed in an existing guided session; restore the release or begin a new output folder.
 
-The default main-model budget gives four NUTS chains 1,000 warmup iterations and 1,000 retained draws each. The separate neural-network comparison uses 10,000 SVI steps. Read the [model specification](docs/model-specification.md), [simulation design](docs/simulation-design.md), and [model review](docs/model-review.md) for assumptions, historical validation, and the limits of the uncertainty bands. The [bundled report skill](skills/executive-report/SKILL.md) specifies the executive narrative and required parameter, validation and data appendices.
+The default main-model budget gives four NUTS chains 1,000 warmup iterations and 1,000 retained draws each. The separate neural-network comparison uses 10,000 SVI steps. Read the [model specification](docs/model-specification.md), and [model review](docs/model-review.md) for assumptions, historical validation, and the limits of the uncertainty bands. The [bundled report skill](skills/executive-report/SKILL.md) specifies the executive narrative and required parameter, validation and data appendices.
 
-The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses. The source articles and tutorials are linked, not copied into the data release.
+Use [the local Orduz reading](assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf), the eight UCV field tables, the segment journey maps, and the knowledge-assets diagram as part of the workflow. The optional [model challenge](docs/model-challenge.md) forecasts the next twelve calendar months; future outcomes are not distributed.
+
+Use **uv** for all Python package management and execution. The baseline and neural comparison run on **CPU**; no GPU or CUDA installation is required.
+
+The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses. The archived Orduz source-notebook reading carries its own author license and provenance under `assets/articles/`; other sources are cited separately.

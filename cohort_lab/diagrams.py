@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import duckdb
 from .data import SCHEMAS, PRIMARY_KEYS, GRAINS
-from .ucv import build_ucv_tables, ucv_markdown
+from .ucv import CATEGORY_DEFINITIONS, build_ucv_tables, ucv_markdown
 
 ROOT = Path(__file__).resolve().parent.parent
 FILES = ["people.csv", "subscription_periods.csv", "transactions.csv", "product_events.csv",
@@ -249,19 +249,78 @@ def _conceptual_journey(need: str) -> dict:
         title="Build skill: a conceptual customer journey"
         actions=[("Set a learning goal","identify a capability gap"),("Evaluate guidance","look for useful practice"),("Try the first lesson","complete guided practice"),("Notice progress","apply a learned skill"),("Review renewal","is there a useful next step?")]
         questions=["Hypothesis: visible progress and a credible next challenge matter more than immediate speed.","Investigate: among people who state build_skill, does the observed sequence include practice and return visits?", "Ask in research: what did you want to learn, what can you do now, and where did you get stuck?"]
-    evidence=[("Need + source","CRM / attributed source"),("Early interactions","product event sequence"),("Payment + usage","billing / product events"),("Experience + voice","events / feedback"),("Continue or leave","renewal system / billing")]
+    evidence=[("Perception: stated goal","people.primary_need"),
+              ("Engagement: early actions","product_events.event_type"),
+              ("Engagement: payment + use","transaction_type / event_type"),
+              ("Engagement + Perception","event_type / value_rating"),
+              ("Relationship: renewal","renewal_outcome / plan_tier")]
     nodes=[];edges=[]
     for i,((label,sub),(data_label,data_sub)) in enumerate(zip(actions,evidence)):
-        nodes.extend([{"id":f"step{i}","lane":"hypothesis","col":i,"type":"frontend","label":label,"sublabel":sub,"width":180},
-                      {"id":f"evidence{i}","lane":"evidence","col":i,"type":"database","label":data_label,"sublabel":data_sub,"width":180}])
-        if i:edges.append({"id":f"sequence{i}","from":f"step{i-1}","to":f"step{i}","variant":"default"})
-        edges.append({"id":f"look{i}","from":f"step{i}","to":f"evidence{i}","variant":"dashed"})
+        nodes.extend([{"id":f"step{i}","lane":f"stage{i}","col":0,"type":"frontend","label":label,"sublabel":sub,"width":245,"height":70},
+                      {"id":f"evidence{i}","lane":f"stage{i}","col":1,"type":"database","label":data_label,"sublabel":data_sub,"width":245,"height":70}])
+        if i:edges.append({"id":f"sequence{i}","from":f"step{i-1}","to":f"step{i}","variant":"default","fromSide":"bottom","toSide":"top","route":"drop"})
+        edges.append({"id":f"look{i}","from":f"step{i}","to":f"evidence{i}","variant":"dashed","fromSide":"right","toSide":"left"})
     return {"schema_version":2,"diagram_type":"workflow","meta":{"title":title,"subtitle":"Hypotheses to examine, not an observed path or a population funnel","output":f"journey-{short}.html","locale":"en","quality_profile":"standard","visual_preset":"editorial","animation":"none",
             "legend":{"entries":{"frontend":{"label":"Proposed experience"},"database":{"label":"Evidence source"}}}},
-            "lanes":[{"id":"hypothesis","label":"Conceptual customer experience"},{"id":"evidence","label":"Where to look for evidence"}],
+            "lanes":[{"id":f"stage{i}","label":label} for i,label in enumerate(["Need","Evaluation","First value","Ongoing value","Renewal"])],
             "nodes":nodes,"edges":edges,
             "cards":[{"dot":"orange","title":"Proposed interpretation — test it","items":questions},
-                     {"dot":"cyan","title":"What is recorded and what is missing","items":["The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.","The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.","Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."]}]}
+                     {"dot":"cyan","title":"What is recorded and what is missing","items":["The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.","Identifiers such as person_id connect evidence across the source records. Evidence boxes name the relevant UCV category and actual field; field provenance remains in the full UCV tables.","The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.","Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."]}]}
+
+
+def _knowledge_assets_candidate() -> dict:
+    """Public knowledge/runtime assets; no private generator or holdout enters the map."""
+    components = [
+        {"id":"article","type":"external","label":"Orduz source notebook","sublabel":"Local PDF + MIT provenance","pos":[40,40],"size":[220,78],"sources":[{"path":"assets/articles/orduz-2024-cohort-revenue-retention/source.ipynb"}]},
+        {"id":"student","type":"frontend","label":"Analysis skill","sublabel":"One chat; explicit next stages","pos":[370,40],"size":[220,78],"sources":[{"path":"SKILL.md"}]},
+        {"id":"reportskill","type":"frontend","label":"Executive report skill","sublabel":"Narrative + style + appendices","pos":[700,40],"size":[220,78],"sources":[{"path":"skills/executive-report/SKILL.md"}]},
+        {"id":"csv","type":"database","label":"Eight frozen CSVs","sublabel":"Schemas + UCV field tables","pos":[40,220],"size":[220,78],"sources":[{"path":"data/data_dictionary.json"},{"path":"cohort_lab/ucv.py"}]},
+        {"id":"sql","type":"backend","label":"DuckDB + NumPy/pandas","sublabel":"Saved SQL + checked views","pos":[370,220],"size":[220,78],"sources":[{"path":"cohort_lab/analysis.py"},{"path":"sql/01_views.sql"}]},
+        {"id":"model","type":"backend","label":"JAX CPU + NumPyro","sublabel":"Retention + revenue inference","pos":[700,220],"size":[220,78],"sources":[{"path":"cohort_lab/model.py"},{"path":"cohort_lab/benchmark.py"}]},
+        {"id":"archify","type":"frontend","label":"Archify skill + Node","sublabel":"Source maps + journeys","pos":[40,400],"size":[220,78],"sources":[{"path":"vendor/archify/SKILL.md"},{"path":"cohort_lab/diagrams.py"}]},
+        {"id":"render","type":"backend","label":"Matplotlib + Jinja2","sublabel":"Figures + editable TeX","pos":[370,400],"size":[220,78],"sources":[{"path":"cohort_lab/report.py"},{"path":"templates/customer-economics-report.tex.j2"}]},
+        {"id":"output","type":"messagebus","label":"Executive report + evidence","sublabel":"PDF / SQL / model / manifests","pos":[700,400],"size":[220,78],"sources":[{"path":"cohort_lab/report.py"}]},
+        {"id":"uv","type":"security","label":"uv + uv.lock","sublabel":"Pinned Python environment","pos":[370,580],"size":[220,78],"sources":[{"path":"pyproject.toml"},{"path":"uv.lock"}]},
+    ]
+    links = [
+        ("article","student","method reference"),("student","reportskill","writing contract"),
+        ("student","sql","guides stages"),("reportskill","output","governs report"),
+        ("csv","sql","observed rows"),("sql","model","cohort evidence"),
+        ("archify","render","native diagrams"),("model","output","forecasts + checks"),
+        ("render","output","TeX + figures"),("uv","render","locked packages"),
+    ]
+    # This is a runtime-generated asset map. Current file hashes belong in the
+    # build manifest; a prior Git commit would misdescribe an uncommitted lab.
+    for component in components:
+        component.pop("sources")
+        component["pos"]=[40+(component["pos"][0]-40)/330*265,40+(component["pos"][1]-40)/180*135]
+    short_subtitles={"article":"Local PDF + MIT notice","student":"One chat / next advances","reportskill":"Style + report appendix",
+                     "csv":"Schemas + UCV fields","sql":"Saved SQL + checks","model":"Retention + revenue",
+                     "render":"Figures + TeX source","output":"PDF, SQL, model, audit","uv":"Locked Python packages"}
+    for component in components:
+        component["sublabel"]=short_subtitles.get(component["id"],component["sublabel"])
+    components[8]["label"]="Executive report"
+    return {"schema_version":1,"diagram_type":"architecture",
+            "meta":{"title":"Knowledge assets behind the customer-economics framework","output":"knowledge-assets.html",
+                    "locale":"en","quality_profile":"standard","animation":"none","visual_preset":"editorial",
+                    "legend":{"entries":{"frontend":{"label":"Skills"},"external":{"label":"Reference"},
+                        "database":{"label":"Source data"},"backend":{"label":"Computation"},
+                        "messagebus":{"label":"Outputs"},"security":{"label":"Environment"}}}},
+            "components":components,
+            "connections":[{"id":f"knowledge{i}","from":a,"to":b,"label":label,
+                            **({"fromSide":"right","toSide":"left","route":"straight"} if i in (0,1,4,5,6,8) else {}),
+                            **({"labelAt":[284,25]} if i==0 else {}),
+                            **({"labelAt":[549,25]} if i==1 else {}),
+                            **({"fromSide":"bottom","toSide":"top","labelAt":[415,145]} if i==2 else {}),
+                            **({"label":"","fromSide":"right","toSide":"right","via":[[810,79],[810,349]]} if i==3 else {}),
+                            **({"labelAt":[284,160]} if i==4 else {}),
+                            **({"labelAt":[549,160]} if i==5 else {}),
+                            **({"labelAt":[284,295]} if i==6 else {}),
+                            **({"fromSide":"bottom","toSide":"top","labelAt":[680,280]} if i==7 else {}),
+                            **({"labelAt":[549,295]} if i==8 else {})}
+                           for i,(a,b,label) in enumerate(links)],
+            "cards":[{"dot":"cyan","title":"Read the symbols and colors by asset type","items":["Blue skill panels guide the agent; gray reference panels supply methods. Purple database symbols identify frozen evidence; green code symbols identify local computations.","Amber list symbols collect the deliverables. The rose shield identifies the environment pinned through uv.lock. These symbols do not imply a cloud service."]},
+                     {"dot":"emerald","title":"The complete runtime is local","items":["Python packages are installed and run with uv. CPU JAX and NumPyro do not require a GPU.","Archify runs with Node; pinned Playwright exports its diagrams. A local TeX engine compiles the report from the bundled style assets.","The learner receives observed source records. Instructor-only future outcomes and data-generation tools are outside this public framework."]}]}
 
 
 def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
@@ -278,13 +337,13 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
     for file in FILES:
         name=file.removesuffix(".csv");count_sql=f"SELECT count(*) FROM {name}";sql_log.append(count_sql)
         inventory.append({"file":file,"rows":con.execute(count_sql).fetchone()[0],"source":SOURCES[file][0],"grain":SOURCES[file][1],"sha256":_sha(data/file)})
-    candidates={"source-systems":_system_candidate(inventory),"source-tables":_erd_candidate(),"source-tables-report":_report_erd_candidate(),"source-systems-report":_report_system_candidate(),"customer-journey":_journey_candidate(con,sql_log),
+    candidates={"source-systems":_system_candidate(inventory),"source-tables":_erd_candidate(),"source-tables-report":_report_erd_candidate(),"source-systems-report":_report_system_candidate(),"knowledge-assets":_knowledge_assets_candidate(),"customer-journey":_journey_candidate(con,sql_log),
                 "journey-save-time":_conceptual_journey("save_time"),"journey-build-skill":_conceptual_journey("build_skill")}
     con.close()
     (folder/"inspection.sql").write_text(";\n\n".join(s.rstrip(';') for s in sql_log)+";\n",encoding="utf-8")
     _write(folder/"source_inventory.json",inventory)
     ucv_tables=build_ucv_tables(data)
-    _write(folder/"ucv-tables.json",{"framework":"Universal Customer View","categories":["Identifiers","Engagement","Relationship","Perception"],"tables":ucv_tables})
+    _write(folder/"ucv-tables.json",{"framework":"Universal Customer View","categories":["Identifiers","Engagement","Relationship","Perception"],"category_definitions":CATEGORY_DEFINITIONS,"tables":ucv_tables})
     (folder/"ucv-tables.md").write_text(ucv_markdown(ucv_tables),encoding="utf-8")
     results={}
     for stem,candidate in candidates.items():
@@ -297,7 +356,8 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
         results[stem]={"json":f"diagrams/{source.name}","html":f"diagrams/{dest.name}","sha256":_sha(dest),"renderer":"native Archify "+kind}
     # The report includes the real native overview. Missing browser support is
     # an explicit failure; an old reference PNG is never silently substituted.
-    static_stems=("source-systems","source-tables","source-tables-report","source-systems-report")
+    static_stems=("source-systems","source-tables","source-tables-report","source-systems-report",
+                  "knowledge-assets","journey-save-time","journey-build-skill")
     p=subprocess.run([node,str(ROOT/"scripts/export_diagram_assets.mjs"),
                       *[str(folder/f"{stem}.html") for stem in static_stems]],
                      cwd=ROOT,text=True,capture_output=True,timeout=120)
@@ -311,8 +371,13 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
             results[stem][suffix]=f"diagrams/{asset.name}"
     outputs=[folder/"ucv-tables.json",folder/"ucv-tables.md",folder/"source_inventory.json"]
     outputs.extend(folder/Path(info[field]).name for info in results.values() for field in ("json","html","svg","png") if field in info)
+    knowledge_paths=("SKILL.md","skills/executive-report/SKILL.md","assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf",
+                     "assets/articles/orduz-2024-cohort-revenue-retention/LICENSE.txt","cohort_lab/ucv.py","cohort_lab/analysis.py",
+                     "cohort_lab/model.py","cohort_lab/benchmark.py","cohort_lab/diagrams.py","cohort_lab/report.py",
+                     "vendor/archify/SKILL.md","templates/customer-economics-report.tex.j2","pyproject.toml","uv.lock")
     result={"archify":_json_provenance(),"sources":inventory,"diagrams":results,
-            "static_renderer":{"package":"playwright","version":"1.62.1","viewport":[2400,1600],"device_scale_factor":2,"theme":"light","animations":"disabled","locale":"en-US","timezone":"UTC","report_overview":"Native nodes and edges; reader swimlanes/legend omitted; 12px titles and 9px context; cropped with 20px margin"},
+            "knowledge_asset_hashes":{relative:_sha(ROOT/relative) for relative in knowledge_paths},
+            "static_renderer":{"package":"playwright","version":"1.62.1","script_sha256":_sha(ROOT/"scripts/export_diagram_assets.mjs"),"viewport":[2400,1600],"device_scale_factor":2,"theme":"light","animations":"disabled","locale":"en-US","timezone":"UTC","interactive_ui":"Runtime legend hitboxes/count badges omitted; authored semantic labels and swatches preserved","report_overview":"Native nodes and edges; reader swimlanes/legend omitted; 12px titles and 9px context; cropped with 20px margin","journeys":"Two-column native workflow with stages retained; unused right margin trimmed; 13px titles and 11px context","knowledge_assets":"Compact native architecture with type colors and glyphs; 14px titles and 13px context"},
             "ucv":{"json":"diagrams/ucv-tables.json","markdown":"diagrams/ucv-tables.md"},
             "output_hashes":{p.relative_to(output).as_posix():_sha(p) for p in outputs},
             "verification":"Native renderer validation passed; browser and visual review are separate development checks."}

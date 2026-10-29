@@ -13,8 +13,8 @@ import json
 import os
 from pathlib import Path
 
-os.environ.setdefault("JAX_PLATFORMS", "cpu")
-os.environ.setdefault("JAX_ENABLE_X64", "true")
+os.environ["JAX_PLATFORMS"] = "cpu"
+os.environ["JAX_ENABLE_X64"] = "true"
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import numpy as np

@@ -4,7 +4,7 @@ This repository implements a genuine Bayesian neural network as a **separate ret
 
 ## What comes from the source
 
-Juan Orduz's [Cohort Revenue Retention Analysis with Flax and NumPyro](https://juanitorduz.github.io/revenue_retention_numpyro/) combines a small Bayesian retention network with a revenue model. Its network has four sigmoid hidden units and a sigmoid output, with Laplace priors on weights and biases. This repository implements that mathematical architecture directly in NumPyro/JAX, so Flax is unnecessary. It is an explicit adaptation rather than a verbatim reproduction of his notebook.
+Juan Orduz's [Cohort Revenue Retention Analysis with Flax and NumPyro](../assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf) combines a small Bayesian retention network with a revenue model. Its network has four sigmoid hidden units and a sigmoid output, with Laplace priors on weights and biases. This repository implements that mathematical architecture directly in NumPyro/JAX, so Flax is unnecessary. It is an explicit adaptation rather than a verbatim reproduction of his notebook.
 
 ## What this business requires us to change
 
@@ -27,7 +27,7 @@ There are 16 fixed input features:
 | Acquisition channel | `partner` and `organic` indicators; `search` reference |
 | Calendar month | February–December indicators; January reference |
 
-Fixed transformations require no scaling statistics from the holdout period. The network does not use latent simulation propensities, mixture labels, future outcomes or data-generation parameters. The true calendar shock is not supplied as an input.
+Fixed transformations require no scaling statistics from the holdout period. The network does not use latent simulator variables, future outcomes or hidden generator parameters. Unobserved external events are not supplied as inputs.
 
 ## Inference and fair comparison
 

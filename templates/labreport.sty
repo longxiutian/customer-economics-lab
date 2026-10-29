@@ -1,8 +1,16 @@
 % Report semantics layered over the maintained, unmodified visual package.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{labreport}[2026/10/29 v2.0 Customer economics executive report]
+\ProvidesPackage{labreport}[2026/10/29 v3.0 Customer economics executive report]
 \RequirePackage{longxiu-research-brief}
 \RequirePackage{graphicx,amsmath}
+% Preserve literal code in both the printed glyphs and the PDF text layer.
+\renewcommand{\ttdefault}{lmtt}
+\DisableLigatures{encoding = T1, family = lmtt}
+\ifdefined\pdfglyphtounicode
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\fi
+\newcommand{\Code}[1]{{\ttfamily\microtypesetup{tracking=false,expansion=false,protrusion=false}\detokenize{#1}}}
 \usetikzlibrary{arrows.meta,positioning,calc}
 \colorlet{Ink}{BriefInk}
 \colorlet{Teal}{BriefGreen}
@@ -23,6 +31,9 @@
 \newcommand{\Boundary}[1]{\begin{BriefBoundaryBox}#1\end{BriefBoundaryBox}}
 \newcommand{\Metric}[3]{\begin{minipage}[t]{.31\linewidth}{\color{BriefMuted}\fontsize{8}{10}\selectfont #1}\par{\color{BriefGreen}\fontsize{20}{23}\selectfont\bfseries #2}\par{\color{BriefMuted}\fontsize{8}{10}\selectfont #3}\end{minipage}}
 \newcommand{\FullFig}[2]{\begin{center}\includegraphics[width=\linewidth,height=#2,keepaspectratio]{figures/#1}\end{center}\vspace{-3pt}}
+\newcommand{\FigureCaption}[2]{\par\refstepcounter{figure}\label{fig:#1}{\color{BriefInk}\fontsize{8}{10}\selectfont\textbf{Figure \thefigure.} #2}\par\vspace{4pt}}
+\newcommand{\ReportFigure}[4]{\FullFig{#3}{#4}\FigureCaption{#1}{#2}}
+\newcommand{\TableCaption}[2]{\par\refstepcounter{table}\label{tab:#1}{\color{BriefInk}\fontsize{8}{10}\selectfont\textbf{Table \thetable.} #2}\par\vspace{3pt}}
 \newcommand{\NewPage}{\clearpage}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\DatasetTitle}[2]{\Section{#1}\Evidence{#2}\vspace{3pt}}

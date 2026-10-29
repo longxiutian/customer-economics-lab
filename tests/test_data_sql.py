@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from cohort_lab.analysis import build_views, validate_analysis
-from cohort_lab.data import SCHEMAS, SCHEMA_VERSION, generate_data, validate_data
+from cohort_lab.data import SCHEMAS, SCHEMA_VERSION, validate_data
 
 
 def _seal(folder, as_of="2024-04-01T00:00:00Z"):
@@ -217,9 +217,13 @@ def test_broad_campaign_cost_not_invented_for_segment(hand_data, tmp_path):
     assert sum(float(r["acquisition_spend"]) for r in company) == 158
 
 
-def test_canonical_exports_are_seed_reproducible(tmp_path):
+def test_frozen_exports_validate_independently_of_private_generation(tmp_path):
+    import shutil
     repo = Path(__file__).resolve().parents[1]
-    expected = json.loads((repo / "data" / "data_manifest.json").read_text(encoding="utf-8"))
-    actual = generate_data(tmp_path / "regenerated", seed=expected["synthetic_seed"])
-    assert actual == expected
-    assert actual["files"] == expected["files"]
+    target = tmp_path / "observed"
+    shutil.copytree(repo / "data",target)
+    actual = validate_data(target)
+    assert actual["status"] == "passed" and actual["files_checked"] == 8
+    expected = json.loads((target / "data_manifest.json").read_text(encoding="utf-8"))
+    assert set(expected["files"]) == set(SCHEMAS)
+    assert "synthetic_seed" not in expected and "retention_dgp" not in expected

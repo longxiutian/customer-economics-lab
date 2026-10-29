@@ -1,7 +1,7 @@
 {
   "currency": "USD",
   "data_as_of": "2026-01-01T00:00:00Z",
-  "dataset_version": "2.0",
+  "dataset_version": "3.0",
   "definitions": {
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
@@ -17,7 +17,6 @@
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
     "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
     "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
-    "synthetic_trends": "Changing acquisition cost and observable need/channel mix; persistent individual churn propensities from a two-Beta mixture whose composition varies across acquisition cohorts, needs and channels; a temporary common service disruption; explicit premium upgrades/add-on quantities and incurred costs. Random variation remains, and aggregate improvement does not by itself establish within-segment improvement.",
     "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
@@ -33,7 +32,7 @@
       "experiment_id": "EXP-01",
       "followup_end_at": "2025-06-01 00:00:00",
       "primary_need": "save_time",
-      "randomization": "Seeded shuffled balanced assignment among preexisting, never-paid eligible prospects.",
+      "randomization": "Balanced randomized assignment among preexisting, never-paid eligible prospects.",
       "tested_campaign_id": "TEST-01-search-save_time"
     },
     {
@@ -46,75 +45,46 @@
       "experiment_id": "EXP-02",
       "followup_end_at": "2025-10-01 00:00:00",
       "primary_need": "build_skill",
-      "randomization": "Seeded shuffled balanced assignment among preexisting, never-paid eligible prospects.",
+      "randomization": "Balanced randomized assignment among preexisting, never-paid eligible prospects.",
       "tested_campaign_id": "TEST-02-partner-build_skill"
     }
   ],
   "files": {
     "acquisition_attribution.csv": {
-      "row_count": 4672,
-      "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca"
+      "row_count": 5857,
+      "sha256": "c54ec7122d9738f2fab436aa811ca697d6d9f602a9e59c53f0649bd432f10c8c"
     },
     "campaign_spend.csv": {
       "row_count": 294,
-      "sha256": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057"
+      "sha256": "05a544edf793a17fa1ac00884a983597f41ed7214f057bab3edbd6db0a326a61"
     },
     "experiment_assignments.csv": {
       "row_count": 1000,
-      "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262"
+      "sha256": "22ae91f174ec349a048bfa0fe55c07d0ecac95d770d210b461c34e2ef05983a2"
     },
     "feedback.csv": {
-      "row_count": 2654,
-      "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822"
+      "row_count": 3372,
+      "sha256": "cb9af94e783a656341b76f27281f25475e168b1e18b28c5b3a81917406274b21"
     },
     "people.csv": {
-      "row_count": 5476,
-      "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214"
+      "row_count": 6690,
+      "sha256": "5eaf9fc192e8eabfeda92093f610f670a81616923eb1057cb58a60d381b81224"
     },
     "product_events.csv": {
-      "row_count": 59828,
-      "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53"
+      "row_count": 72107,
+      "sha256": "cc36b2091bfba839624b2af14ffe6f2c9fc164e3bd712465eadf4fe0dee82bcd"
     },
     "subscription_periods.csv": {
-      "row_count": 37244,
-      "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411"
+      "row_count": 44658,
+      "sha256": "84a2f2be62633241d1b8588a278f8470c249677e4763534022ef45093284f7a8"
     },
     "transactions.csv": {
-      "row_count": 45746,
-      "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5"
+      "row_count": 54421,
+      "sha256": "6753bd538e04305e1e8ea18ca454136439e8f5af10a53e1ef6f4790daaea80d7"
     }
   },
-  "generator": "cohort_lab.data.generate_data; Python standard-library random.Random, integer-cent generation",
   "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
-  "retention_dgp": {
-    "calendar_disruption": {
-      "churn_odds_multiplier": 1.35,
-      "months": [
-        "2025-03",
-        "2025-04"
-      ]
-    },
-    "channel_offset": {
-      "organic": 0.0,
-      "partner": -0.04,
-      "search": 0.04
-    },
-    "components": {
-      "durable": {
-        "alpha": 0.7,
-        "beta": 12.0
-      },
-      "fragile": {
-        "alpha": 2.0,
-        "beta": 5.0
-      }
-    },
-    "fragile_weight": "clip((0.40 if save_time else 0.24) + channel_offset - 0.06*cohort_index/23 + 0.02*sin(0.6*cohort_index), 0.05, 0.85)",
-    "latent_draw": "One Beta-mixture churn propensity per acquired person, reused at every renewal; latent propensity and component are never columns in the observed CSVs.",
-    "renewal": "Bernoulli((1-theta)/(1-theta+odds_multiplier*theta)); monthly until permanent churn; acquisition month is paid and future months are censored.",
-    "separation": "These simulation assumptions document data provenance. The inference model must fit only observed source-derived cohort cells, not latent propensities or DGP parameters.",
-    "version": "persistent-mixture-beta-v2"
-  },
+  "provenance": "Frozen original synthetic business records prepared by the instructor. Analytical reproducibility starts from these hash-verified files; generation and unreleased future outcomes are maintained separately.",
   "schema_version": "2.0",
   "source_cutoffs": {
     "acquisition_attribution.csv": "2026-01-01T00:00:00Z",
@@ -126,6 +96,5 @@
     "subscription_periods.csv": "2026-01-01T00:00:00Z",
     "transactions.csv": "2026-01-01T00:00:00Z"
   },
-  "synthetic_seed": 20261116,
   "timezone": "UTC"
 }
