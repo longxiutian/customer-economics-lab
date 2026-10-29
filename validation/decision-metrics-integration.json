@@ -1,0 +1,17 @@
+{
+  "dependent_manifest_and_tables_archived": [
+    "decision_metrics_manifest.json",
+    "tables/segmentation_objective.csv",
+    "tables/cac_reconciliation.csv"
+  ],
+  "manifest_bound_to_query_receipts": true,
+  "new_table_queries": {
+    "cac_reconciliation": 3,
+    "segmentation_objective": 4
+  },
+  "queries_advance_stage": false,
+  "release": "v6.0.0",
+  "scope": "Actual logged query helper against an isolated copy of final reference outputs; actual stage-4 artifact archival in that copy. No learner state or source data changed.",
+  "status": "passed",
+  "tampered_decision_table_rejected": true
+}

@@ -70,3 +70,14 @@ Keep student-facing prose concise and show the actual intermediate charts/tables
 Use the bundled report skill to revisit conceptual journey friction with pre-renewal events and feedback. Keep diagnostic groups separate from baseline acquisition segments, preserve survey missingness and original denominators, and show uncertainty and coverage. After estimation, compare supported acquisition segments using reconciled saved posterior paths; never allocate CAC or model LTV to post-acquisition signal groups.
 
 Use the course and term credit specified in the bundled report skill on the cover. Cite adapted methods explicitly in the relevant prose and provide a references page linked from the contents. Link the licensed Orduz reading and its provenance in `assets/`, and distinguish source methods from this lab's adaptations.
+
+
+## Segmentation objective and incremental acquisition cost
+
+Make the segmentation objective explicit: within-cell homogeneity and across-cell heterogeneity in a decision-relevant outcome. Compare the same customers, horizon and cell complexity using customer-weighted within/between population variance. Show the remaining within-cell dispersion; recognizability and actionability still matter. A descriptive outcome-level split does not estimate heterogeneous treatment effects. The report's four channel-by-need strategy cells and journey signals are distinct from its equal-complexity candidate comparison.
+
+Keep a dedicated **Acquisition cost and incrementality** section. Use the existing all-assigned acquisition holdouts to reconcile treatment media per treated buyer with incremental media per incremental buyer, scaling control counts and costs by N_T/N_C. Show the focal-campaign background inflow and uncertain lift denominator. Invert the positive lift interval with recorded spend fixed; a zero-crossing lift interval has no finite upper iCAC bound. A pooled estimate may describe only the tested programs as run, not company-wide or marginal CAC.
+
+Retain observed blended CAC with matching cohort contribution LTV. Do not relabel that accounting quantity incremental, subtract iCAC again from net LTV, or mix average-buyer LTV with incremental buyers and call it causal. A campaign decision needs incremental all-assigned contribution less incremental acquisition costs under a matching population, regime and horizon. The 30/31-day tests do not identify lifetime impact or a lower bound on it; control protection after their windows is unobserved. Clearly distinguish the lab's undiscounted cash payback from the course's discounted contribution payback.
+
+Read [the CAC methodology note](docs/cac-incrementality.md) for the MBA 743 Topic 1/3/4 connections and the Larsen source. Cite these sources in relevant prose and the references. Preserve the existing synthetic tests and frozen fitted artifacts; no private data generation or future labels are needed for this reconciliation.

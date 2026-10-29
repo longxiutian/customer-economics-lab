@@ -299,6 +299,7 @@ class LabWorkflow:
         """Keep old evidence recoverable while preventing stale previews."""
         names = ["report"]
         if from_stage <= 4:
+            names += ["decision_metrics_manifest.json", "tables/segmentation_objective.csv", "tables/cac_reconciliation.csv"]
             names += ["diagnostics_manifest.json", "tables/friction_contrasts.csv", "tables/friction_balance.csv", "tables/friction_refund_sensitivity.csv"]
         if from_stage <= 6:
             names += ["postestimation_manifest.json", "tables/segment_forecast_curves.csv", "tables/strategic_segment_breakout.csv", "tables/strategic_rank_stability.csv"]

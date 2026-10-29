@@ -1,0 +1,22 @@
+{
+  "all_pages_contact_sheet_reviewed": true,
+  "full_size_pages_reviewed": [
+    1,
+    2,
+    3,
+    12,
+    14,
+    27,
+    28,
+    29,
+    30,
+    31,
+    48,
+    49
+  ],
+  "overfull_boxes": 0,
+  "pages_rendered": 49,
+  "report_sha256": "8d5b6a88b4947bf2d8d6893570a19824522a34fc8e5599e9ad6ec5a25d473efa",
+  "scope": "Rendered all pages at 110 dpi; reviewed the full contact sheet and full-size cover, contents, summary, segmentation, CAC and reference pages. Existing unmodified exhibits retain their prior validation.",
+  "status": "passed"
+}

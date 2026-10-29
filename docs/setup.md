@@ -1,6 +1,6 @@
 # Setup before class
 
-The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v5.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
+The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v6.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
 
 ## Python environment
 

@@ -10,7 +10,7 @@ Studio North sells a monthly creative-work membership to independent professiona
 
 Management needs to know whether successive acquisition cohorts create more durable contribution at a cost the company can recover quickly enough to fund growth.
 \Takeaway{\VAR{learner_verdict}}
-\Metric{ACQUISITION EFFICIENCY}{\VAR{acquisition_kpi}}{blended CAC per acquired customer}\hfill
+\Metric{ACQUISITION EFFICIENCY}{\VAR{acquisition_kpi}}{observed blended CAC per acquired customer}\hfill
 \Metric{CUSTOMER VALUE}{\VAR{value_kpi}}{six-month contribution per customer}\hfill
 \Metric{CASH RECOVERY}{\VAR{cash_kpi}}{six-month cash after blended CAC}
 \Evidence{Matched-age comparison: \VAR{matched_cohorts}. Values above are rounded to dollars; the evidence table reports cents. Differences use unrounded values.}
@@ -61,7 +61,26 @@ The vertical position of differently colored curves at the \emph{same} age suppo
 Higher revenue retention can coexist with customer losses when remaining members upgrade or buy add-ons. A retention improvement should therefore be checked against contribution and acquisition recovery in Figure~\ref{fig:cash-triangle}, and against comparable customer groups in Figure~\ref{fig:channel-retention}.
 \Takeaway{The trajectory matters as well as the cutoff. A stronger first month does not establish longer customer life, while a customer-count decline can coexist with more spending by the members who remain.}
 
-\SectionDivider{04}{Customer segmentation}{Baseline customer differences, within-segment progress and implications for the operating plan.}
+\SectionDivider{04}{Customer segmentation}{Find useful cells with similar outcomes within each cell and different outcomes across cells, then connect them to decisions.}
+
+\PageTitle{04 / SEGMENTATION OBJECTIVE}{Similar within cells,\newline different across cells}{Compare candidate partitions on the same customers, outcome, horizon and number of cells.}
+\Section{The objective is a useful partition of heterogeneity}
+Choose a segmentation strategy that increases \textbf{within-cell homogeneity and across-cell heterogeneity} in a decision-relevant outcome. The MBA 743 grouping exercise holds willingness-to-pay values and cell counts fixed while changing who is grouped together (\SourceCite{course2026}{Tian, 2026}, Topic 1, slides 37--39). Here the outcome is six-receipt contribution per originally acquired customer.
+\[
+\underbrace{\operatorname{Var}(Y)}_{\text{fixed total variation}}
+=\underbrace{\sum_g w_g\operatorname{Var}(Y\mid g)}_{\text{within-cell variation}}
++\underbrace{\sum_g w_g(\bar Y_g-\bar Y)^2}_{\text{between-cell variation}},
+\qquad w_g=\frac{n_g}{N}.
+\]
+With the sample and outcome fixed, reducing weighted within-cell variance increases between-cell variance: they are the same objective. Population variances use the $n_g$ divisor. Cell sizes supply the weights; a small cell does not receive the same weight as a large one.
+\TableCaption{segmentation-objective}{Four two-cell partitions of the same \VAR{segmentation_objective_n} mature, paid, non-experimental customers. Within-cell SD is the square root of customer-weighted within-cell variance. Between-cell share is between variance divided by total variance.}
+\VAR{segmentation_objective_table}
+\Evidence{Saved output: \Code{segmentation_objective.csv}, reconciled to the existing SQL profiles. All six receipts are observed; original customer denominators and zeros after exit are retained. Cohort centering subtracts each joining cohort's mean before repeating the variance comparison.}
+\Section{The evidence favors need, with substantial residual variation}
+\VAR{segmentation_objective_sentence}
+\Boundary{Separation alone is insufficient: cells must also be recognizable, large enough to learn from and actionable. More cells can improve in-sample separation mechanically. Journey signals use different samples and timing, while channel-by-need cells support specific acquisition decisions; neither is automatically a better partition in this four-candidate comparison.}
+\NewPage
+
 \PageTitle{04 / CUSTOMER GROUPS}{Customer differences\newline and within-segment progress}{Observed renewal trajectories by acquisition channel and stated need; each panel uses the same axes and all 24 cohorts.}
 \ReportFigure{channel-retention}{Descriptive comparison. The full cohort sequence within each channel-by-need group. The color key identifies acquisition month. Paid channels are shown; organic test-control cells are omitted.}{channel-segment-retention.pdf}{4.25in}
 \Evidence{Saved SQL output: \Code{cohort_age_summary.csv}. Curves divide retained members by the original cohort--channel--need cell. No missing future observations are filled with zeros.}
@@ -72,7 +91,7 @@ Higher revenue retention can coexist with customer losses when remaining members
 \Evidence{Both experimental arms are excluded from this table and the fixed-mix calculation. The curves above include test buyers. Differences use unrounded values; the whole-company ex-test sensitivity appears in Table~\ref{tab:executive-evidence}.}
 
 \NewPage
-\PageTitle{04 / CUSTOMER GROUPS}{Segmentation explains\newline part of the economic variation}{Baseline characteristics define customer groups; their observed outcomes establish how useful those groups are for this decision.}
+\PageTitle{04 / CUSTOMER GROUPS}{Segmentation accounts for\newline part of the economic variation}{Baseline characteristics define customer groups; their observed outcomes establish how useful those groups are for this decision.}
 \Section{Economic differences across customer groups}
 \VAR{segment_profile_sentence}
 \TableCaption{segment-profile}{Six-receipt economics for the same mature paid customers, excluding both experimental arms. SD is the standard deviation of individual contribution within the stated-need group.}
@@ -191,7 +210,71 @@ The model explained in Section 6 supplies the expected contribution path, preser
 \textbf{Save-time experience.} Investigate whether a shorter use cycle reflects successful task completion, limited recurring need or an experience problem. The current event and survey flags do not distinguish those explanations. Test the proposition or onboarding change, then evaluate incremental contribution and cash over a stated follow-up window.
 \Boundary{A segment can have high predicted buyer value while a campaign has little incremental effect. The randomized evidence in the next section determines what can be said about the tested campaigns; the breakout identifies where a new test may be informative.}
 
-\SectionDivider{08}{Campaigns and management action}{Incremental campaign evidence, investment conditions and accountable next steps.}
+\SectionDivider{08}{Acquisition cost and incrementality}{Reconcile campaign credit with the no-campaign baseline, then match acquisition cost to the value relevant to the decision.}
+\PageTitle{08 / CAC DEFINITIONS}{One acquisition ledger,\newline different decision quantities}{Observed cohort economics and the causal return to an acquisition intervention answer different questions.}
+\Section{Observed blended CAC keeps the cohort accounts consistent}
+\[
+\text{Observed blended CAC}
+=\frac{\text{recorded media + other acquisition spending}}{\text{all customers acquired in the matching cohort}}.
+\]
+This report's earlier cohort exhibits use this accounting quantity with the contribution of those same customers. The denominator includes buyers who might have joined without the tested campaign. It is not incrementality-based. No global holdout identifies incremental CAC for all 24 cohorts. Charging every buyer spend per incremental buyer would deduct more than the recorded spending.
+\Section{Campaign credit is a starting point for reconciliation}
+For each holdout test, a simple attribution-style benchmark credits every treated buyer to the tested campaign: $S_T/B_T$, where $S_T$ is treatment media spending and $B_T$ is treated buyers. This is a transparent treatment-arm benchmark, not a newly estimated last-click metric. It overstates the number of customers caused by the campaign when some would buy in its absence.
+\Section{Incremental CAC removes the counterfactual baseline}
+With $k=N_T/N_C$ to align assignment sizes,
+\[
+\Delta B=B_T-kB_C,\qquad \Delta S=S_T-kS_C,
+\qquad \mathrm{iCAC}=\frac{\Delta S}{\Delta B}\quad(\Delta B>0).
+\]
+\SourceCite{larsen2019}{Larsen (2019)} motivates this distinction between attributed acquisitions, the background inflow and the return to additional spending. MBA 743 Topic 3, slides 6--10, develops the same cost-curve logic (\SourceCite{course2026}{Tian, 2026}).
+\Boundary{Control estimates acquisitions without the tested campaign in its eligible population and window. That background may reflect prior brand exposure and other marketing; it is not a company-wide count of purely organic customers. Each test compares zero media with \$2.60 or \$3.60 per assigned prospect. Its average incremental CAC describes that dose, population and window; it establishes neither a marginal cost curve nor a channel ranking.}
+
+\NewPage
+\PageTitle{08 / CAC RECONCILIATION}{Holdouts remove background\newline acquisitions from campaign credit}{The existing synthetic experiments already randomize acquisition exposure. Their assignments, purchases and spending are preserved.}
+\Section{From credited buyers to incremental buyers}
+Each test assigns 250 prospects to campaign exposure and 250 to control. Search / save time is observed for May 1--June 1, 2025 (31 days); Partner / build skill for September 1--October 1 (30 days). End dates are exclusive. All assigned nonbuyers stay in the analysis.
+\TableCaption{cac-buyers}{Control buyer counts estimate background acquisitions at the treatment-arm size. Both tests have $k=1$; the implementation also supports unequal arms.}
+\VAR{cac_counts_table}
+\TableCaption{cac-bridge}{The same media ledger with two acquisition denominators. Credited CAC is treatment media divided by all treated buyers; background share is estimated no-campaign buyers divided by treated buyers.}
+\VAR{cac_costs_table}
+\Evidence{Saved output: \Code{cac_reconciliation.csv}; source: \Code{experiment_summary.csv} and \Code{experiment_effects.csv}. Control media and other acquisition-cost entries for these tested campaigns are zero. The displayed estimates are media iCAC; a fully loaded decision must also include any additional acquisition costs. Currency rounds half up to cents.}
+\Section{What changes in the reconciliation}
+Search credits 73 buyers but induces an estimated 48; Partner credits 61 but induces 32. With zero control media spending, the correction multiplies credited CAC by $B_T/(B_T-B_C)$. If control spending is positive, both numerator and denominator must change; simply dividing attributed CAC by a lift fraction is insufficient.
+\Boundary{The tested-program row sums these two separately standardized effects and their costs. It describes this particular two-test program across different populations and windows. It cannot calibrate all acquisition spending, establish a universal channel multiplier or replace whole-company blended CAC.}
+
+\NewPage
+\PageTitle{08 / EXPERIMENTAL UNCERTAINTY}{A precise cost ledger can\newline still produce an uncertain iCAC}{Buyer lift is estimated. Dividing by a small or uncertain lift can make acquisition cost highly uncertain.}
+\TableCaption{cac-uncertainty}{Point estimates and approximate 95\% intervals. Buyer-lift intervals use independent randomized arms; iCAC intervals invert the positive lift interval with media spending fixed.}
+\VAR{cac_intervals_table}
+\Section{Keep the denominator's uncertainty visible}
+For buyer probabilities $\hat p_T=B_T/N_T$ and $\hat p_C=B_C/N_C$,
+\[
+\operatorname{SE}(\Delta B)=N_T\sqrt{\frac{\hat p_T(1-\hat p_T)}{N_T}
++\frac{\hat p_C(1-\hat p_C)}{N_C}}.
+\]
+If the lift interval is $[L,U]$ with $L>0$, the corresponding iCAC interval is $[\Delta S/U,\Delta S/L]$. If the lift interval crosses zero, there is no finite upper iCAC bound over its positive region. A zero or negative point estimate of lift does not supply a meaningful positive acquisition-cost estimate.
+\Evidence{These are unadjusted normal approximations, conditional on fixed media spending and independent assignment units. The program row sums separately standardized effects and, assuming independent tests, their variances. Shared audiences or overlapping interventions would require a joint design and a different covariance calculation.}
+\Section{Incremental acquisitions do not guarantee a profitable campaign}
+\VAR{cac_contribution_sentence} A bounded iCAC does not establish profit: Partner\textquotesingle s net-contribution interval includes zero. The following management exhibit retains both net-effect intervals and their 30/31-day horizons.
+\Boundary{The control arms identify only the tested contrast. Estimating company-wide incremental CAC requires holdouts or coordinated experiments covering the relevant portfolio, with cross-channel overlap and substitution handled explicitly. Estimating a marginal cost curve additionally requires evidence across spending levels.}
+
+\NewPage
+\PageTitle{08 / CAC AND CUSTOMER VALUE}{Match acquisition cost\newline to the value being measured}{Use the same population, intervention, cost scope, time origin and horizon on both sides of the decision.}
+\Section{For the acquired cohort: observed cost and cohort value}
+The earlier exhibits combine average discounted contribution before CAC with observed blended CAC for the same acquired customers. Net cohort LTV subtracts that acquisition cost once. An LTV/CAC ratio uses value \emph{before} CAC in the numerator. Do not subtract iCAC from the lab's net LTV, or divide that net LTV by iCAC and interpret it as a causal acquisition return (\SourceCite{course2026}{Tian, 2026}, Topic 4, slides 3 and 31).
+\Section{For an acquisition intervention: incremental value and cost}
+Let $V_H$ be discounted contribution before acquisition cost for every assigned prospect over a prespecified horizon $H$ from assignment, including zeros. The campaign decision is
+\[
+\text{Incremental net value}_H
+=N_T\bigl(\bar V_{T,H}-\bar V_{C,H}\bigr)-\Delta S_H.
+\]
+Cost must include all additional acquisition spending relevant to this contrast. Dividing incremental contribution and cost by the same positive $\Delta B$ gives a consistent per-incremental-acquisition comparison: $\Delta V_H-\Delta S_H=\Delta B(\Delta V_H/\Delta B-\mathrm{iCAC})$. Count buyers and value to the same $H$ under the same regime. However, that contribution ratio is the value of the intervention per additional acquisition; calling it the LTV of induced buyers requires assumptions, including monotone acquisition response and no change in spending or retention among people who would buy anyway.
+\Section{What the current data can establish}
+The existing experiments establish acquisition lift and short-run contribution effects. Controls are documented only through their prespecified 30/31-day windows. Later transactions do not establish continued control protection, so they do not identify a lifetime campaign effect. The cohort model forecasts twelve receipts from acquisition, a different clock from $H$ after assignment.
+Multiplying conversion lift by average treated-buyer LTV would assume the unobserved induced buyers have that value and ignore possible effects on existing would-be buyers. The short-run effect is not a lower bound: pull-forward can let controls catch up, while retention can add value. A longer protected holdout could estimate discounted contribution for everyone assigned; extrapolation requires additional assumptions.
+\Boundary{Use iCAC for the tested acquisition decision with matching incremental value. Keep observed blended CAC for the matching cohort accounts. The lab's cash-payback charts use \emph{undiscounted} contribution; MBA 743 Topic 4, slides 30 and 35, teaches discounted contribution payback. These are distinct conventions, and the existing cash figures retain their stated convention.}
+
+\NewPage
 \PageTitle{08 / CAMPAIGNS AND ACTION}{Campaign incrementality\newline and investment decisions}{Randomized assignment includes all eligible prospects, including those who never purchase. Each test keeps its own control and follow-up window.}
 \TableCaption{experiment-arms}{Assigned prospects, buyers, recorded contribution and media spending by randomized arm.}
 \VAR{experiment_table}
@@ -379,11 +462,21 @@ Fader, P. S., and Hardie, B. G. S. (2010). Customer-base valuation in a contract
 \Section{Acquisition, retention and spending}
 McCarthy, D. M., Fader, P. S., and Hardie, B. G. S. (2017). Valuing subscription-based businesses using publicly disclosed customer data. \textit{Journal of Marketing}, 81(1), 17--35. \href{https://doi.org/10.1509/jm.15.0519}{doi:10.1509/jm.15.0519}.
 \Evidence{Motivates the customer-base decomposition. This report estimates twelve-receipt contribution value and cash payback; it does not implement the paper's full corporate-valuation model.}
+\NewPage
+\PageTitle{REFERENCES / CONTINUED}{Acquisition, forecasting\newline and course connections}{Sources distinguish descriptive cohort value, causal acquisition effects and the teaching objectives.}
 \hypertarget{ref:orduz2024}{}
 \Section{Gamma revenue and the neural comparison}
 Orduz, J. C. (2024, January 8). \textit{Cohort Revenue Retention Analysis with Flax and NumPyro}. \href{https://juanitorduz.github.io/revenue_retention_numpyro/}{Original article}.
 \Evidence{The main model adapts the Gamma revenue structure. The separate neural retention comparison adapts the architecture and weight priors to conditional renewal risk sets. Neither is a verbatim reproduction.}
+\hypertarget{ref:larsen2019}{}
+\Section{Attribution, incrementality and acquisition cost}
+Larsen, K. (2019, May 14). \textit{You Don't Know Your Customer Acquisition Cost}. Noteworthy / The Journal Blog. \href{https://blog.usejournal.com/you-dont-know-your-customer-acquisition-cost-f7bf820f9d4a}{Original article}.
+\Evidence{The assigned course reading motivates the counterfactual background inflow and average versus marginal acquisition costs. The experimental reconciliation and uncertainty calculations here are the lab's implementation. The article is not redistributed.}
+\hypertarget{ref:course2026}{}
+\Section{MBA 743 teaching connections}
+Tian, L. (2026). \textit{MBA 743: Managing Customer Data}, Mod II. Kenan-Flagler Business School. Topic 1, Customer Journeys, slides 30--39; Topic 3, Acquisition Metrics, slides 6--10 and 23--34; Topic 4, Lifetime Value Metrics, slides 3, 30--31 and 35--42. Course slides and pre-lecture notes.
+\Evidence{Topic 1 compares partitions of the same customers; Topic 3 links holdouts to incremental acquisition and contribution; Topic 4 distinguishes value before and after CAC and discounted payback. Course materials remain in the course distribution.}
 \Section{Bundled reading and reproducible provenance}
-The GitHub \href{https://github.com/longxiutian/customer-economics-lab/tree/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention}{Orduz asset folder} contains the \href{https://github.com/longxiutian/customer-economics-lab/blob/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf}{source-notebook PDF}, the original notebook, its MIT notice and a hash manifest pinned to the source commit. The archived notebook is a reading asset; it was not rerun to generate the Studio North results. The repository's \href{https://github.com/longxiutian/customer-economics-lab/blob/v5.0.0/docs/sources.md}{source guide} records additional instructional background.
+The GitHub \href{https://github.com/longxiutian/customer-economics-lab/tree/v6.0.0/assets/articles/orduz-2024-cohort-revenue-retention}{Orduz asset folder} contains the \href{https://github.com/longxiutian/customer-economics-lab/blob/v6.0.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf}{source-notebook PDF}, the original notebook, its MIT notice and a hash manifest pinned to the source commit. The archived notebook is a reading asset; it was not rerun to generate the Studio North results. The repository's \href{https://github.com/longxiutian/customer-economics-lab/blob/v6.0.0/docs/sources.md}{source guide} records additional instructional background.
 
 \end{document}
