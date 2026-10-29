@@ -12,3 +12,9 @@ The lab's synthetic records and analysis are original. The instructor's generato
 Supporting software is listed in `pyproject.toml` and `uv.lock`. Archify is bundled separately under its own license; see its vendor directory. The references above do not imply that their authors endorse this lab or its synthetic conclusions.
 
 Longxiu Tian's private MQM retention/churn homework informed the sequence from persistent churn heterogeneity to interpretation and business decisions. The private Universal Customer View assignment informed the four-column, per-dataset field classification. Those assignment texts, solutions and private records are not distributed here; the public repository contains original implementation, explanations and synthetic records.
+
+
+Acquisition-cost and course alignment sources added in version 6:
+
+- **Kim Larsen (May 14, 2019), You Don't Know Your Customer Acquisition Cost.** [Original article](https://blog.usejournal.com/you-dont-know-your-customer-acquisition-cost-f7bf820f9d4a). Background inflow, attribution, incremental and marginal acquisition cost. [Source record](../assets/articles/larsen-2019-customer-acquisition-cost/README.md); article not redistributed.
+- **Longxiu Tian (2026), MBA 743: Managing Customer Data, Mod II, Kenan-Flagler Business School.** Topic 1 Customer Journeys, slides 30–39; Topic 3 Acquisition Metrics, slides 6–10 and 23–34; Topic 4 Lifetime Value Metrics, slides 3, 30–31 and 35–42. [Exact course connections and estimands](cac-incrementality.md). Course slides and notes remain in the course distribution.

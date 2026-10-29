@@ -31,6 +31,12 @@
       "type": "figure"
     },
     {
+      "caption_tex": "Four two-cell partitions of the same 4,278 mature, paid, non-experimental customers. Within-cell SD is the square root of customer-weighted within-cell variance. Between-cell share is between variance divided by total variance.",
+      "label": "tab:segmentation-objective",
+      "number": 2,
+      "type": "table"
+    },
+    {
       "caption_tex": "Descriptive comparison. The full cohort sequence within each channel-by-need group. The color key identifies acquisition month. Paid channels are shown; organic test-control cells are omitted.",
       "label": "fig:channel-retention",
       "number": 5,
@@ -39,19 +45,19 @@
     {
       "caption_tex": "Sixth-month paid retention by original acquisition channel and baseline stated need; the same joining months one year apart.",
       "label": "tab:segment-progress",
-      "number": 2,
+      "number": 3,
       "type": "table"
     },
     {
       "caption_tex": "Six-receipt economics for the same mature paid customers, excluding both experimental arms. SD is the standard deviation of individual contribution within the stated-need group.",
       "label": "tab:segment-profile",
-      "number": 3,
+      "number": 4,
       "type": "table"
     },
     {
       "caption_tex": "Descriptive outcomes by recorded early signal. Each row retains its original outcome-eligible customers, including subsequent nonrenewers. Contribution is per original customer at ages 1--5, excluding the acquisition month.",
       "label": "tab:friction-profile",
-      "number": 4,
+      "number": 5,
       "type": "table"
     },
     {
@@ -87,19 +93,19 @@
     {
       "caption_tex": "Twelve-receipt contribution value per acquired customer. Value before CAC is discounted contribution; net value subtracts CAC once. Bands reflect 5th--95th parameter uncertainty in the unobserved expected remainder; realized receipts and CAC are fixed. They exclude customer-level variation and are not predictive ranges for realized cell outcomes.",
       "label": "tab:strategic-value",
-      "number": 5,
+      "number": 6,
       "type": "table"
     },
     {
       "caption_tex": "Each entry shows 2024-07 / 2025-07; N is the original acquired count. Retention is observed at age 5. Cash payback is observed for both cohorts and counts receipts from one. The newer cohort's twelve-receipt net value is partly forecast.",
       "label": "tab:strategic-comparison",
-      "number": 6,
+      "number": 7,
       "type": "table"
     },
     {
       "caption_tex": "Build-skill minus save-time net value within the same channel and joining month. Pairs have at least six observed receipts and exclude any pair containing experimental buyers.",
       "label": "tab:strategic-rank",
-      "number": 7,
+      "number": 8,
       "type": "table"
     },
     {
@@ -109,9 +115,27 @@
       "type": "figure"
     },
     {
+      "caption_tex": "Control buyer counts estimate background acquisitions at the treatment-arm size. Both tests have $k=1$; the implementation also supports unequal arms.",
+      "label": "tab:cac-buyers",
+      "number": 9,
+      "type": "table"
+    },
+    {
+      "caption_tex": "The same media ledger with two acquisition denominators. Credited CAC is treatment media divided by all treated buyers; background share is estimated no-campaign buyers divided by treated buyers.",
+      "label": "tab:cac-bridge",
+      "number": 10,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Point estimates and approximate 95\\% intervals. Buyer-lift intervals use independent randomized arms; iCAC intervals invert the positive lift interval with media spending fixed.",
+      "label": "tab:cac-uncertainty",
+      "number": 11,
+      "type": "table"
+    },
+    {
       "caption_tex": "Assigned prospects, buyers, recorded contribution and media spending by randomized arm.",
       "label": "tab:experiment-arms",
-      "number": 8,
+      "number": 12,
       "type": "table"
     },
     {
@@ -123,19 +147,19 @@
     {
       "caption_tex": "Accountable teams, next actions and the evidence required to revisit the recommendation.",
       "label": "tab:actions",
-      "number": 9,
+      "number": 13,
       "type": "table"
     },
     {
       "caption_tex": "Structural parameter estimates, priors, posterior intervals and sampling diagnostics.",
       "label": "tab:parameters",
-      "number": 10,
+      "number": 14,
       "type": "table"
     },
     {
       "caption_tex": "Recorded inference settings and convergence diagnostics for the full-data fit.",
       "label": "tab:estimation",
-      "number": 11,
+      "number": 15,
       "type": "table"
     },
     {
@@ -153,19 +177,19 @@
     {
       "caption_tex": "The four largest absolute standardized calendar residuals among observed renewal risk sets.",
       "label": "tab:calendar-residuals",
-      "number": 12,
+      "number": 16,
       "type": "table"
     },
     {
       "caption_tex": "Prediction performance on historical holdouts, with explicit baseline comparisons and units.",
       "label": "tab:backtest",
-      "number": 13,
+      "number": 17,
       "type": "table"
     },
     {
       "caption_tex": "Cohort-level historical value and payback forecasts, separating already observed recovery from forecast recovery.",
       "label": "tab:valuation-backtest",
-      "number": 14,
+      "number": 18,
       "type": "table"
     },
     {
@@ -177,7 +201,7 @@
     {
       "caption_tex": "Source-to-analysis definitions that preserve grain, timing, denominator and cost scope.",
       "label": "tab:data-contracts",
-      "number": 15,
+      "number": 19,
       "type": "table"
     },
     {
@@ -189,79 +213,79 @@
     {
       "caption_tex": "Universal Customer View: people.csv.",
       "label": "tab:ucv-people",
-      "number": 16,
+      "number": 20,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: subscription\\_periods.csv.",
       "label": "tab:ucv-subscription-periods",
-      "number": 17,
+      "number": 21,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: transactions.csv.",
       "label": "tab:ucv-transactions",
-      "number": 18,
+      "number": 22,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: product\\_events.csv.",
       "label": "tab:ucv-product-events",
-      "number": 19,
+      "number": 23,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: feedback.csv.",
       "label": "tab:ucv-feedback",
-      "number": 20,
+      "number": 24,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: campaign\\_spend.csv.",
       "label": "tab:ucv-campaign-spend",
-      "number": 21,
+      "number": 25,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: acquisition\\_attribution.csv.",
       "label": "tab:ucv-acquisition-attribution",
-      "number": 22,
+      "number": 26,
       "type": "table"
     },
     {
       "caption_tex": "Universal Customer View: experiment\\_assignments.csv.",
       "label": "tab:ucv-experiment-assignments",
-      "number": 23,
+      "number": 27,
       "type": "table"
     },
     {
       "caption_tex": "Four strategies, each with two groups. Variance reductions use the corresponding unsegmented outcome variance as the denominator.",
       "label": "tab:segmentation",
-      "number": 24,
+      "number": 28,
       "type": "table"
     },
     {
       "caption_tex": "A conceptual friction is not the same object as its available recorded proxy.",
       "label": "tab:journey-measures",
-      "number": 25,
+      "number": 29,
       "type": "table"
     },
     {
       "caption_tex": "Composition of diagnostic groups. Skill means build-skill need; premium is the initial plan. Discount and age-0 contribution are mean dollars; age-0 contribution overlaps exposure and is context, not a pre-exposure control.",
       "label": "tab:friction-balance",
-      "number": 26,
+      "number": 30,
       "type": "table"
     },
     {
       "caption_tex": "Target minus reference, in percentage points. Counts, pooled contrasts and adjusted contrasts use the same common-support strata. Coverage is the share of the full outcome-eligible population in those strata; weights reflect that population's composition within support.",
       "label": "tab:friction-adjusted",
-      "number": 27,
+      "number": 31,
       "type": "table"
     },
     {
       "caption_tex": "Adjusted age-5 retention and ages 1--5 contribution contrasts, with approximate 95\\% intervals. Original mature-customer denominators retain zeros after churn. Common-support coverage can differ from the first-renewal comparison and is saved with every estimate.",
       "label": "tab:friction-secondary",
-      "number": 28,
+      "number": 32,
       "type": "table"
     },
     {

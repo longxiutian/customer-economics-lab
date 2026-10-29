@@ -14,7 +14,7 @@ In one AI-agent chat, students inspect the exports, classify each dataset's Univ
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v5.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v6.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
@@ -62,7 +62,7 @@ For example, `SELECT cohort_month, n_acquired, cac FROM cohort_six_month_compari
 
 Use the [business brief](docs/business_brief.md), [data dictionary](docs/data_dictionary.md), and [sources](docs/sources.md) as references. The final report separates observed evidence, forecasts, assumptions, and the learner's recommendation.
 
-See [version 5 changes](docs/v5-changes.md) for the journey diagnostics, strategic segment breakout and report replay without refitting.
+See [version 6 changes](docs/v6-changes.md) for the segmentation objective and acquisition-cost reconciliation, and [CAC and LTV methodology](docs/cac-incrementality.md) for the course connections. The earlier [version 5 changes](docs/v5-changes.md) describe journey diagnostics, strategic breakouts and report replay without refitting.
 
 ## Instructor reproducibility
 

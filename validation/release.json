@@ -3,22 +3,14 @@
   "companion": {
     "editable_charts": 5,
     "editable_tables": 5,
-    "native_powerpoint_rendered": true,
     "pdf_sha256": "fbb8705a4da14127e2d835fa8ccd2247b555bd99c27f5f1a4edb3d0f612392fb",
     "pptx_sha256": "20b2f4408a980732ad08b705fa96536fcfbf7eec997289a134fa5bd9f07bfa9c",
     "slides": 12,
-    "slides_1_to_11_pixel_identical": true,
-    "unchanged_chart_and_workbook_parts": 15,
-    "unchanged_numerical_tables": 4
+    "status": "Retained unchanged from v5"
   },
   "dataset_version": "4.0",
   "date": "2026-10-29",
-  "fit_provenance": "Diagnostic and model-comparison numbers are from the preserved independently fitted v4 outputs. This release independently replays observed ETL and post-estimation/report production; it does not claim new NUTS/SVI fits.",
-  "independent_onboarding_means": {
-    "both_round_to_98_16": true,
-    "completion": 98.15757051623204,
-    "no_completion": 98.15509615384616
-  },
+  "fit_provenance": "Frozen v4 NUTS and neural fitted artifacts are retained unchanged. This release replays observed ETL, diagnostics, decision metrics, post-estimation and reporting, without a new inference run or future-outcome scoring.",
   "main_model": {
     "baseline_historical_value_mae": 24.667540275769145,
     "divergences": 0,
@@ -36,14 +28,26 @@
     "retention_mae": 1.334809680371808,
     "role": "Separate retention-only comparison; does not determine executive LTV or cash payback."
   },
-  "previous_release_preserved": "v4.0.0",
-  "release": "v5.0.0",
+  "previous_releases_preserved": [
+    "v4.0.0",
+    "v5.0.0"
+  ],
+  "release": "v6.0.0",
   "report": {
     "all_pages_rendered": true,
+    "cac_pages": [
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
     "citation_keys": [
       "bouhnick",
+      "course2026",
       "fader2007",
       "fader2010",
+      "larsen2019",
       "mccarthy2017",
       "orduz2024"
     ],
@@ -60,82 +64,44 @@
       "Mod II 2026"
     ],
     "figures": 17,
-    "orduz_asset_links": [
-      "https://github.com/longxiutian/customer-economics-lab/tree/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention",
-      "https://github.com/longxiutian/customer-economics-lab/blob/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf"
-    ],
     "overfull_boxes": 0,
-    "pages": 43,
-    "reference_entries": 5,
-    "references_page": 43,
+    "pages": 49,
+    "reference_entries": 7,
+    "references_pages": [
+      48,
+      49
+    ],
     "section_separators": 9,
-    "sha256": "243667d8469f74fd7411e9932318fb0ce423dda32c59a4656d775b9cabb1df64",
-    "tables": 28,
-    "visual_qa": "All-page contact review plus full-size changed-page inspections, including cover, contents, model mechanism, strategy, diagnostics and references."
+    "segmentation_objective_page": 12,
+    "sha256": "8d5b6a88b4947bf2d8d6893570a19824522a34fc8e5599e9ad6ec5a25d473efa",
+    "tables": 32,
+    "visual_qa": "validation/visual-qa.json"
   },
   "reproducibility": {
-    "canonical_files": 122,
+    "canonical_files": 125,
     "mismatches": 0,
     "model_refit": false,
-    "protected_artifacts": 40,
+    "protected_artifacts": 55,
     "receipt": "validation/reproducibility.json",
-    "scope": "Two fresh same-host observed ETL/diagnostic/post-estimation/diagram/report processes using the separately preserved v4 fitted outputs; no model refit. Equality is not a cross-platform claim.",
-    "unchanged_prior_numeric_tables": 24
+    "scope": "Two fresh same-host observed ETL, diagnostics, decision-metrics, post-estimation, diagram and report processes with verified frozen fitted outputs. No inference refit or future-outcome scoring; byte equality is not a cross-platform claim.",
+    "unchanged_prior_numeric_tables": 37
   },
   "review": {
-    "accepted": [
-      "First-renewal primary diagnostics, monthly survey support, maturity and denominator disclosure.",
-      "Acquisition-cell post-estimation reconciled before maturity/assignment-based exhibit selection.",
-      "Expected-value interval scope beside the table; both comparator cell sizes; pooled versus single-month evidence distinguished.",
-      "Stale reordered prose and half-open window label corrected; added mature non-survivor and full selection/reconciliation tests."
-    ],
     "accounting_status": "committed",
-    "adjudication": [
-      "Source timing confirms complete 27-day exposure and no in-window first renewals; refunds do not identify exit.",
-      "The source contract requires refunds to share the original payment cycle. The mature hand-data test therefore uses a valid same-cycle refund followed by observed zeros after exit, rather than loosening that contract.",
-      "No unsupported quantitative claim was added about how much wider unmodeled process uncertainty would be.",
-      "Subsequent user edits added the exact course/term cover, customer-journey heading and explicit citations/references; these received local source, link, rendering and format checks."
-    ],
-    "design_pass": {
-      "attempt": 2,
-      "effort": "max",
-      "max_tokens": 128000,
-      "model": "claude-opus-5-5",
-      "priority": "low",
-      "status": "completed_end_turn",
-      "timeout_seconds": 1800
-    },
+    "adjudication": "Accepted the matched-estimand, short-horizon, interval, fixed-dose and segmentation-variance clarifications. The noted tiny SD discrepancy comes from rounded prompt inputs; the implementation reconciles unrounded population variances. No refit or data revision required.",
     "effort": "max",
     "incomplete": false,
     "model": "claude-opus-5-5",
-    "reviewed_report_sha256": "079d1d9ff3356d058f2ebff6cc1361f5104c2ecce2f6a816c13eea924bc8320d",
-    "role": "Independent source/code/PDF critique; execution checks below were run locally, not by the reviewer.",
+    "scope": "Self-contained methodology critique; no claim of repository, source-data or full-report inspection.",
     "stop_reason": "end_turn",
-    "usage": {
-      "cache_creation_input_tokens": 0,
-      "cache_read_input_tokens": 1743,
-      "input_tokens": 140741,
-      "mcp_calls": 0,
-      "mcp_cancelled": 0,
-      "mcp_completed": 0,
-      "mcp_failed": 0,
-      "mcp_in_flight": 0,
-      "output_tokens": 72519,
-      "provider_calls": 0,
-      "provider_cancelled": 0,
-      "provider_completed": 0,
-      "provider_failed": 0,
-      "provider_in_flight": 0,
-      "reserved_output_tokens": 0,
-      "thinking_tokens": 70086,
-      "total_tokens": 215003,
-      "usage_unreported_calls": 0
-    }
+    "verdict": "Approved with necessary clarifications, incorporated in the final report. Execution and rendering checks were local."
   },
-  "scope": "Observed journey diagnostics, acquisition-segment post-estimation, management report, companion handoff, portable skill/docs and ZIP setup. Source data and fitted models unchanged.",
+  "scope": "Explicit segmentation objective, acquisition-cost reconciliation and uncertainty, matched CAC/LTV estimands, course and Larsen citations, portable workflow and validated derived tables.",
   "tests": {
-    "final_format": "5 passed in 1.76s after cover/citation edits",
-    "full_suite": "176 passed in 969.04s before five new review-driven tests",
-    "post_review_affected": "34 passed in 170.19s, including all five new tests"
+    "additional_integration_receipt": "validation/decision-metrics-integration.json",
+    "final_workflow_suite": "21 passed in 10.27s after updating only that assertion to v6; no executable code changed after the full run",
+    "initial_full_suite": "186 passed, one stale v5 download-URL assertion failed in 1052.82s",
+    "new_counterexample_tests": 6,
+    "verified_unique_tests": 187
   }
 }

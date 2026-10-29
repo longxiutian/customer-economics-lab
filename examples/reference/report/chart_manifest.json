@@ -1,4 +1,5 @@
 {
+  "decision_metrics_manifest_sha256": "4480e42592ea60f91f34461d420d808734e57e6833d60c4d9a24cd2ad6ef2622",
   "diagnostics_manifest_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
   "figures": {
     "channel-segment-retention": {

@@ -1,6 +1,6 @@
 [project]
 name = "customer-economics-lab"
-version = "5.0.0"
+version = "6.0.0"
 description = "An auditable customer economics framework from source records to executive decisions."
 requires-python = ">=3.12,<3.13"
 dependencies = [

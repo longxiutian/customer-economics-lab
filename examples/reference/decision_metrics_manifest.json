@@ -1,0 +1,18 @@
+{
+  "cac_scope": "Randomized all-assigned acquisition tests; background acquisitions standardized to treatment-arm size. Incremental media costs and buyer effects reconcile to the existing SQL outputs. No private outcomes, lifetime extrapolation or all-company calibration.",
+  "code_sha256": "672eb7cadf56294e101aade50d77923ad17146b83cce553346184c89b3ea4e97",
+  "input_hashes": {
+    "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
+    "experiment_summary.csv": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc",
+    "segmentation_comparison.csv": "d14b65521fab9d858a16175d3924b9f3ec5e03f7fa316b0422b4261d0f700e81",
+    "segmentation_profile.csv": "bd29e96eef73e893047eb410588bbb168188f95dc53bd08248d28bde15722c47"
+  },
+  "output_hashes": {
+    "cac_reconciliation.csv": "695dd1910a220a79d42fe6236dbfbddb32073bb183183f1bfed2fd1d0c788b3e",
+    "segmentation_objective.csv": "cfcd5233b088cd2a5dbba349da043581445737574c59799f790268652223959c"
+  },
+  "pooling": "Sum each test's separately standardized effects and costs; independent tests supply summed variances. This fixed tested-program rollup spans different populations and windows and is not company-wide or marginal CAC.",
+  "segmentation_scope": "Same mature nonexperimental paid customers, six receipts and two-group candidate partitions. Population variance equals customer-weighted within plus between variance. Descriptive, not intervention or future prediction effects.",
+  "uncertainty": "Approximate unadjusted 95% normal buyer-lift interval, conditional on fixed media spend; invert only the positive effect region. Intervals crossing zero have no finite upper iCAC bound. No clipping or fabricated finite estimate.",
+  "version": 1
+}

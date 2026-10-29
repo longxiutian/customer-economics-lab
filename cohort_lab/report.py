@@ -373,6 +373,9 @@ def build_charts(output_dir: Path) -> dict:
         handles,labels=axes[0,0].get_legend_handles_labels();fig.legend(handles,labels,loc="lower center",ncol=3,frameon=False,bbox_to_anchor=(.5,-.12),fontsize=8)
         done(fig,"recent-cohort-fit-check",["model_fit_checks.csv"],"In-sample one-step fitted residuals for recent cohorts with at least one observed renewal, conditional on the previous observed count. This is not a held-out backtest.",{"cohorts":latest_six,"n_cohorts":len(latest_six)})
         manifest["model_summary_sha256"]=_sha(output/"model_summary.json")
+    from .decision_metrics import build_decision_metrics
+    build_decision_metrics(output)
+    manifest["decision_metrics_manifest_sha256"] = _sha(output/"decision_metrics_manifest.json")
     from .report_extensions import add_journey_chart, add_strategy_chart
     add_journey_chart(output, read, done)
     manifest["diagnostics_manifest_sha256"] = _sha(output/"diagnostics_manifest.json")
@@ -906,7 +909,8 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
     charts=build_charts(output)
     style=_validate_style()
     from .report_extensions import extension_context
-    ctx={**_context(output), **_appendix_context(output), **extension_context(output)}
+    from .decision_report import decision_context
+    ctx={**_context(output), **_appendix_context(output), **extension_context(output), **decision_context(output)}
     metrics_path=_write_executive_metrics(output,ctx)
     env=Environment(loader=FileSystemLoader(ROOT/"templates"),undefined=StrictUndefined,
                     variable_start_string=r"\VAR{",variable_end_string="}",autoescape=False)
@@ -933,7 +937,7 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
               "exhibit_registry_sha256":_sha(directory/"exhibit_registry.json"),
               "figure_count":sum(x["type"]=="figure" for x in exhibits),"table_count":sum(x["type"]=="table" for x in exhibits),
               "renewal_window_evidence":ctx["renewal_window_evidence"]}
-    for key in ("diagnostics_manifest_sha256", "postestimation_manifest_sha256"):
+    for key in ("diagnostics_manifest_sha256", "postestimation_manifest_sha256", "decision_metrics_manifest_sha256"):
         if key in charts: manifest[key] = charts[key]
     manifest["learner_choices_sha256"]=_sha(output/"learner_choices.json") if (output/"learner_choices.json").exists() else None
     if compile_pdf:

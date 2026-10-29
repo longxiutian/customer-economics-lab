@@ -1,4 +1,34 @@
-........................................................................ [ 40%]
-........................................................................ [ 81%]
-................................                                         [100%]
-176 passed in 969.04s (0:16:09)
+Command: uv run --frozen python -m pytest -q
+Earlier progress-only output omitted; final output follows.
+.....F...                              [100%]
+================================== FAILURES ===================================
+________________ test_archive_download_install_requires_no_git ________________
+
+tmp_path = WindowsPath('C:/Users/longxiu/AppData/Local/Temp/pytest-of-longxiu/pytest-826/test_archive_download_install_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000262DC6E8650>
+
+    def test_archive_download_install_requires_no_git(tmp_path, monkeypatch):
+        def forbidden(*args, **kwargs):
+            raise AssertionError("Bootstrap must not invoke Git or any other subprocess.")
+        monkeypatch.setattr(subprocess, "run", forbidden)
+        destination = install_archive(_archive(tmp_path), tmp_path / "extracted")
+        assert (destination / "SKILL.md").is_file()
+        assert not (destination / ".git").exists()
+>       assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v5.0.0.zip"
+E       AssertionError: assert 'https://gith...ve/v6.0.0.zip' == 'https://gith...ve/v5.0.0.zip'
+E
+E         Skipping 53 identical leading characters in diff, use -v to show
+E         - /archive/v5.0.0.zip
+E         ?           ^
+E         + /archive/v6.0.0.zip
+E         ?           ^
+
+tests\test_workflow.py:240: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_workflow.py::test_archive_download_install_requires_no_git
+1 failed, 186 passed in 1052.82s (0:17:32)
+
+Corrective check: only the expected release URL changed; no executable code changed.
+Command: uv run --frozen python -m pytest tests/test_workflow.py -q
+All 21 workflow tests passed after correcting the expected release URL from v5.0.0 to v6.0.0.
+21 passed in 10.27s

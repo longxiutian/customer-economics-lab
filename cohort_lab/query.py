@@ -87,7 +87,8 @@ def run_query(data_dir: Path, output_dir: Path, sql: str, *, max_rows: int = 100
             table_files.update({Path(name).name: digest for name, digest in model["output_hashes"].items()
                                 if name.startswith("tables/") and name.endswith(".csv")})
         for filename, module, validator in [("diagnostics_manifest.json", "diagnostics", "validate_diagnostics"),
-                                            ("postestimation_manifest.json", "postestimation", "validate_postestimation")]:
+                                            ("postestimation_manifest.json", "postestimation", "validate_postestimation"),
+                                            ("decision_metrics_manifest.json", "decision_metrics", "validate_decision_metrics")]:
             if (output_dir / filename).exists():
                 import importlib
                 extra = getattr(importlib.import_module("cohort_lab." + module), validator)(output_dir)
