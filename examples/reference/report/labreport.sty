@@ -1,43 +1,35 @@
-% Original public report style for the Customer Economics Lab.
+% Report semantics layered over the maintained, unmodified visual package.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{labreport}[2026/10/28 v1.0 Customer Economics Lab]
-\RequirePackage[letterpaper,left=.68in,right=.68in,top=.62in,bottom=.62in]{geometry}
-\RequirePackage[T1]{fontenc}
-\RequirePackage[default]{sourcesans}
-\RequirePackage{microtype,graphicx,xcolor,booktabs,tabularx,array,amsmath,fancyhdr,tikz}
-\RequirePackage[hidelinks]{hyperref}
+\ProvidesPackage{labreport}[2026/10/29 v2.0 Customer economics executive report]
+\RequirePackage{longxiu-research-brief}
+\RequirePackage{graphicx,amsmath}
 \usetikzlibrary{arrows.meta,positioning,calc}
-\definecolor{Ink}{HTML}{172D3C}
-\definecolor{Teal}{HTML}{087F8C}
-\definecolor{Gold}{HTML}{B78431}
-\definecolor{Muted}{HTML}{526875}
-\definecolor{Pale}{HTML}{EAF4F3}
-\definecolor{Rule}{HTML}{CEDBDC}
-\definecolor{Orange}{HTML}{B75C22}
-\definecolor{LightGold}{HTML}{FBF3E5}
-\color{Ink}
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt}
+\colorlet{Ink}{BriefInk}
+\colorlet{Teal}{BriefGreen}
+\colorlet{Gold}{BriefOchre}
+\colorlet{Muted}{BriefMuted}
+\colorlet{Pale}{BriefPale}
+\colorlet{Rule}{BriefBorder}
+\colorlet{Orange}{BriefOchreRule}
+\colorlet{LightGold}{BriefPaleGold}
+\renewcommand{\BriefRunningHeader}{STUDIO NORTH | CUSTOMER ECONOMICS}
+\renewcommand{\BriefAuthor}{Longxiu Tian}
 \setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.16}
-\setlength{\headheight}{14pt}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\color{Muted}\scriptsize CUSTOMER ECONOMICS LAB}
-\fancyhead[R]{\color{Muted}\scriptsize SYNTHETIC DATA / REPRODUCIBLE EVIDENCE}
-\fancyfoot[L]{\color{Muted}\scriptsize Observed, predicted and experimental evidence are labeled separately.}
-\fancyfoot[R]{\color{Teal}\bfseries\thepage}
-\renewcommand{\headrulewidth}{0pt}
-\newcommand{\PageTitle}[3]{\vspace*{-7pt}{\color{Teal}\bfseries\small #1}\par\vspace{-4pt}{\color{Teal}\rule{\linewidth}{.7pt}}\par\vspace{3pt}{\fontsize{23}{26}\selectfont\bfseries #2}\par\vspace{2pt}{\color{Muted}\fontsize{11}{14}\selectfont #3}\par\vspace{6pt}}
-\newcommand{\Section}[1]{\par\vspace{5pt}{\color{Teal}\fontsize{12}{14}\selectfont\bfseries #1}\par\vspace{-3pt}}
-\newcommand{\Evidence}[1]{\par{\color{Muted}\fontsize{8}{10}\selectfont #1}\par}
-\newcommand{\Takeaway}[1]{\par\vspace{5pt}\begingroup\setlength{\fboxsep}{9pt}\colorbox{Pale}{\parbox{\dimexpr\linewidth-18pt\relax}{\color{Ink}\bfseries #1}}\endgroup\par}
-\newcommand{\Boundary}[1]{\par\vspace{4pt}\begingroup\setlength{\fboxsep}{8pt}\colorbox{LightGold}{\parbox{\dimexpr\linewidth-16pt\relax}{\color{Ink}\small #1}}\endgroup\par}
-\newcommand{\Metric}[3]{\begin{minipage}[t]{.31\linewidth}{\color{Muted}\small #1}\par{\color{Teal}\fontsize{22}{24}\selectfont\bfseries #2}\par{\color{Muted}\footnotesize #3}\end{minipage}}
-\newcommand{\FullFig}[2]{\begin{center}\includegraphics[width=\linewidth,height=#2,keepaspectratio]{figures/#1}\end{center}\vspace{-6pt}}
+\renewcommand{\arraystretch}{1.18}
+\newcommand{\PageTitle}[3]{\BriefKicker{#1}{Management report}{Illustrative business}\BriefTitle{#2}\BriefCitation{#3}\vspace{4pt}}
+\newcommand{\Section}[1]{\par\BriefSection{#1}}
+\newcommand{\Evidence}[1]{\par{\color{BriefMuted}\fontsize{7.1}{8.6}\selectfont #1}\par}
+\newcommand{\Takeaway}[1]{\begin{BriefSummaryBox}\textbf{#1}\end{BriefSummaryBox}}
+\newcommand{\Boundary}[1]{\begin{BriefBoundaryBox}#1\end{BriefBoundaryBox}}
+\newcommand{\Metric}[3]{\begin{minipage}[t]{.31\linewidth}{\color{BriefMuted}\fontsize{8}{10}\selectfont #1}\par{\color{BriefGreen}\fontsize{20}{23}\selectfont\bfseries #2}\par{\color{BriefMuted}\fontsize{8}{10}\selectfont #3}\end{minipage}}
+\newcommand{\FullFig}[2]{\begin{center}\includegraphics[width=\linewidth,height=#2,keepaspectratio]{figures/#1}\end{center}\vspace{-3pt}}
 \newcommand{\NewPage}{\clearpage}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\hypersetup{pdftitle={Are we moving in the right direction?},pdfauthor={Customer Economics Lab},pdfsubject={Synthetic subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab}}
+\newcommand{\DatasetTitle}[2]{\Section{#1}\Evidence{#2}\vspace{3pt}}
+\newcommand{\ApplyReportPaperSize}{\ifdefined\pdfpagewidth\pdfpagewidth=\paperwidth\pdfpageheight=\paperheight\else\special{papersize=\the\paperwidth,\the\paperheight}\fi}
+\newcommand{\BeginSchemaFoldout}{\clearpage\setlength{\paperwidth}{420mm}\setlength{\paperheight}{297mm}\ApplyReportPaperSize\newgeometry{layoutwidth=420mm,layoutheight=297mm,left=.45in,right=.45in,top=.48in,bottom=.5in}\setlength{\headwidth}{\textwidth}}
+\newcommand{\EndSchemaFoldout}{\clearpage\setlength{\paperwidth}{8.5in}\setlength{\paperheight}{11in}\ApplyReportPaperSize\restoregeometry\setlength{\headwidth}{\textwidth}}
+\hypersetup{pdftitle={Studio North: customer economics management report},pdfauthor={Longxiu Tian},pdfsubject={Synthetic subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab reproducible pipeline}}
 \ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
 \ifdefined\pdftrailerid\pdftrailerid{}\fi
 \ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi

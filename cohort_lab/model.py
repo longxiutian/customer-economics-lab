@@ -1,10 +1,9 @@
-"""Seeded, conditional-retention and revenue forecasts for fixed cohort inputs.
+"""Hierarchical shifted-Beta-Geometric retention and Gamma revenue forecasts.
 
-The model is an adaptation of the two-part retention/revenue idea in Juan
-Orduz's tutorial. It uses a conditional survivor likelihood rather than
-independent counts of the same surviving customers. No neural network or
-customer-clustering model is required. Intervals describe approximate posterior
-parameter uncertainty conditional on this model and the future margin rule.
+Persistent customer heterogeneity is integrated out of the conditional renewal
+likelihood. The inference model is not the simulator's Beta mixture. The Gamma
+revenue component adapts Orduz; his neural-network approach is a separately
+labelled validation comparison, never the source of executive valuations.
 """
 from __future__ import annotations
 
@@ -25,6 +24,40 @@ KEYS = ["cohort_month", "channel", "primary_need"]
 HORIZON = 12
 DISCOUNT = 0.01
 DRAWS = 400
+MEAN_FEATURES = ['intercept', 'build_skill', 'partner', 'organic', 'cohort_trend']
+CONCENTRATION_FEATURES = ['intercept', 'build_skill', 'partner', 'organic']
+REVENUE_FEATURES = ['intercept', 'log1p_age', 'cohort_trend', 'build_skill', 'partner', 'organic']
+
+
+def _retention_features(frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+    # Explicit whitelist: no latent simulator truth, outcomes or post-acquisition
+    # engagement/feedback may enter the inference design matrix.
+    x = np.column_stack([np.ones(len(frame)), (frame.primary_need == 'build_skill').astype(float),
+                         (frame.channel == 'partner').astype(float), (frame.channel == 'organic').astype(float),
+                         (frame.cohort_index.to_numpy(float)-11.5)/11.5])
+    return x, x[:, :4]
+
+
+def sbg_survival(alpha: np.ndarray, beta: np.ndarray, age: np.ndarray) -> np.ndarray:
+    """P(still subscribed after age renewal decisions); S(0)=1."""
+    from scipy.special import betaln
+    return np.exp(betaln(alpha, beta + age) - betaln(alpha, beta))
+
+
+def _sbg_parameters(draws: dict, frame: pd.DataFrame) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    from scipy.special import expit
+    x, xc = _retention_features(frame)
+    ci = frame.cohort_index.to_numpy(int)
+    if (ci < 0).any() or (ci >= 24).any():
+        raise ValueError('Forecast cohort must be among the 24 observed acquisition cohorts')
+    mu = expit(draws['mean_beta'] @ x.T + draws['cohort_scale'][:, None] * draws['cohort_z'][:, ci])
+    phi = np.exp(draws['concentration_beta'] @ xc.T)
+    return mu * phi, (1-mu) * phi, mu, phi
+
+
+def _hazard_draws(draws: dict, frame: pd.DataFrame) -> np.ndarray:
+    alpha, beta, _, _ = _sbg_parameters(draws, frame)
+    return alpha / (alpha + beta + np.maximum(frame.age_month.to_numpy(float), 1) - 1)
 
 
 def _hash(path: Path) -> str:
@@ -36,6 +69,9 @@ def _json(path: Path, value: dict) -> None:
 
 
 def _csv(path: Path, frame: pd.DataFrame) -> None:
+    frame=frame.copy()
+    for col in frame.columns:
+        if col.endswith('payback_month') or col == 'payback_age': frame[col]=frame[col].astype('Int64')
     frame.to_csv(path, index=False, float_format="%.10f", lineterminator="\n")
 
 
@@ -50,10 +86,10 @@ def cash_payback(contribution: np.ndarray, acquisition_spend: float) -> int | No
     return int(crossed[0]) if len(crossed) else None
 
 
-def _features(frame: pd.DataFrame, survival: bool = False) -> np.ndarray:
+def _features(frame: pd.DataFrame) -> np.ndarray:
     age = frame.age_month.to_numpy(dtype=float)
     return np.column_stack([
-        np.ones(len(frame)), np.log(np.maximum(age, 1)) if survival else np.log1p(age),
+        np.ones(len(frame)), np.log1p(age),
         (frame.cohort_index.to_numpy(dtype=float) - 11.5) / 12,
         (frame.primary_need == "build_skill").astype(float),
         (frame.channel == "partner").astype(float),
@@ -66,6 +102,10 @@ def _validate(frame: pd.DataFrame) -> pd.DataFrame:
                        "gross_payment_revenue", "net_revenue", "contribution"]
     if set(required) - set(frame):
         raise ValueError(f"Missing cohort model columns: {sorted(set(required) - set(frame))}")
+    if not set(frame.channel).issubset({'search','partner','organic'}):
+        raise ValueError('Unsupported channel; unknown labels must not become the Search reference')
+    if not set(frame.primary_need).issubset({'save_time','build_skill'}):
+        raise ValueError('Unsupported primary need; unknown labels must not become the saving-time reference')
     if frame.duplicated(KEYS + ["age_month"]).any():
         raise ValueError("Duplicate cohort-age cells")
     frame = frame.sort_values(KEYS + ["age_month"]).reset_index(drop=True)
@@ -85,72 +125,131 @@ def _validate(frame: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
+def _dispersed_initial_strategy(initial: dict):
+    """Seeded, independent site/chain starts, jittered in unconstrained space."""
+    import jax
+    import jax.numpy as jnp
+    from functools import partial
+    from numpyro.distributions import biject_to
+    from numpyro.infer.initialization import init_to_uniform
+    def initialize(site):
+        if site['type']=='sample' and not site['is_observed']:
+            if site['name'] not in initial: return init_to_uniform(site)
+            transform=biject_to(site['fn'].support)
+            base=transform.inv(jnp.asarray(initial[site['name']]))
+            jitter=jax.random.uniform(site['kwargs']['rng_key'],shape=base.shape,minval=-.5,maxval=.5)
+            return transform(base+jitter)
+    # NumPyro distinguishes a configured strategy (partial) from a factory.
+    return partial(initialize)
+
+
 def _posterior(frame: pd.DataFrame, seed: int, steps: int, init_scale: float = .05) -> tuple[dict, dict]:
     import jax
     import jax.numpy as jnp
     import numpyro
     import numpyro.distributions as dist
-    from numpyro.infer import SVI, Trace_ELBO
-    from numpyro.infer.autoguide import AutoNormal
-    from numpyro.infer.initialization import init_to_value
-    from numpyro.optim import ClippedAdam
+    from numpyro.infer import MCMC, NUTS
+    from numpyro.diagnostics import summary as mcmc_summary
 
     numpyro.enable_x64()
     if jax.default_backend() != 'cpu' or not jax.config.x64_enabled:
-        raise RuntimeError('The frozen classroom run requires CPU JAX with float64 enabled')
+        raise RuntimeError('The release inference requires CPU JAX with float64 enabled')
     f = frame.copy()
-    f["previous_retained"] = f.groupby(KEYS, sort=True).n_retained.shift(1)
+    f['previous_retained'] = f.groupby(KEYS, sort=True).n_retained.shift(1)
     h = f[(f.age_month > 0) & (f.previous_retained > 0)]
     r = f[(f.n_retained > 0) & (f.gross_payment_revenue > 0)]
     if len(h) < 12 or len(r) < 12:
-        raise ValueError("Insufficient mature cohort cells for the two-part model")
-    xh, xr = _features(h, True), _features(r)
+        raise ValueError('Insufficient mature cohort cells for the two-part model')
+    xh, xc = _retention_features(h)
+    xr = _features(r)
+    ci = h.cohort_index.to_numpy(int)
+    age = h.age_month.to_numpy(float)
     prev = h.previous_retained.to_numpy(float)
     survivors = h.n_retained.to_numpy(float)
     alive = r.n_retained.to_numpy(float)
     gross = r.gross_payment_revenue.to_numpy(float) / 100.0
-
-    # Data-based starting values stabilize SVI; priors and likelihood still
-    # determine the posterior. A fixed design matrix makes replay inspectable.
-    from scipy.special import logit
-    bh = np.linalg.lstsq(xh, logit(np.clip((prev-survivors+0.5)/(prev+1), .001, .999)), rcond=None)[0]
     br = np.linalg.lstsq(xr, np.log(gross/alive), rcond=None)[0]
 
     def specification():
-        hazard_beta = numpyro.sample("hazard_beta", dist.Normal(jnp.array([-1., -.7, 0., 0., 0., 0.]), 1.2).to_event(1))
-        revenue_beta = numpyro.sample("revenue_beta", dist.Normal(jnp.array([-.5, .1, 0., 0., 0., 0.]), 0.8).to_event(1))
-        shape = numpyro.sample("revenue_shape", dist.LogNormal(jnp.log(4.), .8))
-        hazard = jax.nn.sigmoid(jnp.asarray(xh) @ hazard_beta)
+        mean_beta = numpyro.sample('mean_beta', dist.Normal(jnp.array([-2.5,0.,0.,0.,0.]), jnp.array([1.,.5,.5,.5,.5])).to_event(1))
+        concentration_beta = numpyro.sample('concentration_beta', dist.Normal(jnp.array([jnp.log(4.),0.,0.,0.]), jnp.array([1.,.5,.5,.5])).to_event(1))
+        cohort_scale = numpyro.sample('cohort_scale', dist.HalfNormal(.25))
+        cohort_z = numpyro.sample('cohort_z', dist.Normal(jnp.zeros(24), 1.).to_event(1))
+        mu = jax.nn.sigmoid(jnp.asarray(xh) @ mean_beta + cohort_scale*cohort_z[jnp.asarray(ci)])
+        phi = jnp.exp(jnp.asarray(xc) @ concentration_beta)
+        hazard = mu*phi/(phi+jnp.asarray(age)-1)
+        numpyro.sample('survivors', dist.Binomial(total_count=jnp.asarray(prev), probs=1-hazard), obs=jnp.asarray(survivors))
+        revenue_beta = numpyro.sample('revenue_beta', dist.Normal(jnp.array([-.5,.1,0.,0.,0.,0.]), .8).to_event(1))
+        shape = numpyro.sample('revenue_shape', dist.LogNormal(jnp.log(4.), .8))
         mean_per_retained = jnp.exp(jnp.asarray(xr) @ revenue_beta)
-        numpyro.sample("survivors", dist.Binomial(total_count=jnp.asarray(prev), probs=1-hazard), obs=jnp.asarray(survivors))
-        numpyro.sample("revenue", dist.Gamma(jnp.asarray(alive)*shape, shape/mean_per_retained), obs=jnp.asarray(gross))
+        numpyro.sample('revenue', dist.Gamma(jnp.asarray(alive)*shape, shape/mean_per_retained), obs=jnp.asarray(gross))
 
-    guide = AutoNormal(specification, init_loc_fn=init_to_value(values={
-        "hazard_beta": jnp.asarray(bh), "revenue_beta": jnp.asarray(br), "revenue_shape": jnp.asarray(4.)}), init_scale=init_scale)
-    svi = SVI(specification, guide, ClippedAdam(.008, clip_norm=10.), Trace_ELBO())
-    result = svi.run(jax.random.PRNGKey(seed), steps, progress_bar=False)
-    loss = np.asarray(result.losses)
-    if not np.isfinite(loss).all():
-        raise RuntimeError("Nonfinite variational objective; no forecast released")
-    posterior = guide.sample_posterior(jax.random.PRNGKey(seed+1), result.params, sample_shape=(DRAWS,))
-    draws = {k: np.asarray(v) for k, v in posterior.items()}
-    for k, v in draws.items():
-        if not np.isfinite(v).all():
-            raise RuntimeError(f"Nonfinite posterior {k}")
-    # Diagnostic reduction order can differ at ~1e-12 between CPU processes.
-    # Eight decimal places are far beyond meaningful loss precision; keep the
-    # posterior draws untouched and give the reported diagnostic a fixed format.
-    from scipy.special import expit
-    hazard_mean=expit(draws['hazard_beta'] @ xh.T).mean(axis=0)
+    initial = {'mean_beta':jnp.array([-2.,0.,0.,0.,0.]),
+               'concentration_beta':jnp.array([jnp.log(4.),0.,0.,0.]),
+               'cohort_scale':jnp.asarray(max(init_scale,.02)), 'cohort_z':jnp.zeros(24),
+               'revenue_beta':jnp.asarray(br), 'revenue_shape':jnp.asarray(4.)}
+    # Four sequential chains work on a single CPU device. The command's step
+    # budget maps to warmup and sampling rather than a variational optimizer.
+    samples_per_chain = max(1000, steps//3)
+    kernel = NUTS(specification, target_accept_prob=.95, init_strategy=_dispersed_initial_strategy(initial))
+    sampler = MCMC(kernel, num_warmup=samples_per_chain, num_samples=samples_per_chain,
+                   num_chains=4, chain_method='sequential', progress_bar=False)
+    sampler.run(jax.random.PRNGKey(seed))
+    chained = {k:np.asarray(v) for k,v in sampler.get_samples(group_by_chain=True).items()}
+    diagnostics = mcmc_summary(chained, prob=.90, group_by_chain=True)
+    flat = {k:v.reshape((-1,)+v.shape[2:]) for k,v in chained.items()}
+    indices = np.linspace(0,4*samples_per_chain-1,DRAWS,dtype=int)
+    draws = {k:v[indices] for k,v in flat.items()}
+    if any(not np.isfinite(v).all() for v in flat.values()):
+        raise RuntimeError('Nonfinite MCMC parameter draws; no forecast released')
+    parameter_rows = []
+    for name, values in sorted(flat.items()):
+        dimensions = list(np.ndindex(values.shape[1:])) if values.ndim>1 else [()]
+        for index in dimensions:
+            vector = values[(slice(None),)+index]
+            suffix = index[0] if index else None
+            role = {'mean_beta':'churn_mean', 'concentration_beta':'churn_concentration',
+                    'cohort_scale':'cohort_scale', 'cohort_z':'cohort_effect',
+                    'revenue_beta':'revenue', 'revenue_shape':'revenue_dispersion'}[name]
+            if name == 'mean_beta':
+                label = MEAN_FEATURES[suffix]; prior = 'Normal(-2.5,1)' if suffix==0 else 'Normal(0,0.5)'
+                interpretation = 'Log-odds coefficient for mean individual churn propensity: '+label
+            elif name == 'concentration_beta':
+                label = CONCENTRATION_FEATURES[suffix]; prior = 'Normal(log(4),1)' if suffix==0 else 'Normal(0,0.5)'
+                interpretation = 'Log-concentration coefficient (larger concentration means less dispersion at fixed mean): '+label
+            elif name == 'cohort_z':
+                label = str(pd.Timestamp('2024-01-01')+pd.DateOffset(months=suffix))[:7]
+                prior = 'Normal(0,1)'; interpretation = 'Standardized cohort effect; multiply by cohort_scale for log-odds shift'
+            elif name == 'cohort_scale':
+                label = ''; prior='HalfNormal(0.25)'; interpretation='Standard deviation of shared cohort log-odds deviations'
+            elif name == 'revenue_beta':
+                label=REVENUE_FEATURES[suffix]; center=[-.5,.1,0,0,0,0][suffix]
+                prior=f'Normal({center},0.8)'
+                interpretation=('Log gross revenue per retained member in $100 units at age zero, Search, saving-time need and centered cohort trend'
+                                if suffix==0 else 'Log-multiplier of gross revenue per retained member for one unit of '+label)
+            else:
+                label=''; prior='LogNormal(log(4),0.8)'; interpretation='Gamma shape per retained member; governs revenue dispersion'
+            stat=diagnostics[name]
+            parameter_rows.append({'parameter':name+('['+label+']' if label else ''), 'role':role,
+                'prior':prior,'mean':float(vector.mean()),'sd':float(vector.std(ddof=1)),
+                'p05':float(np.quantile(vector,.05)), 'p95':float(np.quantile(vector,.95)),
+                'r_hat':float(np.asarray(stat['r_hat'])[index]),'ess':float(np.asarray(stat['n_eff'])[index]),
+                'interpretation':interpretation})
+    hazard_mean = _hazard_draws(draws,h).mean(axis=0)
+    if any(not np.isfinite([row['r_hat'],row['ess']]).all() for row in parameter_rows):
+        raise RuntimeError('Nonfinite MCMC convergence diagnostics; no forecast released')
     revenue_mean=(np.exp(draws['revenue_beta'] @ xr.T)*alive).mean(axis=0)
     revenue_variance=((np.exp(draws['revenue_beta'] @ xr.T)**2)*alive/draws['revenue_shape'][:,None]).mean(axis=0)
-    return draws, {"n_retention_cells": len(h), "n_revenue_cells": len(r),
-                   "initial_loss_mean": round(float(np.mean(loss[:min(100,len(loss))])), 8),
-                   "final_loss_mean": round(float(np.mean(loss[-min(100,len(loss)):])), 8),
-                   "final_two_window_relative_loss_change": round(float(abs(np.mean(loss[-250:])-np.mean(loss[-500:-250]))/max(abs(np.mean(loss[-250:])),1)),8) if len(loss)>=500 else None,
-                   "retention_pearson_dispersion": round(float(np.sum((survivors-prev*(1-hazard_mean))**2/np.maximum(prev*hazard_mean*(1-hazard_mean),1e-9))/max(len(h)-6,1)),8),
-                   "revenue_pearson_dispersion": round(float(np.sum((gross-revenue_mean)**2/np.maximum(revenue_variance,1e-9))/max(len(r)-7,1)),8),
-                   "actual_backend":jax.default_backend(),"actual_x64":bool(jax.config.x64_enabled),"init_scale":init_scale}
+    divergence_count = int(np.asarray(sampler.get_extra_fields()['diverging']).sum())
+    return draws, {'inference':'NumPyro NUTS', 'chains':4,'warmup_per_chain':samples_per_chain,
+        'samples_per_chain':samples_per_chain,'target_accept':.95,'forecast_draws':DRAWS,
+        'initialization':'Independent seeded Uniform(-0.5,0.5) jitter around declared centers in unconstrained parameter space, separately for each chain/site',
+        'max_r_hat':max(x['r_hat'] for x in parameter_rows),'min_ess':min(x['ess'] for x in parameter_rows),
+        'divergences':divergence_count,'parameter_summary':parameter_rows,
+        'n_retention_cells':len(h),'n_revenue_cells':len(r),
+        'retention_pearson_dispersion':round(float(np.sum((survivors-prev*(1-hazard_mean))**2/np.maximum(prev*hazard_mean*(1-hazard_mean),1e-9))/max(len(h)-35,1)),8),
+        'revenue_pearson_dispersion':round(float(np.sum((gross-revenue_mean)**2/np.maximum(revenue_variance,1e-9))/max(len(r)-7,1)),8),
+        'actual_backend':jax.default_backend(),'actual_x64':bool(jax.config.x64_enabled),'init_scale':init_scale}
 
 
 def _economic_ratios(frame: pd.DataFrame, exemplar: pd.Series, ages: list[int]) -> tuple[np.ndarray,np.ndarray]:
@@ -169,11 +268,10 @@ def _economic_ratios(frame: pd.DataFrame, exemplar: pd.Series, ages: list[int]) 
 
 
 def _future(draws: dict, exemplar: pd.Series, ages: list[int], remaining: float) -> tuple[np.ndarray, np.ndarray]:
-    from scipy.special import expit
     rows = pd.DataFrame([{**exemplar.to_dict(), "age_month": a} for a in ages])
     if not ages:
         return np.empty((DRAWS, 0)), np.empty((DRAWS, 0))
-    hazard = expit(draws["hazard_beta"] @ _features(rows, True).T)
+    hazard = _hazard_draws(draws, rows)
     retained = remaining * np.cumprod(1-hazard, axis=1)
     per_retained = 100*np.exp(draws["revenue_beta"] @ _features(rows).T)
     return retained, retained*per_retained
@@ -209,6 +307,7 @@ def _backtest(frame: pd.DataFrame, seed: int, steps: int) -> tuple[pd.DataFrame,
     denom = float(b.actual_revenue.sum())
     summary = {"training_last_calendar_month": str(cutoff), "held_out_calendar_months": [str(x) for x in months[-3:]],
                "n_cells": len(b), "retention_mae": float(np.mean(abs(b.actual_retained-b.pred_retained))),
+               "retention_wape":float(abs(b.actual_retained-b.pred_retained).sum()/max(b.actual_retained.sum(),1)),
                "revenue_wape": float(abs(b.actual_revenue-b.pred_revenue).sum()/max(denom,1)),
                "baseline_retention_mae": float(np.mean(abs(b.actual_retained-b.baseline_retained))),
                "baseline_revenue_wape": float(abs(b.actual_revenue-b.baseline_revenue).sum()/max(denom,1)),
@@ -235,7 +334,7 @@ def _valuation_record(key: tuple, n: int, spend: float, observed_months: int,
             "ltv_to_cac_mean": total_value/cac if supported_cac and cac>0 else np.nan,
             "payback_age":payback,"payback_month": None if payback is None else payback+1, "payback_status": status,
             "forecast_share": (total_value-observed_value)/total_value if total_value>0 else np.nan,
-            "p_cash_balance_nonnegative_at_horizon": float(np.mean(contrib.sum(axis=1)>=spend)) if supported_cac else np.nan,
+            "p_expected_cash_balance_nonnegative_at_horizon": float(np.mean(contrib.sum(axis=1)>=spend)) if supported_cac else np.nan,
             "cash_payback_recrosses_below_cost": bool(payback is not None and (np.cumsum(mean_curve)[payback:]<spend).any()),
             "observed_discounted_contribution_per_customer": observed_value}
 
@@ -285,6 +384,7 @@ def _valuation_backtest(frame: pd.DataFrame, company_costs: pd.DataFrame, seed: 
     result=pd.DataFrame(rows)
     pending=result[result.actual_payback_month>result.observed_months_at_origin]
     matched=pending.dropna(subset=['actual_payback_month','pred_payback_month'])
+    baseline_matched=pending.dropna(subset=['actual_payback_month','baseline_payback_month'])
     return result,{'training_last_calendar_month':str(cutoff),'n_forecast_cohorts':len(result),
                   'ltv_mae':float(abs(result.actual_ltv_before_cac-result.pred_ltv_before_cac).mean()),
                   'baseline_ltv_mae':float(abs(result.actual_ltv_before_cac-result.baseline_ltv_before_cac).mean()),
@@ -292,6 +392,10 @@ def _valuation_backtest(frame: pd.DataFrame, company_costs: pd.DataFrame, seed: 
                   'forecast_tail_value_wape':float(abs(result.actual_forecast_tail_value-result.pred_forecast_tail_value).sum()/result.actual_forecast_tail_value.sum()),
                   'payback_mae_months_for_both_recovered':float(abs(matched.actual_payback_month-matched.pred_payback_month).mean()) if len(matched) else None,
                   'n_both_recovered':len(matched),'n_payback_after_origin':len(pending),'n_payback_already_observed':int((result.actual_payback_month<=result.observed_months_at_origin).sum()),
+                  'n_payback_not_recovered_within_horizon':int(result.actual_payback_month.isna().sum()),
+                  'n_forecast_missed_actual_recovery':int(pending.pred_payback_month.isna().sum()),
+                  'baseline_payback_mae_months_for_both_recovered':float(abs(baseline_matched.actual_payback_month-baseline_matched.baseline_payback_month).mean()) if len(baseline_matched) else None,
+                  'n_baseline_both_recovered':len(baseline_matched),
                   'training_only_economics':True,'diagnostic':diagnostic,
                   'baseline':'Naive frozen last-three-period renewal rate and revenue per retained customer; a one-period cohort uses an explicit 0.8 renewal fallback.',
                   'limitation':'One historical year-end origin, not proof of accuracy for every future cohort or business regime.'}
@@ -302,7 +406,7 @@ def fit_and_forecast(output_dir: Path, seed: int = 20261116, steps: int = 3000) 
     tables = output_dir/"tables"
     input_paths = [tables/"cohort_age_summary.csv", tables/"cohort_acquisition_costs.csv",tables/"cohort_cash_economics.csv"]
     if steps < 3000:
-        raise ValueError("At least 3000 SVI steps are required by the tested release contract")
+        raise ValueError("At least a 3000-step budget is required (1000 NUTS warmup and draws per chain)")
     # Verify the analysis layer if its public validator is available.
     from cohort_lab.analysis import validate_analysis
     validate_analysis(output_dir)
@@ -319,12 +423,14 @@ def fit_and_forecast(output_dir: Path, seed: int = 20261116, steps: int = 3000) 
     value_backtest,vbt=_valuation_backtest(frame,company_costs,seed,steps)
     draws, diagnostic = _posterior(frame, seed, steps)
     for label,check in [('full fit',diagnostic),('three-month backtest',bt.get('diagnostic',{})),('LTV backtest',vbt.get('diagnostic',{}))]:
-        required_checks={'final_two_window_relative_loss_change','retention_pearson_dispersion','revenue_pearson_dispersion'}
+        required_checks={'max_r_hat','min_ess','divergences','retention_pearson_dispersion','revenue_pearson_dispersion'}
         if not required_checks.issubset(check): raise RuntimeError(f'{label}: required diagnostics missing')
-        if check['final_two_window_relative_loss_change']>.005:
-            raise RuntimeError(f'{label}: variational loss has not stabilized; no report released')
-        if max(check['retention_pearson_dispersion'],check['revenue_pearson_dispersion'])>1.5:
-            raise RuntimeError(f'{label}: residual dispersion exceeds the release diagnostic limit; reassess the likelihood')
+        if not np.isfinite([check[k] for k in required_checks]).all():
+            raise RuntimeError(f'{label}: nonfinite MCMC diagnostics; no report released')
+        if check['max_r_hat']>1.01 or check['min_ess']<400 or check['divergences']:
+            raise RuntimeError(f'{label}: MCMC diagnostics failed (R-hat={check["max_r_hat"]:.4f}, ESS={check["min_ess"]:.1f}, divergences={check["divergences"]}); no report released')
+        # Misspecification is reported, not hidden by tuning the simulator or
+        # refusing every imperfect fit. Numerical convergence and fit differ.
     cost_map = costs.set_index(KEYS)
     aggregates = {}
     cell_records, curves = [], []
@@ -365,6 +471,8 @@ def fit_and_forecast(output_dir: Path, seed: int = 20261116, steps: int = 3000) 
         cumul=np.cumsum(a["contribution"].mean(axis=0))-a["spend"]
         for age in range(HORIZON):
             curves.append({"cohort_month":cohort,"age_month":age,"n_retained_mean":float(a["retained"][:,age].mean()),
+                "n_retained_p05":float(np.quantile(a["retained"][:,age],.05)),
+                "n_retained_p95":float(np.quantile(a["retained"][:,age],.95)),
                 "net_revenue_mean":float(a["revenue"][:,age].mean()),"contribution_mean":float(a["contribution"][:,age].mean()),
                 "contribution_p05":float(np.quantile(a["contribution"][:,age],.05)),
                 "contribution_p95":float(np.quantile(a["contribution"][:,age],.95)),
@@ -373,24 +481,55 @@ def fit_and_forecast(output_dir: Path, seed: int = 20261116, steps: int = 3000) 
     from scipy.special import expit
     fit_checks=frame.copy()
     prior=fit_checks.groupby(KEYS).n_retained.shift(1).fillna(fit_checks.n_acquired).to_numpy()
-    fitted=prior*(1-expit(draws['hazard_beta']@_features(fit_checks,True).T).mean(axis=0))
+    fitted=prior*(1-_hazard_draws(draws,fit_checks).mean(axis=0))
     fit_checks['fitted_retained_one_step']=np.where(fit_checks.age_month==0,fit_checks.n_acquired,fitted)
+    observed_checks=fit_checks[fit_checks.age_month>0].copy()
+    hmean=_hazard_draws(draws,observed_checks).mean(axis=0)
+    observed_checks['conditional_variance']=prior[fit_checks.age_month.to_numpy()>0]*hmean*(1-hmean)
+    calendar_checks=observed_checks.groupby('calendar_month',sort=True).agg(
+        actual_retained=('n_retained','sum'),fitted_retained=('fitted_retained_one_step','sum'),
+        conditional_variance=('conditional_variance','sum'),n_risk_cells=('n_retained','size')).reset_index()
+    calendar_checks['residual_members']=calendar_checks.actual_retained-calendar_checks.fitted_retained
+    calendar_checks['standardized_residual']=calendar_checks.residual_members/np.sqrt(calendar_checks.conditional_variance.clip(lower=1e-9))
     fit_checks=fit_checks[fit_checks.cohort_month.isin(sorted(frame.cohort_month.unique())[-6:])][KEYS+['age_month','n_acquired','n_retained','fitted_retained_one_step']]
+    cells=frame[KEYS+['cohort_index']].drop_duplicates().reset_index(drop=True)
+    alpha,beta,mu,phi=_sbg_parameters(draws,cells)
+    heterogeneity=cells[KEYS].copy()
+    heterogeneity['mean_churn_mean']=mu.mean(axis=0)
+    heterogeneity['mean_churn_p05']=np.quantile(mu,.05,axis=0)
+    heterogeneity['mean_churn_p95']=np.quantile(mu,.95,axis=0)
+    heterogeneity['variance_churn_mean']=(mu*(1-mu)/(phi+1)).mean(axis=0)
+    heterogeneity['concentration_mean']=phi.mean(axis=0)
+    heterogeneity['alpha_mean']=alpha.mean(axis=0);heterogeneity['beta_mean']=beta.mean(axis=0)
+    mature_keys=set(map(tuple,frame.loc[frame.age_month>0,KEYS].drop_duplicates().to_numpy()))
+    heterogeneity['no_observed_renewals']=[tuple(row) not in mature_keys for row in cells[KEYS].to_numpy()]
     outputs={"cohort_valuation.csv":pd.DataFrame(cohort_records),"cohort_valuation_by_segment.csv":pd.DataFrame(cell_records),
-             "forecast_curve.csv":pd.DataFrame(curves),"backtest.csv":backtest,"valuation_backtest.csv":value_backtest,"model_fit_checks.csv":fit_checks}
+             "forecast_curve.csv":pd.DataFrame(curves),"backtest.csv":backtest,"valuation_backtest.csv":value_backtest,"model_fit_checks.csv":fit_checks,
+             "parameter_summary.csv":pd.DataFrame(diagnostic['parameter_summary']),"heterogeneity_by_cell.csv":heterogeneity,
+             "calendar_fit_checks.csv":calendar_checks}
     for name,df in outputs.items(): _csv(tables/name,df)
     draw_path=output_dir/"posterior_draws.json"
     _json(draw_path,{k:v.tolist() for k,v in sorted(draws.items())})
     settings={"seed":seed,"steps":steps,"draws":DRAWS,"horizon_months":HORIZON,"discount_rate":DISCOUNT,
-              "backend":"cpu","float_precision":"float64","guide":"AutoNormal","init_scale":.05,"optimizer":"ClippedAdam(0.008)"}
+              "backend":"cpu","float_precision":"float64","inference":"NUTS","init_scale":.05,
+              "chains":4,"warmup_per_chain":max(1000,steps//3),"samples_per_chain":max(1000,steps//3),"target_accept":.95,
+              "initialization":"Seeded independent per-chain/site Uniform(-0.5,0.5) jitter in unconstrained parameter space"}
     versions={k:importlib.metadata.version(k) for k in ["jax","jaxlib","numpyro","numpy","pandas","scipy"]}
-    summary={"model":"Conditional binomial survival + Gamma gross revenue; NumPyro SVI",
+    summary={"model":"Hierarchical shifted-Beta-Geometric retention + Gamma gross revenue; NumPyro NUTS",
              **settings,"backtest":bt,"valuation_backtest":vbt,"diagnostic":diagnostic,"versions":versions,
-             "uncertainty_label":"Approximate posterior parameter uncertainty conditional on model and fixed future economics; not a full predictive interval",
+             "uncertainty_label":"Posterior parameter uncertainty conditional on the single-Beta model and fixed future economics; not a full predictive interval",
              "economics_assumption":"Future net revenue and contribution shares of payment revenue use observed channel-by-need-by-age shares, with the same group's observed renewal ages (age>=1) as fallback. Shares are fixed assumptions, not causally identified or assigned posterior uncertainty.",
-             "cost_scope":"Tracked acquisition spending; organic cell CAC unsupported; whole-cohort CAC is tracked spend divided by all acquired customers, not fully loaded company cost.",
-             "interpretation":"Twelve-month contribution value, not an infinite-lifetime claim. Cash payback is the first undiscounted crossing; payback_age is zero-based and payback_month counts receipts from 1. Discounting uses t=age+1. A separate flag identifies later recrossing below cost. The model shares one linear cohort trend across groups; in-sample fit diagnostics are separate from backtests. No causal long-run campaign value is inferred from customer LTV.",
-             "source":"https://juanitorduz.github.io/revenue_retention_numpyro/"}
+             "cost_scope":"Tracked acquisition spending; organic cell CAC unsupported. Whole-cohort blended CAC is tracked spend divided by all acquired customers, including organic control buyers; it is not paid-only acquisition efficiency or fully loaded company cost.",
+             "interpretation":"Twelve-month contribution value, not an infinite-lifetime claim. Forecast cash payback is the first undiscounted crossing of the posterior-mean contribution path, not a distribution of realized payback times; payback_age is zero-based and payback_month counts receipts from 1. Discounting uses t=age+1. A separate flag identifies later recrossing below cost. Cohort random effects partially pool departures from the shared linear cohort trend. December 2025 has no observed renewal decisions; its retention forecast is inferred from other cohorts. No causal long-run campaign value is inferred from customer LTV.",
+             "model_description":{
+                 "retention":"Each member has a persistent churn propensity. Within a cohort/need/channel cell, propensities follow one Beta distribution. After t-1 renewals, churn hazard is alpha/(alpha+beta+t-1); observed survivors follow a Binomial with the previous survivor count as its risk set.",
+                 "heterogeneity":"Mean propensity varies with need, channel, cohort trend and a partially pooled cohort effect. Concentration varies with need and channel. Variance is mu*(1-mu)/(phi+1). Falling aggregate churn can reflect survivor selection, not improvement in each individual's loyalty.",
+                 "revenue":"Gross payment revenue follows a Gamma distribution with shape proportional to observed retained members. Expected revenue per retained member varies with log age, cohort trend, need and channel. Observed age-aligned net and contribution shares translate future gross revenue into economics.",
+                 "censoring":"Pending renewals and future ages are unobserved, not failures. Age zero establishes acquisition and supplies no renewal trial. Churn is absorbing in this business.",
+                 "forecast":"Keep observed revenue and contribution; forecast recursively from the last observed survivors. All cohorts are valued over the same 12 monthly receipts, discounting at 1% per month. Forecast bands and the probability of nonnegative expected cash cover parameter uncertainty, not renewal/revenue process noise or all future business risk.",
+                 "source_adaptation":"Retention extends Fader-Hardie sBG with mean/concentration parameterization, logit/log covariate links, a non-centered cohort effect on mean churn, grouped conditional Binomial renewal likelihood and NUTS estimation. Revenue adapts Orduz's Gamma structure but uses observed active counts in fitting, an additional per-member shape multiplier, a mean link without an age-by-cohort interaction, need/channel covariates and $100 scaling. Conditional on observed activity, the revenue and retention likelihoods have independent parameter blocks. The separate Orduz-inspired 4-hidden-unit Bayesian neural network is a retention comparison only; its cumulative-count likelihood is changed to conditional renewal trials."},
+             "source":"https://juanitorduz.github.io/revenue_retention_numpyro/",
+             "retention_source":"https://www.brucehardie.com/notes/016/"}
     _json(output_dir/"model_summary.json",summary)
     artifacts=["model_summary.json","posterior_draws.json"]+["tables/"+x for x in outputs]
     manifest={"schema_version":1,"settings":settings,"input_hashes":{p.name:_hash(p) for p in input_paths},

@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-DATASET_VERSION = "1.0"
+DATASET_VERSION = "2.0"
 DATA_FILES = (
     "people.csv", "subscription_periods.csv", "transactions.csv",
     "product_events.csv", "feedback.csv", "campaign_spend.csv",
@@ -58,11 +58,13 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     """Fingerprint the executable contract, excluding learner output SQL."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
     paths.extend(root / name for name in ("lab.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
+    paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
+    paths.extend(p for p in (root/'scripts').glob('*.mjs') if p.is_file())
     return {p.relative_to(root).as_posix(): _hash(p) for p in sorted(set(paths))}
 
 
@@ -121,9 +123,14 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
         if result.returncode == 0:
             node_version = result.stdout.strip()
     try:
-        node_ready = node_version is not None and int(node_version.lstrip("v").split(".")[0]) >= 18
+        node_ready = node_version is not None and int(node_version.lstrip("v").split(".")[0]) >= 20
     except ValueError:
         node_ready = False
+    diagram_ready = False
+    if node_ready:
+        probe = subprocess.run([node, str(Path(__file__).resolve().parents[1]/'scripts/export_diagram_assets.mjs'), '--check'],
+                               text=True, capture_output=True, check=False, timeout=30)
+        diagram_ready = probe.returncode == 0
     python_ready = sys.version_info[:2] == (3, 12)
     requested_tex = os.environ.get("COHORT_TEX_ENGINE")
     tex_engine = (shutil.which(requested_tex) or (requested_tex if Path(requested_tex).is_file() else None)) if requested_tex else (shutil.which("tectonic") or shutil.which("pdflatex"))
@@ -134,18 +141,19 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
             tex_engine = "WSL pdflatex"
     manifest = json.loads((data_dir / "data_manifest.json").read_text(encoding="utf-8"))
     return {
-        "ready": python_ready and not missing and node_ready and (bool(tex_engine) or not need_pdf),
+        "ready": python_ready and not missing and node_ready and diagram_ready and (bool(tex_engine) or not need_pdf),
         "python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
         "python_ready": python_ready,
         "missing_python_packages": missing,
         "node": node_version,
         "node_ready": node_ready,
+        "diagram_renderer_ready": diagram_ready,
         "latex_engine": tex_engine,
         "pdf_required": need_pdf,
         "dataset_version": manifest["dataset_version"],
         "data_as_of": manifest.get("data_as_of"),
         "question": "Are we moving in the right direction as a company?",
-        "setup_instruction": "Use Python 3.12 and uv sync --frozen; install Node 18 or newer before the lab.",
+        "setup_instruction": "Use Python 3.12 and uv sync --frozen; Node 20+, npm ci --prefix tools, and the pinned Playwright Chromium install support Archify exports.",
         "report_note": "The report step also requires the documented LaTeX renderer; check docs/setup.md before class.",
     }
 
@@ -161,10 +169,10 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
         return build_diagrams(data_dir, output_dir)
     if stage == 2:
         result = {
-            "ucv_categories": ["Identifiers", "Relationship", "Engagement", "Perceptions"],
+            "ucv_categories": ["Identifiers", "Engagement", "Relationship", "Perception"],
             "candidate_segment_fields": ["primary_need", "age_band"],
             "instructions": [
-                "Classify fields using docs/data_dictionary.md, allowing justified overlap.",
+                "Read diagrams/ucv-tables.json: one four-column field-name table per dataset. Use a best-fit category and explain ambiguous fields; preserve genuine gaps.",
                 "Propose which baseline grouping may explain retention and contribution differences.",
                 "Distinguish observed journey events, reported perceptions and inferred explanations.",
                 "Stage 4 will check the proposal against older age-aligned cohorts; do not claim an outcome comparison yet.",
@@ -201,9 +209,13 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
         return result
     if stage == 6:
         from .model import fit_and_forecast
+        from .benchmark import run_benchmark, validate_retention_comparison
         from .report import build_charts
+        import pandas as pd
         model_result = fit_and_forecast(output_dir, seed=seed, steps=steps)
-        return {"model": model_result, "charts": build_charts(output_dir)}
+        benchmark = run_benchmark(pd.read_csv(output_dir/'tables/cohort_age_summary.csv'), output_dir, seed=seed)
+        validate_retention_comparison(output_dir)
+        return {"model": model_result, "benchmark": benchmark, "charts": build_charts(output_dir)}
     if stage == 7:
         from .report import build_report
         if choices:

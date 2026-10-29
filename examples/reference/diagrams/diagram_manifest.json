@@ -14,7 +14,7 @@
       "html": "diagrams/customer-journey.html",
       "json": "diagrams/customer-journey.json",
       "renderer": "native Archify timeline",
-      "sha256": "87a6d1c24eef7004692ec1ad1e43b6dcd6813098eca53c71b41173acd199df8f"
+      "sha256": "c0d09633ac549030d92ff20b184a6d6283c5e84b9241f0d8f87cb1fc577b23ba"
     },
     "journey-build-skill": {
       "html": "diagrams/journey-build-skill.html",
@@ -31,44 +31,97 @@
     "source-systems": {
       "html": "diagrams/source-systems.html",
       "json": "diagrams/source-systems.json",
+      "png": "diagrams/source-systems.png",
       "renderer": "native Archify dataflow",
-      "sha256": "ce7c444cc1ef6e699be4f05b60ab1e446010ed076dc624bdeb6a5f0e39a34e7e"
+      "sha256": "5e89f75908c4272b40544f03172b426b4f81e8dcc1a85117f6c54949200c1df2",
+      "svg": "diagrams/source-systems.svg"
+    },
+    "source-systems-report": {
+      "html": "diagrams/source-systems-report.html",
+      "json": "diagrams/source-systems-report.json",
+      "png": "diagrams/source-systems-report.png",
+      "renderer": "native Archify workflow",
+      "sha256": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333",
+      "svg": "diagrams/source-systems-report.svg"
+    },
+    "source-tables": {
+      "html": "diagrams/source-tables.html",
+      "json": "diagrams/source-tables.json",
+      "png": "diagrams/source-tables.png",
+      "renderer": "native Archify erd",
+      "sha256": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694",
+      "svg": "diagrams/source-tables.svg"
+    },
+    "source-tables-report": {
+      "html": "diagrams/source-tables-report.html",
+      "json": "diagrams/source-tables-report.json",
+      "png": "diagrams/source-tables-report.png",
+      "renderer": "native Archify erd",
+      "sha256": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443",
+      "svg": "diagrams/source-tables-report.svg"
     }
+  },
+  "output_hashes": {
+    "diagrams/customer-journey.html": "c0d09633ac549030d92ff20b184a6d6283c5e84b9241f0d8f87cb1fc577b23ba",
+    "diagrams/customer-journey.json": "f9a09bf0765b4bdc5f39935a60413d210182d6592fc7d6ece02763ac1c7b089e",
+    "diagrams/journey-build-skill.html": "084ee37f91410c4329921215f475ca1be436f6adb9094022e879199a3165e5ef",
+    "diagrams/journey-build-skill.json": "da80a8fedf99c2bf72ff8c9c93f687bdfa00c588f0320d4f70a151452889f026",
+    "diagrams/journey-save-time.html": "e357b990b65c6fec0ed9bebd1122e7a05305ab63b368ecf8f4502a529857b135",
+    "diagrams/journey-save-time.json": "0b17ebd1e482dfafd70bf9f17316193cb8fec275339e32e298165833d96d4e8d",
+    "diagrams/source-systems-report.html": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333",
+    "diagrams/source-systems-report.json": "058e9a3eb98eaec92f0efee0b6d9effcbb2020baca59a96e9caae3e7cbefd5d8",
+    "diagrams/source-systems-report.png": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26",
+    "diagrams/source-systems-report.svg": "00403d7e82ea94c2679bffb609ada47e23c8b5fdf3a8079500174c1f706248f8",
+    "diagrams/source-systems.html": "5e89f75908c4272b40544f03172b426b4f81e8dcc1a85117f6c54949200c1df2",
+    "diagrams/source-systems.json": "ca84be6578ad00173e695fc71509dbf888be775947f3e208888c5e712320f94e",
+    "diagrams/source-systems.png": "9a1de15cb5e7e7f12b91bd76a26b76171dd5b404b4d30be7122a79bb82e5e279",
+    "diagrams/source-systems.svg": "9a5af9922f71702cd583a9d9ba921ba73b3aabdbeb9612a881aef89674a1f279",
+    "diagrams/source-tables-report.html": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443",
+    "diagrams/source-tables-report.json": "769ff6aa27512826616ffe495265e764eb4afd2da190efa65d5db17dda322d0b",
+    "diagrams/source-tables-report.png": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba",
+    "diagrams/source-tables-report.svg": "de94a09e0bd569dd7a00eb618eaf7b7de9e4c84d45d02022205fc872b104cb8b",
+    "diagrams/source-tables.html": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694",
+    "diagrams/source-tables.json": "35962b3aefabec8aaa0f41d05e700cfeb5fff4bfb264645628f59ee0b4022752",
+    "diagrams/source-tables.png": "666c33fc98380347a8ab0cb2aad26c872b8956471d29729926e4bd4f3015e02d",
+    "diagrams/source-tables.svg": "a1addeaf7b8c751e317fe54cbe01b84fb0d19f47cc8fd93e587f8181e2eb19ee",
+    "diagrams/source_inventory.json": "8be0bcc28d63378f2d658632c1ad4ddeb54f0c7d4c05a96ac4a89147e500e905",
+    "diagrams/ucv-tables.json": "d70d705c3a64f1c99247a1aca2c46ba9d72f028d6707934a47b8e2c0e5d6d320",
+    "diagrams/ucv-tables.md": "a70db856dee23922ee7088417c0758a1d6d566364c897682a4d7118674958d2c"
   },
   "sources": [
     {
       "file": "people.csv",
       "grain": "one person, including nonbuyers",
-      "rows": 5449,
-      "sha256": "7d91da008484efbd18a225af55fd458ff5363cf6cbc0ff9a5f9678c11d6f39ab",
+      "rows": 5476,
+      "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214",
       "source": "CRM"
     },
     {
       "file": "subscription_periods.csv",
       "grain": "one scheduled subscription period",
-      "rows": 36870,
-      "sha256": "ce3bc3c5dba95e5e65fc87fba2a0b1e699cc01350675792d37b54678aaac4961",
+      "rows": 37244,
+      "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411",
       "source": "Renewal system"
     },
     {
       "file": "transactions.csv",
       "grain": "one payment or refund event",
-      "rows": 45476,
-      "sha256": "178173cdf8aeb85776d5f951fafe34071099f4c1e2c4a07230b93588bf88ded2",
+      "rows": 45746,
+      "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5",
       "source": "Finance"
     },
     {
       "file": "product_events.csv",
       "grain": "one observed interaction",
-      "rows": 58889,
-      "sha256": "3071ed6afa5ed8e0ab7ee22e98bead70f3987f4b527255b09567599da64cdad7",
+      "rows": 59828,
+      "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53",
       "source": "Product"
     },
     {
       "file": "feedback.csv",
       "grain": "one submitted response",
-      "rows": 2591,
-      "sha256": "694fb5c9948a0df4215ebcb4500f783ea0af29f1926102d3d56682a451d79944",
+      "rows": 2654,
+      "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822",
       "source": "Customer research"
     },
     {
@@ -81,17 +134,35 @@
     {
       "file": "acquisition_attribution.csv",
       "grain": "one acquired person and credited source",
-      "rows": 4617,
-      "sha256": "bd32d75c8eaaf8b573c3137d169dda0533d11f205b63de0e812d982129723ebe",
+      "rows": 4672,
+      "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca",
       "source": "Marketing"
     },
     {
       "file": "experiment_assignments.csv",
       "grain": "one eligible person per experiment",
       "rows": 1000,
-      "sha256": "b9bb80c1275a0ed8ffa2e35af566aef947a0a3b730590f49e82658f338521fc1",
+      "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262",
       "source": "Experiment platform"
     }
   ],
+  "static_renderer": {
+    "animations": "disabled",
+    "device_scale_factor": 2,
+    "locale": "en-US",
+    "package": "playwright",
+    "report_overview": "Native nodes and edges; reader swimlanes/legend omitted; 12px titles and 9px context; cropped with 20px margin",
+    "theme": "light",
+    "timezone": "UTC",
+    "version": "1.62.1",
+    "viewport": [
+      2400,
+      1600
+    ]
+  },
+  "ucv": {
+    "json": "diagrams/ucv-tables.json",
+    "markdown": "diagrams/ucv-tables.md"
+  },
   "verification": "Native renderer validation passed; browser and visual review are separate development checks."
 }

@@ -1,13 +1,13 @@
 {
   "currency": "USD",
   "data_as_of": "2026-01-01T00:00:00Z",
-  "dataset_version": "1.0",
+  "dataset_version": "2.0",
   "definitions": {
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
     "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
     "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
-    "business": "Fully synthetic individual monthly subscription service; standard/premium tiers and optional add-on orders.",
+    "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
     "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
     "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
     "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
@@ -17,7 +17,7 @@
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
     "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
     "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
-    "synthetic_trends": "Gradually lower acquisition costs and renewal hazards, modest acquisition mix changes, explicit premium upgrades/add-on quantities and incurred costs. Random month-to-month variation remains.",
+    "synthetic_trends": "Changing acquisition cost and observable need/channel mix; persistent individual churn propensities from a two-Beta mixture whose composition varies across acquisition cohorts, needs and channels; a temporary common service disruption; explicit premium upgrades/add-on quantities and incurred costs. Random variation remains, and aggregate improvement does not by itself establish within-segment improvement.",
     "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
@@ -52,8 +52,8 @@
   ],
   "files": {
     "acquisition_attribution.csv": {
-      "row_count": 4617,
-      "sha256": "bd32d75c8eaaf8b573c3137d169dda0533d11f205b63de0e812d982129723ebe"
+      "row_count": 4672,
+      "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca"
     },
     "campaign_spend.csv": {
       "row_count": 294,
@@ -61,32 +61,61 @@
     },
     "experiment_assignments.csv": {
       "row_count": 1000,
-      "sha256": "b9bb80c1275a0ed8ffa2e35af566aef947a0a3b730590f49e82658f338521fc1"
+      "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262"
     },
     "feedback.csv": {
-      "row_count": 2591,
-      "sha256": "694fb5c9948a0df4215ebcb4500f783ea0af29f1926102d3d56682a451d79944"
+      "row_count": 2654,
+      "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822"
     },
     "people.csv": {
-      "row_count": 5449,
-      "sha256": "7d91da008484efbd18a225af55fd458ff5363cf6cbc0ff9a5f9678c11d6f39ab"
+      "row_count": 5476,
+      "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214"
     },
     "product_events.csv": {
-      "row_count": 58889,
-      "sha256": "3071ed6afa5ed8e0ab7ee22e98bead70f3987f4b527255b09567599da64cdad7"
+      "row_count": 59828,
+      "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53"
     },
     "subscription_periods.csv": {
-      "row_count": 36870,
-      "sha256": "ce3bc3c5dba95e5e65fc87fba2a0b1e699cc01350675792d37b54678aaac4961"
+      "row_count": 37244,
+      "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411"
     },
     "transactions.csv": {
-      "row_count": 45476,
-      "sha256": "178173cdf8aeb85776d5f951fafe34071099f4c1e2c4a07230b93588bf88ded2"
+      "row_count": 45746,
+      "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5"
     }
   },
   "generator": "cohort_lab.data.generate_data; Python standard-library random.Random, integer-cent generation",
   "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
-  "schema_version": "1.0",
+  "retention_dgp": {
+    "calendar_disruption": {
+      "churn_odds_multiplier": 1.35,
+      "months": [
+        "2025-03",
+        "2025-04"
+      ]
+    },
+    "channel_offset": {
+      "organic": 0.0,
+      "partner": -0.04,
+      "search": 0.04
+    },
+    "components": {
+      "durable": {
+        "alpha": 0.7,
+        "beta": 12.0
+      },
+      "fragile": {
+        "alpha": 2.0,
+        "beta": 5.0
+      }
+    },
+    "fragile_weight": "clip((0.40 if save_time else 0.24) + channel_offset - 0.06*cohort_index/23 + 0.02*sin(0.6*cohort_index), 0.05, 0.85)",
+    "latent_draw": "One Beta-mixture churn propensity per acquired person, reused at every renewal; latent propensity and component are never columns in the observed CSVs.",
+    "renewal": "Bernoulli((1-theta)/(1-theta+odds_multiplier*theta)); monthly until permanent churn; acquisition month is paid and future months are censored.",
+    "separation": "These simulation assumptions document data provenance. The inference model must fit only observed source-derived cohort cells, not latent propensities or DGP parameters.",
+    "version": "persistent-mixture-beta-v2"
+  },
+  "schema_version": "2.0",
   "source_cutoffs": {
     "acquisition_attribution.csv": "2026-01-01T00:00:00Z",
     "campaign_spend.csv": "2026-01-01T00:00:00Z",

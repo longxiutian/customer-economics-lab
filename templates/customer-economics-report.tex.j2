@@ -1,128 +1,162 @@
 \documentclass[10pt]{article}
 \usepackage{labreport}
 \begin{document}
-\PageTitle{01 / THE QUESTION}{Are we moving in\newline the right direction?}{One subscription business. Eight separate exports. A diagnosis that connects customer experience, acquisition and durable contribution.}
-\Metric{Latest observed month}{\VAR{latest_active}}{retained subscribers}\hfill
-\Metric{Latest observed month}{\VAR{latest_revenue}}{net revenue}\hfill
-\Metric{Latest observed month}{\VAR{latest_contribution}}{contribution before acquisition spending}
-\Section{The Universal Customer View connects meanings and keys}
-\begin{center}
-\begin{tikzpicture}[font=\small,box/.style={draw=Rule,fill=Pale,align=center,text width=2.65cm,minimum height=1.15cm,inner sep=5pt},arr/.style={-{Stealth[length=2mm]},Teal,thick}]
-\node[box] (a) at (0,0) {CRM\\People and needs};
-\node[box] (b) at (3.5,0) {Billing + renewal\\Payments and retention};
-\node[box] (c) at (7,0) {Experience\\Events and feedback};
-\node[box] (d) at (10.5,0) {Marketing\\Spend, credit, assignment};
-\node[box,fill=Teal,text=white,text width=5.8cm] (e) at (5.25,-1.8) {Tested SQL views\\Person / cohort / period};
-\draw[arr] (a.south)--++(0,-.35)-|(e.north west);
-\draw[arr] (b.south)--(e.north west);
-\draw[arr] (c.south)--(e.north east);
-\draw[arr] (d.south)--++(0,-.35)-|(e.north east);
-\end{tikzpicture}
-\end{center}
-\Evidence{Interactive source-system and customer-journey diagrams are generated with the bundled, pinned Archify package. This report schematic is an original companion view of the same data domains.}
-\par\begin{tabularx}{\linewidth}{@{}p{.2\linewidth}Y@{}}\toprule
-\textbf{UCV category}&\textbf{What the exported records mean}\\\midrule
-Identifiers&\texttt{person\_id} connects documented records. Transaction, period and event IDs identify different objects.\\
-Relationship&Subscription period, tier and renewal outcome describe the arrangement and when it applies.\\
-Engagement&Payments, product actions and support contacts are observed events, not inferred motives.\\
-Perceptions&Survey responses describe the respondents' evaluations. No response remains missing.\\\bottomrule
-\end{tabularx}\par
-\Section{What would count as progress?}
-Compare customers at the same age since first payment, inspect contribution after acquisition spending, then connect joining cohorts to the firm's calendar-time results. The experiment asks a separate question: did the tested campaign add value relative to its control?
-\Takeaway{A larger business is not sufficient evidence of better customer economics. We need age-aligned cohorts, a stated cost scope, and a credible comparison for marketing effects.}
-\Evidence{Data as of \VAR{data_as_of}. All records are original synthetic teaching data. Forecast horizon: 12 monthly periods from acquisition. Detailed file and SQL hashes are recorded in the report manifest.}
+\PageTitle{01 / EXECUTIVE SUMMARY}{Studio North: is growth\newline becoming more valuable?}{Customer acquisition, monthly renewal and contribution economics | \VAR{scope_line}}
+\Section{The business and the decision}
+Studio North sells a monthly creative-work membership to independent professionals. Standard and premium plans combine ready-to-use templates with guided learning; members can also purchase workshops and other add-ons. Each month, members choose whether to renew. Search campaigns and partner workshops bring customers with two stated priorities: save time or build skills.
+
+Management needs to know whether successive acquisition cohorts create more durable contribution, at a cost the company can recover quickly enough to fund growth. Company scale, customer quality and marketing incrementality answer different parts of that decision.
+\Takeaway{\VAR{learner_verdict}}
+\Metric{ACQUISITION EFFICIENCY}{\VAR{acquisition_kpi}}{blended CAC per acquired customer}\hfill
+\Metric{CUSTOMER VALUE}{\VAR{value_kpi}}{six-month contribution per customer}\hfill
+\Metric{CASH RECOVERY}{\VAR{cash_kpi}}{six-month cash after blended CAC}
+\Evidence{Matched-age comparison: \VAR{matched_cohorts}. Values above are rounded to dollars; the evidence table reports cents.}
+\Section{What the evidence establishes}
+\VAR{decision_table}
+\Section{Recommended management response}
+\textbf{Action.} \VAR{learner_action}
+\VAR{executive_experiment_sentence}
+\Section{What would change the decision}
+For immature cohorts, value depends on future renewals and spending. Treat their LTV as a conditional forecast. Scale a campaign only when a randomized comparison supports incremental contribution over a relevant window; historical attributed CAC alone cannot establish that return. Retain the cost and cash-recovery constraints when a campaign produces more revenue.
+\Boundary{All customer records describe an illustrative business and are synthetic. The analysis covers recorded variable costs and acquisition spending, not fixed operating costs, financing or taxes. It therefore does not establish company profitability.}
+\Evidence{The management pages summarize the diagnosis and action. Appendices document the model, parameter estimates, validation, data architecture and dataset-level Universal Customer View.}
 
 \NewPage
-\PageTitle{02 / OBSERVED COHORTS}{Start with a cohort,\newline not a company average}{A cohort contains people who first paid in the same month. Age index 0 is the first paid month; blank future cells are unobserved.}
-\FullFig{cohort-triangles.pdf}{3.65in}
-\Evidence{Source: saved SQL tables \texttt{cohort\_totals.csv} and \texttt{cohort\_cash\_economics.csv}. The display selects joining cohorts for legibility; it does not interpolate missing future observations.}
-\Section{Read across, then compare down}
-Across a row, follow one joining cohort as it ages. Down an age column, compare different cohorts at the same stage of their relationship. A newest cohort's short history cannot be compared with an older cohort's accumulated total.
-\par\begin{tabularx}{\linewidth}{@{}p{.26\linewidth}Y@{}}\toprule
-\textbf{Quantity}&\textbf{Denominator and interpretation}\\\midrule
-Retained share&Retained subscriptions divided by the original acquired cohort; product inactivity is not cancellation.\\
-Paying customers&People with a successful payment in the period; this is a purchase measure, not a substitute for contractual retention.\\
-Cash after acquisition&Cumulative observed contribution less the cohort's tracked acquisition spending. Cash payback is the first nonnegative balance.\\\bottomrule
-\end{tabularx}\par
-\Boundary{First-paid month is derived from complete payment history. CRM creation, product signup and marketing attribution are separate events. Refund rows reduce value; they do not create extra orders or new people.}
+\PageTitle{02 / OBSERVED COHORT ECONOMICS}{Compare customer quality\newline at a common age}{A joining cohort contains customers whose first successful payment occurred in the same month. Future ages remain unobserved.}
+\FullFig{cohort-triangles.pdf}{3.25in}
+\Evidence{Saved SQL outputs: \texttt{cohort\_totals.csv} and \texttt{cohort\_cash\_economics.csv}. Age 0 is the first paid month. Cash balance is cumulative contribution less tracked acquisition spending, divided by original cohort size. These six cohorts are an evenly spaced subset of the sorted 24-cohort sequence, including its endpoints; they were not selected for favorable results.}
+\Section{Acquisition efficiency and durability must move together}
+\VAR{progress_sentence}
+\FullFig{retention-and-revenue.pdf}{2.05in}
+\Evidence{Retained share uses original cohort membership; revenue retention uses each cohort's first-period revenue. Revenue can change because of the number of renewing members, their plan mix or add-on spending. Product activity is not a substitute for a renewal record.}
+\Takeaway{The trajectory matters as well as the cutoff. A stronger first month does not establish longer customer life, while a customer-count decline can coexist with more spending by the members who remain.}
 
 \NewPage
-\PageTitle{03 / CUSTOMER DIFFERENCES}{People and revenue\newline can tell different stories}{A falling customer count can coexist with stronger spending among those who remain. Interpret both curves before describing retention as good or bad.}
-\FullFig{retention-and-revenue.pdf}{3.25in}
-\Evidence{Observed SQL ratios use original cohort membership for people and the cohort's first-period revenue for revenue retention. Selected cohorts are labeled; all plotted observations are saved SQL outputs.}
-\Section{Segmentation represents selected differences}
-The pre-acquisition need groups and age groups organize the same customers differently. The comparison below uses mature customers at a common six-month horizon. Smaller within-group variation can make a grouping more informative; it does not make everyone within a segment identical.
-\VAR{segmentation_table}
-\Section{Use the journey to interpret, not invent, explanations}
-An onboarding event records an action. A survey rating records an expressed evaluation. Their timing can suggest a question worth investigating, but a customer path alone does not establish why someone renewed or left.
-\Takeaway{Joining month defines a cohort. Stated need or age defines a segment. Customer heterogeneity exists before we choose either representation.}
-
-\NewPage
-\PageTitle{04 / CHANNELS AND NEEDS}{Check the trend\newline within customer groups}{Compare the same joining cohorts inside each channel and pre-acquisition need. The axes stay fixed across all four panels.}
-\FullFig{channel-segment-retention.pdf}{4.7in}
-\Evidence{Source: \texttt{cohort\_age\_summary.csv}. Each curve divides retained customers by its original cohort--channel--need cell. Only observed ages appear; the July 2025 curves stop at age 5. No future zeros or filled-in retention paths are added.}
-\Section{What survives the breakdown?}
+\PageTitle{03 / CUSTOMER GROUPS}{Check whether progress\newline survives the customer mix}{Observed renewal trajectories by acquisition channel and stated need; each panel uses the same axes.}
+\FullFig{channel-segment-retention.pdf}{3.7in}
+\Evidence{Saved SQL output: \texttt{cohort\_age\_summary.csv}. Curves divide retained members by the original cohort--channel--need cell. No missing future observations are filled with zeros.}
+\Section{Within-group diagnosis}
 \VAR{facet_sentence}
-\Section{Use the differences to ask a better question}
-If a channel's aggregate curve changes, examine both its customer mix and the trajectories within the same needs. Different curves can guide a diagnostic question or a new test; they do not show that the acquisition channel caused the difference.
-\Takeaway{A cohort controls the joining clock. A segment organizes customer differences. Use both before explaining a company-wide trend.}
+\Section{A useful segmentation separates relevant differences}
+\VAR{segmentation_sentence}
+\VAR{segmentation_table}
+\Evidence{Comparison uses the same mature-customer sample and the same six-month outcome. Smaller within-group variance means more homogeneous observed outcomes within the chosen groups; it does not imply identical customers or establish a causal effect of a need or channel.}
+\Boundary{Stated need is known before acquisition. It can support targeting and journey interpretation. Joining month defines a cohort, not a segment. Survey evaluations and observed behavior can suggest explanations to test, but neither proves why a customer renewed or left.}
 
 \NewPage
-\PageTitle{05 / COMPANY DYNAMICS}{Cohort layers build\newline the company over time}{Each colored layer is a joining cohort. The firm grows when new customer inflows and retained older cohorts together outweigh departures.}
-\FullFig{company-cohort-layers.pdf}{3.2in}
-\Evidence{Source: \texttt{company\_month.csv} cohort layers and independently saved SQL company totals. Layer sums are checked against totals before plotting.}
+\PageTitle{04 / COMPANY ECONOMICS}{Retained cohorts determine\newline how growth accumulates}{The company is the sum of its acquisition cohorts at different ages, not the latest cohort scaled up.}
+\FullFig{company-cohort-layers.pdf}{3.15in}
+\Evidence{Saved SQL output: \texttt{company\_month.csv}. Each layer is a joining cohort's active customers at the displayed calendar month. Layer totals are reconciled to independently saved company totals before plotting.}
 \FullFig{company-economics.pdf}{1.75in}
-\Section{Separate scale from economic quality}
-The upper figure shows active customers at each calendar month, not cumulative acquisitions. The lower figure compares contribution before acquisition spending with the spending incurred to acquire customers. A growing active base can still require substantial acquisition investment.
-\Boundary{Contribution subtracts recorded variable costs. Fixed operating costs, financing and taxes are outside this dataset. These figures do not establish company profitability.}
+\Section{Scale and cash recovery are separate tests}
+New acquisition adds customers immediately. Renewals preserve older layers and their contribution, reducing the replacement acquisition required to sustain scale. The lower chart compares recorded contribution with acquisition spending in each calendar month; it is not cumulative retained customers or a profit statement.
+\VAR{company_sentence}
+\Section{Operating implication}
+Track both the common-age economics of each joining cohort and the company's accumulated contribution. A favorable acquisition metric can coexist with slower cash recovery when renewals weaken. A growing customer base can also conceal deterioration if management replaces departing customers with increasingly costly new ones.
+\Boundary{Cash payback is undiscounted: the first age at which cumulative contribution covers the acquisition investment. The LTV calculation that follows discounts expected monthly contribution and uses a common, explicit horizon.}
 
 \NewPage
-\PageTitle{06 / FORECAST VALUE}{Make the horizon explicit\newline before comparing LTV}{Observed contribution is retained. Only the unobserved remainder of the common 12-month horizon is forecast.}
-\FullFig{ltv-and-cac.pdf}{2.4in}
-\Evidence{Bands are approximate 5th--95th posterior parameter percentiles. They exclude optimization, model-structure and future-economics uncertainty; they are not full predictive intervals.}
-\[
-\text{LTV}_{12}=\sum_{m=1}^{12}\frac{\operatorname{E}[c_m]}{(1.01)^m},
-\qquad \text{net LTV}_{12}=\text{LTV}_{12}-\text{CAC}.
-\]
-\Evidence{$c_m$ is monthly contribution per original acquired customer, including zeros for those who have left. The first receipt is discounted at $m=1$ (saved age index 0). \VAR{economics_assumption}}
-\FullFig{forecast-detail.pdf}{1.7in}
-\Section{Test prediction against outcomes we withheld}
-\VAR{backtest_sentence}
+\PageTitle{05 / MODEL AND VALUE FORECAST}{Forecast monthly renewal\newline before forecasting value}{\VAR{model_short_description}}
+\Section{How the model represents the business}
+\VAR{model_description}
+\VAR{model_equation}
+\Evidence{\VAR{model_economics_description} The main retention model extends Fader--Hardie's shifted-Beta-Geometric approach; the revenue model adapts Orduz's Gamma structure. An Orduz-inspired neural retention model is a separate validation benchmark, not the source of executive LTV. Parameter estimates and held-out checks appear in the appendix.}
+\FullFig{ltv-and-cac.pdf}{2.5in}
+\Evidence{\VAR{interval_description}. The lower strip shows the forecast share of common \VAR{horizon_months}-month LTV. Dotted markers identify experiment months with organic control buyers in the denominator. Blended CAC divides tracked spending by all acquired customers; it is not the causal cost of the next customer.}
+\Section{Management interpretation}
 \VAR{latest_valuation_sentence}
-\Boundary{The shared joining-cohort trend may miss deterioration within a particular segment; inspect the separate recent-cohort fit diagnostic. Forecast LTV and historical average CAC do not identify the causal return on the next advertising dollar. Cash payback remains undiscounted.}
+\Boundary{\VAR{economics_assumption} Predicted customer value is not experimentally identified campaign return. A favorable average LTV-to-CAC comparison still requires a cash-recovery constraint and evidence that the next acquisition investment creates additional value.}
 
 \NewPage
-\PageTitle{07 / RANDOMIZED EVIDENCE}{A campaign must beat\newline its no-campaign baseline}{Start from every assigned eligible prospect, including people who never buy. Their zero outcomes belong in the denominator.}
+\PageTitle{06 / CAMPAIGNS AND ACTION}{Require the next campaign\newline to beat its own baseline}{Randomized assignment includes all eligible prospects, including those who never purchase. Each test keeps its own control and follow-up window.}
 \VAR{experiment_table}
-\Evidence{Source: \texttt{experiment\_summary.csv} and \texttt{experiment\_effects.csv}. Each experiment keeps its own assignment roster, control and prespecified follow-up window. Organic purchases by control members remain control outcomes.}
-\FullFig{experiment-effects.pdf}{2.45in}
-\Evidence{These are point estimates over the tested window, not certain rankings. The analysis tables separately report uncertainty for the conversion-rate difference.}
-\Section{Compare contribution using the same transformation}
-For each arm, net revenue less variable costs gives contribution. Compare arm means per eligible prospect; then subtract the treatment's additional media cost per assigned prospect. Purchases that would have occurred without the campaign are part of the baseline.
+\FullFig{experiment-effects.pdf}{2.1in}
+\Evidence{Saved SQL outputs: \texttt{experiment\_summary.csv} and \texttt{experiment\_effects.csv}. Whiskers are approximate 95\% intervals from all-assigned contribution variances, including nonbuyer zeros. Fixed media costs shift the mean, not its sampling variance. These 30/31-day windows are shorter than the cohorts' cash-recovery horizon; they do not measure lifetime campaign return.}
+\Section{The same economics apply to treatment and control}
+For each arm, net revenue less recorded variable costs gives contribution. Compare contribution per assigned eligible prospect, then subtract the treatment's additional media cost. Control purchases remain in the baseline rather than receiving campaign credit.
 \[
 \Delta\text{contribution after media per prospect}
 =\frac{C_T-M_T}{N_T}-\frac{C_C-M_C}{N_C}.
 \]
-\Boundary{The experimental window is not a lifetime horizon. Do not multiply a conversion lift by the average predicted LTV of observed buyers and call the result experimentally established lifetime incrementality.}
+\Section{Management actions and accountability}
+\VAR{action_table}
+\Boundary{Do not multiply experimental conversion lift by the predicted LTV of observed buyers and label the product an established lifetime campaign effect. The tested population, outcome window and valuation assumptions must remain visible.}
 
 \NewPage
-\PageTitle{08 / THE MANAGEMENT DECISION}{Connect the evidence\newline before choosing the next move}{The task is to judge whether the business is improving and identify the next measurement or operating action.}
-\VAR{decision_table}
-\Section{A defensible conclusion}
-\VAR{progress_sentence}
-\Section{Learner judgment and next action}
-\textbf{Judgment:} \VAR{learner_verdict}
-\par\textbf{Recommended action:} \VAR{learner_action}
-\Section{Carry the decision into action}
-\par\begin{tabularx}{\linewidth}{@{}p{.23\linewidth}Y@{}}\toprule
-\textbf{Responsibility}&\textbf{Output needed before acting}\\\midrule
-Marketing + Product&State the customer objective, eligible population and definition of success.\\
-Engineering + Analytics&Preserve source meaning, the person key, observation cutoffs and tested SQL transformations.\\
-Operations + Marketing&Verify the final recipients or rollout configuration and own the release decision.\\
-Evaluation&Keep assignment and nonconverters; assess the outcome over the prespecified comparison window.\\\bottomrule
-\end{tabularx}\par
-\Takeaway{Decide from the evidence that exists. Name the uncertainty that could change the decision, and make the next action produce the missing evidence.}
-\Section{Reproducibility and sources}
-All numerical tables are saved SQL or model outputs. The chart manifest binds each figure to those files. The report manifest records file hashes, model metadata and the compiler. SQL scripts, editable \LaTeX{} and original diagram sources accompany this PDF.
-\Evidence{Conceptual references: Juan Orduz, \emph{Revenue Retention and Customer Lifetime Value with NumPyro} (public walkthrough); Gil Bouhnick, \emph{Cohort Analysis} (MobileSpoon, 2019). This lab uses original synthetic data and explicit contribution costs; it does not copy article images or treat an article's transaction commission as its own contribution margin. Archify 3.2.0, MIT, pinned source included with notices. See \texttt{docs/visual-sources.md} for links and license details.}
+\PageTitle{A1 / MODEL SPECIFICATION}{Parameter meanings\newline and fitted estimates}{Technical appendix | The inference model is distinct from the process used to generate the synthetic customer records.}
+\Section{Likelihood, heterogeneity and economic conversion}
+\VAR{model_technical_description}
+\VAR{model_specification_equations}
+\Evidence{$g$ indexes a cohort--need--channel cell; $t=1$ is its first renewal. Mean-churn coefficients use a logit link; concentration and revenue use log links. Search and save-time customers are the reference groups. Retention cohort trend is $(\text{index}-11.5)/11.5$; revenue cohort trend is $(\text{index}-11.5)/12$. Revenue log-age is $\log(1+\text{age})$. Cohort index runs from 0 to 23.}
+\VAR{parameter_table}
+\Evidence{Posterior means and 5th--95th percentiles are read from the saved, hash-bound parameter output. Units and reference groups are stated with the parameter definitions; transformed parameters are not interchangeable with their latent log-scale values.}
+\Section{Estimation and reproducibility}
+\VAR{estimation_table}
+
+\NewPage
+\PageTitle{A2 / RETENTION FORECASTS}{Show the unobserved\newline renewal path explicitly}{Technical appendix | The same model forecasts retained customers, then converts that path into revenue and contribution.}
+\FullFig{retention-forecast.pdf}{3.25in}
+\Evidence{Saved model output: \texttt{forecast\_curve.csv}. Each panel uses its original acquired-customer denominator. Solid points are observed; dashed lines are forecast expected retention; shading is the 5th--95th posterior parameter range. The vertical marker is the observation boundary.}
+\Section{The amount of observed renewal history matters}
+The complete cohort supplies an observed reference. The intermediate cohort has some renewal history but still requires extrapolation. The newest cohort has only its acquisition month: it has \textbf{zero observed renewal decisions}. Its future path borrows information from older cohorts, stated needs, acquisition channels and the model's partially pooled cohort distribution.
+\FullFig{forecast-detail.pdf}{1.65in}
+\Evidence{Observed contribution is retained; only the unobserved remainder is predicted. The newest cohort's forecast relies on older cohorts until its own renewal history becomes available.}
+\Boundary{These are expected customer paths conditional on fitted parameters. The bands exclude future customer-level Bernoulli variation, uncertain economic conversion and changes in the business regime. A narrow parameter band is not evidence that those risks are small.}
+
+\NewPage
+\PageTitle{A3 / VALIDATION}{Separate fitted agreement\newline from prediction performance}{Technical appendix | A model can describe observed counts closely and still miss the future.}
+\FullFig{recent-cohort-fit-check.pdf}{2.9in}
+\Evidence{Saved SQL/model output: \texttt{model\_fit\_checks.csv}. These are in-sample, one-step fitted residuals conditional on previous observed customer counts. They are not held-out forecast errors.}
+\Section{Held-out performance}
+\Evidence{\VAR{holdout_dates}}
+\VAR{backtest_sentence}
+\VAR{backtest_table}
+\Evidence{\VAR{benchmark_sentence}}
+\Section{Where calendar-time fit departs most}
+\VAR{calendar_residual_table}
+\Evidence{Four months with the largest absolute standardized calendar residual, selected from saved \texttt{calendar\_fit\_checks.csv}; only renewal ages 1 and older enter, not new acquisitions. These flag timing patterns, not causes, held-out errors or formal significance tests.}
+\Section{Interval scope and remaining risk}
+\VAR{interval_description}.\par
+\VAR{validation_boundary}
+
+\NewPage
+\PageTitle{A4 / HISTORICAL VALUATION CHECK}{Show exactly how much\newline of each value was forecast}{Technical appendix | Training includes the calendar month beginning \VAR{valuation_backtest_origin}; later calendar months are used only for scoring.}
+\VAR{valuation_backtest_sentence}
+\VAR{valuation_backtest_table}
+\Evidence{Saved model output: \texttt{valuation\_backtest.csv}. LTV values are discounted contribution before blended CAC, per original acquired customer. ``Observed / forecast'' counts the receipts within the common 12-month horizon; payback month counts receipts from 1.}
+\Section{Why total-value and forecast-tail errors are the same}
+Observed contribution is copied identically into the actual and predicted totals. The forecast covers only the remaining months. Consequently, total LTV error equals the error in the unobserved tail; the long observed prefix does not create additional predictive accuracy. Rows are ordered by the amount of history available at the origin.
+\Section{The baseline and its weakest-information case}
+The naive baseline freezes the last three observed renewal rates and revenue per retained customer. A cohort with only its acquisition month has no observed renewal rate; the baseline uses an explicit 0.8 renewal fallback. Its value is an assumption, not an estimated renewal rate. The December row makes this low-information comparison visible.
+\Section{What the payback forecast represents}
+Forecast payback is the first crossing of acquisition cost by the \textbf{posterior-mean expected contribution path}. It is not the mean or median of a payback-time distribution, and it does not estimate the chance that a realized customer cohort recovers its cost by that month. Posterior parameter bands also exclude future customer-level process noise.
+\Boundary{Both the generator and sBG model contain persistent individual churn heterogeneity. The generator additionally uses a mixture of churn types, calendar shocks, cohort-specific dispersion, plan upgrades and add-on purchases. The inference model does not reproduce those mechanisms. The small set of future-payback cases is a narrow diagnostic under that deliberate mismatch: interpret zero month error, if observed, alongside the full value errors and incomplete histories.}
+
+\NewPage
+\PageTitle{A5 / DATA ARCHITECTURE}{Preserve source meaning\newline through the joins}{Technical appendix | Eight separate exports become tested analytical views in DuckDB; no database server is required.}
+\Takeaway{\VAR{evidence_base}}
+\VAR{architecture_figure}
+\Evidence{The diagram is rendered by the bundled Archify package from original source specifications. The accompanying \texttt{diagrams/source-tables.html} and SVG show the full table-level schema and cardinality. Dataset classifications on the following pages list concrete fields.}
+\Section{Keys do not make unlike records interchangeable}
+A person can have many renewal periods, ledger transactions, product events and survey responses. Those tables must be aggregated at the intended grain before they are joined. Acquisition spending is a campaign-level record; it does not become a customer-level observation merely because it can be allocated across acquired customers. Experimental assignment defines an eligible population that includes noncustomers.
+\Section{Analytical contracts}
+\VAR{data_contract_table}
+\Evidence{Source hashes, saved SQL and downstream manifests bind the evidence chain. Numeric tables, editable \LaTeX{}, source diagrams and the maintained style package accompany the report.}
+
+\BeginSchemaFoldout
+\PageTitle{A6 / DETAILED TABLE RELATIONSHIPS}{Source records, keys and cardinality}{A3 landscape foldout | The eight raw exports remain separate. Campaign metadata is a derived lookup for a nonunique campaign-spend key.}
+\begin{center}\includegraphics[width=\linewidth,height=8.25in,keepaspectratio]{figures/source-tables-report.png}\end{center}
+\Evidence{Native Archify schema; editable SVG/HTML: diagrams/source-tables. Refunds link transactions.related\_transaction\_id to transactions.transaction\_id within the same ledger. Campaign foreign keys target unique campaign\_metadata; campaign\_spend uses campaign\_id + spend\_date. Aggregate to the intended grain before joining one-to-many records.}
+\EndSchemaFoldout
+\PageTitle{A7 / UNIVERSAL CUSTOMER VIEW}{Classify each source\newline by what it actually measures}{Technical appendix | Identifiers include keys and profile descriptors; engagement records behavior; relationship describes the arrangement; perception records expressed views.}
+\VAR{ucv_tables_first}
+\Evidence{Each raw field appears once in its dataset's classification. Source-specific rationale is preserved in \texttt{diagrams/ucv-tables.json}. A category marked not observed is a data gap, not an invitation to infer a missing attitude or relationship.}
+
+\NewPage
+\PageTitle{A8 / UNIVERSAL CUSTOMER VIEW}{Keep campaign credit,\newline response and belief distinct}{Technical appendix | Campaign spending and randomized assignment describe different objects from a customer's behavior or survey response.}
+\VAR{ucv_tables_second}
+\Section{Sources and model adaptations}
+\VAR{source_note}
+\VAR{model_source_note}
+\Evidence{All graphics in this report are generated from this repository's original synthetic records or original diagram specifications. The public sources motivate analytical ideas; their screenshots and private course materials are not redistributed.}
 \end{document}

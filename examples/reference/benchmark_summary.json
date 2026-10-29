@@ -1,0 +1,89 @@
+{
+  "adaptations": [
+    "Conditional churn replaces the tutorial's original-cohort Binomial active-count likelihood to respect absorbing contractual renewals.",
+    "Fixed scaling and need/channel indicators replace the tutorial's original feature preprocessing.",
+    "This comparison fits retention only; the main report separately explains its survival and revenue models."
+  ],
+  "architecture": {
+    "hidden_activation": "sigmoid",
+    "hidden_units": 4,
+    "input_dimension": 16,
+    "input_features": [
+      "age_month/23",
+      "(cohort_index-11.5)/11.5",
+      "need_build_skill",
+      "channel_partner",
+      "channel_organic",
+      "calendar_month_02",
+      "calendar_month_03",
+      "calendar_month_04",
+      "calendar_month_05",
+      "calendar_month_06",
+      "calendar_month_07",
+      "calendar_month_08",
+      "calendar_month_09",
+      "calendar_month_10",
+      "calendar_month_11",
+      "calendar_month_12"
+    ],
+    "output_activation": "sigmoid",
+    "parameter_count": 73
+  },
+  "diagnostics": {
+    "actual_backend": "cpu",
+    "actual_x64": true,
+    "convergence_limitation": "A finite, stable variational objective is not proof of posterior convergence or calibrated uncertainty; AutoNormal is an approximation.",
+    "final_loss_mean": 1322.90320139,
+    "final_two_window_relative_loss_change": 0.0006359,
+    "finite_objective": true,
+    "finite_posterior": true,
+    "initial_loss_mean": 1476.86809037,
+    "n_training_risk_sets": 844,
+    "training_churn_pearson_dispersion": 1.1166807
+  },
+  "forecast_origin": "Each eligible cell's September count; all three months are forecast recursively without conditioning on held-out survivors.",
+  "held_out_calendar_months": [
+    "2025-10-01",
+    "2025-11-01",
+    "2025-12-01"
+  ],
+  "implementation": "Direct NumPyro/JAX implementation of two dense sigmoid layers, mathematically equivalent to the stated Flax architecture; not a verbatim reproduction of the tutorial.",
+  "implementation_sha256": "e148704b2904c8792d8ec1b361e784006872ea9bd02535f7d186e844289ae638",
+  "inference": {
+    "clip_norm": 10.0,
+    "learning_rate": 0.01,
+    "method": "SVI AutoNormal",
+    "optimizer": "ClippedAdam",
+    "posterior_draws": 400,
+    "seed": 20261416,
+    "steps": 10000
+  },
+  "interval_scope": "5th\u201395th percentiles of expected survivor counts over approximate posterior parameter draws, excluding future Bernoulli process noise; not predictive coverage intervals.",
+  "likelihood": "Monthly churn count ~ Binomial(previous observed survivors, network churn probability). Only positive observed risk sets enter fitting.",
+  "limitations": [
+    "One fixed three-month historical holdout is not broad external validation.",
+    "A flexible fitted hazard does not identify individual latent churn propensities or causal retention-treatment effects.",
+    "Variational inference may understate uncertainty; hidden-unit weights are not direct managerial effect sizes.",
+    "Comparative performance is reported whether or not the network outperforms the main survival model."
+  ],
+  "model": "Orduz-derived Bayesian neural conditional-churn benchmark",
+  "n_cells": 258,
+  "new_holdout_cohorts_excluded": true,
+  "priors": "Independent Laplace(location=0, scale=1) on every hidden/output weight and bias.",
+  "retention_mae": 1.1461283416191057,
+  "retention_wape": 0.04822262102702696,
+  "role": "Separate retention-only comparison; does not determine executive LTV or cash payback.",
+  "runtime": {
+    "jax": "0.12.0.1",
+    "jaxlib": "0.12.0.1",
+    "numpy": "2.5.4",
+    "numpyro": "0.22.0",
+    "scipy": "1.18.1"
+  },
+  "scoring_data_sha256": "385346bc15b7858d3630c0949b4704bb2d417a6a3c7a3e5e3f59cd70c5ab603d",
+  "source": "https://juanitorduz.github.io/revenue_retention_numpyro/",
+  "table_sha256": "2c3428fa8a39a9d8e86b97c7bb31bd90ac0d66eed620f99f80f8249d8dd3384e",
+  "training_cutoff_exclusive": "2025-10-01",
+  "training_data_sha256": "dd25bcca8438e4e3613d802e435ea8a22ab1bd178135d0884e5b69c54b2f3179",
+  "training_last_calendar_month": "2025-09-01"
+}

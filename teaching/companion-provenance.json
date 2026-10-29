@@ -1,0 +1,25 @@
+{
+  "all_slides_visually_reviewed": true,
+  "business": "Studio North",
+  "cohorts": "January2024\u2013December2025",
+  "editable_chart_count": 5,
+  "editable_table_count": 5,
+  "media_review_fixes": "Clear ERD key targets, UCV profile definition, experiment uncertainty and observation window, semantic slide colors, executive framing",
+  "native_powerpoint_rendered": true,
+  "observation_cutoff": "2026-01-01 exclusive",
+  "pdf_page_count": 12,
+  "pdf_sha256": "f37ad3a7b53e1d8ce3e48fd3f95133ef27e0df2d114e687fb1e05327533d2cc9",
+  "pptx_sha256": "bb7fd50216a76e9d75f3ab9337473b82ff900488cdc63b6632d2e98ca32f5166",
+  "slide_count": 12,
+  "source_output_run": "v2-release-verified/run-a",
+  "source_table_hashes": {
+    "cohort_age_summary.csv": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a",
+    "cohort_totals.csv": "58268416b9677bfd613bf506d5116788d50a22b931630d65931f91beb2f6a471",
+    "company_month.csv": "349f078771d9413d5029d159eff58e320e4aaf84979a97ce9f2970f0ba8c73f3",
+    "company_totals.csv": "47ce2d8f100f8ac9ead68e031becdb2adc82a13e6cbb759f11e193c690c284b6",
+    "experiment_effects.csv": "bad9d7363b979bbaea8a74d6ed0909dad57bc8f6aa50c80204ac5c9f799fd406",
+    "experiment_summary.csv": "c48cc679d82279367484aeba017af7b2efc0bc098fc809014ecc27c3320b63f0"
+  },
+  "validation_receipt_status": "pass",
+  "version": "2.0.0"
+}

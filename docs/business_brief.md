@@ -1,12 +1,14 @@
-# The company question
+# Studio North: customer economics and capital allocation
 
-You are reviewing a fictional consumer subscription service. Management wants to know:
+Studio North sells a monthly creative-work membership to independent professionals. Its template library helps members finish recurring work faster; guided learning helps members develop new skills. Standard and premium plans generate recurring subscription revenue, while workshops and other add-ons generate additional purchases. Customers can renew or leave each month. The business and all source records are fictional.
+
+Management is reviewing the next acquisition budget and the pace of expansion. The central decision is:
 
 > Are we moving in the right direction as a company? Are successive customer cohorts becoming more valuable relative to what we spend to acquire them?
 
-The service offers standard and premium monthly plans and optional add-on purchases. Customers describe their primary need as **saving time** or **building skills**. Search and partner campaigns acquire customers. The data also contain organic purchases made by experimental control participants.
+Customers state their primary need as **saving time** or **building skills** before acquisition. Search campaigns reach people actively seeking help; partner campaigns reach members through professional communities and workshops. The data also contain organic purchases made by experimental control participants. These are observed acquisition labels, not proof that a channel caused a member's long-run value.
 
-You receive eight separate exports from CRM, billing, renewals, product/support, surveys, marketing spending, attribution, and campaign experiments. They contain original synthetic records with documented shared keys. Your task is to build and inspect the evidence through DuckDB SQL, rather than begin with a supplied cohort dashboard.
+The operating team provides eight separate exports from CRM, billing, renewals, product/support, surveys, marketing spending, attribution, and campaign experiments. Their shared keys allow ordinary record linkage, but their row units and clocks differ. DuckDB SQL turns these records into saved, reconciled analytical views. Those views support the management assessment and remain available for independent review.
 
 ## Comparison rules
 
@@ -19,10 +21,11 @@ You receive eight separate exports from CRM, billing, renewals, product/support,
 - Cash payback uses cumulative **undiscounted** contribution against acquisition cost. A cohort that pays back in its first-paid month has a payback period of one month. Payback and discounted LTV answer different questions.
 - Fixed operating expenses are outside the dataset. The conclusion concerns customer economics and company growth, rather than a complete accounting-profit forecast.
 
-## Your judgments
+## Decisions for the management team
 
-1. Which simple baseline segmentation helps explain variation in customer behavior and value? State a reason first, then check it on older, comparable cohorts.
-2. What do the observed cohort curves, acquisition costs, and company layers suggest about the firm's direction? Distinguish a changing customer/channel mix from improvement within groups.
-3. Does experimental evidence or the forecast for young cohorts change your verdict? Recommend an action and state what future evidence would cause you to reconsider.
+1. Determine whether newer cohorts create more contribution value relative to acquisition spending and recover that spending fast enough to support growth.
+2. Distinguish a shift toward stronger customer/channel groups from improvement within those groups. Use simple, interpretable segments and preserve residual differences among their members.
+3. Decide where to continue, constrain, or test acquisition spending. Separate randomized campaign evidence from descriptive channel economics and forecasts for immature cohorts.
+4. Assign monitoring responsibilities and conditions for revisiting the recommendation. Growing revenue alone does not establish improving unit economics or sustainable company cash generation.
 
-The final report should label conclusions as **observed**, **forecast**, or **assumed**. A mixed verdict or “too early to tell” is acceptable when it follows from the evidence. Keep the experiment's eligible prospects and controls intact; a descriptive cohort trend does not establish the cause of that trend.
+The executive report labels conclusions as **observed**, **forecast**, or **assumed**. Its opening recommendation is backed by the cohort and acquisition evidence; model details, parameters, data classifications, and reproducibility receipts follow in technical appendices. A mixed or uncertain conclusion is appropriate when the evidence supports it. Fixed costs and the causal long-run value of advertising remain outside what these exports establish.

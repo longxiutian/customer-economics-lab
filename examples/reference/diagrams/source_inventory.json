@@ -2,36 +2,36 @@
   {
     "file": "people.csv",
     "grain": "one person, including nonbuyers",
-    "rows": 5449,
-    "sha256": "7d91da008484efbd18a225af55fd458ff5363cf6cbc0ff9a5f9678c11d6f39ab",
+    "rows": 5476,
+    "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214",
     "source": "CRM"
   },
   {
     "file": "subscription_periods.csv",
     "grain": "one scheduled subscription period",
-    "rows": 36870,
-    "sha256": "ce3bc3c5dba95e5e65fc87fba2a0b1e699cc01350675792d37b54678aaac4961",
+    "rows": 37244,
+    "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411",
     "source": "Renewal system"
   },
   {
     "file": "transactions.csv",
     "grain": "one payment or refund event",
-    "rows": 45476,
-    "sha256": "178173cdf8aeb85776d5f951fafe34071099f4c1e2c4a07230b93588bf88ded2",
+    "rows": 45746,
+    "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5",
     "source": "Finance"
   },
   {
     "file": "product_events.csv",
     "grain": "one observed interaction",
-    "rows": 58889,
-    "sha256": "3071ed6afa5ed8e0ab7ee22e98bead70f3987f4b527255b09567599da64cdad7",
+    "rows": 59828,
+    "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53",
     "source": "Product"
   },
   {
     "file": "feedback.csv",
     "grain": "one submitted response",
-    "rows": 2591,
-    "sha256": "694fb5c9948a0df4215ebcb4500f783ea0af29f1926102d3d56682a451d79944",
+    "rows": 2654,
+    "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822",
     "source": "Customer research"
   },
   {
@@ -44,15 +44,15 @@
   {
     "file": "acquisition_attribution.csv",
     "grain": "one acquired person and credited source",
-    "rows": 4617,
-    "sha256": "bd32d75c8eaaf8b573c3137d169dda0533d11f205b63de0e812d982129723ebe",
+    "rows": 4672,
+    "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca",
     "source": "Marketing"
   },
   {
     "file": "experiment_assignments.csv",
     "grain": "one eligible person per experiment",
     "rows": 1000,
-    "sha256": "b9bb80c1275a0ed8ffa2e35af566aef947a0a3b730590f49e82658f338521fc1",
+    "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262",
     "source": "Experiment platform"
   }
 ]

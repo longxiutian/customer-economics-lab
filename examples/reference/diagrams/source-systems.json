@@ -3,19 +3,19 @@
     {
       "dot": "emerald",
       "items": [
-        "people.csv: 5,449 rows; one person, including nonbuyers",
-        "subscription_periods.csv: 36,870 rows; one scheduled subscription period",
-        "transactions.csv: 45,476 rows; one payment or refund event",
-        "product_events.csv: 58,889 rows; one observed interaction"
+        "people.csv: 5,476 rows; one person, including nonbuyers",
+        "subscription_periods.csv: 37,244 rows; one scheduled subscription period",
+        "transactions.csv: 45,746 rows; one payment or refund event",
+        "product_events.csv: 59,828 rows; one observed interaction"
       ],
       "title": "Same key, different grains"
     },
     {
       "dot": "orange",
       "items": [
-        "feedback.csv: 2,591 rows; one submitted response",
+        "feedback.csv: 2,654 rows; one submitted response",
         "campaign_spend.csv: 294 rows; one campaign-spending date",
-        "acquisition_attribution.csv: 4,617 rows; one acquired person and credited source",
+        "acquisition_attribution.csv: 4,672 rows; one acquired person and credited source",
         "experiment_assignments.csv: 1,000 rows; one eligible person per experiment"
       ],
       "title": "The denominator is a business choice"
@@ -23,11 +23,13 @@
     {
       "dot": "cyan",
       "items": [
-        "The shared person_id is documented; IDs for orders, periods and events identify other objects.",
-        "Aggregate each source at its intended grain before joining; daily spend must not repeat on transaction rows.",
-        "The experiment begins with all assigned eligible people. No purchase is an observed zero, not an omitted row."
+        "Observed: customer_month \u2192 cohort_age_summary, cohort_cash_economics and company_month. Compare cohorts at the same age.",
+        "Forecast: retention and revenue models extend young cohorts, with uncertainty. They do not establish campaign incrementality.",
+        "Experimental: experiment_person \u2192 experiment_summary \u2192 experiment_effects. Keep every assigned person, including nonbuyers.",
+        "person_id links one profile to many periods, transactions, events and responses. period_id links one renewal cycle to many financial events.",
+        "Aggregate campaign_spend by campaign_id before joining acquisition counts; campaign_id alone is not the raw spend table's primary key."
       ],
-      "title": "Meaning must survive each join"
+      "title": "The same business, three kinds of evidence"
     }
   ],
   "diagram_type": "dataflow",
@@ -35,25 +37,25 @@
     {
       "from": "crm",
       "id": "flow0",
-      "label": "person + need",
+      "label": "person_id",
       "to": "raw"
     },
     {
       "from": "billing",
       "id": "flow1",
-      "label": "paid / retained",
+      "label": "person / period",
       "to": "raw"
     },
     {
       "from": "experience",
       "id": "flow2",
-      "label": "events / reports",
+      "label": "person_id",
       "to": "raw"
     },
     {
       "from": "marketing",
       "id": "flow3",
-      "label": "cost + credit",
+      "label": "campaign_id",
       "to": "raw"
     },
     {
@@ -65,13 +67,13 @@
     {
       "from": "raw",
       "id": "flow5",
-      "label": "customer values",
+      "label": "customer_month",
       "to": "cohorts"
     },
     {
       "from": "raw",
       "id": "flow6",
-      "label": "roster + outcomes",
+      "label": "experiment_person",
       "to": "experiment"
     },
     {
@@ -100,88 +102,89 @@
     }
   ],
   "meta": {
+    "animation": "none",
     "locale": "en",
     "output": "source-systems.html",
     "quality_profile": "standard",
-    "title": "Separate systems, explicit meanings, connected evidence"
+    "title": "Studio North: separate records become a company decision"
   },
   "nodes": [
     {
       "id": "crm",
-      "label": "CRM",
+      "label": "CRM profiles",
       "row": 0,
       "stage": 0,
-      "sublabel": "people",
+      "sublabel": "1 row / person_id",
       "type": "database"
     },
     {
       "id": "billing",
-      "label": "Billing + renewal",
+      "label": "Payments + renewals",
       "row": 1,
       "stage": 0,
-      "sublabel": "financial records",
+      "sublabel": "transaction / period",
       "type": "database"
     },
     {
       "id": "experience",
-      "label": "Experience",
+      "label": "Events + feedback",
       "row": 2,
       "stage": 0,
-      "sublabel": "events / feedback",
+      "sublabel": "many / person_id",
       "type": "database"
     },
     {
       "id": "marketing",
-      "label": "Marketing",
+      "label": "Spend + attribution",
       "row": 3,
       "stage": 0,
-      "sublabel": "spend / credit",
+      "sublabel": "campaign / person",
       "type": "database"
     },
     {
       "id": "assignments",
-      "label": "Assignments",
+      "label": "Random assignment",
       "row": 4,
       "stage": 0,
-      "sublabel": "eligible prospects",
+      "sublabel": "test \u00d7 person_id",
       "type": "database"
     },
     {
       "height": 104,
       "id": "raw",
-      "label": "Raw SQL views",
+      "label": "DuckDB SQL",
       "row": 2,
       "stage": 1,
-      "sublabel": "separate grains",
-      "type": "database"
+      "sublabel": "validate \u2192 aggregate",
+      "type": "backend"
     },
     {
       "id": "cohorts",
-      "label": "Cohort economics",
+      "label": "Saved cohort views",
       "row": 1,
       "stage": 2,
-      "sublabel": "person / age / cost",
-      "type": "backend"
+      "sublabel": "age / segment / cost",
+      "type": "database"
     },
     {
       "id": "experiment",
-      "label": "Experiment means",
+      "label": "Saved test views",
       "row": 3,
       "stage": 2,
       "sublabel": "all assigned people",
-      "type": "backend"
+      "type": "database"
     },
     {
       "id": "forecast",
-      "label": "Value model",
+      "label": "Forecast + compare",
       "row": 1,
       "stage": 3,
-      "sublabel": "observed + future",
+      "sublabel": "retention \u2192 value",
       "type": "backend"
     },
     {
       "id": "effects",
-      "label": "Tested effects",
+      "label": "Estimate test lift",
       "row": 3,
       "stage": 3,
       "sublabel": "own control window",
@@ -189,29 +192,29 @@
     },
     {
       "id": "decision",
-      "label": "Report",
+      "label": "Company direction",
       "row": 2,
       "stage": 4,
-      "sublabel": "evidence to action",
+      "sublabel": "LTV / CAC / payback",
       "type": "backend"
     }
   ],
   "schema_version": 1,
   "stages": [
     {
-      "label": "Raw CSV exports"
+      "label": "Eight frozen CSV exports"
     },
     {
-      "label": "DuckDB source views"
+      "label": "Replay saved SQL"
     },
     {
-      "label": "Saved SQL tables"
+      "label": "Auditable output tables"
     },
     {
-      "label": "Different evidence"
+      "label": "Explain uncertainty"
     },
     {
-      "label": "Interpret and act"
+      "label": "Choose and monitor"
     }
   ]
 }

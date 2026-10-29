@@ -39,7 +39,7 @@ def test_first_crossing_is_distinguished_from_staying_recovered():
     record=_valuation_record(('2024-01-01',),1,25,12,flows,np.ones(12,dtype=bool))
     assert record['payback_month']==1 and record['payback_age']==0
     assert record['cash_payback_recrosses_below_cost'] is True
-    assert record['p_cash_balance_nonnegative_at_horizon']==0
+    assert record['p_expected_cash_balance_nonnegative_at_horizon']==0
 
 
 def test_negative_value_does_not_produce_a_misleading_forecast_percentage():
@@ -78,16 +78,19 @@ def test_invalid_retention_panels_fail(mutation):
 
 
 def constant_draws():
-    h=np.zeros((400,6)); h[:,0]=np.log(.2/.8)
+    h=np.zeros((400,5)); h[:,0]=np.log(.2/.8)
+    c=np.zeros((400,4)); c[:,0]=np.log(4.)
     r=np.zeros((400,6)); r[:,0]=np.log(.5)
-    return {'hazard_beta':h,'revenue_beta':r}
+    return {'mean_beta':h,'concentration_beta':c,'cohort_scale':np.zeros(400),'cohort_z':np.zeros((400,24)),
+            'revenue_beta':r,'revenue_shape':np.full(400,4.)}
 
 
 def test_forecast_starts_at_last_observed_remaining_count():
     f=frame_fixture().iloc[0]
     retained,revenue=_future(constant_draws(),f,[3,4],80)
-    np.testing.assert_allclose(retained[0],[64,51.2])
-    np.testing.assert_allclose(revenue[0],[3200,2560])
+    expected=80*np.cumprod(1-.8/(4+np.array([3,4])-1))
+    np.testing.assert_allclose(retained[0],expected)
+    np.testing.assert_allclose(revenue[0],expected*50)
 
 
 def test_forecast_economics_preserve_age_specific_margins():

@@ -1,17 +1,21 @@
 {
-  "compared_files": 38,
+  "compared_files": 60,
   "comparisons": {
     "analysis_summary.json": {
-      "run_a_sha256": "621fccb3d39aff64a9febf1219b9ce66e0017821c4fd4dce6eca08f4510086ab",
-      "run_b_sha256": "621fccb3d39aff64a9febf1219b9ce66e0017821c4fd4dce6eca08f4510086ab"
+      "run_a_sha256": "d91a64257dc1bc291981ad62cc338c927b888f803e8595c53d9257582cceda79",
+      "run_b_sha256": "d91a64257dc1bc291981ad62cc338c927b888f803e8595c53d9257582cceda79"
+    },
+    "benchmark_summary.json": {
+      "run_a_sha256": "becdb7f85312e1a39df210b69e74b1f276d5acc9f8166d62618d3f6409491389",
+      "run_b_sha256": "becdb7f85312e1a39df210b69e74b1f276d5acc9f8166d62618d3f6409491389"
     },
     "diagrams/customer-journey.html": {
-      "run_a_sha256": "87a6d1c24eef7004692ec1ad1e43b6dcd6813098eca53c71b41173acd199df8f",
-      "run_b_sha256": "87a6d1c24eef7004692ec1ad1e43b6dcd6813098eca53c71b41173acd199df8f"
+      "run_a_sha256": "c0d09633ac549030d92ff20b184a6d6283c5e84b9241f0d8f87cb1fc577b23ba",
+      "run_b_sha256": "c0d09633ac549030d92ff20b184a6d6283c5e84b9241f0d8f87cb1fc577b23ba"
     },
     "diagrams/diagram_manifest.json": {
-      "run_a_sha256": "8ab65a6e908d2b93d26c295371005c0fc0a4d4ca642002f9e8375707d053ccbe",
-      "run_b_sha256": "8ab65a6e908d2b93d26c295371005c0fc0a4d4ca642002f9e8375707d053ccbe"
+      "run_a_sha256": "b67193f5c4168fb98bf33426bce9aa0e7d6569ab5e423258b5b9873fa4b08203",
+      "run_b_sha256": "b67193f5c4168fb98bf33426bce9aa0e7d6569ab5e423258b5b9873fa4b08203"
     },
     "diagrams/journey-build-skill.html": {
       "run_a_sha256": "084ee37f91410c4329921215f475ca1be436f6adb9094022e879199a3165e5ef",
@@ -21,147 +25,259 @@
       "run_a_sha256": "e357b990b65c6fec0ed9bebd1122e7a05305ab63b368ecf8f4502a529857b135",
       "run_b_sha256": "e357b990b65c6fec0ed9bebd1122e7a05305ab63b368ecf8f4502a529857b135"
     },
+    "diagrams/source-systems-report.html": {
+      "run_a_sha256": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333",
+      "run_b_sha256": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333"
+    },
+    "diagrams/source-systems-report.png": {
+      "run_a_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26",
+      "run_b_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26"
+    },
+    "diagrams/source-systems-report.svg": {
+      "run_a_sha256": "00403d7e82ea94c2679bffb609ada47e23c8b5fdf3a8079500174c1f706248f8",
+      "run_b_sha256": "00403d7e82ea94c2679bffb609ada47e23c8b5fdf3a8079500174c1f706248f8"
+    },
     "diagrams/source-systems.html": {
-      "run_a_sha256": "ce7c444cc1ef6e699be4f05b60ab1e446010ed076dc624bdeb6a5f0e39a34e7e",
-      "run_b_sha256": "ce7c444cc1ef6e699be4f05b60ab1e446010ed076dc624bdeb6a5f0e39a34e7e"
+      "run_a_sha256": "5e89f75908c4272b40544f03172b426b4f81e8dcc1a85117f6c54949200c1df2",
+      "run_b_sha256": "5e89f75908c4272b40544f03172b426b4f81e8dcc1a85117f6c54949200c1df2"
+    },
+    "diagrams/source-systems.png": {
+      "run_a_sha256": "9a1de15cb5e7e7f12b91bd76a26b76171dd5b404b4d30be7122a79bb82e5e279",
+      "run_b_sha256": "9a1de15cb5e7e7f12b91bd76a26b76171dd5b404b4d30be7122a79bb82e5e279"
+    },
+    "diagrams/source-systems.svg": {
+      "run_a_sha256": "9a5af9922f71702cd583a9d9ba921ba73b3aabdbeb9612a881aef89674a1f279",
+      "run_b_sha256": "9a5af9922f71702cd583a9d9ba921ba73b3aabdbeb9612a881aef89674a1f279"
+    },
+    "diagrams/source-tables-report.html": {
+      "run_a_sha256": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443",
+      "run_b_sha256": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443"
+    },
+    "diagrams/source-tables-report.png": {
+      "run_a_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba",
+      "run_b_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba"
+    },
+    "diagrams/source-tables-report.svg": {
+      "run_a_sha256": "de94a09e0bd569dd7a00eb618eaf7b7de9e4c84d45d02022205fc872b104cb8b",
+      "run_b_sha256": "de94a09e0bd569dd7a00eb618eaf7b7de9e4c84d45d02022205fc872b104cb8b"
+    },
+    "diagrams/source-tables.html": {
+      "run_a_sha256": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694",
+      "run_b_sha256": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694"
+    },
+    "diagrams/source-tables.png": {
+      "run_a_sha256": "666c33fc98380347a8ab0cb2aad26c872b8956471d29729926e4bd4f3015e02d",
+      "run_b_sha256": "666c33fc98380347a8ab0cb2aad26c872b8956471d29729926e4bd4f3015e02d"
+    },
+    "diagrams/source-tables.svg": {
+      "run_a_sha256": "a1addeaf7b8c751e317fe54cbe01b84fb0d19f47cc8fd93e587f8181e2eb19ee",
+      "run_b_sha256": "a1addeaf7b8c751e317fe54cbe01b84fb0d19f47cc8fd93e587f8181e2eb19ee"
     },
     "diagrams/source_inventory.json": {
-      "run_a_sha256": "4156fb13c8851ad9529b1ec62010f0e2aaf6ff98312f64556e0a8b9bb36c01d3",
-      "run_b_sha256": "4156fb13c8851ad9529b1ec62010f0e2aaf6ff98312f64556e0a8b9bb36c01d3"
+      "run_a_sha256": "8be0bcc28d63378f2d658632c1ad4ddeb54f0c7d4c05a96ac4a89147e500e905",
+      "run_b_sha256": "8be0bcc28d63378f2d658632c1ad4ddeb54f0c7d4c05a96ac4a89147e500e905"
+    },
+    "diagrams/ucv-tables.json": {
+      "run_a_sha256": "d70d705c3a64f1c99247a1aca2c46ba9d72f028d6707934a47b8e2c0e5d6d320",
+      "run_b_sha256": "d70d705c3a64f1c99247a1aca2c46ba9d72f028d6707934a47b8e2c0e5d6d320"
     },
     "model_summary.json": {
-      "run_a_sha256": "aaae7c19e9466eedb2103435e4ffa074ee92a04bdb6aff0877b9930df494f4e9",
-      "run_b_sha256": "aaae7c19e9466eedb2103435e4ffa074ee92a04bdb6aff0877b9930df494f4e9"
+      "run_a_sha256": "f7614537a7c613ac54ff8cec303f227338f6a618e5e2ebe7bd5e715de717e990",
+      "run_b_sha256": "f7614537a7c613ac54ff8cec303f227338f6a618e5e2ebe7bd5e715de717e990"
     },
     "posterior_draws.json": {
-      "run_a_sha256": "021cdfdfac22911277ca84687222f57d19d4416d31e83407e043cd2e1c13a44b",
-      "run_b_sha256": "021cdfdfac22911277ca84687222f57d19d4416d31e83407e043cd2e1c13a44b"
+      "run_a_sha256": "d8dbf8d35a3f872ecd1679ae8e25c3c6e67c26e40995a87d0c899333b1bf1d45",
+      "run_b_sha256": "d8dbf8d35a3f872ecd1679ae8e25c3c6e67c26e40995a87d0c899333b1bf1d45"
     },
     "report/customer-economics-report.pdf": {
-      "run_a_sha256": "edd18494efe6c2acf698fc980453ba53adedceb523ef07cebb9a96b8a3872150",
-      "run_b_sha256": "edd18494efe6c2acf698fc980453ba53adedceb523ef07cebb9a96b8a3872150"
+      "run_a_sha256": "bdebc11d72824807c7f506cf8bc1279a7f195174b86d2cb518fdeaa1c297ecae",
+      "run_b_sha256": "bdebc11d72824807c7f506cf8bc1279a7f195174b86d2cb518fdeaa1c297ecae"
     },
     "report/customer-economics-report.tex": {
-      "run_a_sha256": "7a69853569cd7cd81d20735e69744057909f987e8f535d8497c234489d0983e2",
-      "run_b_sha256": "7a69853569cd7cd81d20735e69744057909f987e8f535d8497c234489d0983e2"
+      "run_a_sha256": "abf77c3e0ff4e2e439505319f37cd66d1cb7f0228cf37b9986462fc2acab6388",
+      "run_b_sha256": "abf77c3e0ff4e2e439505319f37cd66d1cb7f0228cf37b9986462fc2acab6388"
+    },
+    "report/executive_metrics.csv": {
+      "run_a_sha256": "a650dd0fb745341a4b0d8f8952a4cc41f64c187ed07b632efab2902b7c8c3a36",
+      "run_b_sha256": "a650dd0fb745341a4b0d8f8952a4cc41f64c187ed07b632efab2902b7c8c3a36"
     },
     "report/figures/channel-segment-retention.png": {
-      "run_a_sha256": "9d271fae9ec3d0eac149ddec277e4b770b2678662b1c520de31c99d8544bf1c0",
-      "run_b_sha256": "9d271fae9ec3d0eac149ddec277e4b770b2678662b1c520de31c99d8544bf1c0"
+      "run_a_sha256": "1523c96ec615860413acad2a44ec86fae8ad7f61546097d1623e11e8e602f680",
+      "run_b_sha256": "1523c96ec615860413acad2a44ec86fae8ad7f61546097d1623e11e8e602f680"
     },
     "report/figures/cohort-triangles.png": {
-      "run_a_sha256": "0f6b4cb0d444895e10138d54c05d863541032cd07d88c8676f56ad06f926d1d7",
-      "run_b_sha256": "0f6b4cb0d444895e10138d54c05d863541032cd07d88c8676f56ad06f926d1d7"
+      "run_a_sha256": "e19a46d71af970afaa33d2fe30f8af2cd6ec51bbf79e7cd554a553fa9b7283ec",
+      "run_b_sha256": "e19a46d71af970afaa33d2fe30f8af2cd6ec51bbf79e7cd554a553fa9b7283ec"
     },
     "report/figures/company-cohort-layers.png": {
-      "run_a_sha256": "c7ad5622073ae6b55c472eb99b74625d3bc83becaadb7ff67a8329b677c1d101",
-      "run_b_sha256": "c7ad5622073ae6b55c472eb99b74625d3bc83becaadb7ff67a8329b677c1d101"
+      "run_a_sha256": "0b7aaaf427a1ced6cbd83e1e21ecaa6be1d8baaf329915cf0ea3f6c706d89d8a",
+      "run_b_sha256": "0b7aaaf427a1ced6cbd83e1e21ecaa6be1d8baaf329915cf0ea3f6c706d89d8a"
     },
     "report/figures/company-economics.png": {
-      "run_a_sha256": "04665b363a7cefd8ccde3c1588d5ca4a3db1c37622b62a073d4ac9b749a053ce",
-      "run_b_sha256": "04665b363a7cefd8ccde3c1588d5ca4a3db1c37622b62a073d4ac9b749a053ce"
+      "run_a_sha256": "39e47df9e9f26290cc19b78b89e497ee9d469e07094009f848eb598d28939b1b",
+      "run_b_sha256": "39e47df9e9f26290cc19b78b89e497ee9d469e07094009f848eb598d28939b1b"
     },
     "report/figures/experiment-effects.png": {
-      "run_a_sha256": "b050e36420a7137c10d603348c40ca5df1e2f0003ea81b36dc70eeebc89c5abb",
-      "run_b_sha256": "b050e36420a7137c10d603348c40ca5df1e2f0003ea81b36dc70eeebc89c5abb"
+      "run_a_sha256": "961564b159e9765dd22919fb994ec5fdba633116f20abb92eb97ac5274c68706",
+      "run_b_sha256": "961564b159e9765dd22919fb994ec5fdba633116f20abb92eb97ac5274c68706"
     },
     "report/figures/forecast-detail.png": {
-      "run_a_sha256": "18ffe8b1120c0ccc70b61879ce8e0c24f5e7f5e7c4ce086361f52f1325b282ed",
-      "run_b_sha256": "18ffe8b1120c0ccc70b61879ce8e0c24f5e7f5e7c4ce086361f52f1325b282ed"
+      "run_a_sha256": "980aeab1ae87bb30ac54897b8690c6379b54eef0f8279bec8cba171ca1d244d7",
+      "run_b_sha256": "980aeab1ae87bb30ac54897b8690c6379b54eef0f8279bec8cba171ca1d244d7"
     },
     "report/figures/ltv-and-cac.png": {
-      "run_a_sha256": "ef424965cbd9eedb0b28b51f6433ccb218274ef3178447d2c1dd0cb33e4cbd52",
-      "run_b_sha256": "ef424965cbd9eedb0b28b51f6433ccb218274ef3178447d2c1dd0cb33e4cbd52"
+      "run_a_sha256": "0077440da23d064c8dfd6a5f3090f4c3059b6466a29dad14f79dcb24ef59f5c8",
+      "run_b_sha256": "0077440da23d064c8dfd6a5f3090f4c3059b6466a29dad14f79dcb24ef59f5c8"
     },
     "report/figures/recent-cohort-fit-check.png": {
-      "run_a_sha256": "8969ec846c98e9f451abc405fdd4fe3ad5c9fe18c6d3bec7d7ba457f8d526856",
-      "run_b_sha256": "8969ec846c98e9f451abc405fdd4fe3ad5c9fe18c6d3bec7d7ba457f8d526856"
+      "run_a_sha256": "6ac5156cdd54aab18e7f2d66876618c01798be7876ceb0cffd242152bb907ea1",
+      "run_b_sha256": "6ac5156cdd54aab18e7f2d66876618c01798be7876ceb0cffd242152bb907ea1"
     },
     "report/figures/retention-and-revenue.png": {
-      "run_a_sha256": "da7a11737026225d1a661bfb62c20c801121f19af4290b05d2923d0368d45208",
-      "run_b_sha256": "da7a11737026225d1a661bfb62c20c801121f19af4290b05d2923d0368d45208"
+      "run_a_sha256": "08eb93d62d2aa6b51ebdef065069bc01931d206fff822d07632d7f53b537609c",
+      "run_b_sha256": "08eb93d62d2aa6b51ebdef065069bc01931d206fff822d07632d7f53b537609c"
+    },
+    "report/figures/retention-forecast.png": {
+      "run_a_sha256": "e405acf0884b641e5b348bdf29a78fc82fa3062119419472c2b1bafb2c714aa6",
+      "run_b_sha256": "e405acf0884b641e5b348bdf29a78fc82fa3062119419472c2b1bafb2c714aa6"
+    },
+    "report/figures/source-systems-report.png": {
+      "run_a_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26",
+      "run_b_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26"
+    },
+    "report/figures/source-tables-report.png": {
+      "run_a_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba",
+      "run_b_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba"
     },
     "report/labreport.sty": {
-      "run_a_sha256": "1cb90a53931c7560e3b05acb18f6f078271aa12d06e89e6fe3ade0ae6cf7ec89",
-      "run_b_sha256": "1cb90a53931c7560e3b05acb18f6f078271aa12d06e89e6fe3ade0ae6cf7ec89"
+      "run_a_sha256": "083ce442deed64da933834cbf69ecaaf739e79a2ed6579759079c76b60a209c1",
+      "run_b_sha256": "083ce442deed64da933834cbf69ecaaf739e79a2ed6579759079c76b60a209c1"
+    },
+    "report/longxiu-research-brief.sty": {
+      "run_a_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
+      "run_b_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5"
     },
     "tables/backtest.csv": {
-      "run_a_sha256": "45d50c461421f12bc58c61e4dc93f1fa6f7984998188ec5bd339c94bec049e2e",
-      "run_b_sha256": "45d50c461421f12bc58c61e4dc93f1fa6f7984998188ec5bd339c94bec049e2e"
+      "run_a_sha256": "502d50b5c6b050f10bf05027dfd90b4ac6fd65445f3d26185c91d488a5a1ffd9",
+      "run_b_sha256": "502d50b5c6b050f10bf05027dfd90b4ac6fd65445f3d26185c91d488a5a1ffd9"
+    },
+    "tables/calendar_fit_checks.csv": {
+      "run_a_sha256": "f6d1f2dc79e310c11d709fa484046ad36ac3bff0abc68d4d33158a00d9e5dce1",
+      "run_b_sha256": "f6d1f2dc79e310c11d709fa484046ad36ac3bff0abc68d4d33158a00d9e5dce1"
     },
     "tables/cohort_acquisition_costs.csv": {
-      "run_a_sha256": "f6e281bf5dc350639f6dbc6c7ed030893d1e37d2e12d7e3bb1f3d09f7fc5837f",
-      "run_b_sha256": "f6e281bf5dc350639f6dbc6c7ed030893d1e37d2e12d7e3bb1f3d09f7fc5837f"
+      "run_a_sha256": "28c0c592af71b575105869d605b522944395ba4a536591774f8119f4b2264d12",
+      "run_b_sha256": "28c0c592af71b575105869d605b522944395ba4a536591774f8119f4b2264d12"
     },
     "tables/cohort_age_summary.csv": {
-      "run_a_sha256": "daf929a4b0964a8c3769446a913a3ffc222cf7b5312c683697597ceda6d12dd8",
-      "run_b_sha256": "daf929a4b0964a8c3769446a913a3ffc222cf7b5312c683697597ceda6d12dd8"
+      "run_a_sha256": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a",
+      "run_b_sha256": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a"
     },
     "tables/cohort_cash_economics.csv": {
-      "run_a_sha256": "cfbb8c03ddad84aa799ccca60d6f3d7e8e874472e7657c98e4d7260009753ebb",
-      "run_b_sha256": "cfbb8c03ddad84aa799ccca60d6f3d7e8e874472e7657c98e4d7260009753ebb"
+      "run_a_sha256": "e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8",
+      "run_b_sha256": "e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8"
     },
     "tables/cohort_six_month_comparison.csv": {
-      "run_a_sha256": "80b720ddfe096d8819b12f31454f79bedd7e001a4943f9afacbad2827ccf3223",
-      "run_b_sha256": "80b720ddfe096d8819b12f31454f79bedd7e001a4943f9afacbad2827ccf3223"
+      "run_a_sha256": "b59b36da419817f3bfc65d2e1e5d355136239d0686056d9c439039794161f0a1",
+      "run_b_sha256": "b59b36da419817f3bfc65d2e1e5d355136239d0686056d9c439039794161f0a1"
     },
     "tables/cohort_totals.csv": {
-      "run_a_sha256": "1e7633342e73f36aa153fe43e40d309e55be7777507d60aaaee5d70cb0dfe0b0",
-      "run_b_sha256": "1e7633342e73f36aa153fe43e40d309e55be7777507d60aaaee5d70cb0dfe0b0"
+      "run_a_sha256": "58268416b9677bfd613bf506d5116788d50a22b931630d65931f91beb2f6a471",
+      "run_b_sha256": "58268416b9677bfd613bf506d5116788d50a22b931630d65931f91beb2f6a471"
     },
     "tables/cohort_valuation.csv": {
-      "run_a_sha256": "1dff0c7b1aafa6b1fc347ecf1a6013f1971ff2671b700ee4bd67fd230f107175",
-      "run_b_sha256": "1dff0c7b1aafa6b1fc347ecf1a6013f1971ff2671b700ee4bd67fd230f107175"
+      "run_a_sha256": "7f4efac9dd4a17cd9d7600cb4079f3e0885cfe2bee672b12236f4667b95e9f0c",
+      "run_b_sha256": "7f4efac9dd4a17cd9d7600cb4079f3e0885cfe2bee672b12236f4667b95e9f0c"
     },
     "tables/cohort_valuation_by_segment.csv": {
-      "run_a_sha256": "d2aac0610ec26f887f0cd78067e422892253582bd4da1a943d373d329ee504a2",
-      "run_b_sha256": "d2aac0610ec26f887f0cd78067e422892253582bd4da1a943d373d329ee504a2"
+      "run_a_sha256": "77c9133f1cde2aa09db21b295e3790d6a8a22e14dd1d17702481070422dbd453",
+      "run_b_sha256": "77c9133f1cde2aa09db21b295e3790d6a8a22e14dd1d17702481070422dbd453"
     },
     "tables/company_month.csv": {
-      "run_a_sha256": "01ecc05f904dda0bfb934924c20aac786b84765ea82887c32e5640ca63a240a7",
-      "run_b_sha256": "01ecc05f904dda0bfb934924c20aac786b84765ea82887c32e5640ca63a240a7"
+      "run_a_sha256": "349f078771d9413d5029d159eff58e320e4aaf84979a97ce9f2970f0ba8c73f3",
+      "run_b_sha256": "349f078771d9413d5029d159eff58e320e4aaf84979a97ce9f2970f0ba8c73f3"
     },
     "tables/company_totals.csv": {
-      "run_a_sha256": "2c4384492a90338a95afbc14e73940b62b25b8a14ff79ea9cbd1850e21239145",
-      "run_b_sha256": "2c4384492a90338a95afbc14e73940b62b25b8a14ff79ea9cbd1850e21239145"
+      "run_a_sha256": "47ce2d8f100f8ac9ead68e031becdb2adc82a13e6cbb759f11e193c690c284b6",
+      "run_b_sha256": "47ce2d8f100f8ac9ead68e031becdb2adc82a13e6cbb759f11e193c690c284b6"
     },
     "tables/customer_month.csv": {
-      "run_a_sha256": "9c9ebbfc778880526bdc12d69fe0025e20dc28dcbc5bee87d8840047d5436ae2",
-      "run_b_sha256": "9c9ebbfc778880526bdc12d69fe0025e20dc28dcbc5bee87d8840047d5436ae2"
+      "run_a_sha256": "16c92d6f593737b99a89f1c73851d88e9d903fd7be75bcf5cd4e2f3154836072",
+      "run_b_sha256": "16c92d6f593737b99a89f1c73851d88e9d903fd7be75bcf5cd4e2f3154836072"
     },
     "tables/experiment_effects.csv": {
-      "run_a_sha256": "8e1ba9861cdc90f290701164bae544bb9964c3cc109731bf55c686e00bdcaaa5",
-      "run_b_sha256": "8e1ba9861cdc90f290701164bae544bb9964c3cc109731bf55c686e00bdcaaa5"
+      "run_a_sha256": "bad9d7363b979bbaea8a74d6ed0909dad57bc8f6aa50c80204ac5c9f799fd406",
+      "run_b_sha256": "bad9d7363b979bbaea8a74d6ed0909dad57bc8f6aa50c80204ac5c9f799fd406"
     },
     "tables/experiment_summary.csv": {
-      "run_a_sha256": "9b13efef90854b311f1282b241e9e061201628135e27fdf8245e130457ce428d",
-      "run_b_sha256": "9b13efef90854b311f1282b241e9e061201628135e27fdf8245e130457ce428d"
+      "run_a_sha256": "c48cc679d82279367484aeba017af7b2efc0bc098fc809014ecc27c3320b63f0",
+      "run_b_sha256": "c48cc679d82279367484aeba017af7b2efc0bc098fc809014ecc27c3320b63f0"
     },
     "tables/forecast_curve.csv": {
-      "run_a_sha256": "235ee2758b69051fa12392eb3630865b2e265a25582957acfdb38bc1f70ff5f8",
-      "run_b_sha256": "235ee2758b69051fa12392eb3630865b2e265a25582957acfdb38bc1f70ff5f8"
+      "run_a_sha256": "c61e51e5d5f3149843d2bcb786ced698ac2e4da10c9469a559c6b3b64c0dc58f",
+      "run_b_sha256": "c61e51e5d5f3149843d2bcb786ced698ac2e4da10c9469a559c6b3b64c0dc58f"
+    },
+    "tables/heterogeneity_by_cell.csv": {
+      "run_a_sha256": "f7363e35296bf7e9f017803905bc60cc87fc8a09391694f06c4ed5ab79f646ce",
+      "run_b_sha256": "f7363e35296bf7e9f017803905bc60cc87fc8a09391694f06c4ed5ab79f646ce"
     },
     "tables/model_fit_checks.csv": {
-      "run_a_sha256": "2ca7dfc0123f58563845520df934beb7949c3d4501908be31a45294316e317fe",
-      "run_b_sha256": "2ca7dfc0123f58563845520df934beb7949c3d4501908be31a45294316e317fe"
+      "run_a_sha256": "325eec81ccf3d3dd0077d4ee76714e98f4dc8cad91360058d18c5911eb3b04b0",
+      "run_b_sha256": "325eec81ccf3d3dd0077d4ee76714e98f4dc8cad91360058d18c5911eb3b04b0"
+    },
+    "tables/orduz_benchmark.csv": {
+      "run_a_sha256": "2c3428fa8a39a9d8e86b97c7bb31bd90ac0d66eed620f99f80f8249d8dd3384e",
+      "run_b_sha256": "2c3428fa8a39a9d8e86b97c7bb31bd90ac0d66eed620f99f80f8249d8dd3384e"
+    },
+    "tables/parameter_summary.csv": {
+      "run_a_sha256": "fd7d9ae6857cc427e9472c77a8fd188dd3d4594287d13483e6b9cbe7e8e44603",
+      "run_b_sha256": "fd7d9ae6857cc427e9472c77a8fd188dd3d4594287d13483e6b9cbe7e8e44603"
     },
     "tables/segmentation_comparison.csv": {
-      "run_a_sha256": "4504112d5597d203dfcb76f38430ee2ff6fb504eb92c1a29584eb10acce759ca",
-      "run_b_sha256": "4504112d5597d203dfcb76f38430ee2ff6fb504eb92c1a29584eb10acce759ca"
+      "run_a_sha256": "2f623d22a12018d46e1cce6120736610596fd4403df6de9780265eeb06879e80",
+      "run_b_sha256": "2f623d22a12018d46e1cce6120736610596fd4403df6de9780265eeb06879e80"
     },
     "tables/valuation_backtest.csv": {
-      "run_a_sha256": "ab4ad826d8f5eb26252fab59581f5758e38d53a5eddd1f543446423fb47aad53",
-      "run_b_sha256": "ab4ad826d8f5eb26252fab59581f5758e38d53a5eddd1f543446423fb47aad53"
+      "run_a_sha256": "d347f93e585f5e25a525132c3ce29e066ab8f88fa09f8790d83f1ada4f08d322",
+      "run_b_sha256": "d347f93e585f5e25a525132c3ce29e066ab8f88fa09f8790d83f1ada4f08d322"
     }
   },
-  "frozen_data_manifest_sha256": "43721af6d45c9c48d72ed6da89a353cf2b6b407c716aad77eaaf8dad13bb475e",
+  "frozen_data_manifest_sha256": "77b4b49f08c58cf56dfc6f78f106a4cca66253c492b57a191746db709d28ed41",
   "mismatches": [],
   "platform": "Windows-11-10.0.22631-SP0",
   "python": "3.12.14",
-  "schema_version": 1,
-  "scope": "Two fresh processes; same frozen inputs, source, dependency lock, seed, settings and host.",
+  "resume_evidence": "The original batch completed statistical estimation but stopped on 15-page report QA. Report-only rerenders fixed layout. The final experimental uncertainty extension preserved all three model-input CSV hashes and all model outputs.",
+  "schema_version": 2,
+  "scope": "Two independent same-host CPU processes computed ETL, three NUTS fits and the neural benchmark. After a layout repair and addition of experimental uncertainty columns, ETL and report stages were independently rerun for each output. Model input hashes remained unchanged. Final canonical outputs match byte-for-byte; this is not a cross-platform claim.",
   "seed": 20261116,
+  "source_fingerprints": {
+    "SKILL.md": "112d67f02230bdc72428562476f9728ec51ac19e56436e5add1e3a4185d3b66f",
+    "cohort_lab/__init__.py": "b152ebe5364d92a5aadaf189a15683fcb12a3ef0358164617c86eecc05a77a0e",
+    "cohort_lab/analysis.py": "df9cf5b6ae5c3416475d56df807556e652e9a92d4e7ee6ef34c350aedc27e27c",
+    "cohort_lab/benchmark.py": "e148704b2904c8792d8ec1b361e784006872ea9bd02535f7d186e844289ae638",
+    "cohort_lab/data.py": "0de117eac00542049f6e95e60e97afbe6768871d8be214538d882081929af7ed",
+    "cohort_lab/diagrams.py": "1f6efeca2ac04ef3531e0b6c3dc1c162b2217b8ec1f3c141cb36a9b627ba4e17",
+    "cohort_lab/model.py": "3117e8eda4ac1ed76985229299d960e1993782b330e8402d5b0d2a0004c85168",
+    "cohort_lab/query.py": "6c742f256e33f0043e8cf921943577a84122b5c4526abaa6e3aabb55959d2ec7",
+    "cohort_lab/report.py": "18b942d763f5232515a99213e1067151a7124d9550a2545e4f380b67fb65a3ed",
+    "cohort_lab/ucv.py": "113480732845d20a417d33f3ab391438f0b9f4b340c07228be73621d710ce67b",
+    "cohort_lab/workflow.py": "bd704f04bff57e3f3201f9bd7df1995756625e33c5cd910e501e608362f5c359",
+    "lab.py": "d4003806f73d9140f3a2680561a6953ed7872e4c26be89bd49922c8e13de38ed",
+    "pyproject.toml": "00077d3cb07469b7e7ab353376fcb4e8e0f794c4f8fe09bd6e99f2ac64e3bd30",
+    "scripts/export_diagram_assets.mjs": "56b585448f7abe339f7e260d7a757469b18e45b3f58e7e3d3764e823b7122966",
+    "skills/executive-report/SKILL.md": "b8e5fa69aaee13e80f3d3637125ececa2c54597560e52d611f996c3e8b56c264",
+    "skills/executive-report/references/style-system.md": "b78ea233203e20f8c94507f9e40fd99c3584f2a185cdc1c3504c7e1ace3c6073",
+    "sql/01_views.sql": "c67e28d38eb2d94dca1cbfe041ed85befc411302bd6b9ea6967188fe69ba14b4",
+    "templates/customer-economics-report.tex.j2": "daf8339eb10f89863d2eb33e00170d246ade01c7ad774e6417d4aa2705a269c7",
+    "templates/labreport.sty": "083ce442deed64da933834cbf69ecaaf739e79a2ed6579759079c76b60a209c1",
+    "templates/longxiu-research-brief.sty": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
+    "templates/report-style-manifest.json": "0bf61c6116b1c5bcc1070b8d710de38380febfbf082e9e031e2746c4de694045",
+    "tools/package-lock.json": "d37b520b67eddf7a3d5e6f584add9da9c39992aa696298ddbee9e1483966cef6",
+    "tools/package.json": "d0645a00fb4783236ad4b3757b49c748e877afb34128697ae6bfa77abb556de1",
+    "uv.lock": "2e4c29ff84224d32b3de504f6b970755041506d24d401ae54b425f629d562194",
+    "vendor/archify-provenance.json": "230cbc4617d2e1fd2f4ad97570b62715a1b8a9d529ad90f93ab51302aeec23c6"
+  },
   "status": "pass",
   "steps": 3000,
-  "uv_lock_sha256": "7b2adfefa0491945aa21be35e7c48149c63eff6ada5f78080529696633dd4302"
+  "uv_lock_sha256": "2e4c29ff84224d32b3de504f6b970755041506d24d401ae54b425f629d562194"
 }

@@ -2,63 +2,90 @@
   "companion": {
     "native_charts": 5,
     "native_tables": 5,
-    "pdf_sha256": "d2da23700091426629d43500b39b473992fc880e2995a0f5c5bdde5e31194333",
-    "pptx_sha256": "3ce76549adb3c9ea314e9dc028276398caaf6c99eab12416b7619f3ab5d1e15a",
+    "pdf_sha256": "f37ad3a7b53e1d8ce3e48fd3f95133ef27e0df2d114e687fb1e05327533d2cc9",
+    "pptx_sha256": "bb7fd50216a76e9d75f3ab9337473b82ff900488cdc63b6632d2e98ca32f5166",
     "slides": 12
   },
-  "date": "2026-10-28",
+  "date": "2026-10-29",
+  "main_model": {
+    "baseline_historical_value_mae": 25.205509318207042,
+    "divergences": 0,
+    "historical_value_mae": 3.131692732439244,
+    "inference": "NumPyro NUTS",
+    "max_r_hat": 1.0009108413740033,
+    "min_ess": 1411.7734890559657,
+    "retention": "Hierarchical shifted-Beta-Geometric",
+    "revenue": "Gamma"
+  },
+  "orduz_comparison": {
+    "actual_fit": true,
+    "held_out_cells": 258,
+    "model": "Orduz-derived Bayesian neural conditional-churn benchmark",
+    "retention_mae": 1.1461283416191057,
+    "role": "Separate retention-only comparison; does not determine executive LTV or cash payback."
+  },
   "platform": "Windows-11-10.0.22631-SP0",
   "python": "3.12.14",
-  "release": "v1.0.0",
+  "release": "v2.0.0",
   "report": {
     "overfull_boxes": 0,
-    "pages": 8,
-    "sha256": "edd18494efe6c2acf698fc980453ba53adedceb523ef07cebb9a96b8a3872150"
+    "pages": 14,
+    "sha256": "bdebc11d72824807c7f506cf8bc1279a7f195174b86d2cb518fdeaa1c297ecae",
+    "style_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5"
   },
   "reproducibility": {
-    "byte_identical_files": 38,
-    "fresh_processes": 2,
+    "byte_identical_files": 60,
+    "independent_statistical_processes": 2,
     "mismatches": 0,
-    "receipt": "validation/reproducibility.json"
+    "receipt": "validation/reproducibility.json",
+    "scope": "Two independent same-host CPU processes computed ETL, three NUTS fits and the neural benchmark. After a layout repair and addition of experimental uncertainty columns, ETL and report stages were independently rerun for each output. Model input hashes remained unchanged. Final canonical outputs match byte-for-byte; this is not a cross-platform claim."
   },
   "review": {
-    "completed_substantive_reviews": 2,
+    "completed_substantive_reviews": 3,
     "effort": "xhigh",
     "model": "claude-opus-5-5",
     "provider_did_not_execute_tests": true,
+    "scopes": [
+      "Design",
+      "Implementation and tests",
+      "Actual PDF and decision claims"
+    ],
     "tests_executed_locally": true
   },
-  "scope": "Tested on Windows Python/JAX CPU float64, Node and WSL pdfLaTeX. Cross-platform bitwise equality is not asserted.",
-  "skill_validator": "passed",
+  "scope": "Windows Python/JAX CPU float64, Node/Playwright Chromium and WSL pdfLaTeX. Cross-platform bitwise equality is not asserted. The v1 stability receipt is not used to validate v2.",
+  "skill_validator": "Both main and bundled report skill passed quick_validate.py.",
   "source_fingerprints": {
-    "SKILL.md": "324353c3db848c9d2af7919769d2f5b6093eeecdcec99cf00be2dbcb928750ad",
-    "cohort_lab/__init__.py": "3c54846c7450ecc1b9feabfd1372652a0e38a398e910c56a1d9323e534978589",
-    "cohort_lab/analysis.py": "82732ef4a47803b3714be9a64d9743dabcc371e5ccdef239692d88db63bcb51b",
-    "cohort_lab/data.py": "b9573a23d523e040c8b064f21ff5dae6635babe68260438b2d957c72ecad13e4",
-    "cohort_lab/diagrams.py": "1476eb4f5db0fb16a17f36f7da61bd1b3aa537fed6ab709ec9e24e2dd130086f",
-    "cohort_lab/model.py": "8bd9e740f743aaa9aa51e8489cfc242cf17ab03f5ebaf4906a600b225f1d85cf",
+    "SKILL.md": "112d67f02230bdc72428562476f9728ec51ac19e56436e5add1e3a4185d3b66f",
+    "cohort_lab/__init__.py": "b152ebe5364d92a5aadaf189a15683fcb12a3ef0358164617c86eecc05a77a0e",
+    "cohort_lab/analysis.py": "df9cf5b6ae5c3416475d56df807556e652e9a92d4e7ee6ef34c350aedc27e27c",
+    "cohort_lab/benchmark.py": "e148704b2904c8792d8ec1b361e784006872ea9bd02535f7d186e844289ae638",
+    "cohort_lab/data.py": "0de117eac00542049f6e95e60e97afbe6768871d8be214538d882081929af7ed",
+    "cohort_lab/diagrams.py": "1f6efeca2ac04ef3531e0b6c3dc1c162b2217b8ec1f3c141cb36a9b627ba4e17",
+    "cohort_lab/model.py": "3117e8eda4ac1ed76985229299d960e1993782b330e8402d5b0d2a0004c85168",
     "cohort_lab/query.py": "6c742f256e33f0043e8cf921943577a84122b5c4526abaa6e3aabb55959d2ec7",
-    "cohort_lab/report.py": "3e8158d9523d9f1bda40fdd16979572dfc43149181fbf3a27f2f3d188bc46e37",
-    "cohort_lab/workflow.py": "e71bc416f5987a3bc858d17cb78eecd2f9bc0fc49088ce287b23f3132ed7dea8",
+    "cohort_lab/report.py": "18b942d763f5232515a99213e1067151a7124d9550a2545e4f380b67fb65a3ed",
+    "cohort_lab/ucv.py": "113480732845d20a417d33f3ab391438f0b9f4b340c07228be73621d710ce67b",
+    "cohort_lab/workflow.py": "bd704f04bff57e3f3201f9bd7df1995756625e33c5cd910e501e608362f5c359",
     "lab.py": "d4003806f73d9140f3a2680561a6953ed7872e4c26be89bd49922c8e13de38ed",
-    "pyproject.toml": "81048c327785021c505c1edca3cdfe3a86b512239bd2ffc2843775a27a7c0ce6",
-    "sql/01_views.sql": "524da81246faffd8fb82f36d098316a45e4b05f84d463f53e2be0953ee874b66",
-    "templates/customer-economics-report.tex.j2": "223d927416a2b5fe80dae913b96d53049962dff8712abd99253bbf9fda7403d6",
-    "templates/labreport.sty": "1cb90a53931c7560e3b05acb18f6f078271aa12d06e89e6fe3ade0ae6cf7ec89",
-    "uv.lock": "7b2adfefa0491945aa21be35e7c48149c63eff6ada5f78080529696633dd4302",
+    "pyproject.toml": "00077d3cb07469b7e7ab353376fcb4e8e0f794c4f8fe09bd6e99f2ac64e3bd30",
+    "scripts/export_diagram_assets.mjs": "56b585448f7abe339f7e260d7a757469b18e45b3f58e7e3d3764e823b7122966",
+    "skills/executive-report/SKILL.md": "b8e5fa69aaee13e80f3d3637125ececa2c54597560e52d611f996c3e8b56c264",
+    "skills/executive-report/references/style-system.md": "b78ea233203e20f8c94507f9e40fd99c3584f2a185cdc1c3504c7e1ace3c6073",
+    "sql/01_views.sql": "c67e28d38eb2d94dca1cbfe041ed85befc411302bd6b9ea6967188fe69ba14b4",
+    "templates/customer-economics-report.tex.j2": "daf8339eb10f89863d2eb33e00170d246ade01c7ad774e6417d4aa2705a269c7",
+    "templates/labreport.sty": "083ce442deed64da933834cbf69ecaaf739e79a2ed6579759079c76b60a209c1",
+    "templates/longxiu-research-brief.sty": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
+    "templates/report-style-manifest.json": "0bf61c6116b1c5bcc1070b8d710de38380febfbf082e9e031e2746c4de694045",
+    "tools/package-lock.json": "d37b520b67eddf7a3d5e6f584add9da9c39992aa696298ddbee9e1483966cef6",
+    "tools/package.json": "d0645a00fb4783236ad4b3757b49c748e877afb34128697ae6bfa77abb556de1",
+    "uv.lock": "2e4c29ff84224d32b3de504f6b970755041506d24d401ae54b425f629d562194",
     "vendor/archify-provenance.json": "230cbc4617d2e1fd2f4ad97570b62715a1b8a9d529ad90f93ab51302aeec23c6"
-  },
-  "source_zip_preflight": {
-    "canonical_sql_tables_byte_identical": 11,
-    "fresh_locked_packages_installed": 35,
-    "git_required": false,
-    "guided_setup_stopped_at_stage": 0
   },
   "status": "passed",
   "unit_integration_tests": {
     "command": "python -m pytest -q",
-    "duration_seconds": 261.56,
+    "duration_seconds": 365.17,
     "failed": 0,
-    "passed": 89
+    "passed": 139
   }
 }

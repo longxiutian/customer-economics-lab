@@ -1,0 +1,8 @@
+{
+  "name": "customer-economics-lab-diagram-export",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Pinned browser renderer for native Archify SVG and PNG report assets",
+  "engines": {"node": ">=20"},
+  "dependencies": {"playwright": "1.62.1"}
+}

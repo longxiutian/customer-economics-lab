@@ -128,20 +128,26 @@ CREATE OR REPLACE VIEW experiment_summary AS
 SELECT e.experiment_id, e.channel, e.primary_need, e.arm, count(*)::INTEGER AS n_assigned,
        sum(e.buyer)::INTEGER AS n_buyers, sum(e.net_revenue)::DECIMAL(18,2) AS net_revenue,
        sum(e.contribution)::DECIMAL(18,2) AS contribution,
-       CASE WHEN e.arm = 'treatment' THEN max(s.media_spend) ELSE 0 END::DECIMAL(18,2) AS media_spend
+       CASE WHEN e.arm = 'treatment' THEN max(s.media_spend) ELSE 0 END::DECIMAL(18,2) AS media_spend,
+       min(e.assigned_at) AS assigned_at, max(e.followup_end_at) AS followup_end_at,
+       epoch(max(e.followup_end_at) - min(e.assigned_at))/86400.0 AS followup_days,
+       var_samp(e.contribution::DOUBLE) AS contribution_sample_variance
 FROM experiment_person e JOIN experiment_spend s USING (experiment_id)
 GROUP BY e.experiment_id, e.channel, e.primary_need, e.arm;
 
 CREATE OR REPLACE VIEW experiment_effects AS
 WITH paired AS (
  SELECT t.experiment_id, t.channel, t.primary_need, t.n_assigned AS n_treatment, c.n_assigned AS n_control,
+        t.assigned_at, t.followup_end_at, t.followup_days,
         t.n_buyers AS buyers_treatment, c.n_buyers AS buyers_control,
         t.n_buyers::DOUBLE/t.n_assigned AS purchase_rate_treatment,
         c.n_buyers::DOUBLE/c.n_assigned AS purchase_rate_control,
         t.n_buyers - c.n_buyers * t.n_assigned::DOUBLE/c.n_assigned AS incremental_buyers,
         t.net_revenue - c.net_revenue * t.n_assigned::DOUBLE/c.n_assigned AS incremental_net_revenue,
         t.contribution - c.contribution * t.n_assigned::DOUBLE/c.n_assigned AS incremental_contribution,
-        t.media_spend - c.media_spend * t.n_assigned::DOUBLE/c.n_assigned AS incremental_media_spend
+        t.media_spend - c.media_spend * t.n_assigned::DOUBLE/c.n_assigned AS incremental_media_spend,
+        sqrt(t.contribution_sample_variance/t.n_assigned
+           + c.contribution_sample_variance/c.n_assigned) AS contribution_difference_per_prospect_se
  FROM experiment_summary t JOIN experiment_summary c USING (experiment_id, channel, primary_need)
  WHERE t.arm = 'treatment' AND c.arm = 'control'
 ), effects AS (
@@ -151,12 +157,23 @@ WITH paired AS (
  FROM paired
 )
 SELECT experiment_id, channel, primary_need, n_treatment, n_control, buyers_treatment, buyers_control,
+       assigned_at, followup_end_at, followup_days,
        purchase_rate_treatment, purchase_rate_control, purchase_rate_difference, purchase_rate_difference_se,
        greatest(-1.0, purchase_rate_difference - 1.96*purchase_rate_difference_se) AS purchase_rate_ci_lower,
        least(1.0, purchase_rate_difference + 1.96*purchase_rate_difference_se) AS purchase_rate_ci_upper,
        incremental_buyers, incremental_net_revenue, incremental_contribution, incremental_media_spend,
        incremental_contribution - incremental_media_spend AS incremental_contribution_after_media,
        (incremental_contribution - incremental_media_spend)/n_treatment AS incremental_contribution_after_media_per_prospect,
+       contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_se,
+       (incremental_contribution - incremental_media_spend)/n_treatment
+           - 1.96*contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_ci_lower,
+       (incremental_contribution - incremental_media_spend)/n_treatment
+           + 1.96*contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_ci_upper,
+       n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_se,
+       incremental_contribution - incremental_media_spend
+           - 1.96*n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_ci_lower,
+       incremental_contribution - incremental_media_spend
+           + 1.96*n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_ci_upper,
        CASE WHEN incremental_buyers > 0 THEN incremental_media_spend/incremental_buyers END AS incremental_cac,
        incremental_net_revenue/nullif(incremental_media_spend, 0) AS iroas
 FROM effects;

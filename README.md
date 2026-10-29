@@ -2,11 +2,11 @@
 
 **Are we moving in the right direction as a company?**
 
-[Read the eight-page report](examples/reference/report/customer-economics-report.pdf) · [Companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx) · [Stage-gated skill](SKILL.md)
+[Read the executive report](examples/reference/report/customer-economics-report.pdf) · [Companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx) · [Stage-gated skill](SKILL.md)
 
-This guided lab begins with eight separate synthetic CSV exports. In one AI-agent chat, students inspect the sources, build cohort summaries with DuckDB SQL, compare acquisition and retention economics, interpret experiments, forecast immature cohorts, and produce a short company report.
+This framework starts with eight separate source-system CSVs and ends with an executive decision report and an auditable analytical handoff. The fictional business, Studio North, sells monthly creative-work memberships. Twenty-four acquisition cohorts make monthly renewal decisions; customers differ in their underlying propensity to churn. Managers can use the same staged workflow to brief their analytical teams.
 
-The lab is designed around customer economics across successive joining cohorts. It includes clean documented keys, local SQL execution, an Archify system diagram, customer journeys, NumPyro forecasts, and editable LaTeX/PDF output.
+In one AI-agent chat, students inspect the exports, classify each dataset's Universal Customer View fields, execute saved DuckDB SQL, compare cohorts and segments, examine randomized acquisition evidence, and forecast immature cohorts. The main NumPyro model uses heterogeneous-churn sBG retention and Gamma revenue. An adapted Orduz Bayesian neural network is a separate validation comparison. The actual report-formatting skill and source assets are bundled, along with Archify relationship diagrams and editable LaTeX/PDF output.
 
 ![Report preview](examples/reference/report/preview.png)
 
@@ -14,11 +14,11 @@ The lab is designed around customer economics across successive joining cohorts.
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the lab one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v2.0.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
-Complete [setup](docs/setup.md) before the class. The core requirements are Python 3.12, the frozen `uv.lock` environment, Node 18+, and a supported LaTeX renderer. DuckDB reads the CSVs locally; there is no database server or paid cloud account to configure.
+Complete [setup](docs/setup.md) before the class. The core requirements are Python 3.12, the frozen `uv.lock` environment, Node 20+, the pinned browser renderer, and a supported LaTeX engine. DuckDB reads the CSVs locally; there is no database server or paid cloud account to configure.
 
 ## Guided commands
 
@@ -64,7 +64,7 @@ Use the [business brief](docs/business_brief.md), [data dictionary](docs/data_di
 
 ## Instructor reproducibility
 
-The classroom data release is version **1.0**, generated from seed **20261116**. The source manifest records every CSV's hash and definitions. The canonical pipeline generates the tables; plotting and reporting consume those results.
+The frozen data release is version **2.0**, generated from seed **20261116**. The source manifest records every CSV's hash, definitions and simulation design. The generator uses persistent customer propensities from a Beta mixture; inference uses a different single-Beta hierarchical model. Hidden simulation variables never enter analyst features. The canonical SQL pipeline generates the tables; plotting and reporting consume those results.
 
 For an explicitly requested full reproducibility run:
 
@@ -76,6 +76,6 @@ uv run --frozen python scripts/verify_reproducibility.py --output outputs/replay
 
 Batch mode intentionally runs all computations and is not the student-chat workflow. Choose a fresh empty output folder for each run. Use `--no-pdf` before the command only when an editable TeX result is intentionally sufficient. A different model step budget or seed is recorded and invalidates dependent guided outputs. Changes to core code, SQL, templates, or the frozen environment fail closed in an existing guided session; restore the release or begin a new output folder.
 
-The release uses 3,000 model steps. [Model review and limitations](docs/model-review.md) explains the adversarial checks, the historical valuation backtest, and what the uncertainty bands do and do not establish.
+The default main-model budget gives four NUTS chains 1,000 warmup iterations and 1,000 retained draws each. The separate neural-network comparison uses 10,000 SVI steps. Read the [model specification](docs/model-specification.md), [simulation design](docs/simulation-design.md), and [model review](docs/model-review.md) for assumptions, historical validation, and the limits of the uncertainty bands. The [bundled report skill](skills/executive-report/SKILL.md) specifies the executive narrative and required parameter, validation and data appendices.
 
 The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses. The source articles and tutorials are linked, not copied into the data release.

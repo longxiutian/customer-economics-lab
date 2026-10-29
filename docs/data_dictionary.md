@@ -1,6 +1,9 @@
 # Source data and accounting definitions
 
-These are original synthetic records for an individual subscription service.
+These are original synthetic records for **Studio North**, a monthly creative-work
+membership for independent professionals. Members use reusable templates to save
+time or guided learning to build skills. Standard/premium plans renew monthly;
+paid workshops and other add-ons appear as separate purchases.
 There are 24 first-paid joining cohorts, January 2024 through December 2025.
 The exclusive observation cutoff is **2026-01-01 00:00:00 UTC**. All money is USD.
 The default generation seed is `20261116`. No real customer or course records are included.
@@ -24,6 +27,40 @@ cutoffs, definitions and experiment designs. The loader refuses changed exports.
 
 The joins are deliberately ordinary, documented joins. This lab does not require
 identity inference or a matching algorithm.
+
+## Universal Customer View and the connection map
+
+**Universal Customer View (UCV)** classifies fields, not files. The four categories
+are **Identifiers, Engagement, Relationship, Perception**. The companion
+[field taxonomy](ucv-tables.md) gives one four-column table per source dataset,
+with every actual field appearing exactly once. It explains ambiguous operational
+metadata and leaves genuinely absent categories empty. An aggregate spending
+field does not become an individual customer action merely because it supports
+the Engagement category.
+
+Stage 1 regenerates `diagrams/ucv-tables.json` and `.md` from the actual source
+headers, checks complete field coverage, and binds them to raw-file hashes.
+`diagrams/source-tables.html` is the native Archify ERD: all columns and SQL
+types, PK/FK roles, relationship cardinality, and focused views of membership,
+customer experience, and acquisition. Its derived `campaign_metadata` view is
+explicitly labelled; it is not a ninth raw dataset. The original spending key
+is `(campaign_id, spend_date)`, while the derived view has one row per campaign.
+Refund `related_transaction_id` points to the original payment in the same ledger.
+
+The separate `diagrams/source-systems.html` overview traces raw sources through
+saved DuckDB SQL views to observed cohort economics, model forecasts, randomized
+test effects and the company decision. Native SVG/PNG exports accompany both
+diagrams; `diagram_manifest.json` hashes all report inputs. The diagrams do not
+imply a database server needs to be provisioned.
+
+`source-systems-report.png` is a compact print edition of a separate native
+Archify workflow: the same source groups, SQL transformation, evidence types and
+decision, with the reader's wide background lanes omitted. Its native nodes and
+edges remain intact, with fixed 12px titles and 9px context before a 2x raster
+export. The detailed HTML/ERD retains all field and cardinality information.
+The `source-tables-report` edition retains every field, key and relationship in
+narrower cards for a readable A3 report foldout. It omits only the SQL-type column;
+types remain available in the full ERD and exact data dictionary.
 
 ## People, segments and subscription status
 

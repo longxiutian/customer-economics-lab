@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Instructor diagnostic: perturb variational initialization and compare value intervals."""
+"""Optional instructor diagnostic: perturb NUTS starting values and compare value intervals."""
 from __future__ import annotations
 import argparse
 import json
@@ -22,7 +22,7 @@ def main():
     frame=_validate(pd.read_csv(output/'tables/cohort_age_summary.csv'))
     latest=frame[frame.cohort_month==frame.cohort_month.max()]
     records=[]
-    for steps,scale in [(1200,.05),(3000,.02),(3000,.2)]:
+    for steps,scale in [(3000,.05),(3000,.02),(3000,.2)]:
         draws,diagnostic=_posterior(frame,20261116,steps,init_scale=scale)
         total=np.zeros((DRAWS,HORIZON));n=0
         for _,g in latest.groupby(KEYS):
@@ -39,7 +39,7 @@ def main():
     comparison={'width_relative_difference':abs(records[1]['width']-records[2]['width'])/max(records[1]['width'],records[2]['width']),
                 'mean_relative_difference':abs(records[1]['ltv_mean']-records[2]['ltv_mean'])/records[1]['ltv_mean']}
     receipt={'records':records,'comparison':comparison,
-             'interpretation':'Sensitivity of approximate posterior parameter intervals; this does not establish full predictive coverage or eliminate structural uncertainty.'}
+             'interpretation':'Sensitivity of posterior parameter intervals to the initial cohort scale. NUTS uses four chains for each run; this optional check does not establish full predictive coverage or eliminate structural uncertainty.'}
     (output/'model_stability.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n',encoding='utf-8')
     print(json.dumps(comparison),flush=True)
 

@@ -1,6 +1,6 @@
 # Setup before class
 
-The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v1.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
+The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v2.0.0 source archive over HTTPS into a new empty folder using Python's standard library.
 
 ## Python environment
 
@@ -20,7 +20,15 @@ The exact resolved package versions are in `uv.lock`. The core model uses CPU JA
 
 ## Diagram and report tools
 
-- **Node 18 or newer** runs the bundled Archify package. Check `node --version`. Archify's required source and license are included; no Git-backed skill installer or runtime service account is needed.
+- **Node 20 or newer** runs the bundled Archify package and the pinned browser exporter. Check `node --version`. Archify's required source and license are included; no Git-backed skill installer or runtime service account is needed.
+- Install the exact **Playwright 1.62.1** version from `tools/package-lock.json`, then its Chromium browser. These local tools export the actual Archify diagrams to static SVG/PNG for the report; they do not require a service account or Git:
+
+  ```text
+  npm ci --prefix tools
+  npx --prefix tools playwright install chromium
+  ```
+
+  The exporter fixes viewport, locale, time zone, light theme and animation state. HTML, SVG and PNG hashes enter the diagram manifest. A missing renderer fails explicitly rather than reusing a stale image. Install and exercise this dependency before class; package detection alone does not prove rendering works.
 - **Tectonic or pdfLaTeX** compiles the report. The renderer checks `COHORT_TEX_ENGINE` if set, then `tectonic` and `pdflatex` on PATH. On Windows it can also use an existing WSL pdfLaTeX installation. The report needs Source Sans (`sourcesans.sty`) plus the standard graphics, table, and TikZ packages in its template. Complete the first compilation before class so any package downloads are cached.
 - An environment-specific renderer path may be supplied through `COHORT_TEX_ENGINE`. The lab does not require shell escape. A failed PDF build preserves the editable `.tex` and figures and reports the failure.
 

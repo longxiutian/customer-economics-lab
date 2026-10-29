@@ -130,7 +130,7 @@ def build_views(data_dir: Path, output_dir: Path) -> dict:
         "schema_version": "1.0", "data_as_of": manifest["data_as_of"], "timezone": manifest["timezone"],
         "currency": manifest["currency"], "definitions": manifest["definitions"],
         "source_validation": source_validation, "sql_checks": checks, "table_row_counts": row_counts,
-        "experiment_interval": "Purchase-rate difference: unpooled normal standard error and approximate 95% interval; each experiment retains its own controls. No correction for comparing different tests.",
+        "experiment_interval": "Approximate 95% normal intervals: purchase-rate differences use unpooled Bernoulli standard errors; contribution-after-media per prospect uses sqrt(s_T^2/n_T+s_C^2/n_C), with sample contribution variances over every assigned person including nonbuyers with zero outcomes. Recorded media spending is treated as fixed and changes the mean, not its standard error. Total-pilot contribution intervals scale the per-prospect interval by n_T. Each experiment retains its own controls and explicit assignment/follow-up dates; windows can differ. These are not long-run LTV intervals, do not include cost uncertainty, and have no correction for comparing different tests.",
         "segmentation_scope": "All people with six complete observed acquisition-age months; outcome is six-month contribution. All three baseline schemes have two groups. This is descriptive discrimination, not a treatment effect.",
         "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
         **summaries,

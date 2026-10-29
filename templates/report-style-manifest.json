@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "upstream_skill": "build-longxiu-research-briefs",
+  "upstream_style_version": "2026-08-22-v1.1",
+  "upstream_package": "templates/longxiu-research-brief.sty",
+  "upstream_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
+  "upstream_package_modified": false,
+  "report_wrapper": "templates/labreport.sty",
+  "supporting_skill": "skills/executive-report/SKILL.md",
+  "source_free": true,
+  "private_runtime_dependency": false,
+  "required_typeface": "Source Sans",
+  "paper_size_points": [612, 792]
+}

@@ -35,31 +35,31 @@
     },
     {
       "at": "2024-01-03T09:00:00Z",
-      "detail": "Financial event T0000002; refunds remain separate ledger events.",
+      "detail": "Financial event T0000039; refunds remain separate ledger events.",
       "id": "event2",
       "lane": "billing",
       "title": "payment: subscription"
     },
     {
-      "at": "2024-01-04T10:00:00Z",
+      "at": "2024-01-08T16:00:00Z",
       "detail": "Observed interaction on app; motive is not supplied.",
       "id": "event3",
       "lane": "product",
-      "title": "onboarding completed"
+      "title": "core action"
     },
     {
-      "at": "2024-01-08T16:00:00Z",
+      "at": "2024-01-14T16:00:00Z",
       "detail": "Observed interaction on app; motive is not supplied.",
       "id": "event4",
       "lane": "product",
       "title": "core action"
     },
     {
-      "at": "2024-01-24T10:00:00Z",
-      "detail": "getting_started; a reported perception, not a measured cause.",
+      "at": "2024-01-15T09:00:00Z",
+      "detail": "Financial event T0000040; refunds remain separate ledger events.",
       "id": "event5",
-      "lane": "feedback",
-      "title": "Customer feedback"
+      "lane": "billing",
+      "title": "payment: add_on"
     }
   ],
   "lanes": [

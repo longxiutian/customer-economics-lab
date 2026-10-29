@@ -1,0 +1,195 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{longxiu-research-brief}[2026/08/22 v1.1 Longxiu Tian portrait research briefs]
+\newcommand{\LongxiuBriefStyleVersion}{2026-08-22-v1.1}
+
+% Page and typography ---------------------------------------------------------
+\RequirePackage[letterpaper,left=.72in,right=.72in,top=.58in,bottom=.62in,headheight=12pt,headsep=18pt,footskip=24pt]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[default]{sourcesans}
+\RequirePackage{microtype}
+\RequirePackage{ragged2e}
+\RequirePackage{fancyhdr}
+\RequirePackage{lastpage}
+\RequirePackage{enumitem}
+\RequirePackage{booktabs,tabularx,array}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\RequirePackage{hyperref}
+
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3.7pt plus .5pt minus .3pt}
+\setlength{\columnsep}{.34in}
+\setlist[itemize]{leftmargin=1.1em,itemsep=1.5pt,topsep=2pt,parsep=0pt,partopsep=0pt}
+\setlist[enumerate]{leftmargin=1.35em,itemsep=1.5pt,topsep=2pt,parsep=0pt,partopsep=0pt}
+\emergencystretch=1.5em
+\AtBeginDocument{\fontsize{9}{11}\selectfont}
+
+% Palette recovered from the two supplied Choice Symposium reference PDFs. ---
+\definecolor{BriefInk}{HTML}{202521}
+\definecolor{BriefMuted}{HTML}{5A625D}
+\definecolor{BriefGreen}{HTML}{185A46}
+\definecolor{BriefOchre}{HTML}{8A5E0E}
+\definecolor{BriefOchreRule}{HTML}{B57A19}
+\definecolor{BriefBorder}{HTML}{C8CECA}
+\definecolor{BriefPale}{HTML}{F2F5F2}
+\definecolor{BriefPaleGreen}{HTML}{E5F2EC}
+\definecolor{BriefPaleGold}{HTML}{FFF1D5}
+
+\color{BriefInk}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=BriefGreen,
+  urlcolor=BriefGreen,
+  citecolor=BriefGreen,
+  pdfborder={0 0 0}
+}
+
+% Running matter --------------------------------------------------------------
+\newcommand{\BriefRunningHeader}{SELECTED RESEARCH \enspace|\enspace IRON SIMPLEX PAPER BRIEFS}
+\newcommand{\BriefAuthor}{Longxiu Tian}
+
+\fancypagestyle{brief}{%
+  \fancyhf{}
+  \fancyhead[L]{{\fontsize{7}{8}\selectfont\bfseries\color{BriefMuted}\BriefRunningHeader}}
+  \fancyfoot[L]{{\fontsize{7}{8}\selectfont\color{BriefMuted}\BriefAuthor}}
+  \fancyfoot[R]{{\fontsize{7}{8}\selectfont\color{BriefMuted}\thepage\ / \pageref*{LastPage}}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\fancypagestyle{brieftitle}{%
+  \fancyhf{}
+  \fancyfoot[L]{{\fontsize{7}{8}\selectfont\color{BriefMuted}\BriefAuthor}}
+  \fancyfoot[R]{{\fontsize{7}{8}\selectfont\color{BriefMuted}\thepage\ / \pageref*{LastPage}}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+\pagestyle{brief}
+
+% Semantic document components -----------------------------------------------
+\newcommand{\BriefKicker}[3]{%
+  {\fontsize{7.2}{8.3}\selectfont\bfseries
+   \textcolor{BriefOchre}{\MakeUppercase{#1}}\enspace|\enspace
+   \textcolor{BriefMuted}{\MakeUppercase{#2}}\enspace|\enspace
+   \textcolor{BriefMuted}{\MakeUppercase{#3}}}\par
+  \vspace{5pt}
+  {\color{BriefGreen}\rule{\linewidth}{.8pt}}\par
+  \vspace{9pt}
+}
+
+\newcommand{\BriefTitle}[1]{%
+  {\fontsize{18}{20.5}\selectfont\bfseries\color{BriefInk}#1}\par\vspace{5pt}}
+
+\newcommand{\BriefCitation}[1]{%
+  {\fontsize{9.3}{10.8}\selectfont\color{BriefMuted}#1}\par\vspace{7pt}}
+
+\newcommand{\BriefBottomLine}[1]{%
+  {\fontsize{9.2}{11.1}\selectfont\textbf{Bottom line.} #1}\par\vspace{10pt}}
+
+\newcommand{\BriefSection}[1]{%
+  \vspace{2pt}{\fontsize{8.1}{9.2}\selectfont\bfseries\color{BriefGreen}\MakeUppercase{#1}}\par\vspace{1pt}}
+
+\newcommand{\BriefSmallSection}[1]{%
+  {\fontsize{7.7}{8.8}\selectfont\bfseries\color{BriefGreen}\MakeUppercase{#1}}\par\vspace{1pt}}
+
+\newtcolorbox{BriefBoundaryBox}{
+  colback=BriefPaleGold,
+  colframe=BriefOchreRule,
+  boxrule=.7pt,
+  arc=0pt,
+  outer arc=0pt,
+  left=7pt,right=7pt,top=6pt,bottom=6pt,
+  before skip=3pt,after skip=6pt,
+  fontupper=\fontsize{8.7}{10.4}\selectfont
+}
+
+\newtcolorbox{BriefSafeBox}{
+  colback=BriefPaleGreen,
+  colframe=BriefGreen,
+  boxrule=.7pt,
+  arc=0pt,
+  outer arc=0pt,
+  left=8pt,right=8pt,top=6pt,bottom=6pt,
+  before skip=8pt,after skip=5pt,
+  fontupper=\fontsize{8.65}{10.3}\selectfont
+}
+
+\newtcolorbox{BriefSummaryBox}{
+  colback=BriefPale,
+  frame hidden,
+  borderline west={2.2pt}{0pt}{BriefGreen},
+  sharp corners,
+  left=9pt,right=9pt,top=7pt,bottom=7pt,
+  before skip=5pt,after skip=5pt,
+  fontupper=\fontsize{9}{10.8}\selectfont
+}
+
+\newcommand{\BriefSafeClaim}[1]{%
+  \begin{BriefSafeBox}\textbf{Safe external claim.} #1\end{BriefSafeBox}}
+
+\newcommand{\BriefSource}[1]{%
+  {\fontsize{7.1}{8.2}\selectfont\color{BriefMuted}\textbf{Primary source:} #1}\par}
+
+% Maintained two-column anatomy. Keep widths here, not in document sources. ---
+\newlength{\BriefLeftColumnWidth}
+\newlength{\BriefRightColumnWidth}
+\setlength{\BriefLeftColumnWidth}{.645\textwidth}
+\setlength{\BriefRightColumnWidth}{.315\textwidth}
+
+\newenvironment{BriefLeftColumn}{%
+  \noindent\begin{minipage}[t]{\BriefLeftColumnWidth}\vspace{0pt}%
+}{%
+  \end{minipage}\hfill%
+}
+
+\newenvironment{BriefRightColumn}{%
+  \begin{minipage}[t]{\BriefRightColumnWidth}\vspace{0pt}\RaggedRight%
+}{%
+  \end{minipage}%
+}
+
+\newcommand{\BriefAxisScores}[5]{%
+  {\fontsize{6.2}{7.2}\selectfont\color{BriefMuted}
+  Scalability #1/5 \enspace|\enspace Uncertainty #2/5 \enspace|\enspace Flexibility #3/5\par
+  Ease of use #4/5 \enspace|\enspace Interpretability #5/5}}
+
+% Fixed-axis radar chart. Scores describe intellectual emphasis, not quality. --
+\newcommand{\BriefRadar}[5]{%
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \foreach \level in {1,...,5}{%
+    \pgfmathsetmacro{\rr}{0.22*\level}
+    \draw[BriefBorder,line width=.35pt] (90:\rr)--(18:\rr)--(-54:\rr)--(-126:\rr)--(162:\rr)--cycle;
+  }
+  \foreach \ang in {90,18,-54,-126,162}{\draw[BriefBorder,line width=.35pt] (0,0)--(\ang:1.10);}
+  \pgfmathsetmacro{\ra}{0.22*#1}
+  \pgfmathsetmacro{\rb}{0.22*#2}
+  \pgfmathsetmacro{\rc}{0.22*#3}
+  \pgfmathsetmacro{\rd}{0.22*#4}
+  \pgfmathsetmacro{\re}{0.22*#5}
+  \path[fill=BriefPaleGreen,draw=BriefGreen,line width=1.0pt]
+    (90:\ra)--(18:\rb)--(-54:\rc)--(-126:\rd)--(162:\re)--cycle;
+  \foreach \ang/\rad in {90/\ra,18/\rb,-54/\rc,-126/\rd,162/\re}
+    \fill[BriefOchreRule] (\ang:\rad) circle (1.25pt);
+  \node[font=\fontsize{5.6}{6.1}\selectfont\bfseries,text=BriefMuted,anchor=south] at (90:1.35) {Scalability};
+  \node[font=\fontsize{5.6}{6.1}\selectfont\bfseries,text=BriefMuted,anchor=west] at (18:1.39) {Uncertainty};
+  \node[font=\fontsize{5.6}{6.1}\selectfont\bfseries,text=BriefMuted,anchor=north west] at (-54:1.35) {Flexibility};
+  \node[font=\fontsize{5.6}{6.1}\selectfont\bfseries,text=BriefMuted,anchor=north east] at (-126:1.35) {Ease of use};
+  \node[font=\fontsize{5.6}{6.1}\selectfont\bfseries,text=BriefMuted,anchor=east] at (162:1.39) {Interpretability};
+\end{tikzpicture}}
+
+\newcommand{\BriefRadarPanel}[5]{%
+  \begin{center}
+    \BriefRadar{#1}{#2}{#3}{#4}{#5}\par\vspace{-2pt}
+    \BriefAxisScores{#1}{#2}{#3}{#4}{#5}
+  \end{center}}
+
+% Title-page helpers ----------------------------------------------------------
+\newcommand{\BriefTitleRule}{\textcolor{BriefGreen}{\rule{.43\linewidth}{.8pt}}}
+\newcommand{\BriefClosingRule}{\textcolor{BriefOchreRule}{\rule{.43\linewidth}{.8pt}}}
+\newcommand{\BriefCoverEyebrow}[1]{{\fontsize{7.2}{8.4}\selectfont\bfseries\color{BriefMuted}\MakeUppercase{#1}}\par}
+\newcommand{\BriefCoverTitle}[1]{{\fontsize{24}{27}\selectfont\bfseries\color{BriefInk}#1}\par}
+\newcommand{\BriefCoverSubtitle}[1]{{\fontsize{10}{12}\selectfont\color{BriefMuted}#1}\par}
+\newcommand{\BriefCoverByline}[1]{{\fontsize{7.2}{8.4}\selectfont\bfseries\color{BriefMuted}#1}\par}

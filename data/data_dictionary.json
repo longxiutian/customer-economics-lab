@@ -4,7 +4,7 @@
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
     "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
     "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
-    "business": "Fully synthetic individual monthly subscription service; standard/premium tiers and optional add-on orders.",
+    "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
     "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
     "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
     "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
@@ -14,12 +14,12 @@
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
     "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
     "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
-    "synthetic_trends": "Gradually lower acquisition costs and renewal hazards, modest acquisition mix changes, explicit premium upgrades/add-on quantities and incurred costs. Random month-to-month variation remains.",
+    "synthetic_trends": "Changing acquisition cost and observable need/channel mix; persistent individual churn propensities from a two-Beta mixture whose composition varies across acquisition cohorts, needs and channels; a temporary common service disruption; explicit premium upgrades/add-on quantities and incurred costs. Random variation remains, and aggregate improvement does not by itself establish within-segment improvement.",
     "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
   },
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "tables": {
     "acquisition_attribution.csv": {
       "columns": [

@@ -18,7 +18,14 @@ from pathlib import Path
 
 DEFAULT_SEED = 20261116
 DATA_AS_OF = "2026-01-01T00:00:00Z"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "2.0"
+DATASET_VERSION = "2.0"
+
+# These are simulation assumptions, not estimated parameters or observed fields.
+# Each customer's one persistent draw is kept inside generate_data, never exported.
+CHURN_COMPONENTS = {"durable": (0.7, 12.0), "fragile": (2.0, 5.0)}
+DISRUPTION_MONTHS = (14, 15)  # March and April 2025; calendar months, not customer ages.
+DISRUPTION_CHURN_ODDS_MULTIPLIER = 1.35
 SCHEMAS = {
     "people.csv": {
         "person_id": "VARCHAR", "record_created_at": "TIMESTAMP", "attributes_recorded_at": "TIMESTAMP",
@@ -95,6 +102,42 @@ def _write_csv(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
+def churn_mixture_spec(cohort: int, need: str, channel: str) -> dict:
+    """Population mixture before acquisition; neither component is an observed segment.
+
+    Observable segments retain continuous within-segment heterogeneity. Cohort
+    quality changes modestly, while the source generator also changes observable
+    acquisition mix. Both mechanisms must be separated in the business analysis.
+    """
+    if not 0 <= cohort < 24 or need not in {"save_time", "build_skill"} or channel not in {"search", "partner", "organic"}:
+        raise ValueError("Unsupported acquisition cohort, need, or channel")
+    fragile_weight = (0.40 if need == "save_time" else 0.24)
+    fragile_weight += {"search": 0.04, "partner": -0.04, "organic": 0.0}[channel]
+    fragile_weight += -0.06 * cohort / 23 + 0.02 * math.sin(0.6 * cohort)
+    return {"fragile_weight": min(0.85, max(0.05, fragile_weight)),
+            "durable": CHURN_COMPONENTS["durable"], "fragile": CHURN_COMPONENTS["fragile"]}
+
+
+def sample_churn_propensity(rng: random.Random, cohort: int, need: str, channel: str) -> float:
+    """Draw one customer's unobserved baseline propensity ONCE, at acquisition."""
+    spec = churn_mixture_spec(cohort, need, channel)
+    component = "fragile" if rng.random() < spec["fragile_weight"] else "durable"
+    return rng.betavariate(*spec[component])
+
+
+def renewal_probability(theta: float, calendar_index: int) -> float:
+    """Monthly renewal conditional on still being active, with a temporary common shock.
+
+    The latent theta is constant. A service disruption changes the odds for two
+    calendar months without drawing a new propensity or permanently changing it.
+    """
+    if not 0 <= theta <= 1:
+        raise ValueError("Churn propensity must lie in [0, 1]")
+    multiplier = DISRUPTION_CHURN_ODDS_MULTIPLIER if calendar_index in DISRUPTION_MONTHS else 1.0
+    hazard = multiplier * theta / (1 - theta + multiplier * theta)
+    return 1 - hazard
+
+
 def generate_data(data_dir: Path, seed: int = DEFAULT_SEED) -> dict:
     """Write the frozen eight-export dataset and its deterministic manifest."""
     data_dir = Path(data_dir)
@@ -148,7 +191,8 @@ def generate_data(data_dir: Path, seed: int = DEFAULT_SEED) -> dict:
 
     def subscribe(pid: str, cohort: int, need: str, channel: str, campaign: str | None) -> None:
         sid = next_id("S")
-        frailty = rng.uniform(0.83, 1.17)
+        # Persistent individual heterogeneity: do not redraw this at each renewal.
+        theta = sample_churn_propensity(rng, cohort, need, channel)
         tier = "premium" if rng.random() < (0.08 if need == "save_time" else 0.22) + cohort * 0.004 else "standard"
         first_transaction = None
         alive = True
@@ -156,14 +200,7 @@ def generate_data(data_dir: Path, seed: int = DEFAULT_SEED) -> dict:
             month = _month(cohort + age)
             future = cohort + age >= 24
             if age and not future:
-                if age == 1:
-                    hazard = 0.255 if need == "save_time" else 0.175
-                elif age <= 3:
-                    hazard = 0.105 if need == "save_time" else 0.065
-                else:
-                    hazard = 0.058 if need == "save_time" else 0.033
-                hazard *= (1 - 0.27 * cohort / 23) * (0.92 if channel == "partner" else 1.02) * frailty
-                alive = rng.random() >= hazard
+                alive = rng.random() < renewal_probability(theta, cohort + age)
                 if alive and tier == "standard" and rng.random() < 0.065 + 0.0015 * cohort:
                     tier = "premium"
             outcome = "pending" if future else ("paid" if alive else ("cancelled" if rng.random() < 0.88 else "failed"))
@@ -274,7 +311,7 @@ def generate_data(data_dir: Path, seed: int = DEFAULT_SEED) -> dict:
     for name in SCHEMAS:
         _write_csv(data_dir / name, rows[name])
     definitions = {
-        "business": "Fully synthetic individual monthly subscription service; standard/premium tiers and optional add-on orders.",
+        "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
         "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
         "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
         "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
@@ -291,14 +328,24 @@ def generate_data(data_dir: Path, seed: int = DEFAULT_SEED) -> dict:
         "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
         "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
         "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
-        "synthetic_trends": "Gradually lower acquisition costs and renewal hazards, modest acquisition mix changes, explicit premium upgrades/add-on quantities and incurred costs. Random month-to-month variation remains.",
+        "synthetic_trends": "Changing acquisition cost and observable need/channel mix; persistent individual churn propensities from a two-Beta mixture whose composition varies across acquisition cohorts, needs and channels; a temporary common service disruption; explicit premium upgrades/add-on quantities and incurred costs. Random variation remains, and aggregate improvement does not by itself establish within-segment improvement.",
     }
     manifest = {
-        "schema_version": SCHEMA_VERSION, "dataset_version": "1.0", "synthetic_seed": seed,
+        "schema_version": SCHEMA_VERSION, "dataset_version": DATASET_VERSION, "synthetic_seed": seed,
         "data_as_of": DATA_AS_OF, "timezone": "UTC", "currency": "USD",
         "source_cutoffs": {name: DATA_AS_OF for name in SCHEMAS},
         "files": {name: {"sha256": _digest(data_dir / name), "row_count": len(rows[name])} for name in SCHEMAS},
         "definitions": definitions, "experiment_specs": specs,
+        "retention_dgp": {
+            "version": "persistent-mixture-beta-v2",
+            "components": {k: {"alpha": v[0], "beta": v[1]} for k, v in CHURN_COMPONENTS.items()},
+            "fragile_weight": "clip((0.40 if save_time else 0.24) + channel_offset - 0.06*cohort_index/23 + 0.02*sin(0.6*cohort_index), 0.05, 0.85)",
+            "channel_offset": {"search": 0.04, "partner": -0.04, "organic": 0.0},
+            "latent_draw": "One Beta-mixture churn propensity per acquired person, reused at every renewal; latent propensity and component are never columns in the observed CSVs.",
+            "calendar_disruption": {"months": ["2025-03", "2025-04"], "churn_odds_multiplier": DISRUPTION_CHURN_ODDS_MULTIPLIER},
+            "renewal": "Bernoulli((1-theta)/(1-theta+odds_multiplier*theta)); monthly until permanent churn; acquisition month is paid and future months are censored.",
+            "separation": "These simulation assumptions document data provenance. The inference model must fit only observed source-derived cohort cells, not latent propensities or DGP parameters.",
+        },
         "generator": "cohort_lab.data.generate_data; Python standard-library random.Random, integer-cent generation",
         "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
     }

@@ -1,0 +1,37 @@
+{
+  "data_manifest_sha256": "77b4b49f08c58cf56dfc6f78f106a4cca66253c492b57a191746db709d28ed41",
+  "files": {
+    "acquisition_attribution.csv": {
+      "row_count": 4672,
+      "sha256": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca"
+    },
+    "campaign_spend.csv": {
+      "row_count": 294,
+      "sha256": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057"
+    },
+    "experiment_assignments.csv": {
+      "row_count": 1000,
+      "sha256": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262"
+    },
+    "feedback.csv": {
+      "row_count": 2654,
+      "sha256": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822"
+    },
+    "people.csv": {
+      "row_count": 5476,
+      "sha256": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214"
+    },
+    "product_events.csv": {
+      "row_count": 59828,
+      "sha256": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53"
+    },
+    "subscription_periods.csv": {
+      "row_count": 37244,
+      "sha256": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411"
+    },
+    "transactions.csv": {
+      "row_count": 45746,
+      "sha256": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5"
+    }
+  }
+}

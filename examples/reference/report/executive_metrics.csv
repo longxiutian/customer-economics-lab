@@ -1,0 +1,3 @@
+cohort_month,age_month,blended_cac,cumulative_contribution_per_customer,cash_after_cac_per_customer,source,source_sha256
+2024-01-01,5,105.7872340426,123.3882978723,17.6010638298,tables/cohort_cash_economics.csv,e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8
+2025-07-01,5,72.9933031674,144.0488687783,71.0555656109,tables/cohort_cash_economics.csv,e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8

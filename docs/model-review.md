@@ -1,46 +1,39 @@
-# Model decisions and adversarial checks
+# Modeling decisions and verification
 
-The implemented model was reviewed with Claude Opus 5.5 at **xhigh** effort. The
-model reviewed supplied code and executed-test receipts; it did not run the local
-tests itself. Codex implemented and executed the resulting checks. An earlier
-proposal-review call failed upstream without a substantive answer and is not
-counted as a completed review.
+## Different generation and inference mechanisms
 
-The review led to these changes:
+The v2 sources contain individual monthly renewal decisions for 24 acquisition cohorts. Each acquired member receives one persistent latent churn propensity from a two-component Beta mixture. Group composition and a temporary calendar disturbance vary the observed curves. These simulation variables never appear in the eight analyst-facing CSVs.
 
-| Risk | Implemented treatment | Falsification check |
-|---|---|---|
-| Company CAC omits spending in cells with no buyers | Whole-cohort costs come from the SQL spending ledger, separately from buyer-linked segment CAC. | Add zero-conversion and unallocated spending; company CAC must rise while supported segment CAC stays unchanged. Missing paid-cell cost records fail. |
-| Young-cohort margins inherit acquisition-month costs | Forecast economic ratios match channel, need, and customer age, with observed renewal ages as a documented fallback. | A fixture with 10% acquisition-month margin and 50% later margin must use 50% for renewals. |
-| Historical summaries use future information | Raw exports are physically truncated to an earlier observation date and the SQL is replayed. | All previously observed customer/cohort/company tables and completed experiment outcomes must remain identical. |
-| Short-term revenue accuracy is mistaken for LTV accuracy | Add a historical year-end origin and forecast each eligible cohort to a common 12-month horizon. | Compare contribution LTV and cash-payback month with subsequently observed outcomes, using training-only economics. |
-| Numerical completion is called convergence | Release fitting uses 3,000 steps, CPU float64 checks, loss-drift and residual-dispersion gates. | Perturb initialization tenfold; inspect value means, interval widths, and likelihood residuals. The release threshold is a diagnostic, not a proof of convergence. |
-| Payback hides a later refund reversal | Retain the standard first-crossing definition and add an explicit recrossing flag and probability of nonnegative cash balance at the horizon. | A cash-flow fixture crosses acquisition cost and later falls below it. The flag must distinguish those outcomes. |
-| A zero-based age is mistaken for a one-based payback period | Store `payback_age` from zero and `payback_month` as the number of monthly receipts from one. | Boundary fixtures distinguish observed from forecast crossings; valuation and backtest files use the same receipt convention. |
-| Already-observed payback is counted as a successful forecast | Score payback only when it occurs after the historical forecast origin. | Four release cohorts have genuinely future payback; seven already-recovered cohorts are excluded from that score. |
-| Conditional intervals are overstated | Label intervals as approximate posterior **parameter** uncertainty under the model and fixed future economic ratios. | No claim of full predictive coverage, uncertain future cost ratios, or causally identified lifetime marketing value. |
+Inference uses one Beta distribution per cohort/need/channel cell, covariates and partially pooled cohort effects. This structural difference permits misspecification without injecting arbitrary errors or selecting a seed after inspecting forecasts. Gamma revenue inference also differs from the generator's explicit plan, upgrade and add-on purchases.
 
-The model intentionally reports **12-month contribution value**, not an
-infinite-lifetime estimate. A positive predicted net LTV does not establish that
-additional campaign spending causes that value. The randomized campaign analysis
-keeps its own eligible population, control group, and shorter outcome window.
+The design was deliberated with Claude Opus 5.5 at **xhigh** effort. Codex implemented and executed the tests; the reviewer receives supplied code and test evidence rather than running local tests itself. v1 remains available under its immutable tag. Its earlier linear hazard and SVI checks do not validate the new NUTS model.
 
-The reviewer accepted the revised approach subject to closing the payback-unit
-and scoring issues and rerunning final-release tests. Those issues are covered
-by the tests above. Conditional parameter intervals omit optimization sensitivity
-and uncertainty about future economics. Different initialization scales shifted
-the latest cohort's mean value by about $3; historical 12-month value error
-averaged about $7. The shared cohort trend may smooth recent deterioration, so
-an observed versus one-step-fitted plot covers the latest six cohorts. This is
-an in-sample diagnostic, not a substitute for the held-out tests.
+## Main model and comparison
 
-Company CAC uses all acquired customers and tracked spending. May 2025 and
-September 2025 include 24 and 26 organic control buyers, respectively. That
-changes the blended denominator; it does not establish free organic acquisition
-or improvement in paid-channel efficiency.
+Management valuations use hierarchical shifted-Beta-Geometric retention and Gamma gross revenue in NumPyro NUTS. A genuine four-hidden-unit Bayesian neural network separately adapts Orduz's architecture to conditional monthly risk sets. It is a validation comparison, not the source of executive LTV. See [model specification](model-specification.md) and [benchmark provenance](orduz-benchmark.md).
 
-`scripts/validate_model_stability.py` reproduces the initialization check.
-`scripts/verify_reproducibility.py` runs the full pipeline twice in fresh Python
-processes and compares scientific outputs and presentation artifacts. The release
-validation receipt states which platform and dependency lock were actually tested;
-it does not promise bitwise identity across untested machines.
+The four-chain convergence gate requires finite diagnostics, R-hat at most 1.01, effective sample size at least 400 and zero divergences. Residual dispersion and held-out errors are reported separately. An independent audit found that NaN diagnostics could bypass ordinary comparisons; explicit finite checks and regression tests close that gap.
+
+## Falsification checks
+
+| Risk | Verification |
+|---|---|
+| Propensity is redrawn monthly | One latent draw per acquired person, mixture-moment and survivor-selection tests. |
+| Censoring becomes artificial churn | Acquisition supplies no renewal trial; future/pending periods are excluded; exactly 24 entry cohorts. |
+| Cumulative counts reuse customers incorrectly | Conditional hazard products equal Beta-function survival; individual and aggregate likelihoods agree after count combinatorics. |
+| Simulator truth or future outcomes leak | Explicit feature whitelist and held-out outcome mutation tests. |
+| CAC drops zero-conversion or unallocated spend | Spending perturbations distinguish whole-company from supported cell CAC; unknown organic CAC stays missing. |
+| Forecasts borrow future economics | Training-only backtests and age-aligned contribution-ratio fixtures. |
+| Numerical completion is called convergence | Finite diagnostics, R-hat, ESS and divergence gates apply to all three historical/full fits. |
+| Short-term retention accuracy substitutes for value accuracy | Three-month outcome holdout plus separate year-end twelve-month contribution-value holdout, both with baselines. |
+| Already observed payback is scored as a forecast | Only recovery after the historical origin enters forecast payback scoring. |
+| A common seed substitutes for reproducibility | Two fresh processes compare analytical tables, posterior draws, diagrams, figures, TeX and PDF hashes. |
+| Old figures or styles are silently reused | Source, model, benchmark, diagram and report manifests bind actual numerical and visual files. |
+
+## Interpretation limits
+
+The decision horizon is twelve monthly receipts. Cash payback is undiscounted; contribution value is discounted at 1% monthly. CAC is deducted once. Parameter bands hold economic ratios fixed and omit renewal/revenue process noise, future costs and regime change. The probability of nonnegative **expected** cash is a posterior-parameter quantity, not a guarantee of actual recovery.
+
+One year-end origin and one three-month holdout do not establish universal forecast accuracy. Cohort and channel differences remain descriptive. Campaign incrementality is evaluated separately using all randomized prospects, including nonbuyers, within its outcome window. Favorable LTV cannot substitute for a controlled test of additional spending.
+
+Executed counts, diagnostics and hash comparisons are recorded under `validation/` and in the report. Receipts identify the tested platform and dependency versions; cross-platform byte identity is not assumed. `scripts/validate_model_stability.py` is an optional starting-value sensitivity check, not an unexecuted release claim.

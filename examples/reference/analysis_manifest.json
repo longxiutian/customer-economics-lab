@@ -1,0 +1,40 @@
+{
+  "analysis_code_sha256": "df9cf5b6ae5c3416475d56df807556e652e9a92d4e7ee6ef34c350aedc27e27c",
+  "duckdb_version": "2.0.0",
+  "executed_sql_hashes": {
+    "00_sources.sql": "f71568f08c29b511c3545a53e5c3941c9750a843373419a20338e5b77c124ec4",
+    "01_views.sql": "c67e28d38eb2d94dca1cbfe041ed85befc411302bd6b9ea6967188fe69ba14b4",
+    "02_exports.sql": "e56dc73dcd075e58f5904a73e9410a8ff9b6b68516fa0f6f80f956bf4240023b",
+    "03_summary.sql": "b2ffe30dcb16b4a1cbe1f1379c7f41344f20212302429b41234211b2eec99c04"
+  },
+  "input_csv_hashes": {
+    "acquisition_attribution.csv": "968614f347b3bc9eb8b9a2afbecfd6d3c9ee5dec82e1a142cf66251c7185a6ca",
+    "campaign_spend.csv": "8b4eb45866aab4efb09f776127d801a1c490cb59ddf719aa29d044606244c057",
+    "experiment_assignments.csv": "10a7a8a9f8487f0a9da004a88b5da55fdcaec33114375e6b605b5fcb1dff0262",
+    "feedback.csv": "691023a1bbbd2ee337fb3383ce1b7ed52212532a3fb9a35c045835c4ad467822",
+    "people.csv": "a66f826c745fa360160c6d5bf380d8e76cbbdaf98ceaef1eea190a5dc8233214",
+    "product_events.csv": "5d64d2f459b6b4d35b74e875ca03a6895428b2b42f2cb29b59a432b968f3ab53",
+    "subscription_periods.csv": "57381d61c86b5253916c86bd14eac97e06904683f2953f793dcda285fdcba411",
+    "transactions.csv": "5300edda28d891235d382af465cef539cf2ba1703d79bc838db76cbb91a651c5"
+  },
+  "input_data_manifest_sha256": "77b4b49f08c58cf56dfc6f78f106a4cca66253c492b57a191746db709d28ed41",
+  "input_receipt_sha256": "8c3cc31d6473e181138560cc9322890593b39d6f4523a237573e5c59863fd99b",
+  "output_table_hashes": {
+    "cohort_acquisition_costs.csv": "28c0c592af71b575105869d605b522944395ba4a536591774f8119f4b2264d12",
+    "cohort_age_summary.csv": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a",
+    "cohort_cash_economics.csv": "e254011d42207beaa3be061a6be0a5b32297690527bfaf61e30fa4308c15a7b8",
+    "cohort_six_month_comparison.csv": "b59b36da419817f3bfc65d2e1e5d355136239d0686056d9c439039794161f0a1",
+    "cohort_totals.csv": "58268416b9677bfd613bf506d5116788d50a22b931630d65931f91beb2f6a471",
+    "company_month.csv": "349f078771d9413d5029d159eff58e320e4aaf84979a97ce9f2970f0ba8c73f3",
+    "company_totals.csv": "47ce2d8f100f8ac9ead68e031becdb2adc82a13e6cbb759f11e193c690c284b6",
+    "customer_month.csv": "16c92d6f593737b99a89f1c73851d88e9d903fd7be75bcf5cd4e2f3154836072",
+    "experiment_effects.csv": "bad9d7363b979bbaea8a74d6ed0909dad57bc8f6aa50c80204ac5c9f799fd406",
+    "experiment_summary.csv": "c48cc679d82279367484aeba017af7b2efc0bc098fc809014ecc27c3320b63f0",
+    "segmentation_comparison.csv": "2f623d22a12018d46e1cce6120736610596fd4403df6de9780265eeb06879e80"
+  },
+  "schema_version": "1.0",
+  "source_sql_hashes": {
+    "01_views.sql": "c67e28d38eb2d94dca1cbfe041ed85befc411302bd6b9ea6967188fe69ba14b4"
+  },
+  "summary_sha256": "d91a64257dc1bc291981ad62cc338c927b888f803e8595c53d9257582cceda79"
+}

@@ -66,12 +66,16 @@ def test_experiment_effects_scale_unequal_assignment_arms():
     con = duckdb.connect()
     try:
         con.execute("""CREATE TABLE experiment_summary AS SELECT * FROM (VALUES
-          ('X','search','save_time','treatment',4,3,60.0,24.0,10.0),
-          ('X','search','save_time','control',2,1,12.0,5.0,0.0))
-          t(experiment_id,channel,primary_need,arm,n_assigned,n_buyers,net_revenue,contribution,media_spend)""")
+          ('X','search','save_time','treatment',4,3,60.0,24.0,10.0,TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01',31.0,16.0),
+          ('X','search','save_time','control',2,1,12.0,5.0,0.0,TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01',31.0,12.5))
+          t(experiment_id,channel,primary_need,arm,n_assigned,n_buyers,net_revenue,contribution,media_spend,assigned_at,followup_end_at,followup_days,contribution_sample_variance)""")
         con.execute("CREATE VIEW experiment_effects AS" + effect_sql)
         result = con.execute("SELECT incremental_buyers,incremental_net_revenue,incremental_contribution,incremental_contribution_after_media,incremental_contribution_after_media_per_prospect,incremental_cac,iroas FROM experiment_effects").fetchone()
         assert [float(x) for x in result] == pytest.approx([1,36,14,4,1,10,3.6])
+        interval=con.execute("SELECT incremental_contribution_after_media_per_prospect_se,incremental_contribution_after_media_per_prospect_ci_lower,incremental_contribution_after_media_per_prospect_ci_upper,followup_days FROM experiment_effects").fetchone()
+        # T contributions [0,8,8,8] give s^2=16; C [0,5] gives s^2=12.5.
+        se=(16/4+12.5/2)**.5
+        assert [float(x) for x in interval] == pytest.approx([se,1-1.96*se,1+1.96*se,31])
     finally:
         con.close()
 
@@ -182,8 +186,24 @@ def test_raw_source_as_of_replay_matches_only_history_known_then(tmp_path):
         pd.testing.assert_frame_equal(expected,actual,check_exact=True)
     # Both experiments completed before the cutoff; future purchases must not
     # leak into their prespecified outcomes in either raw-source replay.
-    pd.testing.assert_frame_equal(pd.read_csv(full/"tables/experiment_effects.csv"),
-                                  pd.read_csv(replay/"tables/experiment_effects.csv"),check_exact=True)
+    expected = pd.read_csv(full/"tables/experiment_effects.csv")
+    actual = pd.read_csv(replay/"tables/experiment_effects.csv")
+    uncertainty_columns = [
+        "incremental_contribution_after_media_per_prospect_se",
+        "incremental_contribution_after_media_per_prospect_ci_lower",
+        "incremental_contribution_after_media_per_prospect_ci_upper",
+        "incremental_contribution_after_media_se",
+        "incremental_contribution_after_media_ci_lower",
+        "incremental_contribution_after_media_ci_upper",
+    ]
+    # Truncating unrelated future source rows can change DuckDB's reduction
+    # order for DOUBLE sample variance. Allow only sub-picodollar roundoff in
+    # the six variance-derived SE/CI fields; financial points, dates, counts,
+    # conversion measures, and every other column must still agree exactly.
+    pd.testing.assert_frame_equal(expected.drop(columns=uncertainty_columns),
+                                  actual.drop(columns=uncertainty_columns),check_exact=True)
+    pd.testing.assert_frame_equal(expected[uncertainty_columns],actual[uncertainty_columns],
+                                  check_exact=False,rtol=0,atol=1e-12)
 
 
 @pytest.fixture
@@ -203,8 +223,11 @@ def isolated_model_inputs(tmp_path, monkeypatch):
     ]).to_csv(table/"cohort_acquisition_costs.csv",index=False)
     pd.DataFrame([dict(cohort_month="2024-01-01",age_month=0,n_acquired=10,acquisition_spend=1800)]).to_csv(table/"cohort_cash_economics.csv",index=False)
     monkeypatch.setattr(analysis,"validate_analysis",lambda output:{"status":"test fixture"})
-    draws={"hazard_beta":np.zeros((model.DRAWS,6)),"revenue_beta":np.zeros((model.DRAWS,6))}
-    diagnostic={'final_two_window_relative_loss_change':0.,'retention_pearson_dispersion':1.,'revenue_pearson_dispersion':1.}
+    draws={'mean_beta':np.zeros((model.DRAWS,5)), 'concentration_beta':np.zeros((model.DRAWS,4)),
+           'cohort_scale':np.zeros(model.DRAWS), 'cohort_z':np.zeros((model.DRAWS,24)),
+           'revenue_beta':np.zeros((model.DRAWS,6)), 'revenue_shape':np.full(model.DRAWS,4.)}
+    diagnostic={'max_r_hat':1.,'min_ess':1000.,'divergences':0,'parameter_summary':[],
+                'retention_pearson_dispersion':1.,'revenue_pearson_dispersion':1.}
     monkeypatch.setattr(model,"_posterior",lambda *args:(draws,diagnostic))
     monkeypatch.setattr(model,"_backtest",lambda *args:(pd.DataFrame({"fixture":[1]}),{"fixture":True,'diagnostic':diagnostic}))
     monkeypatch.setattr(model,"_valuation_backtest",lambda *args:(pd.DataFrame({"fixture":[1]}),{"fixture":True,'diagnostic':diagnostic}))

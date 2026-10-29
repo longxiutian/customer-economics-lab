@@ -1,0 +1,10 @@
+{
+  "code_sha256": "e148704b2904c8792d8ec1b361e784006872ea9bd02535f7d186e844289ae638",
+  "input_hashes": {
+    "tables/cohort_age_summary.csv": "ce4a8d46de1d8bcd559b968e5513bcdcb0b8173239f6b32dc52249283f622c9a"
+  },
+  "output_hashes": {
+    "benchmark_summary.json": "becdb7f85312e1a39df210b69e74b1f276d5acc9f8166d62618d3f6409491389",
+    "tables/orduz_benchmark.csv": "2c3428fa8a39a9d8e86b97c7bb31bd90ac0d66eed620f99f80f8249d8dd3384e"
+  }
+}

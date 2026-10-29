@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from cohort_lab.analysis import build_views, validate_analysis
-from cohort_lab.data import SCHEMAS, generate_data, validate_data
+from cohort_lab.data import SCHEMAS, SCHEMA_VERSION, generate_data, validate_data
 
 
 def _seal(folder, as_of="2024-04-01T00:00:00Z"):
@@ -17,7 +17,7 @@ def _seal(folder, as_of="2024-04-01T00:00:00Z"):
         with p.open(newline="", encoding="utf-8") as f:
             n = len(list(csv.DictReader(f)))
         files[name] = {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(), "row_count": n}
-    manifest = {"schema_version": "1.0", "dataset_version": "fixture", "synthetic_seed": 0,
+    manifest = {"schema_version": SCHEMA_VERSION, "dataset_version": "fixture", "synthetic_seed": 0,
                 "data_as_of": as_of, "timezone": "UTC", "currency": "USD", "files": files,
                 "definitions": {"fixture": "Independent three-month hand ledger."}}
     (folder / "data_manifest.json").write_text(json.dumps(manifest, sort_keys=True), encoding="utf-8")

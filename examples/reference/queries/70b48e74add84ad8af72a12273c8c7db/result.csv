@@ -1,0 +1,3 @@
+cohort_month,age_month,calendar_month,n_acquired,n_retained,n_paying,net_revenue,variable_cost,contribution,net_revenue_per_payer,ledger_revenue_gap,ledger_cost_gap,ledger_contribution_gap
+2024-01-01,0,2024-01-01,141,141,141,8065.75,4837.0,3228.75,57.2,0.0,0.0,0.0
+2024-01-01,1,2024-02-01,141,123,123,7413.25,4322.0,3091.25,60.27,0.0,0.0,0.0
