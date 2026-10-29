@@ -1,10 +1,11 @@
 {
-  "analysis_code_sha256": "e4cd6839f7eae4b1144dd9a3af570af9d6362d88f73192953f2c9ed629abec65",
+  "analysis_code_sha256": "23c68226917edd2e173c0b8de56b7b4e63b6ce78188029affd94350e593f5482",
   "duckdb_version": "2.0.0",
   "executed_sql_hashes": {
     "00_sources.sql": "f71568f08c29b511c3545a53e5c3941c9750a843373419a20338e5b77c124ec4",
     "01_views.sql": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a",
-    "02_exports.sql": "962711b25c9020132e0748dedbcb285ca49eb00a7df992c570e39ef786cf01c9",
+    "02_exports.sql": "c201e33b9d07400f6496c77f7e006a60630ae197d2fe1e83809f027b7d4d0050",
+    "02_friction.sql": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129",
     "03_summary.sql": "b2ffe30dcb16b4a1cbe1f1379c7f41344f20212302429b41234211b2eec99c04"
   },
   "input_csv_hashes": {
@@ -32,12 +33,20 @@
     "customer_month.csv": "3bef6e11692af70524770c250a1b8dba089e4dfb9f4ba580dc2425cfbb00753f",
     "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
     "experiment_summary.csv": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc",
+    "friction_cohort_segments.csv": "3ee91d24013c4060414c160e1f54bba43b27fa2bdd75a47d7cdef6eec0c183b4",
+    "friction_cohort_summary.csv": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
+    "friction_matched_comparison.csv": "995d7d4b7b88728d7beeb418fa41f0bc49da9968d02a60ca2eb9ac5175f1721d",
+    "friction_segment_summary.csv": "9c16185d34fb4ef6056c639506c4656f4a0f1f65f80755e67b8314080575b171",
+    "friction_source_audit.csv": "303598a08ace6f75c84902022b37ec925736d9b27eb4c861ce3fc755c01bdf49",
+    "friction_subjects.csv": "a4fed44132628a96499558d5ec22ecac0b5f9b5cf2aeea30dc2667e6fc321a23",
+    "friction_timing_audit.csv": "7db7c4e05c74b3d4e0470a241ea10dc420e45057e9c0d7761d76314ac0a7a35d",
     "segmentation_comparison.csv": "d14b65521fab9d858a16175d3924b9f3ec5e03f7fa316b0422b4261d0f700e81",
     "segmentation_profile.csv": "bd29e96eef73e893047eb410588bbb168188f95dc53bd08248d28bde15722c47"
   },
   "schema_version": "1.0",
   "source_sql_hashes": {
-    "01_views.sql": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a"
+    "01_views.sql": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a",
+    "02_friction.sql": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129"
   },
-  "summary_sha256": "f73bb7932c43da67dbfc391770d1c5e48b7a2d7d23a79479fb0586cfae3aead3"
+  "summary_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898"
 }

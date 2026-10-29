@@ -1,0 +1,2 @@
+exposure_days,all_acquired,acquired_experimental,other_nonexperimental_channels,eligible_paid_non_test,incomplete_exposure,diagnostic_customers,age1_observed_customers,mature_customers,renewals_before_landmark,earliest_renewal_days,feature_window_violations,in_window_effective_cancellations,in_window_period_ends,in_window_refunds,outcome_transactions_before_landmark
+27,5891,188,0,5703,0,5703,5410,4278,0,27.958333333333332,0,0,0,342,0

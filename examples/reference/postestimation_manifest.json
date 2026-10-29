@@ -1,0 +1,32 @@
+{
+  "code_sha256": "6e62aecfd03878331e15d0c5e2ea9071fc4f91a5cea003b40996c11ba941059e",
+  "comparison_cohort": "2024-07-01",
+  "draws_sha256": "11b29e1ec30b13e07018b7951573cb00eb1122a884b9b8a6fcb5e9483c50a55f",
+  "input_hashes": {
+    "cohort_acquisition_costs.csv": "b6f1e4f67d7ea6115f274898ffc09a322cae8d608939eb80f71da89aa6752f0e",
+    "cohort_age_ex_tests.csv": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6",
+    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
+    "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
+    "cohort_valuation_by_segment.csv": "2d6cb771a3a19c01eebb136a8f3828b1fbc3d9f4b21cfa53ac97ec6f46b0539f",
+    "forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b"
+  },
+  "model_code_sha256": "0fc92f4ce6c76e186f949f4d8bd6254173ce70f092832d5a68f3677c41699fe6",
+  "model_manifest_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368",
+  "output_hashes": {
+    "segment_forecast_curves.csv": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
+    "strategic_rank_stability.csv": "c84e72b45729e9bb70e718931a83030f746cf434fa9a1b74b41d62600c3b69f0",
+    "strategic_segment_breakout.csv": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
+  },
+  "reconciliation": {
+    "atol": 1e-08,
+    "cells": 98,
+    "cohorts": 24,
+    "rtol": 1e-09,
+    "status": "passed"
+  },
+  "refit": false,
+  "scope": "Acquisition channel \u00d7 baseline stated need only. Observed values spliced to conditional expected forecasts from existing draws. Bands are 5th\u201395th parameter percentiles; fixed cost ratios and no customer-process uncertainty. Average CAC and value do not identify marginal or causal returns.",
+  "selected_cohort": "2025-07-01",
+  "selection": "Latest four-cell paid cohort with >=6 observed receipts and no experimental buyers; compare same month one year earlier. Selection uses maturity and assignment, never economic outcomes.",
+  "version": 1
+}

@@ -23,10 +23,16 @@ def test_triangle_numeral_color_is_economic_not_background_contrast():
     plt.close(fig)
 
 
-def test_extrapolation_is_early_and_each_major_section_has_a_divider():
+def test_model_follows_company_economics_and_precedes_forecast_results():
     text=(report.ROOT/"templates/customer-economics-report.tex.j2").read_text(encoding="utf-8")
     assert text.index("What the model contributes")<text.index("{retention-forecast}")
-    assert text.index("{retention-forecast}")<text.index("{retention-triangle}")<text.index("ltv-and-cac.pdf")
+    assert text.index("{retention-triangle}")<text.index("{cohort-layers}")<text.index("{retention-forecast}")<text.index("ltv-and-cac.pdf")
+    assert text.index("The renewal mechanism")<text.index("{retention-forecast}")
+    assert r"\SectionDivider{06}{Model-based forecasting of cohort trajectories}" in text
+    title="Studio North: are we moving in the right direction? A customer-base analysis of cohort-based LTV"
+    assert r"\ReportCover{"+title+"}" in text
+    assert text.index(r"\ReportCover{")<text.index(r"\ReportContents")<text.index(r"\PageTitle{EXECUTIVE SUMMARY}")
+    assert "All records describe an illustrative business and are synthetic." not in text
     assert text.count(r"\ReportFigure{retention-forecast}")==1
     assert text.count(r"\SectionDivider{")==9
     assert r"\SectionDivider{APPENDIX}" in text

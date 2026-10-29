@@ -1,6 +1,9 @@
 \documentclass[10pt]{article}
 \usepackage{labreport}
 \begin{document}
+\ReportCover{Studio North: are we moving in the right direction? A customer-base analysis of cohort-based LTV}
+\ReportContents
+\ReportEntry{Executive summary}
 \PageTitle{EXECUTIVE SUMMARY}{Studio North: is growth\newline becoming more valuable?}{Customer acquisition, monthly renewal and contribution economics | 24 monthly acquisition cohorts, 2024-01 through 2025-12; data cutoff 2026-01-01}
 \Section{The business and the decision}
 Studio North sells a monthly creative-work membership to independent professionals. Templates support immediate tasks; guided learning builds skills. Members choose standard or premium plans, may buy add-ons, and decide monthly whether to renew. Search and partner workshops acquire customers seeking time savings or stronger skills.
@@ -25,13 +28,13 @@ Ex-test CAC / cash & \$107.67 / -\$1.16 & \$85.31 / \$45.80 & Same joining windo
 \Evidence{The later window includes 98 experimental buyers and \$650 of test spending; the earlier window has none. Sensitivity rows exclude both arms and their receipts. Cash improves by \$46.95 excluding tests, versus \$50.62 including them. Differences are computed from unrounded values.}
 Initial need is informative: build skill customers show \$40 more six-receipt contribution and 23 percentage points higher retention than save time customers; variation within each group remains substantial.
 \Section{Recommended management response}
-\textbf{Action.} Marketing and Analytics should verify that controls stayed protected before using later outcomes; otherwise run a longer test. Finance should monitor the ex-test \$45.80 six-month cash benchmark, not use it as an automatic causal gate. Product should investigate, using events and feedback, what changed for the later cohorts.
+\textbf{Action.} Marketing and Analytics should verify that controls stayed protected before using later outcomes; otherwise run a longer test. Finance should monitor the ex-test \$45.80 six-month cash benchmark, not use it as an automatic causal gate. Product should measure time to first useful outcome and test a specific onboarding change; the current event flags do not identify the cause of cohort improvement.
 Incremental contribution after media per assigned prospect: search / save time: \$1.91 over 31 days (95\% interval \$0.03 to \$3.78); partner / build skill: -\$0.34 over 30 days (95\% interval -\$2.33 to \$1.65). 1 of 2 intervals include zero; Search is encouraging; neither short window establishes lifetime returns.
 \Section{Conditions for revisiting the decision}
 Revisit the growth plan if later cohorts' six-month cash recovery falls toward the earlier window, if a valid longer campaign comparison fails to cover media cost, or if young-cohort outcomes fall materially below forecast. Historical blended CAC does not establish the return from another advertising dollar.
 
 
-\SectionDivider{01}{Studio North\newline and the customer experience}{The membership business, customer needs and possible sources of value and friction.}
+\SectionDivider{01}{Studio North and the customer journey}{The membership business, customer needs and possible sources of value and friction.}
 \PageTitle{01 / BUSINESS OVERVIEW}{The membership experience\newline behind the economics}{Studio North serves independent professionals seeking faster creative work or stronger skills.}
 Templates support immediate work; guided lessons build capabilities over repeated use. A monthly membership is valuable when those benefits recur often enough to justify the next payment. Optional workshops and add-ons expand spending but do not by themselves establish durable membership value.
 \ReportFigure{business-journey}{Conceptual. A broad conceptual journey through the Studio North membership. Benefits and friction points are possible experiences, not measured sentiment or population conversion rates.}{business-journey.png}{4.3in}
@@ -39,36 +42,25 @@ Templates support immediate work; guided lessons build capabilities over repeate
 An unclear plan choice can delay subscription. A difficult first task can prevent a member from experiencing value. Later, a lack of time or an unmet learning goal may weaken the reason to renew. These are business hypotheses for investigation; the source records do not establish their causes.
 \Section{Evidence available to the management team}
 The CRM records stated needs and baseline characteristics. Product events show activity, transactions show spending, renewal records show continuation, and feedback captures selected perceptions. Together, these sources support a more informative diagnosis than a renewal rate alone. Tables~\ref{tab:ucv-people}--\ref{tab:ucv-experiment-assignments} classify all eight sources using the Universal Customer View. The appendix documents parameters, validation and reproducibility.
-\Boundary{All records describe an illustrative business and are synthetic. Recorded variable costs and acquisition spending exclude fixed operating costs, financing and taxes; this analysis does not establish company profitability.}
 
-\SectionDivider{02}{Observed history\newline and the forecast horizon}{How a renewal model supports a common comparison of mature and newly acquired cohorts.}
-\PageTitle{02 / PURPOSE OF THE LTV MODEL}{Extrapolation makes young\newline cohorts comparable}{A common twelve-receipt horizon combines observed contribution with an explicit forecast of the unobserved remainder.}
-\Section{What the model contributes}
-Recent cohorts have not yet had the opportunity to demonstrate a full year of renewals. The retention model estimates how continuation varies across customers, acquisition channels, stated needs and joining months. It uses those patterns to forecast the remaining renewal path. A revenue model then translates retained membership into expected contribution, which is discounted and compared with acquisition cost.
-\ReportFigure{retention-forecast}{Observed and forecast. Observed and forecast retention for cohorts with complete, intermediate and minimal renewal histories. Solid points are observed; dashed continuations are forecasts. Examples are selected by history length, not outcome.}{retention-forecast.pdf}{3.3in}
-\Evidence{Saved model output: \Code{forecast_curve.csv}. Original cohort denominators are preserved. Shading shows the 5th--95th posterior parameter range; the vertical marker identifies the observation boundary.}
-\Section{The information behind each forecast}
-The mature cohort supplies a fully observed reference. The intermediate cohort combines its own renewal history with evidence from other cohorts. The newest cohort has only its acquisition month and therefore \textbf{zero observed renewal decisions}; its forecast depends primarily on comparable customers and model assumptions.
-\Boundary{Extrapolation supports an earlier assessment of cohort value; it does not turn future outcomes into observed facts. These bands describe parameter uncertainty in expected paths, excluding customer-level process variation and changes in the business. The model specification, historical prediction checks and valuation assumptions appear later in the report.}
-
-\SectionDivider{03}{Observed cohort economics}{Retention, contribution and acquisition-cost recovery at comparable customer ages.}
-\PageTitle{03 / OBSERVED COHORT ECONOMICS}{Customer retention\newline at comparable cohort ages}{A joining cohort contains customers whose first successful payment occurred in the same month. Future ages remain unobserved.}
+\SectionDivider{02}{Observed cohort economics}{Retention, contribution and acquisition-cost recovery at comparable customer ages.}
+\PageTitle{02 / OBSERVED COHORT ECONOMICS}{Customer retention\newline at comparable cohort ages}{A joining cohort contains customers whose first successful payment occurred in the same month. Future ages remain unobserved.}
 \ReportFigure{retention-triangle}{Observed. Customer retention for all 24 monthly acquisition cohorts and every observed age. Cells are percentages of the original cohort; blanks are unobserved. * marks test months, including buyers from both arms.}{cohort-retention-triangle.pdf}{6.0in}
-\Evidence{Saved SQL output: \Code{cohort_totals.csv}. The full age range is 0--23; age 0 is the first paid month. Rows follow individual cohorts; columns compare successive cohorts at the same age. No missing future month is assigned zero retention.}
+\Evidence{Saved SQL output: \Code{cohort_totals.csv}. The full age range is 0--23; age 0 is the first paid month. Rows follow individual cohorts; columns compare successive cohorts at the same age (presentation background: \SourceCite{bouhnick}{Bouhnick}). No missing future month is assigned zero retention.}
 \Section{Cohort age and calendar time}
 Every cohort starts at 100\% because acquisition defines its original denominator. Newer cohorts have shorter histories. Their shorter lines and blank cells do not establish shorter customer lifetimes. Figure~\ref{fig:all-cohort-trajectories} shows the same full cohort sequence as curves; Figure~\ref{fig:cohort-layers} recombines cohorts in calendar time.
 \Takeaway{An improving business should acquire cohorts that retain more customers at comparable ages, rather than relying only on a larger inflow of new customers.}
 
 \NewPage
-\PageTitle{03 / OBSERVED COHORT ECONOMICS}{Contribution and\newline acquisition-cost recovery}{All 24 cohorts | Cash balance uses recorded contribution, tracked acquisition cost and the original acquired-customer denominator.}
+\PageTitle{02 / OBSERVED COHORT ECONOMICS}{Contribution and\newline acquisition-cost recovery}{All 24 cohorts | Cash balance uses recorded contribution, tracked acquisition cost and the original acquired-customer denominator.}
 \ReportFigure{cash-triangle}{Observed. Cumulative cash after acquisition for every joining cohort, in dollars per original acquired customer. Red numerals indicate contribution below CAC; green numerals indicate break-even or beyond. An outline marks the first observed recovery of CAC. * marks test months, including both arms.}{cohort-cash-triangle.pdf}{5.9in}
 \Evidence{Saved SQL output: \Code{cohort_cash_economics.csv}. Each cell equals cumulative net revenue less incurred variable costs and tracked acquisition spending, divided by original cohort size. The blank region is unobserved. This is undiscounted cash, not total company profit or discounted LTV.}
 \Section{Acquisition efficiency and durability must move together}
 At age 5, six-month cash after acquisition changes from -\$1.16 to \$49.46 per original customer. The comparison uses January--June 2024 and the same joining months of 2025, weighted by acquired cohort size. Table~\ref{tab:executive-evidence} reports the matching retention, contribution and blended-CAC evidence. These are descriptive comparisons, not campaign effects.
 \Boundary{A new cohort may recover acquisition cost sooner because it costs less to acquire, generates more contribution per retained member, retains more members, or combines these changes. The retention and cash triangles together distinguish these sources of change.}
 
-\SectionDivider{04}{Cohort trajectories}{The relationship between member retention and revenue durability across the full sequence.}
-\PageTitle{04 / COHORT TRAJECTORIES}{Retention and revenue\newline across the cohort sequence}{Every monthly acquisition cohort is shown. Shared axes and one chronological color scale keep the comparisons aligned.}
+\SectionDivider{03}{Cohort trajectories}{The relationship between member retention and revenue durability across the full sequence.}
+\PageTitle{03 / COHORT TRAJECTORIES}{Retention and revenue\newline across the cohort sequence}{Every monthly acquisition cohort is shown. Shared axes and one chronological color scale keep the comparisons aligned.}
 \ReportFigure{all-cohort-trajectories}{Observed. All 24 customer-retention and revenue-retention curves. Older cohorts are red and newer cohorts are blue; each line ends at its last observed month.}{retention-and-revenue.pdf}{4.5in}
 \Evidence{Retained share uses original cohort membership; revenue retention uses each cohort's first-period revenue. Revenue can change because of the number of renewing members, their plan mix or add-on spending. Product activity is not a substitute for a renewal record.}
 \Section{Cohort trajectories at comparable ages}
@@ -77,8 +69,8 @@ The vertical position of differently colored curves at the \emph{same} age suppo
 Higher revenue retention can coexist with customer losses when remaining members upgrade or buy add-ons. A retention improvement should therefore be checked against contribution and acquisition recovery in Figure~\ref{fig:cash-triangle}, and against comparable customer groups in Figure~\ref{fig:channel-retention}.
 \Takeaway{The trajectory matters as well as the cutoff. A stronger first month does not establish longer customer life, while a customer-count decline can coexist with more spending by the members who remain.}
 
-\SectionDivider{05}{Customer segmentation}{Baseline customer differences, within-segment progress and implications for the operating plan.}
-\PageTitle{05 / CUSTOMER GROUPS}{Customer differences\newline and within-segment progress}{Observed renewal trajectories by acquisition channel and stated need; each panel uses the same axes and all 24 cohorts.}
+\SectionDivider{04}{Customer segmentation}{Baseline customer differences, within-segment progress and implications for the operating plan.}
+\PageTitle{04 / CUSTOMER GROUPS}{Customer differences\newline and within-segment progress}{Observed renewal trajectories by acquisition channel and stated need; each panel uses the same axes and all 24 cohorts.}
 \ReportFigure{channel-retention}{Descriptive comparison. The full cohort sequence within each channel-by-need group. The color key identifies acquisition month. Paid channels are shown; organic test-control cells are omitted.}{channel-segment-retention.pdf}{4.25in}
 \Evidence{Saved SQL output: \Code{cohort_age_summary.csv}. Curves divide retained members by the original cohort--channel--need cell. No missing future observations are filled with zeros.}
 \Section{Within-group diagnosis}
@@ -94,7 +86,7 @@ Partner / build skill & 69.7\% & 74.6\% & +4.9 pp\\
 \Evidence{Both experimental arms are excluded from this table and the fixed-mix calculation. The curves above include test buyers. Differences use unrounded values; the whole-company ex-test sensitivity appears in Table~\ref{tab:executive-evidence}.}
 
 \NewPage
-\PageTitle{05 / CUSTOMER GROUPS}{Segmentation explains\newline part of the economic variation}{Baseline characteristics define customer groups; their observed outcomes establish how useful those groups are for this decision.}
+\PageTitle{04 / CUSTOMER GROUPS}{Segmentation explains\newline part of the economic variation}{Baseline characteristics define customer groups; their observed outcomes establish how useful those groups are for this decision.}
 \Section{Economic differences across customer groups}
 Customers whose initial stated need is build skill produce \$39.59 more contribution over six receipts than those stating save time, on average. Their sixth-month retained share differs by 23.1 percentage points. This identifies an economically relevant customer distinction, not proof that changing a customer's need or acquisition channel would cause the same outcome.
 \TableCaption{segment-profile}{Six-receipt economics for the same mature paid customers, excluding both experimental arms. SD is the standard deviation of individual contribution within the stated-need group.}
@@ -108,29 +100,141 @@ save time & 2,276 & 47.2\% & \$103.28 & \$64.54\\
 The more durable group supports a longer relationship and a different cash-recovery profile. The less durable group may still be attractive at an appropriate acquisition cost, with a service proposition suited to its shorter use cycle. Product and Marketing can distinguish immediate task completion from ongoing capability development when designing onboarding and renewal communications.
 \Boundary{Segmentation is a useful summary of market heterogeneity, not a claim that members of a group are identical. These comparisons identify where to investigate or test a decision; they do not estimate the effect of moving customers between groups.}
 
-\SectionDivider{06}{Company economics}{How successive cohorts accumulate into an active membership base and operating contribution.}
-\PageTitle{06 / COMPANY ECONOMICS}{Retained cohorts determine\newline how growth accumulates}{The company is the sum of its acquisition cohorts at different ages, not the latest cohort scaled up.}
+\NewPage
+\PageTitle{04 / JOURNEY DIAGNOSTICS}{Recorded early steps offer\newline limited renewal separation}{Post-acquisition diagnostics | Completion, core use and onboarding feedback observed in the first 27 days after payment.}
+\Section{Return to the customer journey}
+The conceptual journey in Figure~\ref{fig:business-journey} distinguishes first value from regular use. Completion and core-use events show whether early steps occurred. Reports of difficulty getting started or finding features speak to first value; finding time speaks to regular use. None directly measures the effort of setup, the benefit of the first task, or the reason for cancellation.
+\TableCaption{friction-profile}{Descriptive outcomes by recorded early signal. Each row retains its original outcome-eligible customers, including subsequent nonrenewers. Contribution is per original customer at ages 1--5, excluding the acquisition month.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.27\linewidth}rrrrY@{}}\toprule
+\textbf{Recorded group} & \textbf{N, renewal 1} & \textbf{Retain 1} & \textbf{N, age 5} & \textbf{Retain 5} & \textbf{Ages 1--5 contribution}\\\midrule
+No core use recorded & 792 & 85.5\% & 632 & 58.9\% & \$100.35\\
+Core use recorded & 4,618 & 85.4\% & 3,646 & 57.9\% & \$97.78\\
+No completion recorded & 690 & 86.1\% & 520 & 58.5\% & \$98.16\\
+Completion recorded & 4,720 & 85.4\% & 3,758 & 58.0\% & \$98.16\\
+Finding features & 179 & 83.8\% & 143 & 61.5\% & \$101.85\\
+Finding time & 162 & 84.0\% & 125 & 53.6\% & \$96.00\\
+Getting started & 162 & 85.2\% & 121 & 61.2\% & \$103.09\\
+No recorded response & 3,550 & 85.5\% & 2,852 & 57.7\% & \$97.21\\
+No difficulty reported & 1,357 & 85.8\% & 1,037 & 58.6\% & \$99.94\\
+\bottomrule\end{tabularx}\par}
+\Evidence{Saved SQL: \Code{friction_segment_summary.csv}. Completion and core-use rows are separate, overlapping classifications; survey categories partition customers. First-renewal and age-5 columns have different maturity denominators. Refunds are assigned to their transaction month, as in the accounting tables.}
+\Section{What survives an aligned comparison}
+After standardizing acquisition year, channel and need, the first-renewal gap is +0.7 percentage points (95\% interval -2.1 to +3.4) for no completion versus completion, and +0.1 percentage points (95\% interval -2.4 to +2.7) for no core use versus core use. These estimates provide little separation, but their intervals do not establish equivalence. The signals record whether steps occurred, not the effort required or the value experienced.
+\Section{Survey coverage limits the diagnosis}
+Onboarding responses are recorded for 1,967 of 5,703 customers (34.5\%). Invitations are unavailable, so no response combines uninvited people and people who did not answer. Difficulty categories are nominal and self-reported; a missing response is not a report of no difficulty.
+\Boundary{These are recorded behaviours and selected perceptions, not identified causes of churn. The comparisons neither establish that friction is harmless nor estimate the effect of changing onboarding. Table~\ref{tab:friction-adjusted} reports all adjusted first-renewal contrasts; Table~\ref{tab:friction-secondary} follows the five completion, core-use and reported-difficulty contrasts through their economic outcomes.}
+
+\NewPage
+\PageTitle{04 / COHORT AND JOURNEY}{Renewal improves while\newline recorded early steps vary little}{All 24 joining cohorts, split by baseline stated need | Both randomized arms are excluded.}
+\ReportFigure{journey-cohorts}{Descriptive comparison. Early completion, core use and survey response above; first-renewal and age-5 retention below. Outcomes stop at the last eligible cohort. All prevalence points have complete 27-day exposure.}{journey-cohort-diagnostics.pdf}{4.3in}
+\Evidence{Saved SQL: \Code{friction_cohort_summary.csv}; detailed cohort--channel--need--signal counts: \Code{friction_cohort_segments.csv}. Channels are pooled within each need in this figure. Test buyers are excluded throughout; remaining members in test months are retained. Unobserved outcomes are blank, not zero.}
+\Section{Population and timing}
+5,891 acquired customers minus 188 buyers assigned to either experimental arm leaves 5,703 paid non-experimental customers with a complete 27-day window. First renewal is observed for 5,410 (Jan 2024--Nov 2025); age 5 for 4,278 (Jan 2024--Jul 2025). All assigned prospects remain in the campaign analysis, including nonbuyers.
+\Section{An operating question the records cannot yet answer}
+Relatively stable event prevalence alongside improving retention does not identify the mechanism of improvement. An easier experience could help members without changing whether a completion or core action is recorded. Conversely, a member may skip a recorded step and still obtain value. Product should measure time to first useful outcome and reasons for cancellation, then randomize a specific onboarding change within baseline need and acquisition channel.
+\Takeaway{Use initial need to distinguish the job members seek to accomplish. Use early activity and feedback to investigate that experience; the current signals do not justify automatic churn targeting or a claim that onboarding caused the cohort gains.}
+
+\SectionDivider{05}{Company economics}{How successive cohorts accumulate into an active membership base and operating contribution.}
+\PageTitle{05 / COMPANY ECONOMICS}{Retained cohorts determine\newline how growth accumulates}{The company is the sum of its acquisition cohorts at different ages, not the latest cohort scaled up.}
 \ReportFigure{cohort-layers}{Observed. The company's retained membership base as the sum of all 24 acquisition cohorts in calendar time.}{company-cohort-layers.pdf}{3.0in}
 \Evidence{Saved SQL output: \Code{company_month.csv}. Each layer is a joining cohort's active customers at the displayed calendar month. Layer totals are reconciled to independently saved company totals before plotting.}
 \ReportFigure{company-cash}{Observed. Monthly contribution before acquisition compared with tracked acquisition spending.}{company-economics.pdf}{1.6in}
 \Section{Scale and cash recovery are separate tests}
-New acquisition adds customers immediately. Renewals preserve older layers and their contribution, reducing the replacement acquisition required to sustain scale. The lower chart compares recorded contribution with acquisition spending in each calendar month; it is not cumulative retained customers or a profit statement.
+The acquisition--retention--spending decomposition follows \SourceCite{mccarthy2017}{McCarthy, Fader and Hardie (2017)}. New acquisition adds customers immediately. Renewals preserve older layers and their contribution, reducing the replacement acquisition required to sustain scale. The lower chart compares recorded contribution with acquisition spending in each calendar month; it is not cumulative retained customers or a profit statement.
 In 2025-12, recorded contribution was \$103,343 and acquisition spending was \$21,915, leaving \$81,428 before fixed costs, financing and taxes. This period result should be read alongside the age-aligned cohort comparison, rather than used as a substitute for it.
 \Section{Operating implication}
 The operating review benefits from both the common-age economics of each joining cohort and the company's accumulated contribution. A favorable acquisition metric can coexist with slower cash recovery when renewals weaken. A growing customer base can also conceal deterioration if management replaces departing customers with increasingly costly new ones.
 \Boundary{Cash payback is undiscounted: the first age at which cumulative contribution covers the acquisition investment. The LTV calculation that follows discounts expected monthly contribution and uses a common, explicit horizon.}
 
-\SectionDivider{07}{Customer value forecasts}{The renewal model, contribution valuation and the assumptions behind immature-cohort LTV.}
-\PageTitle{07 / MODEL AND VALUE FORECAST}{Monthly renewal\newline and the valuation model}{Hierarchical shifted-Beta-Geometric retention + Gamma gross revenue; NumPyro NUTS}
-\Section{How the model represents the business}
-Members differ in their underlying propensity to renew. The model learns how that distribution varies with initial need, acquisition channel and joining cohort. A cohort's average churn can decline as its more durable members remain; this need not mean each individual becomes more loyal. Completed renewals provide evidence, while pending and future decisions remain unobserved.
+\SectionDivider{06}{Model-based forecasting of cohort trajectories}{The renewal and revenue mechanisms that extend incomplete cohort histories to a common decision horizon.}
+\PageTitle{06 / MODEL MECHANISM}{How membership histories become cohort forecasts}{Hierarchical shifted-Beta-Geometric retention + Gamma gross revenue; NumPyro NUTS}
+\Section{The renewal mechanism}
+The shifted-Beta-Geometric mechanism follows \SourceCite{fader2007}{Fader and Hardie (2007)}. Each member has a persistent propensity to leave at a monthly renewal. Within a joining-cohort, channel and stated-need cell $g$, the model represents that heterogeneity with a Beta distribution. Members with higher churn propensity tend to leave earlier, so the surviving group's average churn falls even when no individual's underlying propensity changes.
+\[
+p_{i,g}\sim\operatorname{Beta}(\alpha_g,\beta_g),\qquad
+h_g(t)=\frac{\alpha_g}{\alpha_g+\beta_g+t-1},\qquad t\geq1.
+\]
+Here $p_{i,g}$ is member $i$'s latent monthly churn propensity and $h_g(t)$ is churn among members who reach renewal $t$. The first paid receipt is age zero; it establishes the acquired population and supplies no renewal trial. The count of customers who renew is modeled from the previous month's survivors:
+\[
+N_{g,t}\mid N_{g,t-1}\sim\operatorname{Binomial}\!\left(N_{g,t-1},1-h_g(t)\right).
+\]
+\Section{What differs between customer groups}
+The mean of the Beta distribution varies with baseline need, acquisition channel and joining-month trend, plus a partially pooled cohort effect. Its concentration varies with need and channel. Pooling lets a young cohort borrow evidence from older cohorts while allowing observed cohort differences. The model uses these baseline attributes; later activity and feedback are diagnostic evidence, rather than forecasting inputs.
+\Section{Revenue and contribution}
+A Gamma model adapted from \SourceCite{orduz2024}{Orduz (2024)} represents payment revenue. Its expected total is the number of retained members multiplied by expected spending per retained member:
+\[
+\operatorname{E}[R_{g,a}\mid N_{g,a}]=N_{g,a}\,r_{g,a}.
+\]
+Expected spending $r_{g,a}$ varies with customer age, joining month, need and channel. The payment target is after discounts and before refunds. Observed refund and variable-cost ratios translate future payment revenue into contribution. Actual contribution is kept wherever it is observed; only the unobserved remainder is forecast.
+\Section{Estimation and scope}
+NumPyro NUTS estimates the model from completed renewal and payment histories on CPU. Pending decisions and future ages remain unobserved. Cancellation is absorbing in this business. Forecasts start from the last actual survivor count and cover each cohort's first twelve monthly receipts. The appendix reports priors, parameter estimates and chronological validation; the separate Orduz-inspired neural model supplies a comparison, not executive LTV.
+\Boundary{The bands describe posterior parameter uncertainty conditional on the fitted model and fixed economic ratios. They exclude future customer-level variation, uncertain costs and business-regime changes. With no calendar-time term, a common disruption can affect multiple cohorts outside the displayed bands.}
+\NewPage
+\PageTitle{06 / FORECAST TRAJECTORIES}{Extrapolation makes young\newline cohorts comparable}{A common twelve-receipt horizon combines observed contribution with an explicit forecast of the unobserved remainder.}
+\Section{What the model contributes}
+Figure~\ref{fig:retention-forecast} applies the preceding model to cohorts with different amounts of observed renewal history.
+\ReportFigure{retention-forecast}{Observed and forecast retention for cohorts with complete, intermediate and minimal renewal histories. Solid points are observed; dashed continuations are forecasts. Examples are selected by history length, not outcome.}{retention-forecast.pdf}{3.3in}
+\Evidence{Saved model output: \Code{forecast_curve.csv}. Original cohort denominators are preserved. Shading shows the 5th--95th posterior parameter range; the vertical marker identifies the observation boundary.}
+\Section{The information behind each forecast}
+The mature cohort supplies a fully observed reference. The intermediate cohort combines its own renewal history with evidence from other cohorts. The newest cohort has only its acquisition month and therefore \textbf{zero observed renewal decisions}; its forecast depends primarily on comparable customers and model assumptions.
+\Boundary{Extrapolation supports an earlier assessment of cohort value; it does not turn future outcomes into observed facts. These bands describe parameter uncertainty in expected paths, excluding customer-level process variation and changes in the business. The preceding page explains the mechanism. Appendix A1--A2 gives the specification and estimates, A4--A6 reports model checks, and Section 7 defines valuation.}
+
+\SectionDivider{07}{Customer value forecasts}{Contribution valuation, acquisition-segment strategy and the assumptions behind immature-cohort LTV.}
+\PageTitle{07 / CONTRIBUTION VALUE}{A common horizon connects\newline renewal to acquisition economics}{Twelve monthly receipts | Observed contribution is retained; only the unobserved remainder is forecast.}
+\Section{From the forecast path to value}
+The model explained in Section 6 supplies the expected contribution path, preserving the retention heterogeneity emphasized by \SourceCite{fader2010}{Fader and Hardie (2010)}. Discount each receipt, sum twelve receipts, then subtract the acquisition cost per original customer. The first paid receipt is age zero and is discounted by one month. Cash payback instead uses the first undiscounted crossing of cumulative contribution over CAC.
 \[\operatorname{net\,LTV}_{H}=\sum_{a=0}^{H-1}\frac{\operatorname{E}[\text{contribution}_{a}\mid\text{observed history}]}{(1+d)^{a+1}}-\operatorname{CAC}.\]
-\Evidence{A separate revenue model estimates spending per retained member. Observed revenue and contribution are preserved; only the remaining receipts are forecast, with recorded cost and refund relationships held fixed. Values cover each cohort's first twelve monthly receipts, discounted at 1\% per month. The model has no calendar-time effect: common disruptions can move cohorts together and are outside these parameter bands. The main retention model extends Fader--Hardie's shifted-Beta-Geometric approach; the revenue model adapts Orduz's Gamma structure. An Orduz-inspired neural retention model is a separate validation benchmark, not the source of executive LTV. Parameter estimates and held-out checks appear in the appendix.}
+\Evidence{A separate revenue model estimates spending per retained member. Observed revenue and contribution are preserved; only the remaining receipts are forecast, with recorded cost and refund relationships held fixed. Values cover each cohort's first twelve monthly receipts, discounted at 1\% per month. The model has no calendar-time effect: common disruptions can move cohorts together and are outside these parameter bands. The horizon covers twelve receipts, not an infinite lifetime. Bands describe uncertainty in expected value conditional on the model.}
 \ReportFigure{ltv-cac}{Observed and forecast. Common-horizon contribution LTV and blended CAC for all cohorts. The lower strip identifies the share of each LTV estimate that is forecast.}{ltv-and-cac.pdf}{2.35in}
 \Evidence{Posterior parameter uncertainty conditional on the single-Beta model and fixed future economics; not a full predictive interval. The lower strip shows the forecast share of common 12-month LTV. Dotted markers identify experiment months with organic control buyers in the denominator. Blended CAC divides tracked spending by all acquired customers; it is not the causal cost of the next customer.}
 \Section{Management interpretation}
 Among cohorts with all twelve receipts observed, net contribution value increases from \$55.83 for 2024-01 to \$106.18 for 2025-01. The newest cohort, 2025-12, is separate: \$180 net value, 90\% forecast, with a 5th--95th parameter range of \$168 to \$192. Its projection depends on the cohort-trend term and customer mix, with no observed renewal trial. In the historical one-receipt comparison, the model over-forecast value by \$20.15; that miss illustrates risk beyond the parameter band.
 \Boundary{Future net revenue and contribution shares of payment revenue use observed channel-by-need-by-age shares, with the same group's observed renewal ages (age>=1) as fallback. Shares are fixed assumptions, not causally identified or assigned posterior uncertainty. Predicted customer value is not experimentally identified campaign return. A favorable average LTV-to-CAC comparison still requires a cash-recovery constraint and evidence that the next acquisition investment creates additional value.}
+
+\NewPage
+\PageTitle{07 / STRATEGIC SEGMENTATION}{Acquisition groups differ\newline in value and cash recovery}{Post-estimation breakout | 2025-07, the latest cohort with six observed receipts and no experimental buyers.}
+\Section{Value after a meaningful observed history}
+\TableCaption{strategic-value}{Twelve-receipt contribution value per acquired customer. Value before CAC is discounted contribution; net value subtracts CAC once. Bands reflect 5th--95th parameter uncertainty in the unobserved expected remainder; realized receipts and CAC are fixed. They exclude customer-level variation and are not predictive ranges for realized cell outcomes.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.23\linewidth}rrYYY@{}}\toprule
+\textbf{Acquisition group} & \textbf{N} & \textbf{CAC} & \textbf{Value before CAC} & \textbf{Net value (5th--95th)} & \textbf{Forecast}\\\midrule
+Partner / build skill & 71 & \$81 & \$299 & \$218 (\$216--\$220) & 47\%\\
+Partner / save time & 47 & \$72 & \$215 & \$143 (\$141--\$146) & 41\%\\
+Search / build skill & 61 & \$85 & \$284 & \$198 (\$196--\$201) & 46\%\\
+Search / save time & 87 & \$79 & \$187 & \$108 (\$106--\$110) & 38\%\\
+\bottomrule\end{tabularx}\par}
+\Evidence{Saved outputs: \Code{strategic_segment_breakout.csv} and \Code{postestimation_manifest.json}. Forecast share is the unobserved share of discounted contribution before CAC. Acquisition costs are supported by channel--need targeted spending. No costs or LTV are assigned to post-acquisition diagnostic groups.}
+\Section{Same joining month, one year apart}
+\TableCaption{strategic-comparison}{Each entry shows 2024-07 / 2025-07; N is the original acquired count. Retention is observed at age 5. Cash payback is observed for both cohorts and counts receipts from one. The newer cohort's twelve-receipt net value is partly forecast.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.23\linewidth}YYYY@{}}\toprule
+\textbf{Acquisition group} & \textbf{N} & \textbf{Age-5 retained} & \textbf{Net 12-receipt value} & \textbf{Payback receipt}\\\midrule
+Partner / build skill & 51 / 71 & 68.6\% / 81.7\% & \$143 / \$218 & 5 / 3\\
+Partner / save time & 35 / 47 & 37.1\% / 59.6\% & \$40 / \$143 & 7 / 4\\
+Search / build skill & 45 / 61 & 80.0\% / 77.0\% & \$139 / \$198 & 5 / 4\\
+Search / save time & 74 / 87 & 54.1\% / 49.4\% & \$71 / \$108 & 6 / 4\\
+\bottomrule\end{tabularx}\par}
+\Evidence{The earlier cohort has all twelve receipts observed. Differences between the two joining cohorts are descriptive; customer mix, the acquisition environment and other conditions may have changed. Selection uses maturity and experimental assignment, not unusually favorable outcomes.}
+Search's single-month age-5 shares changed by -3.0 percentage points for build skill; -4.6 percentage points for save time. These small cells do not establish a retention decline. The pooled January--June comparison remains the within-group retention evidence. Value can rise through lower CAC or higher spending per member without stronger retention.
+\Section{Does the need ranking recur across cohorts?}
+\TableCaption{strategic-rank}{Build-skill minus save-time net value within the same channel and joining month. Pairs have at least six observed receipts and exclude any pair containing experimental buyers.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}YYYY@{}}\toprule
+\textbf{Channel} & \textbf{Positive gap / pairs} & \textbf{Median gap (range)} & \textbf{Fully observed: positive / pairs}\\\midrule
+Partner & 19 / 19 & \$79 (\$19 to \$105) & 13 / 13\\
+Search & 18 / 18 & \$76 (\$29 to \$121) & 13 / 13\\
+\bottomrule\end{tabularx}\par}
+\Evidence{Saved output: \Code{strategic_rank_stability.csv}. Some values include forecast remainders; the final column restricts to fully observed twelve-receipt pairs. This is descriptive consistency across historical cohorts, not independent forecast validation.}
+\Section{Decision implication}
+Within 2025-07, build-skill customers have mean net twelve-receipt value of \$209, versus \$120 for save-time customers, weighted by acquired cell size. This is a candidate distinction for acquisition and service tests; it does not show what the next advertising dollar will earn.
+\Boundary{The newest cohort remains a different decision problem: it has no observed renewal and is predominantly forecast. Use the mature-history breakout to frame a test, and the forecast-dependence display in Figure~\ref{fig:ltv-cac} to keep extrapolation risk visible. Neither average value nor average CAC establishes an optimal budget allocation.}
+
+\NewPage
+\PageTitle{07 / STRATEGIC TRAJECTORIES}{The segment opportunity\newline has a cash timeline}{2025-07 | Solid points are observed; dashed continuations are forecasts from the same fitted model.}
+\ReportFigure{strategic-paths}{Observed and forecast acquisition-segment paths. The upper row shows retention; the lower row shows undiscounted cumulative contribution less CAC per original customer. The vertical marker separates six observed receipts from the remaining forecast.}{strategic-segment-paths.pdf}{4.2in}
+\Evidence{Saved output: \Code{segment_forecast_curves.csv}. Shading is the 5th--95th posterior parameter range. Original denominators remain fixed. Narrow conditional bands exclude future customer-level variation, uncertain costs and changes in the business. Latest non-experimental four-cell cohort with six observed receipts: 2025-07. Same-month prior-year comparator: 2024-07. All 98 acquisition-cell values and all 24 cohort paths reconcile to the saved baseline before selection; no refit.}
+\Section{Two distinct management responses}
+\textbf{Build-skill acquisition.} Its more durable economics make this a candidate for a controlled acquisition test with a cash-payback constraint. The favorable partner cell does not establish that increasing partner spend will produce the same customers at the same CAC.
+
+\textbf{Save-time experience.} Investigate whether a shorter use cycle reflects successful task completion, limited recurring need or an experience problem. The current event and survey flags do not distinguish those explanations. Test the proposition or onboarding change, then evaluate incremental contribution and cash over a stated follow-up window.
+\Boundary{A segment can have high predicted buyer value while a campaign has little incremental effect. The randomized evidence in the next section determines what can be said about the tested campaigns; the breakout identifies where a new test may be informative.}
 
 \SectionDivider{08}{Campaigns and management action}{Incremental campaign evidence, investment conditions and accountable next steps.}
 \PageTitle{08 / CAMPAIGNS AND ACTION}{Campaign incrementality\newline and investment decisions}{Randomized assignment includes all eligible prospects, including those who never purchase. Each test keeps its own control and follow-up window.}
@@ -155,7 +259,7 @@ For each arm, net revenue less recorded variable costs gives contribution. The d
 \par\begin{tabularx}{\linewidth}{@{}p{.18\linewidth}YY@{}}\toprule
 \textbf{Accountable team} & \textbf{Next action} & \textbf{Decision evidence}\\\midrule
 Marketing + Finance & Assess a larger budget using longer-window incremental contribution and cash recovery. & Age-aligned value and cash, alongside uncertainty in incremental returns.\\
-Product + Operations & Investigate renewal changes using product events and customer feedback. & Renewal events, product actions and expressed customer evaluations.\\
+Product + Operations & Instrument time to first useful outcome and test a specific onboarding change within baseline need groups. & Protected controls; subsequent renewal and contribution, including nonrenewers.\\
 Marketing + Analytics & Verify control protection before extending the comparison; otherwise run a longer test. & Contribution after media per assigned prospect, including nonbuyers, with uncertainty.\\
 Data + Analytics & Refresh source exports and review forecast errors before the next decision. & SQL reconciliation, model holdouts, parameter output and file hashes.\\
 \bottomrule\end{tabularx}\par
@@ -250,7 +354,7 @@ Retained-count WAPE & 4.3\% & Not reported & Retained customers, not revenue\\
 Revenue WAPE & 5.9\% & 12.8\% & Withheld calendar months\\
 12-month LTV MAE & \$4.02 & \$24.67 & Value per original customer\\
 \bottomrule\end{tabularx}\par
-\Evidence{On the same 258 held-out cells, retained-count MAE is 1.215 for sBG, 1.335 for the Orduz-inspired 4-hidden-unit network, and 2.424 for the naive baseline. The network uses variational inference and a conditional monthly churn likelihood; it does not supply executive LTV. Revenue WAPE evaluates the main Gamma revenue model, not the retention-only network.}
+\Evidence{On the same 258 held-out cells, retained-count MAE is 1.215 for sBG, 1.335 for the Orduz-inspired 4-hidden-unit network, and 2.424 for the naive baseline. The network uses variational inference and a conditional monthly churn likelihood; it does not supply executive LTV. Revenue WAPE evaluates the main Gamma revenue model, not the retention-only network. The neural architecture is adapted from \SourceCite{orduz2024}{Orduz (2024)}; the bundled source-notebook edition and its provenance are listed in References.}
 
 \Section{What the comparison can establish}
 The model and each baseline use the same withheld outcome cells. Their errors are reported in the stated units and at the same forecast horizon. A better retained-count forecast need not produce the better revenue forecast, and predictive performance does not establish a campaign's causal effect.
@@ -393,9 +497,96 @@ A segmentation can produce an actionable difference in average retention and dol
 \Boundary{Cohort centering removes the mean level of each joining month. It does not adjust for every confounder. The channel-by-need four-cell comparison is presented separately and is not ranked against two-group strategies.}
 
 \NewPage
-\PageTitle{A13 / KNOWLEDGE ASSETS}{Knowledge assets\newline and a reproducible handoff}{Skills specify decisions and stage gates; reference assets explain methods; Python packages execute the transformations and models.}
+\PageTitle{A13 / JOURNEY MEASUREMENT}{Timing, coverage and\newline baseline differences}{Diagnostic appendix | Exposure is [first payment, first payment + 27 days); the outcome follows that window.}
+\Section{How each journey hypothesis meets the records}
+\TableCaption{journey-measures}{A conceptual friction is not the same object as its available recorded proxy.}
+{\fontsize{8}{10}\selectfont
+\begin{tabularx}{\linewidth}{@{}p{.17\linewidth}YY@{}}\toprule
+\textbf{Journey stage} & \textbf{Available evidence} & \textbf{Interpretation limit}\\\midrule
+Discover / evaluate & Acquisition channel, chosen plan and randomized campaign assignment & Buyer mix is observed; confusion or commitment concerns are not.\\
+First value & Completion and core-use events; onboarding feedback within 27 days & Completion timestamps share a fixed offset. They do not measure setup duration or a useful outcome.\\
+Regular use & Finding-time answers at onboarding; separate ongoing-use feedback later & The later wave follows renewals and reflects a selected population. It is excluded from early groups.\\
+Renew & Subscription renewal outcome & Continuation is observed. Unrecorded cancellation requests and reasons are not.\\\bottomrule
+\end{tabularx}}
+\Section{Baseline composition of the diagnostic groups}
+\TableCaption{friction-balance}{Composition of diagnostic groups. Skill means build-skill need; premium is the initial plan. Discount and age-0 contribution are mean dollars; age-0 contribution overlaps exposure and is context, not a pre-exposure control.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.25\linewidth}rYYYYYY@{}}\toprule
+\textbf{Recorded group} & \textbf{N} & \textbf{Partner} & \textbf{Skill} & \textbf{2025} & \textbf{Premium} & \textbf{Discount} & \textbf{Age-0 contrib.}\\\midrule
+No completion recorded & 726 & 47\% & 48\% & 59\% & 18\% & \$1.14 & \$23.82\\
+Completion recorded & 4,977 & 43\% & 48\% & 56\% & 20\% & \$1.14 & \$24.31\\
+No core use recorded & 847 & 43\% & 48\% & 57\% & 21\% & \$0.99 & \$24.46\\
+Core use recorded & 4,856 & 44\% & 48\% & 56\% & 19\% & \$1.16 & \$24.21\\
+Finding features & 182 & 46\% & 47\% & 59\% & 16\% & \$1.15 & \$24.17\\
+Finding time & 174 & 44\% & 51\% & 60\% & 25\% & \$0.89 & \$25.46\\
+Getting started & 174 & 39\% & 45\% & 59\% & 21\% & \$1.26 & \$24.25\\
+No recorded response & 3,736 & 44\% & 48\% & 56\% & 19\% & \$1.13 & \$24.16\\
+No difficulty reported & 1,437 & 43\% & 48\% & 57\% & 21\% & \$1.16 & \$24.34\\
+\bottomrule\end{tabularx}\par}
+\Evidence{Saved output: \Code{friction_balance.csv}. All complete-exposure non-experimental paid customers. Differences in baseline composition motivate stratification but do not exhaust possible confounding.}
+\Section{Refunds and the timing boundary}
+The exposure window contains 342 refund records, 0 effective cancellations and 0 period ends. Primary comparisons retain refunding customers. Excluding customers with a refund gives first-renewal adjusted gaps of +1.3 pp (-1.5 to +4.1) for no completion versus completion; +0.1 pp (-2.6 to +2.8) for no core use versus core use. Refunds do not establish exit. Cancellation-request times are unavailable, so the window precedes recorded renewal outcomes, not necessarily the customer's decision.
+\Evidence{Saved timing and source audits: \Code{friction_timing_audit.csv}, \Code{friction_source_audit.csv}. Onboarding-start events precede payment and are not diagnostic features. The earliest later renewal is more than 27 days after payment. No age-1--5 transaction precedes the feature boundary.}
+
+\NewPage
+\PageTitle{A14 / ADJUSTED DIAGNOSTICS}{Aligned contrasts retain\newline substantial uncertainty}{Descriptive standardization | Event contrasts use acquisition year; survey contrasts use acquisition month. Both retain channel and initial need.}
+\Section{First renewal: the primary outcome}
+\TableCaption{friction-adjusted}{Target minus reference, in percentage points. Counts, pooled contrasts and adjusted contrasts use the same common-support strata. Coverage is the share of the full outcome-eligible population in those strata; weights reflect that population's composition within support.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.27\linewidth}YrrYY@{}}\toprule
+\textbf{Comparison} & \textbf{N: target / ref.} & \textbf{Crude pp} & \textbf{Adjusted pp} & \textbf{95\% interval} & \textbf{Coverage}\\\midrule
+No completion vs. completion & 690 / 4,720 & +0.7 & +0.7 & -2.1 to +3.4 & 100\%\\
+No core use vs. core use & 792 / 4,618 & +0.0 & +0.1 & -2.4 to +2.7 & 100\%\\
+Support contact vs. none recorded & 374 / 5,036 & -0.7 & -0.9 & -4.6 to +2.9 & 100\%\\
+Getting started vs. no difficulty & 139 / 713 & -1.4 & -1.1 & -7.9 to +5.6 & 53\%\\
+Finding features vs. no difficulty & 152 / 793 & -3.6 & -3.0 & -9.9 to +4.0 & 62\%\\
+Finding time vs. no difficulty & 139 / 760 & -1.5 & -2.6 & -10.0 to +4.9 & 57\%\\
+No response vs. response & 3,550 / 1,860 & +0.1 & +0.6 & -1.4 to +2.6 & 100\%\\
+\bottomrule\end{tabularx}\par}
+\Evidence{Saved output: \Code{friction_contrasts.csv}. Each included stratum requires at least two members in both groups. Normal 95\% intervals use within-group sample variances and independent people, treating weights as fixed. They are approximate, unadjusted for multiple comparisons and not posterior intervals. A small estimate or an interval spanning zero does not establish equivalence.}
+\Section{Six-month economic follow-through}
+\TableCaption{friction-secondary}{Adjusted age-5 retention and ages 1--5 contribution contrasts, with approximate 95\% intervals. Original mature-customer denominators retain zeros after churn. Common-support coverage can differ from the first-renewal comparison and is saved with every estimate.}
+{\fontsize{8}{10}\selectfont \par\begin{tabularx}{\linewidth}{@{}p{.27\linewidth}YYp{.09\linewidth}@{}}\toprule
+\textbf{Comparison} & \textbf{Age-5 gap, pp (95\%)} & \textbf{Ages 1--5 contribution gap (95\%)} & \textbf{Coverage}\\\midrule
+No completion vs. completion & +0.6 (-3.8 to +5.1) & \$0.23 (-\$5.49 to \$5.96) & 100\%\\
+No core use vs. core use & +1.1 (-2.9 to +5.1) & \$2.77 (-\$2.56 to \$8.09) & 100\%\\
+Getting started vs. no difficulty & -1.0 (-11.4 to +9.5) & \$3.05 (-\$9.76 to \$15.85) & 45\%\\
+Finding features vs. no difficulty & +2.4 (-7.8 to +12.7) & \$0.58 (-\$12.43 to \$13.59) & 55\%\\
+Finding time vs. no difficulty & -4.2 (-15.8 to +7.5) & -\$7.04 (-\$23.24 to \$9.15) & 57\%\\
+\bottomrule\end{tabularx}\par}
+\Section{What adjustment does and does not resolve}
+Year--channel--need standardization for event groups leaves within-year cohort differences. Survey contrasts instead align joining month, channel and need, so months without a recorded response cannot enter the comparison. Sparse survey groups lose coverage; results apply to supported cells. Neither adjustment resolves plan selection, unmeasured experience or selective survey participation. No recorded response retains unknown invitation status.
+\Boundary{The figures and tables describe associations in the released observation window. They do not establish a friction effect, an individual targeting rule or prediction on future cohorts. A randomized intervention with a protected control is needed to estimate whether reducing a specific friction changes retention and contribution.}
+
+\NewPage
+\PageTitle{A15 / KNOWLEDGE ASSETS}{Knowledge assets\newline and a reproducible handoff}{Skills specify decisions and stage gates; reference assets explain methods; Python packages execute the transformations and models.}
 \ReportFigure{knowledge-assets}{Analytical architecture. Knowledge assets and execution dependencies. Typed boxes, icons and colors distinguish skills, reference documents, Python packages, data and generated outputs.}{knowledge-assets.png}{5.6in}
 \Section{The same evidence should lead to the same report}
 The recorded Python environment is installed with \Code{uv sync --frozen}; commands run through \Code{uv run --frozen}. The model uses CPU JAX/NumPyro; a GPU is not required. The analysis begins with the released records and does not regenerate them. Source hashes, saved SQL, model settings, figure data and document assets remain bound to the output manifests.
 \Boundary{Alternative models must use the same information available at the observation cutoff. Later outcomes are reserved for prospective evaluation and cannot inform features, parameter tuning or revisions to the input snapshot. Human review remains a gate between analytical stages.}
+
+\NewPage
+\ReportEntry{References and source assets}
+\PageTitle{REFERENCES}{Methods and source assets}{Citations identify the source method and the scope of this implementation.}
+\hypertarget{ref:bouhnick}{}
+\Section{Cohort presentation}
+Bouhnick, G. (n.d.). \textit{Cohort analysis---4 ways to analyze your product retention rate}. Mobilespoon. \href{https://www.mobilespoon.net/2019/07/cohort-analysis-retention-rate.html}{Original article} (accessed October 29, 2026).
+\Evidence{Inspiration for comparing cohort retention, revenue and acquisition recovery. All Studio North figures are computed from the released source records.}
+\hypertarget{ref:fader2007}{}
+\Section{Persistent churn heterogeneity}
+Fader, P. S., and Hardie, B. G. S. (2007). How to project customer retention. \textit{Journal of Interactive Marketing}, 21(1), 76--90. \href{https://doi.org/10.1002/dir.20074}{doi:10.1002/dir.20074}.
+\Evidence{Source of shifted-Beta-Geometric retention. The covariate regressions, cohort pooling and Bayesian priors are lab adaptations. An \href{https://www.brucehardie.com/papers/021/}{author-hosted working paper} is also available.}
+\hypertarget{ref:fader2010}{}
+\Section{Retention dynamics and customer-base value}
+Fader, P. S., and Hardie, B. G. S. (2010). Customer-base valuation in a contractual setting: The perils of ignoring heterogeneity. \textit{Marketing Science}, 29(1), 85--93. \href{https://doi.org/10.1287/mksc.1080.0482}{doi:10.1287/mksc.1080.0482}.
+\Evidence{Motivates preserving survivor selection when valuing the remaining customer base. \href{https://www.brucehardie.com/papers/022/}{Article and technical appendix}.}
+\hypertarget{ref:mccarthy2017}{}
+\Section{Acquisition, retention and spending}
+McCarthy, D. M., Fader, P. S., and Hardie, B. G. S. (2017). Valuing subscription-based businesses using publicly disclosed customer data. \textit{Journal of Marketing}, 81(1), 17--35. \href{https://doi.org/10.1509/jm.15.0519}{doi:10.1509/jm.15.0519}.
+\Evidence{Motivates the customer-base decomposition. This report estimates twelve-receipt contribution value and cash payback; it does not implement the paper's full corporate-valuation model.}
+\hypertarget{ref:orduz2024}{}
+\Section{Gamma revenue and the neural comparison}
+Orduz, J. C. (2024, January 8). \textit{Cohort Revenue Retention Analysis with Flax and NumPyro}. \href{https://juanitorduz.github.io/revenue_retention_numpyro/}{Original article}.
+\Evidence{The main model adapts the Gamma revenue structure. The separate neural retention comparison adapts the architecture and weight priors to conditional renewal risk sets. Neither is a verbatim reproduction.}
+\Section{Bundled reading and reproducible provenance}
+The GitHub \href{https://github.com/longxiutian/customer-economics-lab/tree/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention}{Orduz asset folder} contains the \href{https://github.com/longxiutian/customer-economics-lab/blob/v5.0.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf}{source-notebook PDF}, the original notebook, its MIT notice and a hash manifest pinned to the source commit. The archived notebook is a reading asset; it was not rerun to generate the Studio North results. The repository's \href{https://github.com/longxiutian/customer-economics-lab/blob/v5.0.0/docs/sources.md}{source guide} records additional instructional background.
+
 \end{document}

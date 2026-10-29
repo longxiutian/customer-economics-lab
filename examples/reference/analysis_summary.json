@@ -305,6 +305,7 @@
     }
   ],
   "experiment_interval": "Approximate 95% normal intervals: purchase-rate differences use unpooled Bernoulli standard errors; contribution-after-media per prospect uses sqrt(s_T^2/n_T+s_C^2/n_C), with sample contribution variances over every assigned person including nonbuyers with zero outcomes. Recorded media spending is treated as fixed and changes the mean, not its standard error. Total-pilot contribution intervals scale the per-prospect interval by n_T. Each experiment retains its own controls and explicit assignment/follow-up dates; windows can differ. These are not long-run LTV intervals, do not include cost uncertainty, and have no correction for comparing different tests.",
+  "friction_scope": "Post-acquisition diagnostic groups use [first payment, first payment + 27 days), with complete exposure and both experimental arms excluded. First-renewal retention is primary; age-5 retention and ages1\u20135 contribution are secondary, including zeros after exit and original-customer denominators. No recorded survey response and unanswered difficulty items remain distinct. Timing assertions verify first renewals and outcome transactions follow the window. Refunds are retained and separately flagged; their presence does not establish exit. Cancellation-request times are unavailable. No diagnostic feature enters the valuation model; no acquisition spending is allocated to these groups.",
   "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
   "schema_version": "1.0",
   "segmentation": [
@@ -556,6 +557,11 @@
     "ex_test_cell_counts_reconcile": "passed",
     "ex_test_customer_counts_reconcile": "passed",
     "ex_test_spending_reconciles": "passed",
+    "friction_complete_denominators": "passed",
+    "friction_future_outcomes_missing": "passed",
+    "friction_no_experimental_buyers": "passed",
+    "friction_precedes_outcomes": "passed",
+    "friction_unique_customers": "passed",
     "gross_minus_refunds_reconciles": "passed",
     "ledger_cost_reconciles": "passed",
     "ledger_revenue_reconciles": "passed",
@@ -580,6 +586,13 @@
     "customer_month": 66692,
     "experiment_effects": 2,
     "experiment_summary": 4,
+    "friction_cohort_segments": 990,
+    "friction_cohort_summary": 48,
+    "friction_matched_comparison": 88,
+    "friction_segment_summary": 11,
+    "friction_source_audit": 6,
+    "friction_subjects": 5703,
+    "friction_timing_audit": 1,
     "segmentation_comparison": 4,
     "segmentation_profile": 8
   },

@@ -373,6 +373,12 @@ def build_charts(output_dir: Path) -> dict:
         handles,labels=axes[0,0].get_legend_handles_labels();fig.legend(handles,labels,loc="lower center",ncol=3,frameon=False,bbox_to_anchor=(.5,-.12),fontsize=8)
         done(fig,"recent-cohort-fit-check",["model_fit_checks.csv"],"In-sample one-step fitted residuals for recent cohorts with at least one observed renewal, conditional on the previous observed count. This is not a held-out backtest.",{"cohorts":latest_six,"n_cohorts":len(latest_six)})
         manifest["model_summary_sha256"]=_sha(output/"model_summary.json")
+    from .report_extensions import add_journey_chart, add_strategy_chart
+    add_journey_chart(output, read, done)
+    manifest["diagnostics_manifest_sha256"] = _sha(output/"diagnostics_manifest.json")
+    if (output/"model_manifest.json").exists():
+        add_strategy_chart(output, read, done)
+        manifest["postestimation_manifest_sha256"] = _sha(output/"postestimation_manifest.json")
     _write_json(output/"report"/"chart_manifest.json",manifest)
     return manifest
 
@@ -541,7 +547,7 @@ def _context(output: Path) -> dict:
         experiment_sentence="Incremental contribution after media per assigned prospect: "+"; ".join(terms)+f". {zero_count} of {len(effects)} intervals include zero; Search is encouraging; neither short window establishes lifetime returns."
         if has_economics and "recommended_action" not in choices:
             monitoring_cash=ex_test[1]["cash_after_cac_per_customer"]
-            product_action=("Product should investigate, using events and feedback, what changed for the later cohorts." if renewal_improving else "Product should investigate the weaker renewal trajectories before assuming conversion gains imply durable value.")
+            product_action=("Product should measure time to first useful outcome and test a specific onboarding change; the current event flags do not identify the cause of cohort improvement." if renewal_improving else "Product should investigate the weaker renewal trajectories before assuming conversion gains imply durable value.")
             learner_action=(f"Marketing and Analytics should verify that controls stayed protected before using later outcomes; otherwise run a longer test. Finance should monitor the ex-test ${monitoring_cash:,.2f} six-month cash benchmark, not use it as an automatic causal gate. "+product_action)
     company_sentence=""
     if "acquisition_spend" in totals:
@@ -549,7 +555,7 @@ def _context(output: Path) -> dict:
         company_sentence=(f"In {str(last.calendar_month)[:7]}, recorded contribution was ${float(last.contribution):,.0f} and acquisition spending was ${float(last.acquisition_spend):,.0f}, leaving ${balance:,.0f} before fixed costs, financing and taxes. This period result should be read alongside the age-aligned cohort comparison, rather than used as a substitute for it.")
     action_rows=[
         ["Marketing + Finance","Assess a larger budget using longer-window incremental contribution and cash recovery.","Age-aligned value and cash, alongside uncertainty in incremental returns."],
-        ["Product + Operations","Investigate renewal changes using product events and customer feedback.","Renewal events, product actions and expressed customer evaluations."],
+        ["Product + Operations","Instrument time to first useful outcome and test a specific onboarding change within baseline need groups.","Protected controls; subsequent renewal and contribution, including nonrenewers."],
         ["Marketing + Analytics","Verify control protection before extending the comparison; otherwise run a longer test.","Contribution after media per assigned prospect, including nonbuyers, with uncertainty."],
         ["Data + Analytics","Refresh source exports and review forecast errors before the next decision.","SQL reconciliation, model holdouts, parameter output and file hashes."],
     ]
@@ -899,7 +905,8 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
     _json(output/"model_summary.json") # No silent placeholder forecast.
     charts=build_charts(output)
     style=_validate_style()
-    ctx={**_context(output), **_appendix_context(output)}
+    from .report_extensions import extension_context
+    ctx={**_context(output), **_appendix_context(output), **extension_context(output)}
     metrics_path=_write_executive_metrics(output,ctx)
     env=Environment(loader=FileSystemLoader(ROOT/"templates"),undefined=StrictUndefined,
                     variable_start_string=r"\VAR{",variable_end_string="}",autoescape=False)
@@ -926,14 +933,17 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
               "exhibit_registry_sha256":_sha(directory/"exhibit_registry.json"),
               "figure_count":sum(x["type"]=="figure" for x in exhibits),"table_count":sum(x["type"]=="table" for x in exhibits),
               "renewal_window_evidence":ctx["renewal_window_evidence"]}
+    for key in ("diagnostics_manifest_sha256", "postestimation_manifest_sha256"):
+        if key in charts: manifest[key] = charts[key]
     manifest["learner_choices_sha256"]=_sha(output/"learner_choices.json") if (output/"learner_choices.json").exists() else None
     if compile_pdf:
         manifest["build"]=_compile_native(source)
         from pypdf import PdfReader
         pdf=PdfReader(source.with_suffix(".pdf"))
-        expected_pages=rendered.count(r"\PageTitle{")+rendered.count(r"\SectionDivider{")
+        front_matter_pages=rendered.count(r"\ReportCover{")+rendered.count(r"\ReportContents")
+        expected_pages=rendered.count(r"\PageTitle{")+rendered.count(r"\SectionDivider{")+front_matter_pages
         schema_prefix=rendered.split(r"\BeginSchemaFoldout",1)[0]
-        schema_page=schema_prefix.count(r"\PageTitle{")+schema_prefix.count(r"\SectionDivider{")
+        schema_page=schema_prefix.count(r"\PageTitle{")+schema_prefix.count(r"\SectionDivider{")+front_matter_pages
         if len(pdf.pages)!=expected_pages:raise ValueError(f"Expected {expected_pages} designed pages including the schema foldout, got {len(pdf.pages)}; inspect pagination")
         for index,page in enumerate(pdf.pages):
             width,height=(1190.551,841.89) if index==schema_page else (612,792)

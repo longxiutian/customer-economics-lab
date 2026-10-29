@@ -1,0 +1,5 @@
+scheme,label,outcome,n_target,n_reference,n_population,crude_difference,n_target_common,n_reference_common,strata,n_strata,coverage,crude_common_difference,difference,se,ci_lower,ci_upper
+onboarding,No completion − completion,retained_age1,633,4458,5091,0.0124213566,633,4458,acquisition_year × channel × primary_need,8,1.0000000000,0.0124213566,0.0128630406,0.0144280385,-0.0154159148,0.0411419960
+onboarding,No completion − completion,retained_age5,472,3545,4017,0.0035015897,472,3545,acquisition_year × channel × primary_need,8,1.0000000000,0.0035015897,0.0039798241,0.0240256947,-0.0431105376,0.0510701858
+early_use,No core use − core use,retained_age1,743,4348,5091,-0.0002324671,743,4348,acquisition_year × channel × primary_need,8,1.0000000000,-0.0002324671,0.0009919474,0.0135994552,-0.0256629847,0.0276468796
+early_use,No core use − core use,retained_age5,590,3427,4017,0.0041188370,590,3427,acquisition_year × channel × primary_need,8,1.0000000000,0.0041188370,0.0063866111,0.0213535264,-0.0354663007,0.0482395228

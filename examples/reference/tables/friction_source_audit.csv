@@ -1,0 +1,7 @@
+source,signal,n_records,n_before_payment,n_in_window,earliest_days_after_payment,latest_days_after_payment
+feedback,onboarding,2034,0,2034,21.041666666666668,21.041666666666668
+feedback,ongoing_use,1405,0,0,80.04166666666667,83.04166666666667
+product_events,core_action,57419,0,8824,5.291666666666667,717.2916666666666
+product_events,onboarding_completed,5133,0,5133,1.0416666666666667,1.0416666666666667
+product_events,onboarding_started,5891,5891,0,-0.7916666666666666,-0.7916666666666666
+product_events,support_contact,2769,0,406,18.083333333333332,718.0833333333334
