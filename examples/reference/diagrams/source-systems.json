@@ -3,19 +3,19 @@
     {
       "dot": "emerald",
       "items": [
-        "people.csv: 6,690 rows; one person, including nonbuyers",
-        "subscription_periods.csv: 44,658 rows; one scheduled subscription period",
-        "transactions.csv: 54,421 rows; one payment or refund event",
-        "product_events.csv: 72,107 rows; one observed interaction"
+        "people.csv: 6,703 rows; one person, including nonbuyers",
+        "subscription_periods.csv: 44,080 rows; one scheduled subscription period",
+        "transactions.csv: 53,717 rows; one payment or refund event",
+        "product_events.csv: 71,212 rows; one observed interaction"
       ],
       "title": "Same key, different grains"
     },
     {
       "dot": "orange",
       "items": [
-        "feedback.csv: 3,372 rows; one submitted response",
+        "feedback.csv: 3,439 rows; one submitted response",
         "campaign_spend.csv: 294 rows; one campaign-spending date",
-        "acquisition_attribution.csv: 5,857 rows; one acquired person and credited source",
+        "acquisition_attribution.csv: 5,891 rows; one acquired person and credited source",
         "experiment_assignments.csv: 1,000 rows; one eligible person per experiment"
       ],
       "title": "The denominator is a business choice"

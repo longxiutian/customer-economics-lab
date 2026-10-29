@@ -11,7 +11,7 @@ import pytest
 
 from cohort_lab.analysis import build_views
 from cohort_lab import report
-from cohort_lab.diagrams import build_diagrams, _conceptual_journey
+from cohort_lab.diagrams import build_diagrams
 
 
 @pytest.fixture(scope="module")
@@ -125,27 +125,28 @@ def test_a_changed_upstream_style_is_not_silently_accepted(tmp_path, monkeypatch
         report._validate_style()
 
 
-def test_conceptual_journeys_are_segment_specific_hypotheses():
-    time=_conceptual_journey("save_time");skill=_conceptual_journey("build_skill")
-    assert "Hypotheses" in time["meta"]["subtitle"]
-    assert time["nodes"][0]["label"]!=skill["nodes"][0]["label"]
-    assert time["nodes"][0]["label"]=="Recognize friction"
-    assert skill["nodes"][0]["label"]=="Set a learning goal"
-    assert any("not proof" in x for card in time["cards"] for x in card["items"])
+def test_business_map_is_one_conceptual_introduction(tmp_path):
+    from cohort_lab.business_journey import build_business_journey
+    build_business_journey(tmp_path)
+    source=json.loads((tmp_path/"business-journey.json").read_text())
+    assert source["evidence"]=="conceptual"
+    assert len(source["stages"])==6
+    assert all(s["potential_benefit"] and s["potential_friction"] for s in source["stages"])
+    assert "no score" in source["vertical_position"]
+    assert "person_id" not in json.dumps(source)
 
 
 @pytest.mark.skipif(not shutil.which("node"),reason="Native Archify renderer requires Node")
-def test_native_archify_is_reproducible_and_observed_timeline_keeps_provenance(evidence,tmp_path):
+def test_diagrams_are_reproducible_and_business_map_is_conceptual(evidence,tmp_path):
     data,_=evidence
     first=build_diagrams(data,tmp_path/"one");second=build_diagrams(data,tmp_path/"two")
-    assert {"source-systems","source-systems-report","source-tables","source-tables-report","customer-journey","journey-save-time","journey-build-skill","knowledge-assets"}.issubset(first["diagrams"])
+    assert {"source-systems","source-systems-report","source-tables","source-tables-report","business-journey","knowledge-assets"}.issubset(first["diagrams"])
     assert len(first["sources"])==8
     assert {k:v["sha256"] for k,v in first["diagrams"].items()}=={k:v["sha256"] for k,v in second["diagrams"].items()}
-    timeline=json.loads((tmp_path/"one/diagrams/customer-journey.json").read_text())
-    assert timeline["meta"]["evidence"]=="observed"
-    assert len(timeline["events"])>0
-    statements=(tmp_path/"one/diagrams/inspection.sql").read_text()
-    assert "first_paid" in statements and "INTERVAL '30 days'" in statements
+    journey=json.loads((tmp_path/"one/diagrams/business-journey.json").read_text())
+    assert journey["evidence"]=="conceptual"
+    assert not (tmp_path/"one/diagrams/journey-save-time.html").exists()
+    assert not (tmp_path/"one/diagrams/customer-journey.html").exists()
     # Changed source bytes are refused rather than redrawn under stale hashes.
     altered=tmp_path/"altered-data";shutil.copytree(data,altered)
     p=altered/"people.csv";p.write_bytes(p.read_bytes()+b"\n")
@@ -186,7 +187,9 @@ def test_executive_kpis_are_matched_age_acquisition_value_and_cash(evidence,monk
         return actual_json(path)
     def table_input(directory,name,columns=()):
         if name=="cohort_valuation.csv":
-            return pd.DataFrame([{"cohort_month":"2025-12-01","net_ltv_mean":100,"net_ltv_p05":90,"net_ltv_p95":110,"forecast_share":.9}])
+            return pd.DataFrame([dict(cohort_month=co,net_ltv_mean=100,net_ltv_p05=90,net_ltv_p95=110,forecast_share=share) for co,share in [('2024-01-01',0),('2025-01-01',0),('2025-12-01',.9)]])
+        if name=="valuation_backtest.csv":
+            return pd.DataFrame([dict(cohort_month='2024-12-01',observed_months_at_origin=1,pred_ltv_before_cac=120,actual_ltv_before_cac=100)])
         return actual_table(directory,name,columns)
     monkeypatch.setattr(report,"_json",json_input);monkeypatch.setattr(report,"_table",table_input)
     context=report._context(output)
@@ -201,10 +204,10 @@ def test_executive_kpis_are_matched_age_acquisition_value_and_cash(evidence,monk
         expected.append([float((one[col]*weights).sum()) for col in ["cac","cumulative_contribution_per_customer","balance_per_customer"]])
     assert f"{context["renewal_window_evidence"]["experiment_excluded"]["later"]["cash_after_cac_per_customer"]:,.2f}" in context["learner_action"]
     assert "not use it as an automatic causal gate" in context["learner_action"]
-    assert "extend both campaign follow-ups" in context["learner_action"]
+    assert "verify that controls stayed protected" in context["learner_action"]
     window=context["renewal_window_evidence"]
     if window["later"]["retained_share"]>window["earlier"]["retained_share"] and window["improved_cells"]==window["total_cells"]:
-        assert "Later cohorts also retain more" in context["executive_verdict"]
+        assert "Retention also improves within each channel" in context["executive_verdict"]
     assert "intervals include zero" in context["executive_experiment_sentence"]
     assert "dollars squared" in context["segmentation_sentence"]
     assert list(kpi.window_start)==[months[0] for months in windows]
@@ -253,6 +256,9 @@ def test_ex_test_sql_removes_both_arms_and_all_their_later_contribution():
     """An excluded buyer's later receipts must not survive the comparability filter."""
     import duckdb
     sql=(report.ROOT/"sql/01_views.sql").read_text(encoding="utf-8").split("CREATE OR REPLACE VIEW cohort_economics_ex_tests AS",1)[1]
+    # This fixture tests the whole-cohort exclusion view; later views have
+    # their own field requirements and independent arithmetic fixtures.
+    sql=sql.split("\nCREATE OR REPLACE VIEW ",1)[0]
     con=duckdb.connect()
     try:
         con.execute("""CREATE TABLE customer_month AS SELECT person_id,DATE '2025-05-01' cohort_month,16 cohort_index,age_month,

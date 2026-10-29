@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-DATASET_VERSION = "3.0"
+DATASET_VERSION = "4.0"
 DATA_FILES = (
     "people.csv", "subscription_periods.csv", "transactions.csv",
     "product_events.csv", "feedback.csv", "campaign_spend.csv",
@@ -25,7 +25,7 @@ DATA_FILES = (
 STAGES = (
     "Check the environment and understand the company question",
     "Inspect the sources and draw the system map",
-    "Classify UCV fields, propose segments and map journeys",
+    "Classify UCV fields and propose baseline segments",
     "Build the analytical views with DuckDB SQL",
     "Compare cohorts and diagnose the company's observed direction",
     "Check acquisition incrementality with experimental evidence",
@@ -186,16 +186,15 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
     if stage == 2:
         result = {
             "ucv_categories": ["Identifiers", "Engagement", "Relationship", "Perception"],
-            "candidate_segment_fields": ["primary_need", "age_band"],
+            "candidate_segment_fields": ["primary_need", "age_band", "region", "original acquisition channel"],
             "instructions": [
                 "Read diagrams/ucv-tables.json: one four-column field-name table per dataset. Use a best-fit category and explain ambiguous fields; preserve genuine gaps.",
                 "Propose which baseline grouping may explain retention and contribution differences.",
-                "Distinguish observed journey events, reported perceptions and inferred explanations.",
+                "The introductory business map describes possible benefits and friction; distinguish observed events, reported perceptions and hypotheses.",
                 "Stage 4 will check the proposal against older age-aligned cohorts; do not claim an outcome comparison yet.",
             ],
             "choices": choices,
-            "diagrams": ["diagrams/source-systems.html", "diagrams/knowledge-assets.html", "diagrams/customer-journey.html",
-                         "diagrams/journey-save-time.html", "diagrams/journey-build-skill.html"],
+            "diagrams": ["diagrams/source-systems.html", "diagrams/knowledge-assets.html", "diagrams/business-journey.html"],
             "ucv_tables": ["diagrams/ucv-tables.md", "diagrams/ucv-tables.json"],
         }
         _write_json(output_dir / "stage2_customer_reasoning.json", result)

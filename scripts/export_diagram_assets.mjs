@@ -1,4 +1,4 @@
-/** Export the native Archify SVG, not a screenshot of a replacement drawing. */
+/** Export authored SVGs: native Archify diagrams and the original business map. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -36,8 +36,8 @@ try {
         el.style.animation = 'none'; el.style.transition = 'none';
       }
     });
-    const asset = await page.evaluate(({reportOverview,journey,knowledge}) => {
-      const source = [...document.querySelectorAll('svg')].find(el => el.hasAttribute('data-quality-profile'));
+    const asset = await page.evaluate(({reportOverview,journey,knowledge,business}) => {
+      const source = business ? document.querySelector('svg') : [...document.querySelectorAll('svg')].find(el => el.hasAttribute('data-quality-profile'));
       if (!source) throw new Error('Native Archify diagram SVG is missing.');
       // The portrait edition preserves native nodes/edges, but omits the wide
       // reader swimlanes and legend. Their descriptions are in the report text.
@@ -98,7 +98,7 @@ try {
       return {svg: new XMLSerializer().serializeToString(copy), width: Math.ceil(width), height: Math.ceil(height)};
     },{reportOverview:path.basename(html)==='source-systems-report.html',
        journey:['journey-save-time.html','journey-build-skill.html'].includes(path.basename(html)),
-       knowledge:path.basename(html)==='knowledge-assets.html'});
+       knowledge:path.basename(html)==='knowledge-assets.html',business:path.basename(html)==='business-journey.html'});
     const stem = html.replace(/\.html$/i, '');
     await fs.writeFile(stem+'.svg', asset.svg+'\n', 'utf8');
     // A fresh page with the frozen SVG avoids controls, timers and responsive-fit drift.

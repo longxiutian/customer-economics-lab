@@ -27,13 +27,19 @@ Compare the same acquisition months across years, rather than selecting the earl
 
 Check whether experimental buyers change the accounting comparison. Keep the reported whole-company measures and the original windows, mark test months, and disclose a saved-SQL sensitivity excluding both assigned test arms, all their later contribution, and spending inside the test design. Do not exclude only treatment buyers, leave their later receipts behind, remove ordinary campaign spending or call the sensitivity a causal adjustment. Finance's monitoring benchmark should use the comparable ex-test figure when ordinary future cohorts will not contain those tests.
 
-Write complete conclusions, not instructions to a learner. Do not put prompts such as "choose a next action," blank judgment fields, course-stage descriptions, "in this exercise," or an instructor reference-build placeholder in the PDF. The chat skill owns guided questions and stage gates. The report owns the management diagnosis and a concrete action plan. A saved student's judgment may appear as a management recommendation, with its evidence and limitations intact.
+Write complete conclusions, not instructions to a learner. Address a CEO or CMO respectfully: prefer "Customer differences and within-segment progress" to "Check whether progress survives the customer mix," and "Retention across the cohort sequence" to "Read the whole sequence, not a selected curve." Audit headings, callouts, captions and prose for classroom or patronizing imperatives. Do not put prompts such as "choose a next action," blank judgment fields, course-stage descriptions, "in this exercise," or an instructor reference-build placeholder in the PDF. The chat skill owns guided questions and stage gates. The report owns the management diagnosis and a concrete action plan. A saved student's judgment may appear as a management recommendation, with its evidence and limitations intact.
+
+Provide dedicated separator pages between major report sections and before the technical appendix. They should state the section and its managerial purpose, use the maintained typography, and count in the verified pagination. Do not rely on a small page kicker alone to signal a new section.
 
 ## Establish the model before presenting its results
 
 Explain the business mechanism and observed data the model represents before displaying forecast curves or LTV results. Name the likelihood, parameter meanings, sources of heterogeneity, right-censoring treatment, estimation method, extrapolation horizon and economic conversion. Distinguish customer retention from revenue per retained customer and contribution from revenue. Do not imply that the model is the source article's exact implementation when it is an adaptation.
 
+Motivate extrapolation early in the report: explain how a model extends an immature cohort beyond its observed history, then show solid observed paths and dashed forecast continuations. A plain-language model description must precede that figure; detailed parameters and validation belong later. Do not bury the purpose of the model in an appendix after presenting its LTV results.
+
 Use observed data at comparable ages to establish the diagnosis. Label forecasts and intervals. State what uncertainty the intervals include and omit. Keep a fitted-value diagnostic distinct from a genuinely held-out prediction check. A predictive LTV model does not identify causal acquisition effects.
+
+Compare fully observed common-horizon values first. Discuss a young cohort separately with its forecast share, trend dependence and a relevant historical forecast error; a narrow parameter band must not obscure model or calendar-shock risk. Do not frame an observed-to-mostly-forecast endpoint difference as realized improvement. Verify control protection before recommending longer experimental follow-up from transactions already on hand.
 
 ## Number and preserve the complete exhibit sequence
 
@@ -41,7 +47,11 @@ Give every report figure and table a consecutive number, a descriptive caption, 
 
 Show all 24 acquisition cohorts in the observed retention and cash triangles, with all observed ages 0–23. Leave future cells blank; never replace them with zero or truncate the report to a few favorable cohorts. Split dense triangles onto separate pages instead of shrinking labels. For many cohort curves, use aligned small multiples, common tenure/retention axes, a continuous chronological color key, and lines ending at observed ages. An acquisition cohort with no observed renewal can only contribute its age-zero point. Do not smooth away actual variability or create a 24-item legend that consumes the figure.
 
-Retain the need-specific customer journey maps in the management report and connect them explicitly to the raw-data UCV classification. Label journeys as hypotheses and distinguish them from observed event timelines. Keep the eight field-level UCV tables discoverable through numbered references from the main report, rather than leaving their existence implicit in an appendix.
+Use one broad business journey in the opening firm description, inspired by a touchpoint map with potential benefits and friction around an expected-experience baseline. It is conceptual and has no measured emotion score. Do not add separate journey pages for each segment or another observed-customer timeline. Keep the eight field-level UCV tables discoverable through numbered references from the main report, rather than leaving their existence implicit in an appendix.
+
+Keep heatmap fills light so all retention numerals use the same dark ink. In the cash-after-CAC triangle, numerals are red below zero and dark green at zero or above. Do not switch black/white merely because a cell fill becomes dark. Preserve the sign of values close to break-even after rounding.
+
+Compare segmentation strategies on the same customers, outcome horizon and group count. Show reduction in within-group variance relative to the unsegmented outcome, with sample sizes and residual heterogeneity. A larger number of cells is not evidence of a better operational segmentation by itself. Distinguish baseline group differences from improvement within a group over acquisition cohorts; channel differences remain descriptive.
 
 ## Required appendices
 
@@ -62,6 +72,8 @@ Use the bundled Archify-rendered data architecture to show table grain, join key
 ## Numerical and reproducibility contract
 
 All report quantities come from saved, hash-verified SQL/model outputs. Display selection, formatting and explicit weighted presentation summaries may occur in `cohort_lab/report.py`; do not silently recompute a competing aggregate from raw data. Preserve the windows and weights of those summaries in audit outputs. Derive narrative direction, dates, comparisons and recommendations from the same saved evidence used by figures. No hardcoded empirical result or arbitrary current date.
+
+Use one rounding formatter across the report and companion slides. Label differences calculated from unrounded values, preserve signs near zero and place a negative sign before the currency symbol. A within-group claim excluding experiments must remove both arms in each group's SQL denominator, not merely cite an aggregate sensitivity. Keep classroom terms, competition logistics and private-generation workflow descriptions out of the executive PDF, including its appendix; they belong in the student skill and teaching materials.
 
 Use `uv sync --frozen` and `uv run --frozen` for Python setup and execution. The student analysis is CPU-capable and starts from the released records. Data generation and the next-twelve-month competition holdout are maintained privately in a separate instructor skill; neither belongs in the analysis skill, report assets or public repository. The report may state that the records are original and synthetic, but must not reveal private simulation parameters or future outcomes.
 

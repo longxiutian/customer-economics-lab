@@ -1,0 +1,44 @@
+{
+  "evidence": "conceptual",
+  "scope": "One broad business journey; possible benefits and friction points, not measured sentiment or a universal observed sequence.",
+  "stages": [
+    {
+      "potential_benefit": "A relevant project idea",
+      "potential_friction": "Vague promises",
+      "stage": "Discover",
+      "touchpoint": "Search / partner workshop"
+    },
+    {
+      "potential_benefit": "Clear fit with a work goal",
+      "potential_friction": "Unclear plan differences",
+      "stage": "Evaluate",
+      "touchpoint": "Compare membership plans"
+    },
+    {
+      "potential_benefit": "Predictable monthly price",
+      "potential_friction": "Commitment concerns",
+      "stage": "Subscribe",
+      "touchpoint": "Choose a plan and pay"
+    },
+    {
+      "potential_benefit": "A useful first output",
+      "potential_friction": "Setup takes too long",
+      "stage": "First value",
+      "touchpoint": "Use a template or lesson"
+    },
+    {
+      "potential_benefit": "Time saved; visible progress",
+      "potential_friction": "Too little time to use it",
+      "stage": "Regular use",
+      "touchpoint": "Projects / learning / add-ons"
+    },
+    {
+      "potential_benefit": "A reason to return",
+      "potential_friction": "Benefits do not justify cost",
+      "stage": "Renew",
+      "touchpoint": "Review value and next bill"
+    }
+  ],
+  "title": "The Studio North membership experience",
+  "vertical_position": "Qualitative placement only; no score, magnitude or probability is implied."
+}

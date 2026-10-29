@@ -8,6 +8,10 @@ Management is reviewing the next acquisition budget and the pace of expansion. T
 
 Customers state their primary need as **saving time** or **building skills** before acquisition. Search campaigns reach people actively seeking help; partner campaigns reach members through professional communities and workshops. The data also contain organic purchases made by experimental control participants. These are observed acquisition labels, not proof that a channel caused a member's long-run value.
 
+The two needs suggest different reasons to renew. A professional facing an immediate deadline may value a fast finished output; someone developing a capability may value a sequence of lessons and future projects. These are plausible business explanations to assess against the data, not assumptions that all members of a group behave alike. The baseline stated need and original acquisition channel remain fixed attributes for analysis even when later experience changes.
+
+One broad experience map introduces discovery, evaluation, subscription, first value, regular use and renewal, with potential benefits and friction points. It is an orientation to the service, not a measured satisfaction curve or a separate journey for each segment. The analytical question remains whether later joining cohorts improve within comparable groups as well as through a changing customer mix.
+
 The operating team provides eight separate exports from CRM, billing, renewals, product/support, surveys, marketing spending, attribution, and campaign experiments. Their shared keys allow ordinary record linkage, but their row units and clocks differ. DuckDB SQL turns these records into saved, reconciled analytical views. Those views support the management assessment and remain available for independent review.
 
 ## Comparison rules

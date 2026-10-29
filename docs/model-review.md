@@ -6,7 +6,9 @@ The student workflow starts from eight frozen source exports spanning 24 monthly
 
 The main model and its priors are specified independently of the hidden generation process. Cohort improvement must appear in the observed matched-age evidence; the report must not assert a trend merely because the scenario was designed to explore one. Neither the model nor its priors may be tuned on the private future evaluation labels.
 
-The revision is deliberated with Claude Opus 5.5 at xhigh effort. Codex executes the tests locally; provider consultation is not represented as test execution. Prior releases remain historical artifacts and do not validate this release's new data or fits.
+Version 4 is deliberated with Claude Opus 5.5 at maximum effort, first on the design and then on the rendered report and companion slides. Codex executes the tests locally; provider consultation is not represented as test execution. The release receipt records the completed reviews and their adjudication. Prior releases remain historical artifacts and do not validate this release's new data or fits.
+
+The design review called for economically meaningful but overlapping customer groups, a distinct cohort trend, and comparisons that separate customer mix from progress within comparable groups. The public report verifies those patterns from the observed records. Its segmentation comparison uses the same mature paid customers and the same six-receipt window for all four two-group strategies, excludes both experimental arms, and retains a cohort-centered diagnostic. Group averages are not treated as causal effects or as evidence that members are homogeneous.
 
 ## Main model and comparison
 

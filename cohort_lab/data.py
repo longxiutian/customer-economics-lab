@@ -14,7 +14,7 @@ from pathlib import Path
 
 DATA_AS_OF = "2026-01-01T00:00:00Z"
 SCHEMA_VERSION = "2.0"
-DATASET_VERSION = "3.0"
+DATASET_VERSION = "4.0"
 
 SCHEMAS = {
     "people.csv": {

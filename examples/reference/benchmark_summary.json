@@ -33,13 +33,13 @@
     "actual_backend": "cpu",
     "actual_x64": true,
     "convergence_limitation": "A finite, stable variational objective is not proof of posterior convergence or calibrated uncertainty; AutoNormal is an approximation.",
-    "final_loss_mean": 1457.89866241,
-    "final_two_window_relative_loss_change": 0.00064525,
+    "final_loss_mean": 1419.08071651,
+    "final_two_window_relative_loss_change": 0.00025405,
     "finite_objective": true,
     "finite_posterior": true,
-    "initial_loss_mean": 1660.82392123,
+    "initial_loss_mean": 1678.99684229,
     "n_training_risk_sets": 844,
-    "training_churn_pearson_dispersion": 1.10530271
+    "training_churn_pearson_dispersion": 1.05468844
   },
   "forecast_origin": "Each eligible cell's September count; all three months are forecast recursively without conditioning on held-out survivors.",
   "held_out_calendar_months": [
@@ -70,8 +70,8 @@
   "n_cells": 258,
   "new_holdout_cohorts_excluded": true,
   "priors": "Independent Laplace(location=0, scale=1) on every hidden/output weight and bias.",
-  "retention_mae": 1.1804082287367357,
-  "retention_wape": 0.04138968782469119,
+  "retention_mae": 1.334809680371808,
+  "retention_wape": 0.04699520981658385,
   "role": "Separate retention-only comparison; does not determine executive LTV or cash payback.",
   "runtime": {
     "jax": "0.12.0.1",
@@ -80,10 +80,10 @@
     "numpyro": "0.22.0",
     "scipy": "1.18.1"
   },
-  "scoring_data_sha256": "b1aae22979a759f0d45f936774238270d98ad110270d250eef8f271baf5e903e",
+  "scoring_data_sha256": "da35dc41dcf1c0c2a1679e06ea7ab806e97134c1228f20a57c16a0be98e29619",
   "source": "https://juanitorduz.github.io/revenue_retention_numpyro/",
-  "table_sha256": "b695ff7fdf751b4d4c62fbe59b784b61179259ae5832a885b88f7969c1090a1b",
+  "table_sha256": "2b15b417932ec73fc548d7e284c7fd18d517fead56ad831990cd42e31cfe3e70",
   "training_cutoff_exclusive": "2025-10-01",
-  "training_data_sha256": "392c7479ab8f575b1675bc9e186948259f3f2719aab4484ac7ebfc643f783bc3",
+  "training_data_sha256": "58dacdfef7aeb1b1bc5cec426351526737b6bd9e5939dcf5ede63bada9fa1ef3",
   "training_last_calendar_month": "2025-09-01"
 }

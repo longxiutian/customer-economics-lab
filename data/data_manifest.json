@@ -1,7 +1,7 @@
 {
   "currency": "USD",
   "data_as_of": "2026-01-01T00:00:00Z",
-  "dataset_version": "3.0",
+  "dataset_version": "4.0",
   "definitions": {
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
@@ -51,36 +51,36 @@
   ],
   "files": {
     "acquisition_attribution.csv": {
-      "row_count": 5857,
-      "sha256": "c54ec7122d9738f2fab436aa811ca697d6d9f602a9e59c53f0649bd432f10c8c"
+      "row_count": 5891,
+      "sha256": "84ca32ddd2f6f53d0edaad5c0173c61ec0f6a7f89c5478d019b9f1d222bbf809"
     },
     "campaign_spend.csv": {
       "row_count": 294,
-      "sha256": "05a544edf793a17fa1ac00884a983597f41ed7214f057bab3edbd6db0a326a61"
+      "sha256": "84f837d7510dd4e21a1a3e270fb3791629fbc39a7946366ed2a3668464a5b592"
     },
     "experiment_assignments.csv": {
       "row_count": 1000,
-      "sha256": "22ae91f174ec349a048bfa0fe55c07d0ecac95d770d210b461c34e2ef05983a2"
+      "sha256": "d9534b6d3a694cb8e7cdd3ef2677f24a9845df9d7f8c54c282c5c15250d9251a"
     },
     "feedback.csv": {
-      "row_count": 3372,
-      "sha256": "cb9af94e783a656341b76f27281f25475e168b1e18b28c5b3a81917406274b21"
+      "row_count": 3439,
+      "sha256": "910ea88cd40674bb8f016501ea339c43d43d2736bf866247a72e0b26ad7aa033"
     },
     "people.csv": {
-      "row_count": 6690,
-      "sha256": "5eaf9fc192e8eabfeda92093f610f670a81616923eb1057cb58a60d381b81224"
+      "row_count": 6703,
+      "sha256": "762854ca81d8f1b0f336882a089c8fa4bdefaf76a3ddc2008d5f4c8f5818c21f"
     },
     "product_events.csv": {
-      "row_count": 72107,
-      "sha256": "cc36b2091bfba839624b2af14ffe6f2c9fc164e3bd712465eadf4fe0dee82bcd"
+      "row_count": 71212,
+      "sha256": "4a066be382b24cd91ad4fe165b9803e1951017dbd0cf9e14c31f4bd44732e478"
     },
     "subscription_periods.csv": {
-      "row_count": 44658,
-      "sha256": "84a2f2be62633241d1b8588a278f8470c249677e4763534022ef45093284f7a8"
+      "row_count": 44080,
+      "sha256": "aa5f4577ff8ea8f04968c25977384cc0b1441ae56fd619fdc49cc510fb40084c"
     },
     "transactions.csv": {
-      "row_count": 54421,
-      "sha256": "6753bd538e04305e1e8ea18ca454136439e8f5af10a53e1ef6f4790daaea80d7"
+      "row_count": 53717,
+      "sha256": "91cf544ba22abdf5065b6fbd7801653b81051073859771f4a9a90fa9f279fa43"
     }
   },
   "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",

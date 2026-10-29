@@ -8,7 +8,7 @@ import shutil
 import pytest
 
 from cohort_lab.data import SCHEMAS, PRIMARY_KEYS
-from cohort_lab.diagrams import _erd_candidate, _report_erd_candidate, _knowledge_assets_candidate, _conceptual_journey, build_diagrams
+from cohort_lab.diagrams import _erd_candidate, _report_erd_candidate, _knowledge_assets_candidate, build_diagrams
 from cohort_lab.ucv import CATEGORIES, CATEGORY_DEFINITIONS, CONTEXT_ONLY_FIELDS, FIELD_GROUPS, build_ucv_tables, ucv_markdown
 
 
@@ -100,11 +100,12 @@ def test_native_assets_and_ucv_manifest_are_reproducible(sources,tmp_path):
     assert ucv["framework"]=="Universal Customer View"
     assert len(ucv["tables"])==8
     assert ucv["category_definitions"]==CATEGORY_DEFINITIONS
-    for stem in ("source-systems","source-tables","source-tables-report","source-systems-report","knowledge-assets","journey-save-time","journey-build-skill"):
+    for stem in ("source-systems","source-tables","source-tables-report","source-systems-report","knowledge-assets","business-journey"):
         info=first["diagrams"][stem]
         assert (one/info["png"]).read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
         svg=(one/info["svg"]).read_text(encoding="utf-8")
-        assert '<svg' in svg and 'data-quality-profile="standard"' in svg
+        assert '<svg' in svg
+        if stem != "business-journey": assert 'data-quality-profile="standard"' in svg
         assert '<script' not in svg
         assert 'data-legend-bridge-runtime' not in svg
     svg=(one/"diagrams/source-tables.svg").read_text(encoding="utf-8")
@@ -113,9 +114,9 @@ def test_native_assets_and_ucv_manifest_are_reproducible(sources,tmp_path):
     assert "font-size: 12px" in report_svg
     assert "Company direction and next action</text>" not in report_svg
     assert "person_id / period_id / campaign_id" in report_svg
-    journey_svg=(one/"diagrams/journey-save-time.svg").read_text(encoding="utf-8")
-    assert 'font-size: 13px' in journey_svg and 'font-size: 11px' in journey_svg
-    assert "people.primary_need" in journey_svg and "renewal_outcome / plan_tier" in journey_svg
+    journey_svg=(one/"diagrams/business-journey.svg").read_text(encoding="utf-8")
+    assert "Potential benefits" in journey_svg and "Potential friction" in journey_svg
+    assert "Expected" in journey_svg and "rather than measured" in journey_svg
     for relative,digest in first["knowledge_asset_hashes"].items():
         assert hashlib.sha256((Path(__file__).resolve().parents[1]/relative).read_bytes()).hexdigest()==digest
 
@@ -133,12 +134,6 @@ def test_knowledge_assets_distinguish_roles_without_distributing_private_generat
     text=json.dumps(candidate)
     assert "generate_data" not in text and "seed" not in text and "DGP" not in text
     assert "Instructor-only future outcomes" in text
-    for need in ("save_time","build_skill"):
-        journey=_conceptual_journey(need)
-        assert len(journey["nodes"])==10
-        assert "Hypotheses" in journey["meta"]["subtitle"]
-        evidence=[edge for edge in journey["edges"] if edge["id"].startswith("look")]
-        assert len(evidence)==5 and all(edge["variant"]=="dashed" for edge in evidence)
 
 
 def test_local_method_reference_is_a_frozen_licensed_source_notebook():
