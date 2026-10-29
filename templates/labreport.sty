@@ -1,6 +1,6 @@
 % Report semantics layered over the maintained, unmodified visual package.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{labreport}[2026/10/29 v3.0 Customer economics executive report]
+\ProvidesPackage{labreport}[2026/10/29 v4.0 Customer economics executive report]
 \RequirePackage{longxiu-research-brief}
 \RequirePackage{graphicx,amsmath}
 % Preserve literal code in both the printed glyphs and the PDF text layer.
@@ -35,6 +35,7 @@
 \newcommand{\ReportFigure}[4]{\FullFig{#3}{#4}\FigureCaption{#1}{#2}}
 \newcommand{\TableCaption}[2]{\par\refstepcounter{table}\label{tab:#1}{\color{BriefInk}\fontsize{8}{10}\selectfont\textbf{Table \thetable.} #2}\par\vspace{3pt}}
 \newcommand{\NewPage}{\clearpage}
+\newcommand{\SectionDivider}[3]{\clearpage\vspace*{1.6in}\BriefKicker{#1}{Studio North}{Customer economics}\vspace{.4in}{\color{BriefGreen}\fontsize{30}{36}\selectfont\bfseries #2\par}\vspace{.4in}{\color{BriefMuted}\fontsize{13}{18}\selectfont #3\par}\vfill\clearpage}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcommand{\DatasetTitle}[2]{\Section{#1}\Evidence{#2}\vspace{3pt}}
 \newcommand{\ApplyReportPaperSize}{\ifdefined\pdfpagewidth\pdfpagewidth=\paperwidth\pdfpageheight=\paperheight\else\special{papersize=\the\paperwidth,\the\paperheight}\fi}

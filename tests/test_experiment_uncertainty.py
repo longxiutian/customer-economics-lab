@@ -9,7 +9,7 @@ import pytest
 SQL = (Path(__file__).resolve().parents[1]/"sql"/"01_views.sql").read_text()
 EXPERIMENT_SQL = "CREATE OR REPLACE VIEW experiment_person AS" + SQL.split(
     "CREATE OR REPLACE VIEW experiment_person AS",1)[1].split(
-    "CREATE OR REPLACE VIEW segmentation_comparison AS",1)[0]
+    "CREATE OR REPLACE VIEW segmentation_subjects AS",1)[0]
 
 
 def _fixture(start="2025-05-01 00:00:00",end="2025-06-01 00:00:00"):

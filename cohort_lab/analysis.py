@@ -16,10 +16,12 @@ SQL_DIR = Path(__file__).resolve().parents[1] / "sql"
 TABLE_SORTS = {
     "customer_month": "person_id, age_month",
     "cohort_age_summary": "cohort_month, channel, primary_need, age_month",
+    "cohort_age_ex_tests": "cohort_month, channel, primary_need, age_month",
     "cohort_acquisition_costs": "cohort_month, channel, primary_need",
     "company_month": "calendar_month, cohort_month",
     "experiment_summary": "experiment_id, arm",
     "segmentation_comparison": "scheme",
+    "segmentation_profile": "scheme, segment",
     "cohort_totals": "cohort_month, age_month",
     "cohort_cash_economics": "cohort_month, age_month",
     "company_totals": "calendar_month",
@@ -78,6 +80,7 @@ def _assert_analysis(con) -> dict:
         "organic_CAC_unsupported": "SELECT count(*) FROM cohort_acquisition_costs WHERE channel IN ('organic','unknown') AND cac IS NOT NULL",
         "gross_minus_refunds_reconciles": "SELECT (SELECT sum(gross_payment_revenue-net_revenue) FROM customer_month) - (SELECT sum(refund_amount) FROM transactions)",
         "ex_test_customer_counts_reconcile": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE x.n_acquired+x.excluded_test_buyers<>c.n_acquired",
+        "ex_test_cell_counts_reconcile": "SELECT count(*) FROM (SELECT cohort_month,age_month,sum(n_acquired) AS n_acquired,sum(n_retained) AS n_retained FROM cohort_age_ex_tests GROUP BY cohort_month,age_month) c JOIN cohort_economics_ex_tests x USING(cohort_month,age_month) WHERE c.n_acquired<>x.n_acquired OR c.n_retained<>x.n_retained",
         "ex_test_spending_reconciles": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE abs(x.acquisition_spend+x.excluded_test_spend-c.acquisition_spend)>0.000001",
     }
     for name, query in assertions.items():
@@ -134,7 +137,7 @@ def build_views(data_dir: Path, output_dir: Path) -> dict:
         "currency": manifest["currency"], "definitions": manifest["definitions"],
         "source_validation": source_validation, "sql_checks": checks, "table_row_counts": row_counts,
         "experiment_interval": "Approximate 95% normal intervals: purchase-rate differences use unpooled Bernoulli standard errors; contribution-after-media per prospect uses sqrt(s_T^2/n_T+s_C^2/n_C), with sample contribution variances over every assigned person including nonbuyers with zero outcomes. Recorded media spending is treated as fixed and changes the mean, not its standard error. Total-pilot contribution intervals scale the per-prospect interval by n_T. Each experiment retains its own controls and explicit assignment/follow-up dates; windows can differ. These are not long-run LTV intervals, do not include cost uncertainty, and have no correction for comparing different tests.",
-        "segmentation_scope": "All people with six complete observed acquisition-age months; outcome is six-month contribution. All three baseline schemes have two groups. This is descriptive discrimination, not a treatment effect.",
+        "segmentation_scope": "The same paid customers with six complete observed acquisition-age months, excluding both experiment arms. Four baseline schemes each have two groups; outcome is six-receipt contribution including zeros after churn. Variance reduction compares with the pooled outcome. A second comparison centers outcomes by joining month before grouping. Both are descriptive discrimination, not treatment effects.",
         "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
         **summaries,
     }

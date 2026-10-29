@@ -24,6 +24,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm, Normalize
 from matplotlib.ticker import PercentFormatter, FuncFormatter
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from .display import retention_label
 
 ROOT = Path(__file__).resolve().parent.parent
 EPOCH = 1794787200  # 2026-11-16 00:00 UTC; no wall-clock values in artifacts.
@@ -128,21 +129,31 @@ def _cohort_colorbar(fig, axes, cohorts, palette):
 
 def _triangle(ax, matrix, title, mode, ages, cohorts, test_months=()):
     a=matrix.to_numpy(dtype=float)
-    cmap=LinearSegmentedColormap.from_list("retention",["#F2F5F2",COLORS["teal"]])
-    diverge=LinearSegmentedColormap.from_list("cash",[COLORS["orange"],"#F2F5F2",COLORS["teal"]])
+    # Light backgrounds keep the numerals readable without changing their meaning.
+    cmap=LinearSegmentedColormap.from_list("retention",["#FFFFFF","#BEDFD2"])
+    diverge=LinearSegmentedColormap.from_list("cash",["#F8E7E3","#FFFFFF","#DCEDE5"])
     kw={"vmin":0,"vmax":1,"cmap":cmap} if mode=="rate" else {
         "cmap":diverge,"norm":TwoSlopeNorm(vmin=min(-1.,float(np.nanmin(a))),vcenter=0,vmax=max(1.,float(np.nanmax(a))))}
     ax.imshow(np.ma.masked_invalid(a),aspect="auto",**kw)
     ax.set_xticks(range(len(ages)),ages,fontsize=7)
     ax.set_yticks(range(len(cohorts)),[x[:7]+(" *" if x[:7] in test_months else "") for x in cohorts],fontsize=8)
-    ax.set_title(title,loc="left",pad=12);ax.set_xlabel("Age index (0 = first paid month)")
+    ax.set_title(title,loc="left",pad=30 if mode=="cash" else 12);ax.set_xlabel("Age index (0 = first paid month)")
     ax.set_ylabel("Acquisition cohort")
     for r in range(a.shape[0]):
         for c in range(a.shape[1]):
             if np.isfinite(a[r,c]):
-                label=f"{a[r,c]*100:.0f}" if mode=="rate" else f"{a[r,c]:.0f}"
-                white=(mode=="rate" and a[r,c]>.62) or (mode=="cash" and a[r,c]>np.nanmax(a)*.65)
-                ax.text(c,r,label,ha="center",va="center",fontsize=6.8,color="white" if white else COLORS["ink"])
+                value=a[r,c]
+                label=retention_label(value) if mode=="rate" else (("<0" if value<0 else ">0") if 0<abs(value)<.005 else (f"{value:.2f}" if 0<abs(value)<.5 else f"{value:.0f}"))
+                if mode=="cash":label=label.replace("-","−")
+                color=COLORS["ink"] if mode=="rate" else ("#A3332D" if value<0 else "#185A46")
+                ax.text(c,r,label,ha="center",va="center",fontsize=5.6 if len(label)>4 else 6.8,color=color)
+    if mode=="cash":
+        from matplotlib.patches import Rectangle
+        for r in range(a.shape[0]):
+            reached=np.flatnonzero(np.isfinite(a[r]) & (a[r]>=0))
+            if reached.size:
+                ax.add_patch(Rectangle((int(reached[0])-.5,r-.5),1,1,fill=False,edgecolor=COLORS["ink"],linewidth=1.2))
+        ax.text(0,1.012,"Red: acquisition cost not recovered  ·  Green: break-even or beyond",transform=ax.transAxes,fontsize=8,color=COLORS["muted"],va="bottom")
 
 
 def _validate_model_outputs(output: Path) -> dict:
@@ -305,7 +316,7 @@ def build_charts(output_dir: Path) -> dict:
             matches=np.where(val.cohort_month.astype(str).str[:7].to_numpy()==month)[0]
             for position in matches:
                 ax.axvline(position,color=COLORS["gold"],ls=":",lw=1)
-                ax.annotate(month+" test",(position,.04),xycoords=("data","axes fraction"),rotation=90,fontsize=7,ha="right",va="bottom",color=COLORS["gold"])
+                ax.annotate(month+" test",(position,.04),xycoords=("data","axes fraction"),fontsize=6.5,ha="center",va="bottom",color=COLORS["gold"])
         _months(share,list(val.cohort_month))
         done(fig,"ltv-and-cac",["cohort_valuation.csv","experiment_effects.csv"],"Common 12-month discounted contribution horizon; bar strip shows forecast share. Dotted months contain experiments and organic control buyers in the blended CAC denominator. Blended CAC divides tracked spend by all acquired customers, not marginal customers.",{"forecast_share":val.forecast_share.tolist(),"experiment_months":experiment_months,"y_axis_min":0})
         fc=read("forecast_curve.csv",("cohort_month","age_month","contribution_mean","contribution_p05","contribution_p95","observed","n_retained_mean","n_retained_p05","n_retained_p95"))
@@ -341,7 +352,7 @@ def build_charts(output_dir: Path) -> dict:
         if (~observed).any():
             boundary=float(d.loc[observed,"age_month"].max()) if observed.any() else 0
             ax.axvspan(boundary+.05,float(d.age_month.max())+.1,color=COLORS["gold"],alpha=.08);ax.axvline(boundary+.05,color=COLORS["gold"],lw=.8)
-        ax.set_title(f"Newest cohort: {newest[:7]} · observed history and predicted remainder",loc="left",fontsize=10);ax.set_xlabel("Age index (0 = first paid month)");ax.set_ylabel("Cohort contribution ($)");ax.yaxis.set_major_formatter(FuncFormatter(_currency));ax.grid(axis="y",alpha=.12)
+        ax.set_title(f"Newest cohort: {newest[:7]} · observed history and predicted remainder",loc="left",fontsize=10);ax.set_xlabel("Age index (0 = first paid month)");ax.set_ylabel("Cohort contribution ($)");ax.yaxis.set_major_formatter(FuncFormatter(_currency));ax.grid(axis="y",alpha=.12);ax.set_ylim(bottom=0)
         done(fig,"forecast-detail",["forecast_curve.csv"],"Solid points are observed; dashed continuation and shaded intervals are predictions. Values retain the model output units.")
         fit=read("model_fit_checks.csv",("cohort_month","channel","primary_need","age_month","n_acquired","n_retained","fitted_retained_one_step"))
         latest_six=sorted(fit.loc[fit.age_month>0,"cohort_month"].astype(str).unique())
@@ -438,7 +449,7 @@ def _matched_year_evidence(totals: pd.DataFrame, cash: pd.DataFrame,
         block["paid_cells"]=rows
     return {"age_month":age,"observed_receipts":age+1,"joining_months":[1,2,3,4,5,6],
             "weighting":"Original acquired customer counts within each six-cohort window",
-            "standardization":"Paid channel-by-stated-need composition fixed to the earlier window; organic customers excluded",
+            "standardization":"Paid channel-by-stated-need composition fixed to the earlier window; both experimental arms and organic customers excluded",
             "earlier":blocks[0],"later":blocks[1],
             "fixed_paid_mix":[{"channel":c,"primary_need":n,"weight":w} for (c,n),w in zip(cell_keys,weights)],
             "improved_cells":sum(b["retained_share"]>a["retained_share"] for a,b in zip(paid[0],paid[1])),
@@ -451,7 +462,10 @@ def _context(output: Path) -> dict:
     totals=_table(output,"company_totals.csv").sort_values("calendar_month");last=totals.iloc[-1]
     val=_table(output,"cohort_valuation.csv").sort_values("cohort_month");v=val.iloc[-1]
     seg=_table(output,"segmentation_comparison.csv");effects=_table(output,"experiment_effects.csv");arms=_table(output,"experiment_summary.csv")
-    segrows=[[str(r.scheme).replace("_"," "),f"{r.weighted_within_variance:,.1f}",f"{int(r.n_groups)}",f"{int(r.min_group_size):,}"] for _,r in seg.iterrows()]
+    segrows=[[str(r.scheme).replace("_"," "),f"{r.weighted_within_variance:,.1f}",f"{r.variance_reduction:.1%}",f"{r.cohort_centered_variance_reduction:.1%}",f"{int(r.min_group_size):,}"] for _,r in seg.iterrows()]
+    profile=_table(output,"segmentation_profile.csv")
+    need_profile=profile[profile.scheme=="primary_need"].sort_values("segment")
+    needrows=[[str(r.segment).replace("_"," "),f"{int(r.n):,}",f"{r.retained_share:.1%}",f"${r.mean_contribution:,.2f}",f"${np.sqrt(r.variance):,.2f}"] for _,r in need_profile.iterrows()]
     exrows=[]
     for _,r in arms.iterrows():
         exrows.append([str(r.get("channel",r.experiment_id)).replace("_"," ")+" / "+str(r.get("primary_need","")).replace("_"," "),str(r.arm),f"{int(r.n_assigned):,}",f"{int(r.n_buyers):,}",f"${float(r.contribution):,.2f}",f"${float(r.media_spend):,.2f}"])
@@ -460,11 +474,16 @@ def _context(output: Path) -> dict:
     if vb:
         back+=f" A separate training-only forecast checks complete 12-month values: LTV mean absolute error ${float(vb['ltv_mae']):.2f} versus ${float(vb['baseline_ltv_mae']):.2f} for its baseline."
     back+=" These tests evaluate prediction, not campaign effects."
-    first_value=val.iloc[0]
-    latest=(f"Across the cohort sequence, common-horizon contribution LTV combines observed receipts with a growing predicted remainder; the strip makes that dependence visible. Net of blended CAC, the endpoint comparison is {_money(first_value.net_ltv_mean,2)} for {str(first_value.cohort_month)[:7]} versus {_money(v.net_ltv_mean,2)} for {str(v.cohort_month)[:7]}. This is not a monotonic improvement claim. The newest value is {float(v.forecast_share):.0%} forecast, with a 5th--95th parameter range of {_money(v.net_ltv_p05,2)} to {_money(v.net_ltv_p95,2)}.").replace("%",r"\%")
+    complete=val[val.forecast_share.abs()<1e-9].sort_values("cohort_month")
+    if len(complete)<2:raise ValueError("The management comparison requires two fully observed cohorts")
+    first_value,last_complete=complete.iloc[0],complete.iloc[-1]
+    history=_table(output,"valuation_backtest.csv")
+    youngest_history=history.sort_values(["observed_months_at_origin","cohort_month"]).iloc[0]
+    historical_miss=float(youngest_history.pred_ltv_before_cac-youngest_history.actual_ltv_before_cac)
+    latest=(f"Among cohorts with all twelve receipts observed, net contribution value increases from {_dollars(first_value.net_ltv_mean,2)} for {str(first_value.cohort_month)[:7]} to {_dollars(last_complete.net_ltv_mean,2)} for {str(last_complete.cohort_month)[:7]}. The newest cohort, {str(v.cohort_month)[:7]}, is separate: {_dollars(v.net_ltv_mean,0)} net value, {float(v.forecast_share):.0%} forecast, with a 5th--95th parameter range of {_dollars(v.net_ltv_p05,0)} to {_dollars(v.net_ltv_p95,0)}. Its projection depends on the cohort-trend term and customer mix, with no observed renewal trial. In the historical one-receipt comparison, the model over-forecast value by {_dollars(historical_miss,2)}; that miss illustrates risk beyond the parameter band.")
     ct=_table(output,"cohort_totals.csv")
     cash=_table(output,"cohort_cash_economics.csv")
-    cells=_table(output,"cohort_age_summary.csv")
+    cells=_table(output,"cohort_age_ex_tests.csv")
     window=_matched_year_evidence(ct,cash,cells)
     a,z=window["earlier"],window["later"]
     adjusted=_table(output,"cohort_economics_ex_tests.csv")
@@ -485,18 +504,19 @@ def _context(output: Path) -> dict:
     rows=[["Sixth-month retained share",f"{a['retained_share']:.1%}",f"{z['retained_share']:.1%}","Observed at age index 5"],
           ["Blended CAC",f"${ca:,.2f}",f"${cz:,.2f}","Tracked spending / all acquired people"],
           ["Six-month contribution / customer",f"${a['contribution_per_customer']:,.2f}",f"${z['contribution_per_customer']:,.2f}","After recorded variable costs"],
-          ["Six-month cash after acquisition",f"${a['cash_after_cac_per_customer']:,.2f}",f"${z['cash_after_cac_per_customer']:,.2f}","Contribution less blended CAC"],
-          ["Ex-test CAC / cash",f"${ex_test[0]['blended_cac']:,.2f} / ${ex_test[0]['cash_after_cac_per_customer']:,.2f}",f"${ex_test[1]['blended_cac']:,.2f} / ${ex_test[1]['cash_after_cac_per_customer']:,.2f}","Same joining windows; both test arms excluded"]]
-    test_disclosure=(f"Reported economics include experimental buyers. The later window contains {ex_test[1]['excluded_test_buyers']} test-assigned buyers and ${ex_test[1]['excluded_test_spend']:,.0f} of test spending; excluding both arms and their contribution gives the sensitivity row. The earlier window excludes {ex_test[0]['excluded_test_buyers']} buyers. Improvement remains; its magnitude is smaller.")
-    progress=(f"At age 5, six-month cash after acquisition changes from ${a['cash_after_cac_per_customer']:,.2f} to ${z['cash_after_cac_per_customer']:,.2f} per original customer. The comparison uses January--June {a['year']} and the same joining months of {z['year']}, weighted by acquired cohort size. Table 1 reports the matching retention, contribution and blended-CAC evidence. These are descriptive comparisons, not campaign effects.")
+          ["Six-month cash after acquisition",_dollars(a["cash_after_cac_per_customer"],2),_dollars(z["cash_after_cac_per_customer"],2),"Contribution less blended CAC"],
+          ["Ex-test retained share",f"{ex_test[0]['retained_share']:.1%}",f"{ex_test[1]['retained_share']:.1%}","Both experimental arms excluded"],
+          ["Ex-test CAC / cash",_dollars(ex_test[0]["blended_cac"],2)+" / "+_dollars(ex_test[0]["cash_after_cac_per_customer"],2),_dollars(ex_test[1]["blended_cac"],2)+" / "+_dollars(ex_test[1]["cash_after_cac_per_customer"],2),"Same joining windows; both test arms excluded"]]
+    test_disclosure=(f"The later window includes {ex_test[1]['excluded_test_buyers']} experimental buyers and ${ex_test[1]['excluded_test_spend']:,.0f} of test spending; the earlier window has none. Sensitivity rows exclude both arms and their receipts. Cash improves by ${ex_test[1]['cash_after_cac_per_customer']-ex_test[0]['cash_after_cac_per_customer']:,.2f} excluding tests, versus ${z['cash_after_cac_per_customer']-a['cash_after_cac_per_customer']:,.2f} including them. Differences are computed from unrounded values.")
+    progress=(f"At age 5, six-month cash after acquisition changes from {_dollars(a['cash_after_cac_per_customer'],2)} to {_dollars(z['cash_after_cac_per_customer'],2)} per original customer. The comparison uses January--June {a['year']} and the same joining months of {z['year']}, weighted by acquired cohort size. Table 1 reports the matching retention, contribution and blended-CAC evidence. These are descriptive comparisons, not campaign effects.")
     renewal_improving=(z["retained_share"]>a["retained_share"] and window["improved_cells"]==window["total_cells"])
-    facet_sentence=(f"Age-5 paid retention is {a['paid_raw_retention']:.1%} for January--June {a['year']} versus {z['paid_raw_retention']:.1%} for the same {z['year']} joining months. Fixing the earlier channel-by-need mix gives {a['paid_fixed_mix_retention']:.1%} versus {z['paid_fixed_mix_retention']:.1%}; {window['improved_cells']} of {window['total_cells']} paid groups improve. This removes changes in these groups' shares, not all customer differences or confounding. All 24 trajectories are shown above.")
+    facet_sentence=(f"Excluding both experimental arms, age-5 paid retention is {a['paid_raw_retention']:.1%} for January--June {a['year']} versus {z['paid_raw_retention']:.1%} for the same {z['year']} joining months. Fixing the earlier channel-by-need mix gives {a['paid_fixed_mix_retention']:.1%} versus {z['paid_fixed_mix_retention']:.1%}; {window['improved_cells']} of {window['total_cells']} paid groups improve. This removes changes in these groups' shares, not all customer differences or confounding. The curves above retain the full observed population; the table excludes both experimental arms.")
     choices_path=output/"learner_choices.json"
     choices=_json(choices_path) if choices_path.exists() else {}
     improving = (cz < ca and z["contribution_per_customer"] > a["contribution_per_customer"]
                  and z["cash_after_cac_per_customer"] > a["cash_after_cac_per_customer"])
-    renewal_claim=("Later cohorts also retain more customers at common ages, including within each channel--need group." if renewal_improving else "Renewal is not clearly improving across successive cohorts.")
-    executive_verdict = (("The company is moving toward stronger customer economics: lower blended CAC, higher contribution and more cash recovered over six months. "+renewal_claim+" Short campaign tests do not yet establish the return from a larger acquisition budget.")
+    renewal_claim=("Retention also improves within each channel--need group after excluding both experimental arms." if renewal_improving else "Renewal is not clearly improving across successive cohorts.")
+    executive_verdict = (("Customer economics are strengthening: lower blended CAC, higher contribution and more cash recovered over six months. "+renewal_claim+" Short campaign tests do not establish the return from a larger budget.")
                          if improving else "The cohort evidence does not establish broad economic improvement. Evaluate renewal, acquisition cost, contribution and cash recovery together, then resolve the weak channel--need cells before expanding the budget.")
     default_action = ("Continue measured acquisition while requiring a stated cash-payback limit and randomized evidence before increasing campaign spending. Review each new joining cohort at common ages within its channel and stated-need group."
                       if improving else "Keep acquisition expansion conditional on better cohort economics. Assign Marketing, Product and Analytics a review of the channel and customer-need cells where retention or acquisition cost has deteriorated, then test the proposed correction.")
@@ -508,34 +528,39 @@ def _context(output: Path) -> dict:
     cohorts=sorted(ct.cohort_month.astype(str).unique())
     scope_line=f"{len(cohorts)} monthly acquisition cohorts, {cohorts[0][:7]} through {cohorts[-1][:7]}; data cutoff {str(data_as_of)[:10]}"
     best_seg=seg.sort_values("weighted_within_variance").iloc[0]
-    other_seg=seg[seg.scheme!=best_seg.scheme]
-    relative_gain=(1-float(best_seg.weighted_within_variance)/float(other_seg.weighted_within_variance.min())) if len(other_seg) else 0.
-    gain_qualifier="modest" if relative_gain<.10 else "material"
-    segmentation_sentence=(f"The {str(best_seg.scheme).replace('_',' ')} grouping has the lowest within-group variance in six-month contribution ({float(best_seg.weighted_within_variance):,.1f} dollars squared), a {relative_gain:.1%} reduction versus the next-best scheme. This {gain_qualifier} separation leaves residual heterogeneity: a need label does not make customers economically identical.")
+    relative_gain=float(best_seg.variance_reduction)
+    segmentation_sentence=(f"Among four two-group strategies on the same {int(best_seg.n_customers):,} paid customers, {str(best_seg.scheme).replace('_',' ')} has the lowest within-group variance in six-receipt contribution ({float(best_seg.weighted_within_variance):,.1f} dollars squared). It reduces unexplained variation by {relative_gain:.1%} relative to no segmentation; after centering outcomes within joining month, the reduction is {float(best_seg.cohort_centered_variance_reduction):.1%}. Substantial individual variation remains within each group.")
+    low=need_profile.sort_values("mean_contribution").iloc[0];high=need_profile.sort_values("mean_contribution").iloc[-1]
+    need_sentence=(f"Customers whose initial stated need is {str(high.segment).replace('_',' ')} produce ${high.mean_contribution-low.mean_contribution:,.2f} more contribution over six receipts than those stating {str(low.segment).replace('_',' ')}, on average. Their sixth-month retained share differs by {100*(high.retained_share-low.retained_share):.1f} percentage points. This identifies an economically relevant customer distinction, not proof that changing a customer's need or acquisition channel would cause the same outcome.")
+    cellrows=[[x["channel"].title()+" / "+x["primary_need"].replace("_"," "),f"{x['retained_share']:.1%}",f"{y['retained_share']:.1%}",f"{100*(y['retained_share']-x['retained_share']):+.1f} pp"] for x,y in zip(a['paid_cells'],z['paid_cells'])]
     experiment_sentence=""
     if len(effects):
         net_col=_col(effects,"incremental_contribution_after_media_per_eligible","incremental_contribution_after_media_per_prospect","contribution_after_media_lift_per_eligible","incremental_contribution_per_eligible_after_media")
         terms=[f"{str(r.channel).replace('_',' ')} / {str(r.primary_need).replace('_',' ')}: {_dollars(r[net_col],2)} over {int(r.followup_days)} days (95% interval {_dollars(r[net_col+'_ci_lower'],2)} to {_dollars(r[net_col+'_ci_upper'],2)})" for _,r in effects.iterrows()]
         zero_count=int(((effects[net_col+"_ci_lower"]<=0)&(effects[net_col+"_ci_upper"]>=0)).sum())
-        experiment_sentence="Incremental contribution after media per assigned prospect: "+"; ".join(terms)+f". {zero_count} of {len(effects)} intervals include zero; neither the sign nor the ranking of point estimates warrants a scale-or-stop decision."
+        experiment_sentence="Incremental contribution after media per assigned prospect: "+"; ".join(terms)+f". {zero_count} of {len(effects)} intervals include zero; Search is encouraging; neither short window establishes lifetime returns."
         if has_economics and "recommended_action" not in choices:
             monitoring_cash=ex_test[1]["cash_after_cac_per_customer"]
-            product_action=("Product should protect the experience supporting stronger renewal and monitor whether the newest cohorts sustain it as acquisition scales." if renewal_improving else "Product should investigate the weaker renewal trajectories before assuming conversion gains imply durable value.")
-            learner_action=(f"Marketing and Analytics should preserve controls and extend both campaign follow-ups through the cash-recovery horizon. Finance should monitor six-month cash against the ex-test matched window's ${monitoring_cash:,.2f} per customer, not use it as an automatic causal gate. "+product_action)
+            product_action=("Product should investigate, using events and feedback, what changed for the later cohorts." if renewal_improving else "Product should investigate the weaker renewal trajectories before assuming conversion gains imply durable value.")
+            learner_action=(f"Marketing and Analytics should verify that controls stayed protected before using later outcomes; otherwise run a longer test. Finance should monitor the ex-test ${monitoring_cash:,.2f} six-month cash benchmark, not use it as an automatic causal gate. "+product_action)
     company_sentence=""
     if "acquisition_spend" in totals:
         balance=float(last.contribution)-float(last.acquisition_spend)
         company_sentence=(f"In {str(last.calendar_month)[:7]}, recorded contribution was ${float(last.contribution):,.0f} and acquisition spending was ${float(last.acquisition_spend):,.0f}, leaving ${balance:,.0f} before fixed costs, financing and taxes. This period result should be read alongside the age-aligned cohort comparison, rather than used as a substitute for it.")
     action_rows=[
-        ["Marketing + Finance","Defer expansion or rejection based only on the short-window profit estimates; monitor recovery against mature-cohort experience.","Age-aligned value and cash, alongside uncertainty in incremental returns."],
-        ["Product + Operations","Monitor the experience behind each segment's renewal trajectory; investigate departures as acquisition scales.","Renewal events, product actions and expressed customer evaluations."],
-        ["Marketing + Analytics","Preserve both controls and extend follow-up through the acquisition cash-recovery horizon.","Contribution after media per assigned prospect, including nonbuyers, with uncertainty."],
-        ["Data + Analytics","Refresh the evidence from the source exports and review forecast misses before releasing the decision report.","SQL reconciliation, model holdouts, parameter output and file hashes."],
+        ["Marketing + Finance","Assess a larger budget using longer-window incremental contribution and cash recovery.","Age-aligned value and cash, alongside uncertainty in incremental returns."],
+        ["Product + Operations","Investigate renewal changes using product events and customer feedback.","Renewal events, product actions and expressed customer evaluations."],
+        ["Marketing + Analytics","Verify control protection before extending the comparison; otherwise run a longer test.","Contribution after media per assigned prospect, including nonbuyers, with uncertainty."],
+        ["Data + Analytics","Refresh source exports and review forecast errors before the next decision.","SQL reconciliation, model holdouts, parameter output and file hashes."],
     ]
     return {"latest_active":f"{last.n_retained:,.0f}","latest_revenue":_money(last.net_revenue),"latest_contribution":_money(last.contribution),"data_as_of":_tex(data_as_of),
-            "segmentation_table":_latex_table(["Grouping","Variance (dollars squared)","Groups","Smallest group (people)"],segrows),
+            "segmentation_table":_latex_table(["Two-group strategy","Within variance ($ squared)","Reduction","Cohort-centered reduction","Smallest group"],segrows),
+            "segment_profile_table":_latex_table(["Initial stated need","Customers","Retained at age 5","Six-receipt contribution","Within-group SD"],needrows),
+            "segment_profile_sentence":_tex(need_sentence),
+            "need_headline":_tex(f"Initial need is informative: {str(high.segment).replace('_',' ')} customers show ${high.mean_contribution-low.mean_contribution:,.0f} more six-receipt contribution and {100*(high.retained_share-low.retained_share):.0f} percentage points higher retention than {str(low.segment).replace('_',' ')} customers; variation within each group remains substantial."),
+            "segment_cell_table":_latex_table(["Original channel / need","Jan--Jun 2024","Jan--Jun 2025","Change"],cellrows),
             "experiment_table":r"{\fontsize{8}{10}\selectfont "+_latex_table(["Test","Arm","Assigned","Buyers","Contribution","Media"],exrows,"p{.25\\linewidth}lrrrr")+"}",
-            "backtest_sentence":_tex(back),"latest_valuation_sentence":latest,
+            "backtest_sentence":_tex(back),"latest_valuation_sentence":_tex(latest),
             "economics_assumption":_tex(model.get("economics_assumption","Future economics follow the documented model assumptions.")),
             "facet_sentence":_tex(facet_sentence),
             "decision_table":_latex_table(["Evidence","Earlier","Later","Interpretation"],rows),"progress_sentence":_tex(progress).replace("Table 1",r"Table~\ref{tab:executive-evidence}"),
@@ -578,7 +603,7 @@ def _write_executive_metrics(output: Path, context: dict) -> Path:
                      "source":"tables/cohort_cash_economics.csv", "source_sha256":_sha(output/"tables/cohort_cash_economics.csv")})
     path=output/"report/executive_metrics.csv";path.parent.mkdir(parents=True,exist_ok=True)
     pd.DataFrame(rows).to_csv(path,index=False,float_format="%.10f",lineterminator="\n")
-    evidence={**context["renewal_window_evidence"],"source_hashes":{name:_sha(output/"tables"/name) for name in ["cohort_totals.csv","cohort_cash_economics.csv","cohort_age_summary.csv","cohort_economics_ex_tests.csv"]}}
+    evidence={**context["renewal_window_evidence"],"source_hashes":{name:_sha(output/"tables"/name) for name in ["cohort_totals.csv","cohort_cash_economics.csv","cohort_age_summary.csv","cohort_age_ex_tests.csv","cohort_economics_ex_tests.csv"]}}
     _write_json(path.parent/"matched_cohort_comparison.json",evidence)
     return path
 
@@ -741,7 +766,7 @@ def _appendix_context(output: Path) -> dict:
     if _sha(schema) != diagram_manifest.get("output_hashes", {}).get("diagrams/source-tables-report.png"):
         raise ValueError("Detailed Archify schema is not bound to the diagram manifest")
     shutil.copyfile(schema, output / "report/figures/source-tables-report.png")
-    for stem in ["journey-save-time","journey-build-skill","knowledge-assets"]:
+    for stem in ["business-journey","knowledge-assets"]:
         path=output/"diagrams"/(stem+".png")
         expected=diagram_manifest.get("output_hashes",{}).get("diagrams/"+path.name)
         if not expected or not path.is_file() or _sha(path)!=expected:
@@ -749,7 +774,7 @@ def _appendix_context(output: Path) -> dict:
         shutil.copyfile(path,output/"report/figures"/path.name)
     style = _validate_style()
     from .ucv import CATEGORY_DEFINITIONS
-    model_description = " ".join(str(description[x]) for x in ["retention", "heterogeneity", "censoring"])
+    model_description = "Members differ in their underlying propensity to renew. The model learns how that distribution varies with initial need, acquisition channel and joining cohort. A cohort's average churn can decline as its more durable members remain; this need not mean each individual becomes more loyal. Completed renewals provide evidence, while pending and future decisions remain unobserved."
     technical = " ".join(str(description[x]) for x in ["retention", "heterogeneity", "revenue", "censoring"])
     contract_rows = [
         ["Joining cohort", "Month of the first successful payment, derived from complete payment history."],
@@ -763,7 +788,7 @@ def _appendix_context(output: Path) -> dict:
         **valuation_context,
         "model_short_description": _tex(model["model"]),
         "model_description": _model_text(model_description),
-        "model_economics_description": _tex(description["revenue"] + " " + description["forecast"].replace("Forecast bands and the probability of nonnegative expected cash cover","Forecast bands cover")),
+        "model_economics_description": _tex("A separate revenue model estimates spending per retained member. Observed revenue and contribution are preserved; only the remaining receipts are forecast, with recorded cost and refund relationships held fixed. Values cover each cohort's first twelve monthly receipts, discounted at 1% per month. The model has no calendar-time effect: common disruptions can move cohorts together and are outside these parameter bands."),
         "model_equation": r"\[\operatorname{net\,LTV}_{H}=\sum_{a=0}^{H-1}\frac{\operatorname{E}[\text{contribution}_{a}\mid\text{observed history}]}{(1+d)^{a+1}}-\operatorname{CAC}.\]",
         "horizon_months": str(int(model["horizon_months"])),
         "interval_description": _tex(model["uncertainty_label"]),
@@ -888,6 +913,7 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
     manifest={"version":3,"source_date_epoch":EPOCH,"report_source_sha256":_sha(source),"style_sha256":_sha(directory/"labreport.sty"),
               "upstream_style_version":style["upstream_style_version"],"upstream_style_sha256":_sha(directory/"longxiu-research-brief.sty"),
               "template_sha256":_sha(ROOT/"templates/customer-economics-report.tex.j2"),
+              "display_formatter_sha256":_sha(ROOT/"cohort_lab/display.py"),
               "report_skill_sha256":_sha(ROOT/"skills/executive-report/SKILL.md"),
               "parameter_summary_sha256":_sha(output/"tables/parameter_summary.csv"),
               "executive_metrics_sha256":_sha(metrics_path),
@@ -905,8 +931,9 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
         manifest["build"]=_compile_native(source)
         from pypdf import PdfReader
         pdf=PdfReader(source.with_suffix(".pdf"))
-        expected_pages=rendered.count(r"\PageTitle{")
-        schema_page=rendered.split(r"\BeginSchemaFoldout",1)[0].count(r"\PageTitle{")
+        expected_pages=rendered.count(r"\PageTitle{")+rendered.count(r"\SectionDivider{")
+        schema_prefix=rendered.split(r"\BeginSchemaFoldout",1)[0]
+        schema_page=schema_prefix.count(r"\PageTitle{")+schema_prefix.count(r"\SectionDivider{")
         if len(pdf.pages)!=expected_pages:raise ValueError(f"Expected {expected_pages} designed pages including the schema foldout, got {len(pdf.pages)}; inspect pagination")
         for index,page in enumerate(pdf.pages):
             width,height=(1190.551,841.89) if index==schema_page else (612,792)

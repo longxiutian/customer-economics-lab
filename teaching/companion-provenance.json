@@ -4,7 +4,7 @@
   "all96_retention_series_checked": true,
   "all_slides_visually_reviewed": true,
   "business": "Studio North",
-  "changes": "Numbered figures and tables; all 24 cohort table rows and 96 within-cell curves; chronological colors; CPU/uv model description; future-calendar challenge; no private generation details.",
+  "changes": "Refreshed all numerical exhibits from version 4 observed records; one broad introductory business map; 24 cohort table rows, 96 within-cell curves and 24 company layers; report section and semantic-color guidance.",
   "cohorts": "January 2024\u2013December 2025",
   "editable_chart_count": 5,
   "editable_table_count": 5,
@@ -13,19 +13,19 @@
   "numbered_tables": 5,
   "observation_cutoff": "2026-01-01 exclusive",
   "pdf_page_count": 12,
-  "pdf_sha256": "ca981ab5cb85090c939e48edcbf37e0b80c138034783d7bda246558ef3fe8da0",
-  "pptx_sha256": "23763d9b5fc07e52e9af59bd8c54ac93a0b90df4858808bc0786c131ab8bb8ee",
+  "pdf_sha256": "58dfcab8aad0f17cc425bd99d543a43cd1be4e1477ca166d8a400119c0494c42",
+  "pptx_sha256": "fb53a57718373cd96343c3e33aacd790d9a252ae7f3ba90e48a3fc3eb05fd91f",
   "slide_count": 12,
-  "source_output_run": "v3-release-verified/run-a",
+  "source_output_run": "v4-release-verified-r2/run-a",
   "source_table_hashes": {
-    "cohort_age_summary.csv": "08d1ce215a9cd9650ed1eb076f88df370ad22b13761d36ca1f8e77ccb1a8c99f",
-    "cohort_totals.csv": "41aaeb91c9ac00b2cfddaac722ff81896da28441276397be5253c73f39cfdb75",
-    "company_month.csv": "ec7e2af37ce42b1d89aaf07cc2fb68e99f66499a48c76d7b4fc353d35ac4be40",
-    "company_totals.csv": "d977ce194ea0c509d54bb71f808dc2226fefbba0e57531cabd6161343df6a5a2",
-    "experiment_effects.csv": "393a67fd85ead20f66a8c7608b19ad53848c90c5331022c7b6d77d881258d88b",
-    "experiment_summary.csv": "c322d43bf854e60862b592577e6607ba4b99d20cb361771ff168c3b4652ee622"
+    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
+    "cohort_totals.csv": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c",
+    "company_month.csv": "902f4bb2cdc810882e394c13669c80dc53dd8e719b4971b8dfcfea163590c298",
+    "company_totals.csv": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
+    "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
+    "experiment_summary.csv": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc"
   },
   "validation_receipt_status": "pass",
-  "version": "3.0.0",
-  "visual_qa_note": "The conservative table-height warning on slide 7 was checked against the native PowerPoint render. All 24 cohort rows, the explanatory sentence and footer fit without overlap."
+  "version": "4.0.0",
+  "visual_qa_note": "All twelve native PowerPoint renders were inspected. The conservative table-height warning on slide 7 was checked: all 24 cohort rows, explanation and footer fit without overlap."
 }

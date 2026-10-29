@@ -178,25 +178,52 @@ SELECT experiment_id, channel, primary_need, n_treatment, n_control, buyers_trea
        incremental_net_revenue/nullif(incremental_media_spend, 0) AS iroas
 FROM effects;
 
-CREATE OR REPLACE VIEW segmentation_comparison AS
+CREATE OR REPLACE VIEW segmentation_subjects AS
 WITH six_month_people AS (
- SELECT c.person_id, a.primary_need, a.age_band, a.region,
-        sum(c.contribution)::DOUBLE AS six_month_contribution
+ SELECT c.person_id, a.cohort_month, a.channel, a.primary_need, a.age_band, a.region,
+        sum(c.contribution)::DOUBLE AS six_month_contribution,
+        max(CASE WHEN c.age_month=5 THEN c.retained ELSE 0 END)::INTEGER AS retained_at_age5
  FROM customer_month c JOIN acquired_customers a USING (person_id)
  WHERE c.age_month < 6 AND a.cohort_month + INTERVAL '6 months' <= (SELECT data_as_of FROM lab_settings)
- GROUP BY c.person_id, a.primary_need, a.age_band, a.region
+   AND a.channel IN ('search','partner')
+   AND NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
+ GROUP BY c.person_id, a.cohort_month, a.channel, a.primary_need, a.age_band, a.region
  HAVING count(*) = 6
-), grouped AS (
- SELECT 'primary_need' AS scheme, primary_need AS segment, count(*) AS n, var_pop(six_month_contribution) AS variance
- FROM six_month_people GROUP BY primary_need
- UNION ALL
- SELECT 'age_band', age_band, count(*), var_pop(six_month_contribution) FROM six_month_people GROUP BY age_band
- UNION ALL
- SELECT 'region', region, count(*), var_pop(six_month_contribution) FROM six_month_people GROUP BY region
 )
-SELECT scheme, sum(n*variance)/sum(n) AS weighted_within_variance,
-       sum(n)::INTEGER AS n_customers, count(*)::INTEGER AS n_groups, min(n)::INTEGER AS min_group_size
-FROM grouped GROUP BY scheme;
+SELECT *, six_month_contribution - avg(six_month_contribution) OVER (PARTITION BY cohort_month) AS cohort_centered_contribution
+FROM six_month_people;
+
+CREATE OR REPLACE VIEW segmentation_profile AS
+WITH labeled AS (
+ SELECT *, 'primary_need' AS scheme, primary_need AS segment FROM segmentation_subjects
+ UNION ALL
+ SELECT *, 'age_band', age_band FROM segmentation_subjects
+ UNION ALL
+ SELECT *, 'region', region FROM segmentation_subjects
+ UNION ALL
+ SELECT *, 'acquisition_channel', channel FROM segmentation_subjects
+)
+SELECT scheme, segment, count(*)::INTEGER AS n,
+       avg(six_month_contribution) AS mean_contribution,
+       var_pop(six_month_contribution) AS variance,
+       avg(retained_at_age5) AS retained_share,
+       var_pop(cohort_centered_contribution) AS cohort_centered_variance
+FROM labeled GROUP BY scheme, segment;
+
+CREATE OR REPLACE VIEW segmentation_comparison AS
+WITH overall AS (
+ SELECT var_pop(six_month_contribution) AS pooled_variance,
+        var_pop(cohort_centered_contribution) AS pooled_cohort_centered_variance
+ FROM segmentation_subjects
+), grouped AS (
+ SELECT scheme, sum(n*variance)/sum(n) AS weighted_within_variance,
+        sum(n*cohort_centered_variance)/sum(n) AS cohort_centered_within_variance,
+        sum(n)::INTEGER AS n_customers, count(*)::INTEGER AS n_groups, min(n)::INTEGER AS min_group_size
+ FROM segmentation_profile GROUP BY scheme
+)
+SELECT *, 1-weighted_within_variance/nullif(pooled_variance,0) AS variance_reduction,
+       1-cohort_centered_within_variance/nullif(pooled_cohort_centered_variance,0) AS cohort_centered_variance_reduction
+FROM grouped CROSS JOIN overall;
 
 CREATE OR REPLACE VIEW cohort_totals AS
 WITH totals AS (
@@ -285,3 +312,13 @@ SELECT cohort_month,cohort_index,age_month,calendar_month,n_acquired,n_retained,
        (cumulative_contribution-acquisition_spend)::DECIMAL(18,2) AS balance_after_acquisition,
        (cumulative_contribution-acquisition_spend)/n_acquired AS balance_per_customer
 FROM cumulative;
+
+-- A descriptive within-group comparison on the same nonexperimental population.
+-- Remove both assigned arms, including control buyers, before taking ratios.
+CREATE OR REPLACE VIEW cohort_age_ex_tests AS
+SELECT cohort_month, channel, primary_need, age_month,
+       count(*)::INTEGER AS n_acquired, sum(retained)::INTEGER AS n_retained,
+       sum(retained)::DOUBLE/count(*) AS retained_share
+FROM customer_month c
+WHERE NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
+GROUP BY cohort_month, channel, primary_need, age_month;

@@ -62,7 +62,7 @@ def test_stage5_rejects_tampered_experiment_outputs(tmp_path):
 def test_experiment_effects_scale_unequal_assignment_arms():
     """A 4-person treatment must compare with twice the 2-person control totals."""
     sql = (ROOT / "sql" / "01_views.sql").read_text()
-    effect_sql = sql.split("CREATE OR REPLACE VIEW experiment_effects AS", 1)[1].split("CREATE OR REPLACE VIEW segmentation_comparison AS", 1)[0]
+    effect_sql = sql.split("CREATE OR REPLACE VIEW experiment_effects AS", 1)[1].split("CREATE OR REPLACE VIEW segmentation_subjects AS", 1)[0]
     con = duckdb.connect()
     try:
         con.execute("""CREATE TABLE experiment_summary AS SELECT * FROM (VALUES
@@ -128,13 +128,15 @@ def test_report_preserves_the_learners_distinct_judgment(tmp_path, monkeypatch):
         "recommended_action": "Test a $100 offer before expanding."}))
     fixtures = {
         "company_totals.csv": pd.DataFrame([dict(calendar_month="2025-12-01", n_retained=42, net_revenue=1000, contribution=300)]),
-        "cohort_valuation.csv": pd.DataFrame([dict(cohort_month="2025-12-01", net_ltv_mean=50, net_ltv_p05=40, net_ltv_p95=60, forecast_share=.8)]),
-        "segmentation_comparison.csv": pd.DataFrame([dict(scheme="primary_need", weighted_within_variance=2, n_groups=2, min_group_size=10)]),
+        "cohort_valuation.csv": pd.DataFrame([dict(cohort_month=co,net_ltv_mean=50,net_ltv_p05=40,net_ltv_p95=60,forecast_share=share) for co,share in [('2024-01-01',0),('2025-01-01',0),('2025-12-01',.8)]]),
+        "valuation_backtest.csv": pd.DataFrame([dict(cohort_month='2024-12-01',observed_months_at_origin=1,pred_ltv_before_cac=120,actual_ltv_before_cac=100)]),
+        "segmentation_comparison.csv": pd.DataFrame([dict(scheme="primary_need", weighted_within_variance=2, n_groups=2, min_group_size=10,n_customers=20,variance_reduction=.2,cohort_centered_variance_reduction=.15)]),
+        "segmentation_profile.csv": pd.DataFrame([dict(scheme="primary_need",segment=need,n=10,retained_share=.6,mean_contribution=100,variance=2) for need in ['save_time','build_skill']]),
         "experiment_effects.csv": pd.DataFrame(),
         "experiment_summary.csv": pd.DataFrame(),
         "cohort_totals.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,retained_share=.5 if year==2024 else .7) for year in [2024,2025] for month in range(1,7)]),
         "cohort_cash_economics.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,cac=100 if year==2024 else 80,cumulative_contribution_per_customer=120 if year==2024 else 140,balance_per_customer=20 if year==2024 else 60) for year in [2024,2025] for month in range(1,7)]),
-        "cohort_age_summary.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=5 if year==2024 else 7)
+        "cohort_age_ex_tests.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=5 if year==2024 else 7)
             for year in [2024,2025] for month in range(1,7)
             for channel in ['search','partner'] for need in ['save_time','build_skill']]),
         "cohort_economics_ex_tests.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,excluded_test_buyers=0,excluded_test_spend=0,acquisition_spend=4000 if year==2024 else 3200,cumulative_contribution=4800 if year==2024 else 5600,balance_after_acquisition=800 if year==2024 else 2400) for year in [2024,2025] for month in range(1,7)]),

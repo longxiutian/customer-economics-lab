@@ -197,77 +197,6 @@ def _report_erd_candidate():
     return candidate
 
 
-def _journey_candidate(con, sql_log):
-    choose="""SELECT p.person_id FROM people p
-        JOIN feedback f USING(person_id)
-        JOIN transactions t USING(person_id)
-        WHERE t.transaction_type='payment'
-        GROUP BY p.person_id ORDER BY min(t.occurred_at), p.person_id LIMIT 1"""
-    sql_log.append(choose); row=con.execute(choose).fetchone()
-    if not row:
-        raise ValueError("A recorded journey needs at least one linked customer with payment and feedback")
-    person=str(row[0]); literal=person.replace("'","''")
-    query=f"""WITH first_paid AS (
-      SELECT min(occurred_at::TIMESTAMP) AS first_paid_at FROM transactions
-      WHERE person_id='{literal}' AND transaction_type='payment'),
-    observations AS (
-      SELECT record_created_at::TIMESTAMP AS event_time, 'CRM record created' AS title,
-        'A person is known to CRM; this is not yet a paid acquisition.' AS detail, 'crm' AS lane
-      FROM people WHERE person_id='{literal}'
-      UNION ALL SELECT occurred_at::TIMESTAMP, replace(event_type,'_',' '),
-        'Observed interaction on ' || platform || '; motive is not supplied.', 'product'
-      FROM product_events WHERE person_id='{literal}'
-      UNION ALL SELECT occurred_at::TIMESTAMP, transaction_type || ': ' || charge_type,
-        'Financial event ' || transaction_id || '; refunds remain separate ledger events.', 'billing'
-      FROM transactions WHERE person_id='{literal}'
-      UNION ALL SELECT submitted_at::TIMESTAMP, 'Customer feedback',
-        coalesce(main_difficulty,'No coded difficulty supplied') || '; a reported perception, not a measured cause.', 'feedback'
-      FROM feedback WHERE person_id='{literal}'
-    ) SELECT event_time,title,detail,lane FROM observations,first_paid
-      WHERE event_time<=first_paid_at + INTERVAL '30 days'
-      ORDER BY event_time,lane,title LIMIT 14"""
-    sql_log.append(query); rows=con.execute(query).fetchall()
-    events=[]
-    for i,(at,title,detail,lane) in enumerate(rows):
-        stamp=at.isoformat(timespec="seconds")+"Z"
-        events.append({"id":f"event{i}","at":stamp,"title":str(title),"detail":str(detail),"lane":lane})
-    return {"schema_version":1,"diagram_type":"timeline","meta":{"title":f"One observed customer journey: {person}","output":"customer-journey.html","locale":"en","quality_profile":"showcase","evidence":"observed","timezone":"UTC"},
-            "lanes":[{"id":"crm","label":"CRM"},{"id":"product","label":"Product"},{"id":"billing","label":"Billing"},{"id":"feedback","label":"Feedback"}],"events":events,
-            "cards":[{"dot":"emerald","title":"Observed in synthetic records","items":["The timeline displays recorded actions and responses for one person; the source data are fictional.","The first 30 days after payment are selected for readability; this is not a population funnel."]},
-                     {"dot":"orange","title":"What the records do not say","items":["A product event does not establish motivation. A survey response is a perception, not a causal explanation.","Other touchpoints and unreported experiences remain unknown. These records suggest questions to investigate."]}]}
-
-
-def _conceptual_journey(need: str) -> dict:
-    """A segment-specific hypothesis, deliberately distinct from observed events."""
-    if need not in {"save_time", "build_skill"}:raise ValueError("Unknown pre-acquisition need segment")
-    short=need.replace("_","-")
-    if need=="save_time":
-        title="Save time: a conceptual customer journey"
-        actions=[("Recognize friction","repetitive task feels costly"),("Evaluate fit","compare ease and effort"),("Get first value","complete one useful task"),("Build a routine","repeat with less effort"),("Review renewal","is the time saving worth it?")]
-        questions=["Hypothesis: a shorter route to first useful output matters more than feature breadth.","Investigate: among people who state save_time, which onboarding steps delay their first useful action?", "Ask in research: what task did you hope to complete, how long did it take, and what remained difficult?"]
-    else:
-        title="Build skill: a conceptual customer journey"
-        actions=[("Set a learning goal","identify a capability gap"),("Evaluate guidance","look for useful practice"),("Try the first lesson","complete guided practice"),("Notice progress","apply a learned skill"),("Review renewal","is there a useful next step?")]
-        questions=["Hypothesis: visible progress and a credible next challenge matter more than immediate speed.","Investigate: among people who state build_skill, does the observed sequence include practice and return visits?", "Ask in research: what did you want to learn, what can you do now, and where did you get stuck?"]
-    evidence=[("Perception: stated goal","people.primary_need"),
-              ("Engagement: early actions","product_events.event_type"),
-              ("Engagement: payment + use","transaction_type / event_type"),
-              ("Engagement + Perception","event_type / value_rating"),
-              ("Relationship: renewal","renewal_outcome / plan_tier")]
-    nodes=[];edges=[]
-    for i,((label,sub),(data_label,data_sub)) in enumerate(zip(actions,evidence)):
-        nodes.extend([{"id":f"step{i}","lane":f"stage{i}","col":0,"type":"frontend","label":label,"sublabel":sub,"width":245,"height":70},
-                      {"id":f"evidence{i}","lane":f"stage{i}","col":1,"type":"database","label":data_label,"sublabel":data_sub,"width":245,"height":70}])
-        if i:edges.append({"id":f"sequence{i}","from":f"step{i-1}","to":f"step{i}","variant":"default","fromSide":"bottom","toSide":"top","route":"drop"})
-        edges.append({"id":f"look{i}","from":f"step{i}","to":f"evidence{i}","variant":"dashed","fromSide":"right","toSide":"left"})
-    return {"schema_version":2,"diagram_type":"workflow","meta":{"title":title,"subtitle":"Hypotheses to examine, not an observed path or a population funnel","output":f"journey-{short}.html","locale":"en","quality_profile":"standard","visual_preset":"editorial","animation":"none",
-            "legend":{"entries":{"frontend":{"label":"Proposed experience"},"database":{"label":"Evidence source"}}}},
-            "lanes":[{"id":f"stage{i}","label":label} for i,label in enumerate(["Need","Evaluation","First value","Ongoing value","Renewal"])],
-            "nodes":nodes,"edges":edges,
-            "cards":[{"dot":"orange","title":"Proposed interpretation — test it","items":questions},
-                     {"dot":"cyan","title":"What is recorded and what is missing","items":["The stated need is recorded before acquisition. It is a segment definition, not proof of motives at every later stage.","Identifiers such as person_id connect evidence across the source records. Evidence boxes name the relevant UCV category and actual field; field provenance remains in the full UCV tables.","The records supply actions, payments, renewal outcomes and selected perceptions. The arrows do not establish causality or a universal order.","Unlike a funnel, this map does not report a population conversion rate. Compare it with the separate observed timeline before designing a survey or intervention."]}]}
-
-
 def _knowledge_assets_candidate() -> dict:
     """Public knowledge/runtime assets; no private generator or holdout enters the map."""
     components = [
@@ -277,7 +206,7 @@ def _knowledge_assets_candidate() -> dict:
         {"id":"csv","type":"database","label":"Eight frozen CSVs","sublabel":"Schemas + UCV field tables","pos":[40,220],"size":[220,78],"sources":[{"path":"data/data_dictionary.json"},{"path":"cohort_lab/ucv.py"}]},
         {"id":"sql","type":"backend","label":"DuckDB + NumPy/pandas","sublabel":"Saved SQL + checked views","pos":[370,220],"size":[220,78],"sources":[{"path":"cohort_lab/analysis.py"},{"path":"sql/01_views.sql"}]},
         {"id":"model","type":"backend","label":"JAX CPU + NumPyro","sublabel":"Retention + revenue inference","pos":[700,220],"size":[220,78],"sources":[{"path":"cohort_lab/model.py"},{"path":"cohort_lab/benchmark.py"}]},
-        {"id":"archify","type":"frontend","label":"Archify skill + Node","sublabel":"Source maps + journeys","pos":[40,400],"size":[220,78],"sources":[{"path":"vendor/archify/SKILL.md"},{"path":"cohort_lab/diagrams.py"}]},
+        {"id":"archify","type":"frontend","label":"Archify skill + Node","sublabel":"Source maps + knowledge assets","pos":[40,400],"size":[220,78],"sources":[{"path":"vendor/archify/SKILL.md"},{"path":"cohort_lab/diagrams.py"}]},
         {"id":"render","type":"backend","label":"Matplotlib + Jinja2","sublabel":"Figures + editable TeX","pos":[370,400],"size":[220,78],"sources":[{"path":"cohort_lab/report.py"},{"path":"templates/customer-economics-report.tex.j2"}]},
         {"id":"output","type":"messagebus","label":"Executive report + evidence","sublabel":"PDF / SQL / model / manifests","pos":[700,400],"size":[220,78],"sources":[{"path":"cohort_lab/report.py"}]},
         {"id":"uv","type":"security","label":"uv + uv.lock","sublabel":"Pinned Python environment","pos":[370,580],"size":[220,78],"sources":[{"path":"pyproject.toml"},{"path":"uv.lock"}]},
@@ -294,7 +223,7 @@ def _knowledge_assets_candidate() -> dict:
     for component in components:
         component.pop("sources")
         component["pos"]=[40+(component["pos"][0]-40)/330*265,40+(component["pos"][1]-40)/180*135]
-    short_subtitles={"article":"Local PDF + MIT notice","student":"One chat / next advances","reportskill":"Style + report appendix",
+    short_subtitles={"article":"Local PDF + MIT notice","student":"Human review gates","reportskill":"Style + report appendix",
                      "csv":"Schemas + UCV fields","sql":"Saved SQL + checks","model":"Retention + revenue",
                      "render":"Figures + TeX source","output":"PDF, SQL, model, audit","uv":"Locked Python packages"}
     for component in components:
@@ -337,15 +266,15 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
     for file in FILES:
         name=file.removesuffix(".csv");count_sql=f"SELECT count(*) FROM {name}";sql_log.append(count_sql)
         inventory.append({"file":file,"rows":con.execute(count_sql).fetchone()[0],"source":SOURCES[file][0],"grain":SOURCES[file][1],"sha256":_sha(data/file)})
-    candidates={"source-systems":_system_candidate(inventory),"source-tables":_erd_candidate(),"source-tables-report":_report_erd_candidate(),"source-systems-report":_report_system_candidate(),"knowledge-assets":_knowledge_assets_candidate(),"customer-journey":_journey_candidate(con,sql_log),
-                "journey-save-time":_conceptual_journey("save_time"),"journey-build-skill":_conceptual_journey("build_skill")}
+    candidates={"source-systems":_system_candidate(inventory),"source-tables":_erd_candidate(),"source-tables-report":_report_erd_candidate(),"source-systems-report":_report_system_candidate(),"knowledge-assets":_knowledge_assets_candidate()}
     con.close()
     (folder/"inspection.sql").write_text(";\n\n".join(s.rstrip(';') for s in sql_log)+";\n",encoding="utf-8")
     _write(folder/"source_inventory.json",inventory)
     ucv_tables=build_ucv_tables(data)
     _write(folder/"ucv-tables.json",{"framework":"Universal Customer View","categories":["Identifiers","Engagement","Relationship","Perception"],"category_definitions":CATEGORY_DEFINITIONS,"tables":ucv_tables})
     (folder/"ucv-tables.md").write_text(ucv_markdown(ucv_tables),encoding="utf-8")
-    results={}
+    from .business_journey import build_business_journey
+    results={"business-journey":build_business_journey(folder)}
     for stem,candidate in candidates.items():
         source=folder/f"{stem}.json";dest=folder/f"{stem}.html";_write(source,candidate)
         kind=candidate["diagram_type"]
@@ -357,7 +286,7 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
     # The report includes the real native overview. Missing browser support is
     # an explicit failure; an old reference PNG is never silently substituted.
     static_stems=("source-systems","source-tables","source-tables-report","source-systems-report",
-                  "knowledge-assets","journey-save-time","journey-build-skill")
+                  "knowledge-assets","business-journey")
     p=subprocess.run([node,str(ROOT/"scripts/export_diagram_assets.mjs"),
                       *[str(folder/f"{stem}.html") for stem in static_stems]],
                      cwd=ROOT,text=True,capture_output=True,timeout=120)
@@ -373,11 +302,11 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
     outputs.extend(folder/Path(info[field]).name for info in results.values() for field in ("json","html","svg","png") if field in info)
     knowledge_paths=("SKILL.md","skills/executive-report/SKILL.md","assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf",
                      "assets/articles/orduz-2024-cohort-revenue-retention/LICENSE.txt","cohort_lab/ucv.py","cohort_lab/analysis.py",
-                     "cohort_lab/model.py","cohort_lab/benchmark.py","cohort_lab/diagrams.py","cohort_lab/report.py",
+                     "cohort_lab/model.py","cohort_lab/benchmark.py","cohort_lab/diagrams.py","cohort_lab/business_journey.py","cohort_lab/report.py",
                      "vendor/archify/SKILL.md","templates/customer-economics-report.tex.j2","pyproject.toml","uv.lock")
     result={"archify":_json_provenance(),"sources":inventory,"diagrams":results,
             "knowledge_asset_hashes":{relative:_sha(ROOT/relative) for relative in knowledge_paths},
-            "static_renderer":{"package":"playwright","version":"1.62.1","script_sha256":_sha(ROOT/"scripts/export_diagram_assets.mjs"),"viewport":[2400,1600],"device_scale_factor":2,"theme":"light","animations":"disabled","locale":"en-US","timezone":"UTC","interactive_ui":"Runtime legend hitboxes/count badges omitted; authored semantic labels and swatches preserved","report_overview":"Native nodes and edges; reader swimlanes/legend omitted; 12px titles and 9px context; cropped with 20px margin","journeys":"Two-column native workflow with stages retained; unused right margin trimmed; 13px titles and 11px context","knowledge_assets":"Compact native architecture with type colors and glyphs; 14px titles and 13px context"},
+            "static_renderer":{"package":"playwright","version":"1.62.1","script_sha256":_sha(ROOT/"scripts/export_diagram_assets.mjs"),"viewport":[2400,1600],"device_scale_factor":2,"theme":"light","animations":"disabled","locale":"en-US","timezone":"UTC","interactive_ui":"Runtime legend hitboxes/count badges omitted; authored semantic labels and swatches preserved","report_overview":"Native nodes and edges; reader swimlanes/legend omitted; 12px titles and 9px context; cropped with 20px margin","business_journey":"One original qualitative experience-map SVG; possible benefits and friction, no measured sentiment","knowledge_assets":"Compact native architecture with type colors and glyphs; 14px titles and 13px context"},
             "ucv":{"json":"diagrams/ucv-tables.json","markdown":"diagrams/ucv-tables.md"},
             "output_hashes":{p.relative_to(output).as_posix():_sha(p) for p in outputs},
             "verification":"Native renderer validation passed; browser and visual review are separate development checks."}

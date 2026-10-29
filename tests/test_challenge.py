@@ -159,4 +159,4 @@ def test_public_data_contract_has_no_generator_or_simulation_seed():
     root=Path(__file__).resolve().parents[1]
     manifest=json.loads((root/'data/data_manifest.json').read_text())
     assert not {'synthetic_seed','retention_dgp','generator'}&set(manifest)
-    assert manifest['dataset_version']=='3.0'
+    assert manifest['dataset_version']=='4.0'
