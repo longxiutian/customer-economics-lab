@@ -1,0 +1,46 @@
+% Report semantics layered over the maintained, unmodified visual package.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{labreport}[2026/10/29 v3.0 Customer economics executive report]
+\RequirePackage{longxiu-research-brief}
+\RequirePackage{graphicx,amsmath}
+% Preserve literal code in both the printed glyphs and the PDF text layer.
+\renewcommand{\ttdefault}{lmtt}
+\DisableLigatures{encoding = T1, family = lmtt}
+\ifdefined\pdfglyphtounicode
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\fi
+\newcommand{\Code}[1]{{\ttfamily\microtypesetup{tracking=false,expansion=false,protrusion=false}\detokenize{#1}}}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\colorlet{Ink}{BriefInk}
+\colorlet{Teal}{BriefGreen}
+\colorlet{Gold}{BriefOchre}
+\colorlet{Muted}{BriefMuted}
+\colorlet{Pale}{BriefPale}
+\colorlet{Rule}{BriefBorder}
+\colorlet{Orange}{BriefOchreRule}
+\colorlet{LightGold}{BriefPaleGold}
+\renewcommand{\BriefRunningHeader}{STUDIO NORTH | CUSTOMER ECONOMICS}
+\renewcommand{\BriefAuthor}{Longxiu Tian}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.18}
+\newcommand{\PageTitle}[3]{\BriefKicker{#1}{Management report}{Illustrative business}\BriefTitle{#2}\BriefCitation{#3}\vspace{4pt}}
+\newcommand{\Section}[1]{\par\BriefSection{#1}}
+\newcommand{\Evidence}[1]{\par{\color{BriefMuted}\fontsize{7.1}{8.6}\selectfont #1}\par}
+\newcommand{\Takeaway}[1]{\begin{BriefSummaryBox}\textbf{#1}\end{BriefSummaryBox}}
+\newcommand{\Boundary}[1]{\begin{BriefBoundaryBox}#1\end{BriefBoundaryBox}}
+\newcommand{\Metric}[3]{\begin{minipage}[t]{.31\linewidth}{\color{BriefMuted}\fontsize{8}{10}\selectfont #1}\par{\color{BriefGreen}\fontsize{20}{23}\selectfont\bfseries #2}\par{\color{BriefMuted}\fontsize{8}{10}\selectfont #3}\end{minipage}}
+\newcommand{\FullFig}[2]{\begin{center}\includegraphics[width=\linewidth,height=#2,keepaspectratio]{figures/#1}\end{center}\vspace{-3pt}}
+\newcommand{\FigureCaption}[2]{\par\refstepcounter{figure}\label{fig:#1}{\color{BriefInk}\fontsize{8}{10}\selectfont\textbf{Figure \thefigure.} #2}\par\vspace{4pt}}
+\newcommand{\ReportFigure}[4]{\FullFig{#3}{#4}\FigureCaption{#1}{#2}}
+\newcommand{\TableCaption}[2]{\par\refstepcounter{table}\label{tab:#1}{\color{BriefInk}\fontsize{8}{10}\selectfont\textbf{Table \thetable.} #2}\par\vspace{3pt}}
+\newcommand{\NewPage}{\clearpage}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\DatasetTitle}[2]{\Section{#1}\Evidence{#2}\vspace{3pt}}
+\newcommand{\ApplyReportPaperSize}{\ifdefined\pdfpagewidth\pdfpagewidth=\paperwidth\pdfpageheight=\paperheight\else\special{papersize=\the\paperwidth,\the\paperheight}\fi}
+\newcommand{\BeginSchemaFoldout}{\clearpage\setlength{\paperwidth}{420mm}\setlength{\paperheight}{297mm}\ApplyReportPaperSize\newgeometry{layoutwidth=420mm,layoutheight=297mm,left=.45in,right=.45in,top=.48in,bottom=.5in}\setlength{\headwidth}{\textwidth}}
+\newcommand{\EndSchemaFoldout}{\clearpage\setlength{\paperwidth}{8.5in}\setlength{\paperheight}{11in}\ApplyReportPaperSize\restoregeometry\setlength{\headwidth}{\textwidth}}
+\hypersetup{pdftitle={Studio North: customer economics management report},pdfauthor={Longxiu Tian},pdfsubject={Synthetic subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab reproducible pipeline}}
+\ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
+\ifdefined\pdftrailerid\pdftrailerid{}\fi
+\ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi

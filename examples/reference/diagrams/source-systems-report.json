@@ -1,0 +1,211 @@
+{
+  "cards": [
+    {
+      "dot": "cyan",
+      "items": [
+        "Source files are separate CSV exports with documented keys. DuckDB executes saved SQL locally; no database server is required.",
+        "customer_month and cohort_age_summary supply retained customers and revenue; cohort_cash_economics adds acquisition cost and cash recovery.",
+        "experiment_person keeps every randomized prospect, including nonbuyers; experiment_effects uses each test's own control and outcome window."
+      ],
+      "title": "Saved evidence, not a hidden answer"
+    },
+    {
+      "dot": "orange",
+      "items": [
+        "The source-tables ERD retains every field, key and cardinality; the UCV appendix identifies available and missing kinds of customer evidence.",
+        "One person has many periods, transactions, events and responses. Aggregate daily campaign spending before joining acquired customers.",
+        "A model forecasts future value; it cannot turn attribution credit or an observed cohort trend into an incremental campaign effect."
+      ],
+      "title": "Read alongside the detailed schema"
+    }
+  ],
+  "diagram_type": "workflow",
+  "edges": [
+    {
+      "from": "experience",
+      "fromSide": "bottom",
+      "id": "report-edge0",
+      "route": "drop",
+      "to": "sql",
+      "toSide": "top"
+    },
+    {
+      "from": "membership",
+      "fromSide": "bottom",
+      "id": "report-edge1",
+      "route": "drop",
+      "to": "sql",
+      "toSide": "top"
+    },
+    {
+      "from": "marketing",
+      "fromSide": "bottom",
+      "id": "report-edge2",
+      "route": "drop",
+      "to": "sql",
+      "toSide": "top"
+    },
+    {
+      "from": "sql",
+      "fromSide": "bottom",
+      "id": "report-edge3",
+      "route": "drop",
+      "to": "observed",
+      "toSide": "top"
+    },
+    {
+      "from": "sql",
+      "fromSide": "bottom",
+      "id": "report-edge4",
+      "route": "drop",
+      "to": "forecast",
+      "toSide": "top"
+    },
+    {
+      "from": "sql",
+      "fromSide": "bottom",
+      "id": "report-edge5",
+      "route": "drop",
+      "to": "incrementality",
+      "toSide": "top"
+    },
+    {
+      "from": "observed",
+      "fromSide": "bottom",
+      "id": "report-edge6",
+      "route": "drop",
+      "to": "decision",
+      "toSide": "top"
+    },
+    {
+      "from": "forecast",
+      "fromSide": "bottom",
+      "id": "report-edge7",
+      "route": "drop",
+      "to": "decision",
+      "toSide": "top"
+    },
+    {
+      "from": "incrementality",
+      "fromSide": "bottom",
+      "id": "report-edge8",
+      "route": "drop",
+      "to": "decision",
+      "toSide": "top"
+    }
+  ],
+  "lanes": [
+    {
+      "id": "sources",
+      "label": "Eight source exports"
+    },
+    {
+      "id": "sql",
+      "label": "Reproducible ETL"
+    },
+    {
+      "id": "evidence",
+      "label": "Three complementary forms of evidence"
+    },
+    {
+      "id": "decision",
+      "label": "Company direction and next action"
+    }
+  ],
+  "meta": {
+    "animation": "none",
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Analysis"
+        },
+        "database": {
+          "label": "Source exports"
+        },
+        "frontend": {
+          "label": "Management decision"
+        }
+      }
+    },
+    "locale": "en",
+    "output": "source-systems-report.html",
+    "quality_profile": "standard",
+    "title": "Studio North: from separate records to a decision",
+    "visual_preset": "editorial"
+  },
+  "nodes": [
+    {
+      "col": 0,
+      "id": "experience",
+      "label": "People + experience",
+      "lane": "sources",
+      "sublabel": "profiles / events / feedback",
+      "type": "database",
+      "width": 200
+    },
+    {
+      "col": 1,
+      "id": "membership",
+      "label": "Membership + cash",
+      "lane": "sources",
+      "sublabel": "renewals / transactions",
+      "type": "database",
+      "width": 200
+    },
+    {
+      "col": 2,
+      "id": "marketing",
+      "label": "Marketing + tests",
+      "lane": "sources",
+      "sublabel": "spend / credit / assignment",
+      "type": "database",
+      "width": 200
+    },
+    {
+      "col": 1,
+      "id": "sql",
+      "label": "Saved DuckDB SQL views",
+      "lane": "sql",
+      "sublabel": "person_id / period_id / campaign_id",
+      "type": "backend",
+      "width": 220
+    },
+    {
+      "col": 0,
+      "id": "observed",
+      "label": "Observed economics",
+      "lane": "evidence",
+      "sublabel": "cohorts at the same age",
+      "type": "backend",
+      "width": 200
+    },
+    {
+      "col": 1,
+      "id": "forecast",
+      "label": "Retention + revenue",
+      "lane": "evidence",
+      "sublabel": "forecast with uncertainty",
+      "type": "backend",
+      "width": 200
+    },
+    {
+      "col": 2,
+      "id": "incrementality",
+      "label": "Randomized effects",
+      "lane": "evidence",
+      "sublabel": "all assigned; own controls",
+      "type": "backend",
+      "width": 200
+    },
+    {
+      "col": 1,
+      "id": "decision",
+      "label": "Are we moving forward?",
+      "lane": "decision",
+      "sublabel": "LTV / CAC / cash payback",
+      "type": "frontend",
+      "width": 220
+    }
+  ],
+  "schema_version": 2
+}

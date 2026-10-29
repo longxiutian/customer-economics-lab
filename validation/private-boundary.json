@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "release": "v3.0.0",
+  "scope": "Publishable working-tree files, including extracted document and archive contents; this sanitized receipt is excluded from its own file count.",
+  "files_scanned": 402,
+  "artifact_containers": 21,
+  "embedded_files": 115,
+  "findings": 0,
+  "parsing_errors": 0,
+  "reachable_history_objects_checked": 534,
+  "prior_github_releases_checked": 2,
+  "prior_release_assets_checked": 8,
+  "older_public_generators_preserved_in_history": true,
+  "current_private_material_found": false,
+  "sealed_truth_rows_validated": 1176,
+  "answer_commitment_unchanged": true,
+  "forecasts_scored_on_private_truth": false,
+  "private_test_results": {
+    "generation_and_holdout": 12,
+    "boundary_checker": 6
+  }
+}

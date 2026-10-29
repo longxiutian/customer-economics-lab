@@ -1,0 +1,596 @@
+{
+  "cards": [
+    {
+      "dot": "cyan",
+      "items": [
+        "people: One person, including eligible prospects who never purchase.",
+        "subscription_periods: One scheduled monthly cycle; a paid outcome establishes retained membership for that cycle.",
+        "transactions: One payment or refund event; each payment is one order and refunds reuse its order ID.",
+        "product_events: One observed product/support interaction; no event does not mean no subscription."
+      ],
+      "title": "Every key has a grain"
+    },
+    {
+      "dot": "emerald",
+      "items": [
+        "campaign_spend has a composite primary key: campaign_id + spend_date. Do not join its daily rows directly to every acquired customer.",
+        "campaign_metadata groups spending by campaign_id and retains its channel and target_need. The source contract verifies that one campaign has one channel and target need.",
+        "A refund's related_transaction_id refers to transactions.transaction_id within the same financial ledger. A payment leaves that optional reference blank."
+      ],
+      "title": "Campaign IDs are not unique in raw spending"
+    },
+    {
+      "dot": "orange",
+      "items": [
+        "Cardinality describes how many child records can reference one parent. A known person can have no purchase, event or feedback.",
+        "acquisition_attribution has at most one row per person; its optional credited_campaign_id is blank for organic credit.",
+        "experiment_assignments has a composite key: experiment_id + person_id. Its tested_campaign_id references campaign_metadata.campaign_id, not campaign_spend. Its people include nonbuyers, who must remain in the analysis.",
+        "Shared IDs make documented joins possible. They do not turn recorded credit into causal evidence or a complete journey."
+      ],
+      "title": "Read the links without changing the denominator"
+    },
+    {
+      "dot": "cyan",
+      "items": [
+        "transactions.related_transaction_id \u2192 transactions.transaction_id. This optional self-reference links a refund to its original payment. The FK is retained in the table; the native ERD renderer does not draw self-entity edges."
+      ],
+      "title": "Refunds reference the same ledger"
+    }
+  ],
+  "diagram_type": "erd",
+  "entities": [
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "record_created_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "attributes_recorded_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "age_band",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "household_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "primary_need",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "region",
+          "type": "VARCHAR"
+        }
+      ],
+      "col": 0,
+      "id": "people",
+      "label": "people",
+      "row": 0,
+      "sublabel": "Raw CSV export",
+      "tag": "Customer evidence",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "period_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "subscription_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "period_start",
+          "type": "DATE"
+        },
+        {
+          "name": "period_end",
+          "type": "DATE"
+        },
+        {
+          "name": "renewal_due_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "renewal_outcome",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "cancellation_effective_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "plan_tier",
+          "type": "VARCHAR"
+        }
+      ],
+      "col": 1,
+      "id": "subscription_periods",
+      "label": "subscription_periods",
+      "row": 0,
+      "sublabel": "Raw CSV export",
+      "tag": "Membership economics",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "transaction_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "period_id",
+          "references": "subscription_periods.period_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "occurred_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "transaction_type",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "related_transaction_id",
+          "references": "transactions.transaction_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "order_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "charge_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "quantity",
+          "type": "INTEGER"
+        },
+        {
+          "name": "unit_price",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "gross_amount",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "discount_amount",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "refund_amount",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "variable_cost",
+          "type": "DECIMAL(12,2)"
+        }
+      ],
+      "col": 1,
+      "id": "transactions",
+      "label": "transactions",
+      "row": 1,
+      "sublabel": "Raw CSV export",
+      "tag": "Membership economics",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "event_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "occurred_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "event_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "platform",
+          "type": "VARCHAR"
+        }
+      ],
+      "col": 0,
+      "id": "product_events",
+      "label": "product_events",
+      "row": 1,
+      "sublabel": "Raw CSV export",
+      "tag": "Customer evidence",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "response_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "submitted_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "journey_stage",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "ease_rating",
+          "type": "INTEGER"
+        },
+        {
+          "name": "value_rating",
+          "type": "INTEGER"
+        },
+        {
+          "name": "main_difficulty",
+          "type": "VARCHAR"
+        }
+      ],
+      "col": 0,
+      "id": "feedback",
+      "label": "feedback",
+      "row": 2,
+      "sublabel": "Raw CSV export",
+      "tag": "Customer evidence",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": [
+            "pk",
+            "fk"
+          ],
+          "name": "campaign_id",
+          "references": "campaign_metadata.campaign_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "pk",
+          "name": "spend_date",
+          "type": "DATE"
+        },
+        {
+          "name": "channel",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "target_need",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "media_spend",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "other_acquisition_spend",
+          "type": "DECIMAL(12,2)"
+        }
+      ],
+      "col": 3,
+      "id": "campaign_spend",
+      "label": "campaign_spend",
+      "row": 1,
+      "sublabel": "Raw CSV export",
+      "tag": "Campaign context",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": [
+            "pk",
+            "fk"
+          ],
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "first_paid_transaction_id",
+          "references": "transactions.transaction_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "credited_campaign_id",
+          "references": "campaign_metadata.campaign_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "attribution_rule",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "credited_at",
+          "type": "TIMESTAMP"
+        }
+      ],
+      "col": 2,
+      "id": "acquisition_attribution",
+      "label": "acquisition_attribution",
+      "row": 0,
+      "sublabel": "Raw CSV export",
+      "tag": "Acquisition measurement",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "experiment_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": [
+            "pk",
+            "fk"
+          ],
+          "name": "person_id",
+          "references": "people.person_id",
+          "type": "VARCHAR"
+        },
+        {
+          "key": "fk",
+          "name": "tested_campaign_id",
+          "references": "campaign_metadata.campaign_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "assigned_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "arm",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "followup_end_at",
+          "type": "TIMESTAMP"
+        }
+      ],
+      "col": 2,
+      "id": "experiment_assignments",
+      "label": "experiment_assignments",
+      "row": 1,
+      "sublabel": "Raw CSV export",
+      "tag": "Acquisition measurement",
+      "width": 350
+    },
+    {
+      "attributes": [
+        {
+          "key": "pk",
+          "name": "campaign_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "channel",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "target_need",
+          "type": "VARCHAR"
+        }
+      ],
+      "col": 3,
+      "id": "campaign_metadata",
+      "label": "campaign_metadata \u00b7 SQL view",
+      "row": 0,
+      "sublabel": "Derived SQL view; not a ninth source",
+      "tag": "Campaign context",
+      "width": 350
+    }
+  ],
+  "layout": {
+    "entityW": 350,
+    "gapX": 65,
+    "gapY": 75,
+    "mode": "grid",
+    "rowH": 24
+  },
+  "meta": {
+    "animation": "none",
+    "locale": "en",
+    "output": "source-tables.html",
+    "quality_profile": "standard",
+    "title": "Studio North: source tables, keys and join cardinality",
+    "views": [
+      {
+        "focus": [
+          "people",
+          "subscription_periods",
+          "transactions"
+        ],
+        "id": "membership",
+        "label": "Membership and cash",
+        "note": "A person has many scheduled cycles; a cycle can have multiple payments and refunds."
+      },
+      {
+        "focus": [
+          "people",
+          "product_events",
+          "feedback"
+        ],
+        "id": "experience",
+        "label": "Experience and perceptions",
+        "note": "Many events or responses may link to one person; missing events do not establish churn."
+      },
+      {
+        "focus": [
+          "people",
+          "acquisition_attribution",
+          "experiment_assignments",
+          "campaign_metadata",
+          "campaign_spend"
+        ],
+        "id": "acquisition",
+        "label": "Acquisition and experiments",
+        "note": "Aggregate campaign spending before joining; assignment is not attribution or purchase."
+      }
+    ]
+  },
+  "relationships": [
+    {
+      "from": "subscription_periods",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation0",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "transactions",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation1",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "transactions",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation2",
+      "label": "period_id",
+      "to": "subscription_periods",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "product_events",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation3",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "feedback",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation4",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "acquisition_attribution",
+      "fromCardinality": "one",
+      "fromOptional": true,
+      "id": "relation5",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "acquisition_attribution",
+      "fromCardinality": "one",
+      "fromOptional": true,
+      "id": "relation6",
+      "label": "first_paid_transaction_id",
+      "to": "transactions",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "acquisition_attribution",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation7",
+      "label": "credited_campaign_id",
+      "to": "campaign_metadata",
+      "toCardinality": "one",
+      "toOptional": true
+    },
+    {
+      "from": "experiment_assignments",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation8",
+      "label": "person_id",
+      "to": "people",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "experiment_assignments",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation9",
+      "label": "test \u2192 campaign_metadata",
+      "to": "campaign_metadata",
+      "toCardinality": "one",
+      "toOptional": false
+    },
+    {
+      "from": "campaign_spend",
+      "fromCardinality": "many",
+      "fromOptional": true,
+      "id": "relation10",
+      "label": "campaign_id",
+      "to": "campaign_metadata",
+      "toCardinality": "one",
+      "toOptional": false
+    }
+  ],
+  "schema_version": 1
+}

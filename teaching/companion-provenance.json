@@ -1,0 +1,31 @@
+{
+  "all24_cohort_table_values_checked": true,
+  "all24_company_layers_checked": true,
+  "all96_retention_series_checked": true,
+  "all_slides_visually_reviewed": true,
+  "business": "Studio North",
+  "changes": "Numbered figures and tables; all 24 cohort table rows and 96 within-cell curves; chronological colors; CPU/uv model description; future-calendar challenge; no private generation details.",
+  "cohorts": "January 2024\u2013December 2025",
+  "editable_chart_count": 5,
+  "editable_table_count": 5,
+  "native_powerpoint_rendered": true,
+  "numbered_figures": 3,
+  "numbered_tables": 5,
+  "observation_cutoff": "2026-01-01 exclusive",
+  "pdf_page_count": 12,
+  "pdf_sha256": "ca981ab5cb85090c939e48edcbf37e0b80c138034783d7bda246558ef3fe8da0",
+  "pptx_sha256": "23763d9b5fc07e52e9af59bd8c54ac93a0b90df4858808bc0786c131ab8bb8ee",
+  "slide_count": 12,
+  "source_output_run": "v3-release-verified/run-a",
+  "source_table_hashes": {
+    "cohort_age_summary.csv": "08d1ce215a9cd9650ed1eb076f88df370ad22b13761d36ca1f8e77ccb1a8c99f",
+    "cohort_totals.csv": "41aaeb91c9ac00b2cfddaac722ff81896da28441276397be5253c73f39cfdb75",
+    "company_month.csv": "ec7e2af37ce42b1d89aaf07cc2fb68e99f66499a48c76d7b4fc353d35ac4be40",
+    "company_totals.csv": "d977ce194ea0c509d54bb71f808dc2226fefbba0e57531cabd6161343df6a5a2",
+    "experiment_effects.csv": "393a67fd85ead20f66a8c7608b19ad53848c90c5331022c7b6d77d881258d88b",
+    "experiment_summary.csv": "c322d43bf854e60862b592577e6607ba4b99d20cb361771ff168c3b4652ee622"
+  },
+  "validation_receipt_status": "pass",
+  "version": "3.0.0",
+  "visual_qa_note": "The conservative table-height warning on slide 7 was checked against the native PowerPoint render. All 24 cohort rows, the explanatory sentence and footer fit without overlap."
+}

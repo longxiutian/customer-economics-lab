@@ -1,0 +1,557 @@
+{
+  "cohort_overview": [
+    {
+      "acquisition_spend": 19897.0,
+      "cac": 111.15642458100558,
+      "cash_payback_month": 7,
+      "cohort_month": "2024-01-01",
+      "first_observed_payback_age": 6,
+      "n_acquired": 179,
+      "observed_months": 24
+    },
+    {
+      "acquisition_spend": 21449.8,
+      "cac": 111.13886010362694,
+      "cash_payback_month": 7,
+      "cohort_month": "2024-02-01",
+      "first_observed_payback_age": 6,
+      "n_acquired": 193,
+      "observed_months": 23
+    },
+    {
+      "acquisition_spend": 21776.16,
+      "cac": 112.24824742268041,
+      "cash_payback_month": 6,
+      "cohort_month": "2024-03-01",
+      "first_observed_payback_age": 5,
+      "n_acquired": 194,
+      "observed_months": 22
+    },
+    {
+      "acquisition_spend": 21308.0,
+      "cac": 109.83505154639175,
+      "cash_payback_month": 7,
+      "cohort_month": "2024-04-01",
+      "first_observed_payback_age": 6,
+      "n_acquired": 194,
+      "observed_months": 21
+    },
+    {
+      "acquisition_spend": 20233.66,
+      "cac": 105.93539267015707,
+      "cash_payback_month": 6,
+      "cohort_month": "2024-05-01",
+      "first_observed_payback_age": 5,
+      "n_acquired": 191,
+      "observed_months": 20
+    },
+    {
+      "acquisition_spend": 19470.04,
+      "cac": 102.47389473684211,
+      "cash_payback_month": 6,
+      "cohort_month": "2024-06-01",
+      "first_observed_payback_age": 5,
+      "n_acquired": 190,
+      "observed_months": 19
+    },
+    {
+      "acquisition_spend": 19833.54,
+      "cac": 97.22323529411766,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-07-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 204,
+      "observed_months": 18
+    },
+    {
+      "acquisition_spend": 20741.8,
+      "cac": 96.47348837209302,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-08-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 215,
+      "observed_months": 17
+    },
+    {
+      "acquisition_spend": 22150.12,
+      "cac": 98.44497777777778,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-09-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 225,
+      "observed_months": 16
+    },
+    {
+      "acquisition_spend": 22853.44,
+      "cac": 92.52404858299595,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-10-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 247,
+      "observed_months": 15
+    },
+    {
+      "acquisition_spend": 22332.38,
+      "cac": 94.62872881355932,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-11-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 236,
+      "observed_months": 14
+    },
+    {
+      "acquisition_spend": 21212.68,
+      "cac": 93.86141592920355,
+      "cash_payback_month": 5,
+      "cohort_month": "2024-12-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 226,
+      "observed_months": 13
+    },
+    {
+      "acquisition_spend": 20253.04,
+      "cac": 86.92291845493563,
+      "cash_payback_month": 5,
+      "cohort_month": "2025-01-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 233,
+      "observed_months": 12
+    },
+    {
+      "acquisition_spend": 20078.6,
+      "cac": 86.17424892703862,
+      "cash_payback_month": 4,
+      "cohort_month": "2025-02-01",
+      "first_observed_payback_age": 3,
+      "n_acquired": 233,
+      "observed_months": 11
+    },
+    {
+      "acquisition_spend": 21002.4,
+      "cac": 85.72408163265307,
+      "cash_payback_month": 5,
+      "cohort_month": "2025-03-01",
+      "first_observed_payback_age": 4,
+      "n_acquired": 245,
+      "observed_months": 10
+    },
+    {
+      "acquisition_spend": 22350.28,
+      "cac": 86.29451737451737,
+      "cash_payback_month": 4,
+      "cohort_month": "2025-04-01",
+      "first_observed_payback_age": 3,
+      "n_acquired": 259,
+      "observed_months": 9
+    },
+    {
+      "acquisition_spend": 23529.2,
+      "cac": 64.28743169398908,
+      "cash_payback_month": 3,
+      "cohort_month": "2025-05-01",
+      "first_observed_payback_age": 2,
+      "n_acquired": 366,
+      "observed_months": 8
+    },
+    {
+      "acquisition_spend": 22445.56,
+      "cac": 87.67796875,
+      "cash_payback_month": 4,
+      "cohort_month": "2025-06-01",
+      "first_observed_payback_age": 3,
+      "n_acquired": 256,
+      "observed_months": 7
+    },
+    {
+      "acquisition_spend": 21167.84,
+      "cac": 78.39940740740741,
+      "cash_payback_month": 4,
+      "cohort_month": "2025-07-01",
+      "first_observed_payback_age": 3,
+      "n_acquired": 270,
+      "observed_months": 6
+    },
+    {
+      "acquisition_spend": 20120.8,
+      "cac": 77.09118773946359,
+      "cash_payback_month": 4,
+      "cohort_month": "2025-08-01",
+      "first_observed_payback_age": 3,
+      "n_acquired": 261,
+      "observed_months": 5
+    },
+    {
+      "acquisition_spend": 20812.0,
+      "cac": 58.7909604519774,
+      "cash_payback_month": 3,
+      "cohort_month": "2025-09-01",
+      "first_observed_payback_age": 2,
+      "n_acquired": 354,
+      "observed_months": 4
+    },
+    {
+      "acquisition_spend": 20444.8,
+      "cac": 71.48531468531468,
+      "cash_payback_month": 3,
+      "cohort_month": "2025-10-01",
+      "first_observed_payback_age": 2,
+      "n_acquired": 286,
+      "observed_months": 3
+    },
+    {
+      "acquisition_spend": 21491.66,
+      "cac": 73.60157534246575,
+      "cash_payback_month": null,
+      "cohort_month": "2025-11-01",
+      "first_observed_payback_age": null,
+      "n_acquired": 292,
+      "observed_months": 2
+    },
+    {
+      "acquisition_spend": 21994.63,
+      "cac": 71.41113636363637,
+      "cash_payback_month": null,
+      "cohort_month": "2025-12-01",
+      "first_observed_payback_age": null,
+      "n_acquired": 308,
+      "observed_months": 1
+    }
+  ],
+  "currency": "USD",
+  "data_as_of": "2026-01-01T00:00:00Z",
+  "definitions": {
+    "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
+    "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
+    "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
+    "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
+    "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
+    "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
+    "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
+    "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
+    "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
+    "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
+    "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
+    "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
+    "paying": "At least one payment event in the calendar month; count people and distinct paid orders, not refund ledger rows.",
+    "retention": "Paid scheduled subscription cycle. One subscription per person; membership is monotone until cancellation/failure, with no reactivation.",
+    "targeting": "Every paid campaign targets one baseline primary_need. Direct segment cost aggregation is supported for primary_need, not age_band or region.",
+    "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
+    "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
+  },
+  "experiment_effects": [
+    {
+      "assigned_at": "2025-05-01T00:00:00",
+      "buyers_control": 31,
+      "buyers_treatment": 55,
+      "channel": "search",
+      "experiment_id": "EXP-01",
+      "followup_days": 31.0,
+      "followup_end_at": "2025-06-01T00:00:00",
+      "incremental_buyers": 24.0,
+      "incremental_cac": 27.083333333333332,
+      "incremental_contribution": 486.6,
+      "incremental_contribution_after_media": -163.39999999999998,
+      "incremental_contribution_after_media_ci_lower": -572.0796440763172,
+      "incremental_contribution_after_media_ci_upper": 245.27964407631725,
+      "incremental_contribution_after_media_per_prospect": -0.6536,
+      "incremental_contribution_after_media_per_prospect_ci_lower": -2.2883185763052687,
+      "incremental_contribution_after_media_per_prospect_ci_upper": 0.9811185763052688,
+      "incremental_contribution_after_media_per_prospect_se": 0.8340400899516678,
+      "incremental_contribution_after_media_se": 208.51002248791696,
+      "incremental_media_spend": 650.0,
+      "incremental_net_revenue": 1180.0,
+      "iroas": 1.8153846153846154,
+      "n_control": 250,
+      "n_treatment": 250,
+      "primary_need": "save_time",
+      "purchase_rate_ci_lower": 0.030379621506730098,
+      "purchase_rate_ci_upper": 0.1616203784932699,
+      "purchase_rate_control": 0.124,
+      "purchase_rate_difference": 0.096,
+      "purchase_rate_difference_se": 0.03347978494554587,
+      "purchase_rate_treatment": 0.22
+    },
+    {
+      "assigned_at": "2025-09-01T00:00:00",
+      "buyers_control": 31,
+      "buyers_treatment": 50,
+      "channel": "partner",
+      "experiment_id": "EXP-02",
+      "followup_days": 30.0,
+      "followup_end_at": "2025-10-01T00:00:00",
+      "incremental_buyers": 19.0,
+      "incremental_cac": 47.36842105263158,
+      "incremental_contribution": 571.6,
+      "incremental_contribution_after_media": -328.4,
+      "incremental_contribution_after_media_ci_lower": -783.0542516291182,
+      "incremental_contribution_after_media_ci_upper": 126.2542516291183,
+      "incremental_contribution_after_media_per_prospect": -1.3135999999999999,
+      "incremental_contribution_after_media_per_prospect_ci_lower": -3.132217006516473,
+      "incremental_contribution_after_media_per_prospect_ci_upper": 0.5050170065164732,
+      "incremental_contribution_after_media_per_prospect_se": 0.9278658196512618,
+      "incremental_contribution_after_media_se": 231.96645491281546,
+      "incremental_media_spend": 900.0,
+      "incremental_net_revenue": 1237.5,
+      "iroas": 1.375,
+      "n_control": 250,
+      "n_treatment": 250,
+      "primary_need": "build_skill",
+      "purchase_rate_ci_lower": 0.011752168646716188,
+      "purchase_rate_ci_upper": 0.14024783135328384,
+      "purchase_rate_control": 0.124,
+      "purchase_rate_difference": 0.07600000000000001,
+      "purchase_rate_difference_se": 0.032779505792491746,
+      "purchase_rate_treatment": 0.2
+    }
+  ],
+  "experiment_interval": "Approximate 95% normal intervals: purchase-rate differences use unpooled Bernoulli standard errors; contribution-after-media per prospect uses sqrt(s_T^2/n_T+s_C^2/n_C), with sample contribution variances over every assigned person including nonbuyers with zero outcomes. Recorded media spending is treated as fixed and changes the mean, not its standard error. Total-pilot contribution intervals scale the per-prospect interval by n_T. Each experiment retains its own controls and explicit assignment/follow-up dates; windows can differ. These are not long-run LTV intervals, do not include cost uncertainty, and have no correction for comparing different tests.",
+  "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
+  "schema_version": "1.0",
+  "segmentation": [
+    {
+      "min_group_size": 2130,
+      "n_customers": 4356,
+      "n_groups": 2,
+      "scheme": "age_band",
+      "weighted_within_variance": 4480.420642143892
+    },
+    {
+      "min_group_size": 2007,
+      "n_customers": 4356,
+      "n_groups": 2,
+      "scheme": "primary_need",
+      "weighted_within_variance": 4366.346356902942
+    },
+    {
+      "min_group_size": 2087,
+      "n_customers": 4356,
+      "n_groups": 2,
+      "scheme": "region",
+      "weighted_within_variance": 4480.485848344539
+    }
+  ],
+  "segmentation_scope": "All people with six complete observed acquisition-age months; outcome is six-month contribution. All three baseline schemes have two groups. This is descriptive discrimination, not a treatment effect.",
+  "six_month_comparison": [
+    {
+      "balance_per_customer": -4.995810055865922,
+      "cac": 111.15642458100558,
+      "cohort_month": "2024-01-01",
+      "cumulative_contribution_per_customer": 106.16061452513966,
+      "n_acquired": 179,
+      "retained_share": 0.5027932960893855,
+      "revenue_retention": 0.5816958753761727
+    },
+    {
+      "balance_per_customer": -2.3437823834196894,
+      "cac": 111.13886010362694,
+      "cohort_month": "2024-02-01",
+      "cumulative_contribution_per_customer": 108.79507772020726,
+      "n_acquired": 193,
+      "retained_share": 0.5181347150259067,
+      "revenue_retention": 0.6049925183478612
+    },
+    {
+      "balance_per_customer": 6.33319587628866,
+      "cac": 112.24824742268041,
+      "cohort_month": "2024-03-01",
+      "cumulative_contribution_per_customer": 118.58144329896906,
+      "n_acquired": 194,
+      "retained_share": 0.5927835051546392,
+      "revenue_retention": 0.718478132037454
+    },
+    {
+      "balance_per_customer": -7.965721649484536,
+      "cac": 109.83505154639175,
+      "cohort_month": "2024-04-01",
+      "cumulative_contribution_per_customer": 101.86932989690722,
+      "n_acquired": 194,
+      "retained_share": 0.5103092783505154,
+      "revenue_retention": 0.5814099581200558
+    },
+    {
+      "balance_per_customer": 7.33869109947644,
+      "cac": 105.93539267015707,
+      "cohort_month": "2024-05-01",
+      "cumulative_contribution_per_customer": 113.2740837696335,
+      "n_acquired": 191,
+      "retained_share": 0.5759162303664922,
+      "revenue_retention": 0.6886517015268272
+    },
+    {
+      "balance_per_customer": 10.59057894736842,
+      "cac": 102.47389473684211,
+      "cohort_month": "2024-06-01",
+      "cumulative_contribution_per_customer": 113.06447368421053,
+      "n_acquired": 190,
+      "retained_share": 0.5526315789473685,
+      "revenue_retention": 0.6743590993274198
+    },
+    {
+      "balance_per_customer": 22.82578431372549,
+      "cac": 97.22323529411766,
+      "cohort_month": "2024-07-01",
+      "cumulative_contribution_per_customer": 120.04901960784314,
+      "n_acquired": 204,
+      "retained_share": 0.6225490196078431,
+      "revenue_retention": 0.7483614652540851
+    },
+    {
+      "balance_per_customer": 22.08093023255814,
+      "cac": 96.47348837209302,
+      "cohort_month": "2024-08-01",
+      "cumulative_contribution_per_customer": 118.55441860465116,
+      "n_acquired": 215,
+      "retained_share": 0.6,
+      "revenue_retention": 0.6893632990034608
+    },
+    {
+      "balance_per_customer": 25.58702222222222,
+      "cac": 98.44497777777778,
+      "cohort_month": "2024-09-01",
+      "cumulative_contribution_per_customer": 124.032,
+      "n_acquired": 225,
+      "retained_share": 0.6044444444444445,
+      "revenue_retention": 0.6851131370613398
+    },
+    {
+      "balance_per_customer": 26.308744939271257,
+      "cac": 92.52404858299595,
+      "cohort_month": "2024-10-01",
+      "cumulative_contribution_per_customer": 118.83279352226721,
+      "n_acquired": 247,
+      "retained_share": 0.5748987854251012,
+      "revenue_retention": 0.651121382708944
+    },
+    {
+      "balance_per_customer": 29.885042372881355,
+      "cac": 94.62872881355932,
+      "cohort_month": "2024-11-01",
+      "cumulative_contribution_per_customer": 124.51377118644068,
+      "n_acquired": 236,
+      "retained_share": 0.6101694915254238,
+      "revenue_retention": 0.7152643730365996
+    },
+    {
+      "balance_per_customer": 29.9091592920354,
+      "cac": 93.86141592920355,
+      "cohort_month": "2024-12-01",
+      "cumulative_contribution_per_customer": 123.77057522123894,
+      "n_acquired": 226,
+      "retained_share": 0.5309734513274337,
+      "revenue_retention": 0.6221635480044388
+    },
+    {
+      "balance_per_customer": 31.472575107296137,
+      "cac": 86.92291845493563,
+      "cohort_month": "2025-01-01",
+      "cumulative_contribution_per_customer": 118.39549356223176,
+      "n_acquired": 233,
+      "retained_share": 0.5321888412017167,
+      "revenue_retention": 0.6254456958514913
+    },
+    {
+      "balance_per_customer": 43.48755364806867,
+      "cac": 86.17424892703862,
+      "cohort_month": "2025-02-01",
+      "cumulative_contribution_per_customer": 129.6618025751073,
+      "n_acquired": 233,
+      "retained_share": 0.6437768240343348,
+      "revenue_retention": 0.7584891335294676
+    },
+    {
+      "balance_per_customer": 34.80122448979591,
+      "cac": 85.72408163265307,
+      "cohort_month": "2025-03-01",
+      "cumulative_contribution_per_customer": 120.52530612244898,
+      "n_acquired": 245,
+      "retained_share": 0.5795918367346938,
+      "revenue_retention": 0.6856598256750005
+    },
+    {
+      "balance_per_customer": 49.51532818532818,
+      "cac": 86.29451737451737,
+      "cohort_month": "2025-04-01",
+      "cumulative_contribution_per_customer": 135.80984555984557,
+      "n_acquired": 259,
+      "retained_share": 0.6447876447876448,
+      "revenue_retention": 0.7792532945375805
+    },
+    {
+      "balance_per_customer": 78.74781420765028,
+      "cac": 64.28743169398908,
+      "cohort_month": "2025-05-01",
+      "cumulative_contribution_per_customer": 143.03524590163934,
+      "n_acquired": 366,
+      "retained_share": 0.6912568306010929,
+      "revenue_retention": 0.8089740256670842
+    },
+    {
+      "balance_per_customer": 53.2866796875,
+      "cac": 87.67796875,
+      "cohort_month": "2025-06-01",
+      "cumulative_contribution_per_customer": 140.9646484375,
+      "n_acquired": 256,
+      "retained_share": 0.671875,
+      "revenue_retention": 0.7784722222222222
+    },
+    {
+      "balance_per_customer": 59.32633333333334,
+      "cac": 78.39940740740741,
+      "cohort_month": "2025-07-01",
+      "cumulative_contribution_per_customer": 137.72574074074072,
+      "n_acquired": 270,
+      "retained_share": 0.6666666666666666,
+      "revenue_retention": 0.78737472383209
+    }
+  ],
+  "source_validation": {
+    "acquired_people": 5857,
+    "eligible_experiment_people": 1000,
+    "files_checked": 8,
+    "manifest_sha256": "f6395e8cf2b45b3e2cdec5104b646673ea86e87ce381f4483a4c859617a57147",
+    "row_counts": {
+      "acquisition_attribution.csv": 5857,
+      "campaign_spend.csv": 294,
+      "experiment_assignments.csv": 1000,
+      "feedback.csv": 3372,
+      "people.csv": 6690,
+      "product_events.csv": 72107,
+      "subscription_periods.csv": 44658,
+      "transactions.csv": 54421
+    },
+    "status": "passed"
+  },
+  "sql_checks": {
+    "all_assigned_counted": "passed",
+    "company_revenue_reconciles": "passed",
+    "company_spend_reconciles": "passed",
+    "customer_month_unique": "passed",
+    "ex_test_customer_counts_reconcile": "passed",
+    "ex_test_spending_reconciles": "passed",
+    "gross_minus_refunds_reconciles": "passed",
+    "ledger_cost_reconciles": "passed",
+    "ledger_revenue_reconciles": "passed",
+    "month_zero_coherent": "passed",
+    "no_future_months": "passed",
+    "observed_age_contiguous": "passed",
+    "one_spend_per_experiment": "passed",
+    "organic_CAC_unsupported": "passed",
+    "positive_payment_cells": "passed",
+    "retention_monotone": "passed"
+  },
+  "table_row_counts": {
+    "cohort_acquisition_costs": 98,
+    "cohort_age_summary": 1212,
+    "cohort_cash_economics": 300,
+    "cohort_economics_ex_tests": 300,
+    "cohort_six_month_comparison": 19,
+    "cohort_totals": 300,
+    "company_month": 300,
+    "company_totals": 24,
+    "customer_month": 66332,
+    "experiment_effects": 2,
+    "experiment_summary": 4,
+    "segmentation_comparison": 3
+  },
+  "timezone": "UTC"
+}

@@ -1,0 +1,208 @@
+{
+  "exhibits": [
+    {
+      "caption_tex": "Matched-age evidence on acquisition efficiency, customer value and cash recovery.",
+      "label": "tab:executive-evidence",
+      "number": 1,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Customer retention for all 24 monthly acquisition cohorts and every observed age. Cells are percentages of the original cohort; blanks are unobserved. * marks test months, including buyers from both arms.",
+      "label": "fig:retention-triangle",
+      "number": 1,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Cumulative cash after acquisition for every joining cohort, in dollars per original acquired customer. Orange indicates unrecovered cost; green indicates a positive balance. * marks test months, including both arms.",
+      "label": "fig:cash-triangle",
+      "number": 2,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "All 24 customer-retention and revenue-retention curves. Older cohorts are red and newer cohorts are blue; each line ends at its last observed month.",
+      "label": "fig:all-cohort-trajectories",
+      "number": 3,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "The full cohort sequence within each channel-by-need group. The color key identifies acquisition month. Paid channels are shown; organic test-control cells are omitted.",
+      "label": "fig:channel-retention",
+      "number": 4,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Residual within-group variation in six-month contribution under candidate segmentation schemes.",
+      "label": "tab:segmentation",
+      "number": 2,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Save-time segment: a proposed path from work friction to repeat use and renewal, with the relevant evidence at each step.",
+      "label": "fig:journey-save-time",
+      "number": 5,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Build-skill segment: a proposed learning path and the evidence needed to assess progress, value and renewal.",
+      "label": "fig:journey-build-skill",
+      "number": 6,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "The company's retained membership base as the sum of all 24 acquisition cohorts in calendar time.",
+      "label": "fig:cohort-layers",
+      "number": 7,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Monthly contribution before acquisition compared with tracked acquisition spending.",
+      "label": "fig:company-cash",
+      "number": 8,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Common-horizon contribution LTV and blended CAC for all cohorts. The lower strip identifies the share of each LTV estimate that is forecast.",
+      "label": "fig:ltv-cac",
+      "number": 9,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Assigned prospects, buyers, recorded contribution and media spending by randomized arm.",
+      "label": "tab:experiment-arms",
+      "number": 3,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Incremental contribution after media per assigned prospect, with approximate 95\\% intervals over each test's recorded follow-up window.",
+      "label": "fig:campaign-effects",
+      "number": 10,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Accountable teams, next actions and the evidence required to revisit the recommendation.",
+      "label": "tab:actions",
+      "number": 4,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Structural parameter estimates, priors, posterior intervals and sampling diagnostics.",
+      "label": "tab:parameters",
+      "number": 5,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Recorded inference settings and convergence diagnostics for the full-data fit.",
+      "label": "tab:estimation",
+      "number": 6,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Observed and forecast retention for cohorts with complete, intermediate and minimal renewal histories.",
+      "label": "fig:retention-forecast",
+      "number": 11,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Observed contribution and the forecast remainder for the newest acquisition cohort.",
+      "label": "fig:contribution-forecast",
+      "number": 12,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "In-sample observed-minus-fitted retention residuals for the five newest cohorts with renewal history, by channel and need.",
+      "label": "fig:fit-check",
+      "number": 13,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "The four largest absolute standardized calendar residuals among observed renewal risk sets.",
+      "label": "tab:calendar-residuals",
+      "number": 7,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Prediction performance on historical holdouts, with explicit baseline comparisons and units.",
+      "label": "tab:backtest",
+      "number": 8,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Cohort-level historical value and payback forecasts, separating already observed recovery from forecast recovery.",
+      "label": "tab:valuation-backtest",
+      "number": 9,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Eight source exports become analytical views and decision evidence through an auditable local pipeline.",
+      "label": "fig:source-architecture",
+      "number": 14,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Source-to-analysis definitions that preserve grain, timing, denominator and cost scope.",
+      "label": "tab:data-contracts",
+      "number": 10,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Source tables, join keys and cardinality, including the derived unique campaign lookup.",
+      "label": "fig:data-relationships",
+      "number": 15,
+      "type": "figure"
+    },
+    {
+      "caption_tex": "Universal Customer View: people.csv.",
+      "label": "tab:ucv-people",
+      "number": 11,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: subscription\\_periods.csv.",
+      "label": "tab:ucv-subscription-periods",
+      "number": 12,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: transactions.csv.",
+      "label": "tab:ucv-transactions",
+      "number": 13,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: product\\_events.csv.",
+      "label": "tab:ucv-product-events",
+      "number": 14,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: feedback.csv.",
+      "label": "tab:ucv-feedback",
+      "number": 15,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: campaign\\_spend.csv.",
+      "label": "tab:ucv-campaign-spend",
+      "number": 16,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: acquisition\\_attribution.csv.",
+      "label": "tab:ucv-acquisition-attribution",
+      "number": 17,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Universal Customer View: experiment\\_assignments.csv.",
+      "label": "tab:ucv-experiment-assignments",
+      "number": 18,
+      "type": "table"
+    },
+    {
+      "caption_tex": "Knowledge assets and execution dependencies. Typed boxes, icons and colors distinguish skills, reference documents, Python packages, data and generated outputs.",
+      "label": "fig:knowledge-assets",
+      "number": 16,
+      "type": "figure"
+    }
+  ]
+}

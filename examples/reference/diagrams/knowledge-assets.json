@@ -1,0 +1,323 @@
+{
+  "cards": [
+    {
+      "dot": "cyan",
+      "items": [
+        "Blue skill panels guide the agent; gray reference panels supply methods. Purple database symbols identify frozen evidence; green code symbols identify local computations.",
+        "Amber list symbols collect the deliverables. The rose shield identifies the environment pinned through uv.lock. These symbols do not imply a cloud service."
+      ],
+      "title": "Read the symbols and colors by asset type"
+    },
+    {
+      "dot": "emerald",
+      "items": [
+        "Python packages are installed and run with uv. CPU JAX and NumPyro do not require a GPU.",
+        "Archify runs with Node; pinned Playwright exports its diagrams. A local TeX engine compiles the report from the bundled style assets.",
+        "The learner receives observed source records. Instructor-only future outcomes and data-generation tools are outside this public framework."
+      ],
+      "title": "The complete runtime is local"
+    }
+  ],
+  "components": [
+    {
+      "id": "article",
+      "label": "Orduz source notebook",
+      "pos": [
+        40.0,
+        40.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Local PDF + MIT notice",
+      "type": "external"
+    },
+    {
+      "id": "student",
+      "label": "Analysis skill",
+      "pos": [
+        305.0,
+        40.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "One chat / next advances",
+      "type": "frontend"
+    },
+    {
+      "id": "reportskill",
+      "label": "Executive report skill",
+      "pos": [
+        570.0,
+        40.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Style + report appendix",
+      "type": "frontend"
+    },
+    {
+      "id": "csv",
+      "label": "Eight frozen CSVs",
+      "pos": [
+        40.0,
+        175.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Schemas + UCV fields",
+      "type": "database"
+    },
+    {
+      "id": "sql",
+      "label": "DuckDB + NumPy/pandas",
+      "pos": [
+        305.0,
+        175.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Saved SQL + checks",
+      "type": "backend"
+    },
+    {
+      "id": "model",
+      "label": "JAX CPU + NumPyro",
+      "pos": [
+        570.0,
+        175.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Retention + revenue",
+      "type": "backend"
+    },
+    {
+      "id": "archify",
+      "label": "Archify skill + Node",
+      "pos": [
+        40.0,
+        310.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Source maps + journeys",
+      "type": "frontend"
+    },
+    {
+      "id": "render",
+      "label": "Matplotlib + Jinja2",
+      "pos": [
+        305.0,
+        310.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Figures + TeX source",
+      "type": "backend"
+    },
+    {
+      "id": "output",
+      "label": "Executive report",
+      "pos": [
+        570.0,
+        310.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "PDF, SQL, model, audit",
+      "type": "messagebus"
+    },
+    {
+      "id": "uv",
+      "label": "uv + uv.lock",
+      "pos": [
+        305.0,
+        445.0
+      ],
+      "size": [
+        220,
+        78
+      ],
+      "sublabel": "Locked Python packages",
+      "type": "security"
+    }
+  ],
+  "connections": [
+    {
+      "from": "article",
+      "fromSide": "right",
+      "id": "knowledge0",
+      "label": "method reference",
+      "labelAt": [
+        284,
+        25
+      ],
+      "route": "straight",
+      "to": "student",
+      "toSide": "left"
+    },
+    {
+      "from": "student",
+      "fromSide": "right",
+      "id": "knowledge1",
+      "label": "writing contract",
+      "labelAt": [
+        549,
+        25
+      ],
+      "route": "straight",
+      "to": "reportskill",
+      "toSide": "left"
+    },
+    {
+      "from": "student",
+      "fromSide": "bottom",
+      "id": "knowledge2",
+      "label": "guides stages",
+      "labelAt": [
+        415,
+        145
+      ],
+      "to": "sql",
+      "toSide": "top"
+    },
+    {
+      "from": "reportskill",
+      "fromSide": "right",
+      "id": "knowledge3",
+      "label": "",
+      "to": "output",
+      "toSide": "right",
+      "via": [
+        [
+          810,
+          79
+        ],
+        [
+          810,
+          349
+        ]
+      ]
+    },
+    {
+      "from": "csv",
+      "fromSide": "right",
+      "id": "knowledge4",
+      "label": "observed rows",
+      "labelAt": [
+        284,
+        160
+      ],
+      "route": "straight",
+      "to": "sql",
+      "toSide": "left"
+    },
+    {
+      "from": "sql",
+      "fromSide": "right",
+      "id": "knowledge5",
+      "label": "cohort evidence",
+      "labelAt": [
+        549,
+        160
+      ],
+      "route": "straight",
+      "to": "model",
+      "toSide": "left"
+    },
+    {
+      "from": "archify",
+      "fromSide": "right",
+      "id": "knowledge6",
+      "label": "native diagrams",
+      "labelAt": [
+        284,
+        295
+      ],
+      "route": "straight",
+      "to": "render",
+      "toSide": "left"
+    },
+    {
+      "from": "model",
+      "fromSide": "bottom",
+      "id": "knowledge7",
+      "label": "forecasts + checks",
+      "labelAt": [
+        680,
+        280
+      ],
+      "to": "output",
+      "toSide": "top"
+    },
+    {
+      "from": "render",
+      "fromSide": "right",
+      "id": "knowledge8",
+      "label": "TeX + figures",
+      "labelAt": [
+        549,
+        295
+      ],
+      "route": "straight",
+      "to": "output",
+      "toSide": "left"
+    },
+    {
+      "from": "uv",
+      "id": "knowledge9",
+      "label": "locked packages",
+      "to": "render"
+    }
+  ],
+  "diagram_type": "architecture",
+  "meta": {
+    "animation": "none",
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Source data"
+        },
+        "external": {
+          "label": "Reference"
+        },
+        "frontend": {
+          "label": "Skills"
+        },
+        "messagebus": {
+          "label": "Outputs"
+        },
+        "security": {
+          "label": "Environment"
+        }
+      }
+    },
+    "locale": "en",
+    "output": "knowledge-assets.html",
+    "quality_profile": "standard",
+    "title": "Knowledge assets behind the customer-economics framework",
+    "visual_preset": "editorial"
+  },
+  "schema_version": 1
+}
