@@ -1,4 +1,6 @@
-# Version 4: management report and customer segmentation
+# Release 1.4: management report and customer segmentation
+
+The historical labels in this note use the original numbering. See [the release mapping](versioning.md) for the 2026 1.x series and preserved original tags.
 
 The updated observed dataset supports clearer differences between baseline customer groups while retaining variation within each group and between successive joining cohorts. The analysis still begins with eight separate CSV exports; generation and the future evaluation outcomes are outside the student workflow.
 

@@ -73,6 +73,8 @@ Check cover line placement and metadata, contents/order, citations, blank pages,
 
 ## Portable release handoff
 
+Use the [course-year versioning policy](versioning.md): the current release is 1.6.1, 2026 remains in 1.x.x, and 2027 uses 2.x.x. Preserve historical receipt labels; a numbering change requires refreshed provenance rather than rewritten prior evidence.
+
 Before release, run the affected behavioral tests (`uv run --frozen python -m pytest ...`) and the applicable verification mode. Re-run broader model tests or fresh inference when model/source/settings changes warrant them; a skill or layout correction alone does not call for new simulation data. Verify frozen assets and record which tests actually ran.
 
 Distribute the final source, locks, both skills and linked notes, assets/licenses, editable report/PPTX sources, canonical reference artifacts and scoped validation receipts together. Preserve prior release tags. After publication, download that exact tagged ZIP over HTTPS, extract it into a new folder without `.git`, and run `uv sync --frozen` (select an existing Python 3.12 with `--python` if needed), then the saved-artifact validation command above. Install the locked Node/browser and TeX dependencies when exercising a new replay there. Compare the downloaded report/companion/reading to their recorded hashes. Record source-ZIP verification separately from computation and visual review. The publisher's private boundary audit is an additional release check; public users never need its private inputs.
