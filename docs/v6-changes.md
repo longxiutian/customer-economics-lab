@@ -22,4 +22,7 @@ Larsen and the course materials join the report's explicit citations and referen
 Version 6.0.1 changes only the cover title and layout: the question and Studio North subtitle each occupy one centered line. PDF metadata and the preview match. The 48 following pages and all numerical exhibits retain the v6.0.0 content.
 
 
-Version 6.0.1 changes only the cover title and layout: the question and Studio North subtitle each occupy one centered line. PDF metadata and the preview match. The evidence-period and observation-cutoff lines are centered as well. The 48 following pages and all numerical exhibits retain the v6.0.0 content.
+Version 6.0.2 also centers the evidence-period and observation-cutoff lines beneath the two-line title. PDF metadata and the preview match. The 48 following pages and all numerical exhibits retain the v6.0.0 content.
+
+
+Version 6.1.0 consolidates the recent requirements in the root and report skills and adds a public reproducibility guide. The verifier now has explicit report-replay and full-inference modes, validates the complete evidence chain before comparison, and compares saved SQL and all newer manifests. The implementation fingerprint now includes Python scripts, linked documentation and vendored Archify files. An integrity command validates reference artifacts and preserved companion provenance from an extracted ZIP. The analytical definitions, original data, fits, numerical exhibits and report layout are unchanged; current release receipts distinguish new checks from preserved prior evidence.

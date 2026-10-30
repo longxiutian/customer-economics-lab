@@ -1,0 +1,560 @@
+{
+  "compared_files": 127,
+  "comparisons": {
+    "analysis_input_manifest.json": {
+      "run_a_sha256": "cbea82164efd207b1030f7b5c02edb1f76ba044b0692e9c55722edb3856dd76a",
+      "run_b_sha256": "cbea82164efd207b1030f7b5c02edb1f76ba044b0692e9c55722edb3856dd76a"
+    },
+    "analysis_manifest.json": {
+      "run_a_sha256": "2b0962641e5004e9ff88e1c8fcd1669164a423b800621b0e05ff55182259b712",
+      "run_b_sha256": "2b0962641e5004e9ff88e1c8fcd1669164a423b800621b0e05ff55182259b712"
+    },
+    "analysis_summary.json": {
+      "run_a_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898",
+      "run_b_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898"
+    },
+    "benchmark_manifest.json": {
+      "run_a_sha256": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83",
+      "run_b_sha256": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83"
+    },
+    "benchmark_summary.json": {
+      "run_a_sha256": "6de1044f6e3871438ac796e87ed24a40aa170b8ef8cc88c0a42f9f42ead83c38",
+      "run_b_sha256": "6de1044f6e3871438ac796e87ed24a40aa170b8ef8cc88c0a42f9f42ead83c38"
+    },
+    "decision_metrics_manifest.json": {
+      "run_a_sha256": "4480e42592ea60f91f34461d420d808734e57e6833d60c4d9a24cd2ad6ef2622",
+      "run_b_sha256": "4480e42592ea60f91f34461d420d808734e57e6833d60c4d9a24cd2ad6ef2622"
+    },
+    "diagnostics_manifest.json": {
+      "run_a_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
+      "run_b_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a"
+    },
+    "diagrams/business-journey.html": {
+      "run_a_sha256": "eac346e114b6913d87484d957d9297747c8d7d4d0c708d6256204e3a1972faba",
+      "run_b_sha256": "eac346e114b6913d87484d957d9297747c8d7d4d0c708d6256204e3a1972faba"
+    },
+    "diagrams/business-journey.json": {
+      "run_a_sha256": "52d5b7152787956257ad75143069316cc9d0d7e568ff2e75f7bf7fbd6ca006e4",
+      "run_b_sha256": "52d5b7152787956257ad75143069316cc9d0d7e568ff2e75f7bf7fbd6ca006e4"
+    },
+    "diagrams/business-journey.png": {
+      "run_a_sha256": "c7307671ea00302f235fee524529f96025fabc3beffb56c79466f54204b0a4ff",
+      "run_b_sha256": "c7307671ea00302f235fee524529f96025fabc3beffb56c79466f54204b0a4ff"
+    },
+    "diagrams/business-journey.svg": {
+      "run_a_sha256": "f38c740873a21c15ff9fb5b9f6b17b59a07e3c92653135ee726e1b1db8f4391b",
+      "run_b_sha256": "f38c740873a21c15ff9fb5b9f6b17b59a07e3c92653135ee726e1b1db8f4391b"
+    },
+    "diagrams/diagram_manifest.json": {
+      "run_a_sha256": "b518a4cc294d09a05a90162fc424d361ab037d12f8a39ec94d811fed60301b86",
+      "run_b_sha256": "b518a4cc294d09a05a90162fc424d361ab037d12f8a39ec94d811fed60301b86"
+    },
+    "diagrams/inspection.sql": {
+      "run_a_sha256": "75293ed6738b065e7353cc5b6128ba10363a98d955adf1d07f88e210f3e69c13",
+      "run_b_sha256": "75293ed6738b065e7353cc5b6128ba10363a98d955adf1d07f88e210f3e69c13"
+    },
+    "diagrams/knowledge-assets.html": {
+      "run_a_sha256": "709232c761f8028075c217d35871146f02a4282089baff8730c65bf5d7a3504f",
+      "run_b_sha256": "709232c761f8028075c217d35871146f02a4282089baff8730c65bf5d7a3504f"
+    },
+    "diagrams/knowledge-assets.json": {
+      "run_a_sha256": "f80d303849ee723ded0d0884dd22caed6c63692c3f1b6eb0618630ce5b411922",
+      "run_b_sha256": "f80d303849ee723ded0d0884dd22caed6c63692c3f1b6eb0618630ce5b411922"
+    },
+    "diagrams/knowledge-assets.png": {
+      "run_a_sha256": "c46f1b7eed50bce8b870a53432e37b69f589c631887bcac7d8f3b952bfe94bad",
+      "run_b_sha256": "c46f1b7eed50bce8b870a53432e37b69f589c631887bcac7d8f3b952bfe94bad"
+    },
+    "diagrams/knowledge-assets.svg": {
+      "run_a_sha256": "25ce82e17e2a22dcf7bd6b831c854ee4beefb9e01662de4d4bb87fe1021abc08",
+      "run_b_sha256": "25ce82e17e2a22dcf7bd6b831c854ee4beefb9e01662de4d4bb87fe1021abc08"
+    },
+    "diagrams/source-systems-report.html": {
+      "run_a_sha256": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333",
+      "run_b_sha256": "568c448de6a21d9a819de7eb6c80e9512ee09c8c02ceb71a601bc1ea2ebf0333"
+    },
+    "diagrams/source-systems-report.json": {
+      "run_a_sha256": "058e9a3eb98eaec92f0efee0b6d9effcbb2020baca59a96e9caae3e7cbefd5d8",
+      "run_b_sha256": "058e9a3eb98eaec92f0efee0b6d9effcbb2020baca59a96e9caae3e7cbefd5d8"
+    },
+    "diagrams/source-systems-report.png": {
+      "run_a_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26",
+      "run_b_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26"
+    },
+    "diagrams/source-systems-report.svg": {
+      "run_a_sha256": "00403d7e82ea94c2679bffb609ada47e23c8b5fdf3a8079500174c1f706248f8",
+      "run_b_sha256": "00403d7e82ea94c2679bffb609ada47e23c8b5fdf3a8079500174c1f706248f8"
+    },
+    "diagrams/source-systems.html": {
+      "run_a_sha256": "bce85643491e308d8a18970638ce413bc58c64e5571795f943c4cccf98f43d02",
+      "run_b_sha256": "bce85643491e308d8a18970638ce413bc58c64e5571795f943c4cccf98f43d02"
+    },
+    "diagrams/source-systems.json": {
+      "run_a_sha256": "aee2b40f0820cb48178a180a7bf56c1af9dfa0d3a4a366465ec42716cb5c5f0a",
+      "run_b_sha256": "aee2b40f0820cb48178a180a7bf56c1af9dfa0d3a4a366465ec42716cb5c5f0a"
+    },
+    "diagrams/source-systems.png": {
+      "run_a_sha256": "3cddd8a7e3d848cca45afd49b266e3c6a605dec8ae4973416e3e89ad88d028ad",
+      "run_b_sha256": "3cddd8a7e3d848cca45afd49b266e3c6a605dec8ae4973416e3e89ad88d028ad"
+    },
+    "diagrams/source-systems.svg": {
+      "run_a_sha256": "448323f6e717de871b8efbf1372676d9851dcba6a4dba8488a44d2f0feb0f854",
+      "run_b_sha256": "448323f6e717de871b8efbf1372676d9851dcba6a4dba8488a44d2f0feb0f854"
+    },
+    "diagrams/source-tables-report.html": {
+      "run_a_sha256": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443",
+      "run_b_sha256": "d6a71fb9105f3875b34514bba99d388cba6fa2a9c462af9334df91c25b456443"
+    },
+    "diagrams/source-tables-report.json": {
+      "run_a_sha256": "769ff6aa27512826616ffe495265e764eb4afd2da190efa65d5db17dda322d0b",
+      "run_b_sha256": "769ff6aa27512826616ffe495265e764eb4afd2da190efa65d5db17dda322d0b"
+    },
+    "diagrams/source-tables-report.png": {
+      "run_a_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba",
+      "run_b_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba"
+    },
+    "diagrams/source-tables-report.svg": {
+      "run_a_sha256": "de94a09e0bd569dd7a00eb618eaf7b7de9e4c84d45d02022205fc872b104cb8b",
+      "run_b_sha256": "de94a09e0bd569dd7a00eb618eaf7b7de9e4c84d45d02022205fc872b104cb8b"
+    },
+    "diagrams/source-tables.html": {
+      "run_a_sha256": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694",
+      "run_b_sha256": "ac9d442e8bb49932940fc65671bbefbd3e02763949c8b4527e28017e31ccc694"
+    },
+    "diagrams/source-tables.json": {
+      "run_a_sha256": "35962b3aefabec8aaa0f41d05e700cfeb5fff4bfb264645628f59ee0b4022752",
+      "run_b_sha256": "35962b3aefabec8aaa0f41d05e700cfeb5fff4bfb264645628f59ee0b4022752"
+    },
+    "diagrams/source-tables.png": {
+      "run_a_sha256": "666c33fc98380347a8ab0cb2aad26c872b8956471d29729926e4bd4f3015e02d",
+      "run_b_sha256": "666c33fc98380347a8ab0cb2aad26c872b8956471d29729926e4bd4f3015e02d"
+    },
+    "diagrams/source-tables.svg": {
+      "run_a_sha256": "a1addeaf7b8c751e317fe54cbe01b84fb0d19f47cc8fd93e587f8181e2eb19ee",
+      "run_b_sha256": "a1addeaf7b8c751e317fe54cbe01b84fb0d19f47cc8fd93e587f8181e2eb19ee"
+    },
+    "diagrams/source_inventory.json": {
+      "run_a_sha256": "75892228f21475afdddf7d4bb246dd29f4d712f55914404752a0377d354050e0",
+      "run_b_sha256": "75892228f21475afdddf7d4bb246dd29f4d712f55914404752a0377d354050e0"
+    },
+    "diagrams/ucv-tables.json": {
+      "run_a_sha256": "38e82c54d8359f9516219946bcd4e921621fce067bba93bd3894f8f574cec978",
+      "run_b_sha256": "38e82c54d8359f9516219946bcd4e921621fce067bba93bd3894f8f574cec978"
+    },
+    "diagrams/ucv-tables.md": {
+      "run_a_sha256": "e0e0abe408dd096598093d791b8cafcdce2e714c1fb9645320494735a929b6ec",
+      "run_b_sha256": "e0e0abe408dd096598093d791b8cafcdce2e714c1fb9645320494735a929b6ec"
+    },
+    "implementation_manifest.json": {
+      "run_a_sha256": "5152bc1e659f58259654152c2ec558a3abdd3f71c27256734b4c1310b028032e",
+      "run_b_sha256": "5152bc1e659f58259654152c2ec558a3abdd3f71c27256734b4c1310b028032e"
+    },
+    "model_manifest.json": {
+      "run_a_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368",
+      "run_b_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368"
+    },
+    "model_summary.json": {
+      "run_a_sha256": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6",
+      "run_b_sha256": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6"
+    },
+    "posterior_draws.json": {
+      "run_a_sha256": "11b29e1ec30b13e07018b7951573cb00eb1122a884b9b8a6fcb5e9483c50a55f",
+      "run_b_sha256": "11b29e1ec30b13e07018b7951573cb00eb1122a884b9b8a6fcb5e9483c50a55f"
+    },
+    "postestimation_manifest.json": {
+      "run_a_sha256": "d264235587604b71405433be0b9233af3317f33e1ade05404dc70578d2de450c",
+      "run_b_sha256": "d264235587604b71405433be0b9233af3317f33e1ade05404dc70578d2de450c"
+    },
+    "report/chart_manifest.json": {
+      "run_a_sha256": "74401a5b542dbe2f1b39049a186b51f566b0e63e01eaf8da8623f6f1747bd159",
+      "run_b_sha256": "74401a5b542dbe2f1b39049a186b51f566b0e63e01eaf8da8623f6f1747bd159"
+    },
+    "report/customer-economics-report.pdf": {
+      "run_a_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
+      "run_b_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749"
+    },
+    "report/customer-economics-report.tex": {
+      "run_a_sha256": "791f8d5f569bfbd5d6b035f129987276ea6506f3d94f40e9ffb69dcaf5558590",
+      "run_b_sha256": "791f8d5f569bfbd5d6b035f129987276ea6506f3d94f40e9ffb69dcaf5558590"
+    },
+    "report/executive_metrics.csv": {
+      "run_a_sha256": "b7f521c70979b5a88ae9f8cfbf0cda9c34e396c86abdfc39fe153f006abb1694",
+      "run_b_sha256": "b7f521c70979b5a88ae9f8cfbf0cda9c34e396c86abdfc39fe153f006abb1694"
+    },
+    "report/exhibit_registry.json": {
+      "run_a_sha256": "5a1179d9d1b60e492a00f98ec8360b36f661359c2fa1887b097b25efa06b47a4",
+      "run_b_sha256": "5a1179d9d1b60e492a00f98ec8360b36f661359c2fa1887b097b25efa06b47a4"
+    },
+    "report/figures/business-journey.png": {
+      "run_a_sha256": "c7307671ea00302f235fee524529f96025fabc3beffb56c79466f54204b0a4ff",
+      "run_b_sha256": "c7307671ea00302f235fee524529f96025fabc3beffb56c79466f54204b0a4ff"
+    },
+    "report/figures/channel-segment-retention.pdf": {
+      "run_a_sha256": "22c29d213b78e6e65f16571adce2a50c2cc823f9e80863b585eabcaab43e5468",
+      "run_b_sha256": "22c29d213b78e6e65f16571adce2a50c2cc823f9e80863b585eabcaab43e5468"
+    },
+    "report/figures/channel-segment-retention.png": {
+      "run_a_sha256": "f9edc074ba4ba4e669c12aaff00c41eaa101925c0cab61f8412833d33a45ba57",
+      "run_b_sha256": "f9edc074ba4ba4e669c12aaff00c41eaa101925c0cab61f8412833d33a45ba57"
+    },
+    "report/figures/cohort-cash-triangle.pdf": {
+      "run_a_sha256": "f97d1ba0df95a112474bd20e676568ad3cc790d22917166e478092a6c250dd5a",
+      "run_b_sha256": "f97d1ba0df95a112474bd20e676568ad3cc790d22917166e478092a6c250dd5a"
+    },
+    "report/figures/cohort-cash-triangle.png": {
+      "run_a_sha256": "64fbc0e87d42796616b9ac9f55cb27c435334c7b704527c9595d080e83ab3b49",
+      "run_b_sha256": "64fbc0e87d42796616b9ac9f55cb27c435334c7b704527c9595d080e83ab3b49"
+    },
+    "report/figures/cohort-retention-triangle.pdf": {
+      "run_a_sha256": "86a33503ea2a82e6070c1ad32c7d78b0c2e08f612bbff62e34d82d6f197c74b3",
+      "run_b_sha256": "86a33503ea2a82e6070c1ad32c7d78b0c2e08f612bbff62e34d82d6f197c74b3"
+    },
+    "report/figures/cohort-retention-triangle.png": {
+      "run_a_sha256": "34061ced0aabc62695ff639aed1288f2528d985e3abcfde451966fddc72f157c",
+      "run_b_sha256": "34061ced0aabc62695ff639aed1288f2528d985e3abcfde451966fddc72f157c"
+    },
+    "report/figures/cohort-triangles.pdf": {
+      "run_a_sha256": "7186e7f369e11c1e6c05d22b14ae3157eb8bf69dbfb6357ba5836d4959cdde15",
+      "run_b_sha256": "7186e7f369e11c1e6c05d22b14ae3157eb8bf69dbfb6357ba5836d4959cdde15"
+    },
+    "report/figures/cohort-triangles.png": {
+      "run_a_sha256": "a966cb23668fd586c96440b19336b109671d44880cad29fa4c0ea62f3754d296",
+      "run_b_sha256": "a966cb23668fd586c96440b19336b109671d44880cad29fa4c0ea62f3754d296"
+    },
+    "report/figures/company-cohort-layers.pdf": {
+      "run_a_sha256": "d095655ffcdc8b9c15094b935fa826e6e693601741757be7da3505980f305476",
+      "run_b_sha256": "d095655ffcdc8b9c15094b935fa826e6e693601741757be7da3505980f305476"
+    },
+    "report/figures/company-cohort-layers.png": {
+      "run_a_sha256": "e9b28ab5d215fbab27d3fc5683faf20849199900b0b7aead825f18f765eb5f7f",
+      "run_b_sha256": "e9b28ab5d215fbab27d3fc5683faf20849199900b0b7aead825f18f765eb5f7f"
+    },
+    "report/figures/company-economics.pdf": {
+      "run_a_sha256": "3ed4c502f4c0a83effa5f801a080b38454e7102d214ab1c5d2e848928bc4acf2",
+      "run_b_sha256": "3ed4c502f4c0a83effa5f801a080b38454e7102d214ab1c5d2e848928bc4acf2"
+    },
+    "report/figures/company-economics.png": {
+      "run_a_sha256": "798b7be6a61a967e26c047db4ef56a5834d64e644eeeb250aa1659f3bd997061",
+      "run_b_sha256": "798b7be6a61a967e26c047db4ef56a5834d64e644eeeb250aa1659f3bd997061"
+    },
+    "report/figures/experiment-effects.pdf": {
+      "run_a_sha256": "210435ef99a2d6dcfa8ec0015acfff0292c8463b566ad4bc7cdfc78b4b3f7c71",
+      "run_b_sha256": "210435ef99a2d6dcfa8ec0015acfff0292c8463b566ad4bc7cdfc78b4b3f7c71"
+    },
+    "report/figures/experiment-effects.png": {
+      "run_a_sha256": "d54c39bb36f6ecc763880fe0a64146912a32fe5dac18d9fb41022a7a4fac50dd",
+      "run_b_sha256": "d54c39bb36f6ecc763880fe0a64146912a32fe5dac18d9fb41022a7a4fac50dd"
+    },
+    "report/figures/forecast-detail.pdf": {
+      "run_a_sha256": "fbdda429991fbf8ac312baf7bd4cd4db085b216b2016288465038993c38568f3",
+      "run_b_sha256": "fbdda429991fbf8ac312baf7bd4cd4db085b216b2016288465038993c38568f3"
+    },
+    "report/figures/forecast-detail.png": {
+      "run_a_sha256": "2f1f0f3497d9818badf44e18b3f758f5ce8191a80f4ee8fd69e54202b58c993a",
+      "run_b_sha256": "2f1f0f3497d9818badf44e18b3f758f5ce8191a80f4ee8fd69e54202b58c993a"
+    },
+    "report/figures/journey-cohort-diagnostics.pdf": {
+      "run_a_sha256": "f762fc1ec43553ddc7a2aae021b52b602561b08bd8617923b35d8d51373ae885",
+      "run_b_sha256": "f762fc1ec43553ddc7a2aae021b52b602561b08bd8617923b35d8d51373ae885"
+    },
+    "report/figures/journey-cohort-diagnostics.png": {
+      "run_a_sha256": "d0cfc57e7995c16f7c425eff67ac06e2d34cfa239197936d4ea9a6863c541102",
+      "run_b_sha256": "d0cfc57e7995c16f7c425eff67ac06e2d34cfa239197936d4ea9a6863c541102"
+    },
+    "report/figures/knowledge-assets.png": {
+      "run_a_sha256": "c46f1b7eed50bce8b870a53432e37b69f589c631887bcac7d8f3b952bfe94bad",
+      "run_b_sha256": "c46f1b7eed50bce8b870a53432e37b69f589c631887bcac7d8f3b952bfe94bad"
+    },
+    "report/figures/ltv-and-cac.pdf": {
+      "run_a_sha256": "57854bcc465f5b6d89e5049d292a9e80d6db8704e7e6816587cec1b735be5251",
+      "run_b_sha256": "57854bcc465f5b6d89e5049d292a9e80d6db8704e7e6816587cec1b735be5251"
+    },
+    "report/figures/ltv-and-cac.png": {
+      "run_a_sha256": "4fda82ebcc3187cc3277f1ec63acfd34c2654175fd1ee1c7d28b4ca626d5df37",
+      "run_b_sha256": "4fda82ebcc3187cc3277f1ec63acfd34c2654175fd1ee1c7d28b4ca626d5df37"
+    },
+    "report/figures/recent-cohort-fit-check.pdf": {
+      "run_a_sha256": "2cb32a589e1eb33eb0102436271fcbf954405fe39a2414c9bb8b5b62750e75d8",
+      "run_b_sha256": "2cb32a589e1eb33eb0102436271fcbf954405fe39a2414c9bb8b5b62750e75d8"
+    },
+    "report/figures/recent-cohort-fit-check.png": {
+      "run_a_sha256": "f996e183ed68c3bd6ea5a67735f5bcddd95b659850aeaf0c1f8f3f514cc790ca",
+      "run_b_sha256": "f996e183ed68c3bd6ea5a67735f5bcddd95b659850aeaf0c1f8f3f514cc790ca"
+    },
+    "report/figures/retention-and-revenue.pdf": {
+      "run_a_sha256": "908c06eee3168fc90305df4686422e1519ddb09221de3240978f4fc80ac33c47",
+      "run_b_sha256": "908c06eee3168fc90305df4686422e1519ddb09221de3240978f4fc80ac33c47"
+    },
+    "report/figures/retention-and-revenue.png": {
+      "run_a_sha256": "6567f5bd4f30b54e1c9d1c3227faec09f68a22b9076d48bea794793e3c840a75",
+      "run_b_sha256": "6567f5bd4f30b54e1c9d1c3227faec09f68a22b9076d48bea794793e3c840a75"
+    },
+    "report/figures/retention-forecast.pdf": {
+      "run_a_sha256": "809b8ac4a4c0fb60e1e4a5ca0a0938e084526018db273e410516d33c792ee564",
+      "run_b_sha256": "809b8ac4a4c0fb60e1e4a5ca0a0938e084526018db273e410516d33c792ee564"
+    },
+    "report/figures/retention-forecast.png": {
+      "run_a_sha256": "5a221e0f1a8acc91a91bac946a06f615df28cbdcf13ce6d0f899ca6a7a22ed61",
+      "run_b_sha256": "5a221e0f1a8acc91a91bac946a06f615df28cbdcf13ce6d0f899ca6a7a22ed61"
+    },
+    "report/figures/source-systems-report.png": {
+      "run_a_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26",
+      "run_b_sha256": "3c3588454989cd654f4f10bb463afd104683f7a3dc632fa8e6a2642262461a26"
+    },
+    "report/figures/source-tables-report.png": {
+      "run_a_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba",
+      "run_b_sha256": "2c16e5f6ca0211576d0ac3f24ce4e0205d930e753b0ce830be3be101c4fe3aba"
+    },
+    "report/figures/strategic-segment-paths.pdf": {
+      "run_a_sha256": "a8062f535f2bf6f6ec3370e37c1f411dc7213818fcb96d8ab641ba8baa28b8a1",
+      "run_b_sha256": "a8062f535f2bf6f6ec3370e37c1f411dc7213818fcb96d8ab641ba8baa28b8a1"
+    },
+    "report/figures/strategic-segment-paths.png": {
+      "run_a_sha256": "dd3707ff1f6a8fdfde167d71a4d3cfa5de9b8580a4e0fb429fa6a4b26a298310",
+      "run_b_sha256": "dd3707ff1f6a8fdfde167d71a4d3cfa5de9b8580a4e0fb429fa6a4b26a298310"
+    },
+    "report/labreport.sty": {
+      "run_a_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb",
+      "run_b_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb"
+    },
+    "report/longxiu-research-brief.sty": {
+      "run_a_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
+      "run_b_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5"
+    },
+    "report/matched_cohort_comparison.json": {
+      "run_a_sha256": "cf105f234fbf384aa142756c3e62f4636aa9aa0ab942fdc0346ae82fab59d2f7",
+      "run_b_sha256": "cf105f234fbf384aa142756c3e62f4636aa9aa0ab942fdc0346ae82fab59d2f7"
+    },
+    "report/report_manifest.json": {
+      "run_a_sha256": "7702551eeb7143ece5ae7946a9d3196e59f22ec394bd06bff089ae85edad58f3",
+      "run_b_sha256": "7702551eeb7143ece5ae7946a9d3196e59f22ec394bd06bff089ae85edad58f3"
+    },
+    "report_replay.json": {
+      "run_a_sha256": "72902c904f4fdcb918d67efc899b5fef96074f1ab1db0450d5f6aef6e93697ff",
+      "run_b_sha256": "72902c904f4fdcb918d67efc899b5fef96074f1ab1db0450d5f6aef6e93697ff"
+    },
+    "sql/00_sources.sql": {
+      "run_a_sha256": "f71568f08c29b511c3545a53e5c3941c9750a843373419a20338e5b77c124ec4",
+      "run_b_sha256": "f71568f08c29b511c3545a53e5c3941c9750a843373419a20338e5b77c124ec4"
+    },
+    "sql/01_views.sql": {
+      "run_a_sha256": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a",
+      "run_b_sha256": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a"
+    },
+    "sql/02_exports.sql": {
+      "run_a_sha256": "c201e33b9d07400f6496c77f7e006a60630ae197d2fe1e83809f027b7d4d0050",
+      "run_b_sha256": "c201e33b9d07400f6496c77f7e006a60630ae197d2fe1e83809f027b7d4d0050"
+    },
+    "sql/02_friction.sql": {
+      "run_a_sha256": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129",
+      "run_b_sha256": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129"
+    },
+    "sql/03_summary.sql": {
+      "run_a_sha256": "b2ffe30dcb16b4a1cbe1f1379c7f41344f20212302429b41234211b2eec99c04",
+      "run_b_sha256": "b2ffe30dcb16b4a1cbe1f1379c7f41344f20212302429b41234211b2eec99c04"
+    },
+    "tables/backtest.csv": {
+      "run_a_sha256": "4ed35695b54e83a691b437a24ecd230b9d9ad846aeda29d0e5e803aa1b566c7d",
+      "run_b_sha256": "4ed35695b54e83a691b437a24ecd230b9d9ad846aeda29d0e5e803aa1b566c7d"
+    },
+    "tables/cac_reconciliation.csv": {
+      "run_a_sha256": "695dd1910a220a79d42fe6236dbfbddb32073bb183183f1bfed2fd1d0c788b3e",
+      "run_b_sha256": "695dd1910a220a79d42fe6236dbfbddb32073bb183183f1bfed2fd1d0c788b3e"
+    },
+    "tables/calendar_fit_checks.csv": {
+      "run_a_sha256": "0a582a2a31a3c341483ee7a338346e9703ce4d4001f5428709b5125032ab19f0",
+      "run_b_sha256": "0a582a2a31a3c341483ee7a338346e9703ce4d4001f5428709b5125032ab19f0"
+    },
+    "tables/cohort_acquisition_costs.csv": {
+      "run_a_sha256": "b6f1e4f67d7ea6115f274898ffc09a322cae8d608939eb80f71da89aa6752f0e",
+      "run_b_sha256": "b6f1e4f67d7ea6115f274898ffc09a322cae8d608939eb80f71da89aa6752f0e"
+    },
+    "tables/cohort_age_ex_tests.csv": {
+      "run_a_sha256": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6",
+      "run_b_sha256": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6"
+    },
+    "tables/cohort_age_summary.csv": {
+      "run_a_sha256": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
+      "run_b_sha256": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53"
+    },
+    "tables/cohort_cash_economics.csv": {
+      "run_a_sha256": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
+      "run_b_sha256": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572"
+    },
+    "tables/cohort_economics_ex_tests.csv": {
+      "run_a_sha256": "bae38913ad902082d6aa6d436d64e4a706a70e405a7731a826f9980477502c6f",
+      "run_b_sha256": "bae38913ad902082d6aa6d436d64e4a706a70e405a7731a826f9980477502c6f"
+    },
+    "tables/cohort_six_month_comparison.csv": {
+      "run_a_sha256": "42ca6b5685fdee92e4f68f02ae4cbd437af7aa9651b329e1ea41847d209df460",
+      "run_b_sha256": "42ca6b5685fdee92e4f68f02ae4cbd437af7aa9651b329e1ea41847d209df460"
+    },
+    "tables/cohort_totals.csv": {
+      "run_a_sha256": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c",
+      "run_b_sha256": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c"
+    },
+    "tables/cohort_valuation.csv": {
+      "run_a_sha256": "8b09f0cc902721e1f10b1b1a8965d6dea8688e3e8974cc276de76b5de6c56046",
+      "run_b_sha256": "8b09f0cc902721e1f10b1b1a8965d6dea8688e3e8974cc276de76b5de6c56046"
+    },
+    "tables/cohort_valuation_by_segment.csv": {
+      "run_a_sha256": "2d6cb771a3a19c01eebb136a8f3828b1fbc3d9f4b21cfa53ac97ec6f46b0539f",
+      "run_b_sha256": "2d6cb771a3a19c01eebb136a8f3828b1fbc3d9f4b21cfa53ac97ec6f46b0539f"
+    },
+    "tables/company_month.csv": {
+      "run_a_sha256": "902f4bb2cdc810882e394c13669c80dc53dd8e719b4971b8dfcfea163590c298",
+      "run_b_sha256": "902f4bb2cdc810882e394c13669c80dc53dd8e719b4971b8dfcfea163590c298"
+    },
+    "tables/company_totals.csv": {
+      "run_a_sha256": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
+      "run_b_sha256": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7"
+    },
+    "tables/customer_month.csv": {
+      "run_a_sha256": "3bef6e11692af70524770c250a1b8dba089e4dfb9f4ba580dc2425cfbb00753f",
+      "run_b_sha256": "3bef6e11692af70524770c250a1b8dba089e4dfb9f4ba580dc2425cfbb00753f"
+    },
+    "tables/experiment_effects.csv": {
+      "run_a_sha256": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
+      "run_b_sha256": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113"
+    },
+    "tables/experiment_summary.csv": {
+      "run_a_sha256": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc",
+      "run_b_sha256": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc"
+    },
+    "tables/forecast_curve.csv": {
+      "run_a_sha256": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b",
+      "run_b_sha256": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b"
+    },
+    "tables/friction_balance.csv": {
+      "run_a_sha256": "591cc205299a54f776aa44e52c2b575f76d9298fe09db481a3c1079c5a79cc17",
+      "run_b_sha256": "591cc205299a54f776aa44e52c2b575f76d9298fe09db481a3c1079c5a79cc17"
+    },
+    "tables/friction_cohort_segments.csv": {
+      "run_a_sha256": "3ee91d24013c4060414c160e1f54bba43b27fa2bdd75a47d7cdef6eec0c183b4",
+      "run_b_sha256": "3ee91d24013c4060414c160e1f54bba43b27fa2bdd75a47d7cdef6eec0c183b4"
+    },
+    "tables/friction_cohort_summary.csv": {
+      "run_a_sha256": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
+      "run_b_sha256": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000"
+    },
+    "tables/friction_contrasts.csv": {
+      "run_a_sha256": "ce8e63208ead4a188b84af6ad0bf61bd42dbcbb75a98065c38e6d1efa49aa4ad",
+      "run_b_sha256": "ce8e63208ead4a188b84af6ad0bf61bd42dbcbb75a98065c38e6d1efa49aa4ad"
+    },
+    "tables/friction_matched_comparison.csv": {
+      "run_a_sha256": "995d7d4b7b88728d7beeb418fa41f0bc49da9968d02a60ca2eb9ac5175f1721d",
+      "run_b_sha256": "995d7d4b7b88728d7beeb418fa41f0bc49da9968d02a60ca2eb9ac5175f1721d"
+    },
+    "tables/friction_refund_sensitivity.csv": {
+      "run_a_sha256": "a87224f3f984e6648f1d56415386b51e96b63e91454746db4bacfe41c93b1a1f",
+      "run_b_sha256": "a87224f3f984e6648f1d56415386b51e96b63e91454746db4bacfe41c93b1a1f"
+    },
+    "tables/friction_segment_summary.csv": {
+      "run_a_sha256": "9c16185d34fb4ef6056c639506c4656f4a0f1f65f80755e67b8314080575b171",
+      "run_b_sha256": "9c16185d34fb4ef6056c639506c4656f4a0f1f65f80755e67b8314080575b171"
+    },
+    "tables/friction_source_audit.csv": {
+      "run_a_sha256": "303598a08ace6f75c84902022b37ec925736d9b27eb4c861ce3fc755c01bdf49",
+      "run_b_sha256": "303598a08ace6f75c84902022b37ec925736d9b27eb4c861ce3fc755c01bdf49"
+    },
+    "tables/friction_subjects.csv": {
+      "run_a_sha256": "a4fed44132628a96499558d5ec22ecac0b5f9b5cf2aeea30dc2667e6fc321a23",
+      "run_b_sha256": "a4fed44132628a96499558d5ec22ecac0b5f9b5cf2aeea30dc2667e6fc321a23"
+    },
+    "tables/friction_timing_audit.csv": {
+      "run_a_sha256": "7db7c4e05c74b3d4e0470a241ea10dc420e45057e9c0d7761d76314ac0a7a35d",
+      "run_b_sha256": "7db7c4e05c74b3d4e0470a241ea10dc420e45057e9c0d7761d76314ac0a7a35d"
+    },
+    "tables/heterogeneity_by_cell.csv": {
+      "run_a_sha256": "05a5a0e3c4d5e1a334b908cca7e18cf6fece3814f52eac9e0cf772343a0373b2",
+      "run_b_sha256": "05a5a0e3c4d5e1a334b908cca7e18cf6fece3814f52eac9e0cf772343a0373b2"
+    },
+    "tables/model_fit_checks.csv": {
+      "run_a_sha256": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3",
+      "run_b_sha256": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3"
+    },
+    "tables/orduz_benchmark.csv": {
+      "run_a_sha256": "2b15b417932ec73fc548d7e284c7fd18d517fead56ad831990cd42e31cfe3e70",
+      "run_b_sha256": "2b15b417932ec73fc548d7e284c7fd18d517fead56ad831990cd42e31cfe3e70"
+    },
+    "tables/parameter_summary.csv": {
+      "run_a_sha256": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6",
+      "run_b_sha256": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6"
+    },
+    "tables/segment_forecast_curves.csv": {
+      "run_a_sha256": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
+      "run_b_sha256": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792"
+    },
+    "tables/segmentation_comparison.csv": {
+      "run_a_sha256": "d14b65521fab9d858a16175d3924b9f3ec5e03f7fa316b0422b4261d0f700e81",
+      "run_b_sha256": "d14b65521fab9d858a16175d3924b9f3ec5e03f7fa316b0422b4261d0f700e81"
+    },
+    "tables/segmentation_objective.csv": {
+      "run_a_sha256": "cfcd5233b088cd2a5dbba349da043581445737574c59799f790268652223959c",
+      "run_b_sha256": "cfcd5233b088cd2a5dbba349da043581445737574c59799f790268652223959c"
+    },
+    "tables/segmentation_profile.csv": {
+      "run_a_sha256": "bd29e96eef73e893047eb410588bbb168188f95dc53bd08248d28bde15722c47",
+      "run_b_sha256": "bd29e96eef73e893047eb410588bbb168188f95dc53bd08248d28bde15722c47"
+    },
+    "tables/strategic_rank_stability.csv": {
+      "run_a_sha256": "c84e72b45729e9bb70e718931a83030f746cf434fa9a1b74b41d62600c3b69f0",
+      "run_b_sha256": "c84e72b45729e9bb70e718931a83030f746cf434fa9a1b74b41d62600c3b69f0"
+    },
+    "tables/strategic_segment_breakout.csv": {
+      "run_a_sha256": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf",
+      "run_b_sha256": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
+    },
+    "tables/valuation_backtest.csv": {
+      "run_a_sha256": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d",
+      "run_b_sha256": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d"
+    }
+  },
+  "frozen_data_manifest_sha256": "84e78f3e71f5fdd55d28ee231574b5e47f6ed8d4c6b263fb93dd62fe470df959",
+  "implementation_manifest_sha256": "5152bc1e659f58259654152c2ec558a3abdd3f71c27256734b4c1310b028032e",
+  "mismatches": [],
+  "mode": "report",
+  "model_refit": false,
+  "parallel_processes": true,
+  "platform": "Windows-11-10.0.22631-SP0",
+  "preserved_fitted_artifacts": {
+    "benchmark_manifest.json": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83",
+    "benchmark_summary.json": "6de1044f6e3871438ac796e87ed24a40aa170b8ef8cc88c0a42f9f42ead83c38",
+    "model_manifest.json": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368",
+    "model_summary.json": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6",
+    "posterior_draws.json": "11b29e1ec30b13e07018b7951573cb00eb1122a884b9b8a6fcb5e9483c50a55f",
+    "tables/backtest.csv": "4ed35695b54e83a691b437a24ecd230b9d9ad846aeda29d0e5e803aa1b566c7d",
+    "tables/calendar_fit_checks.csv": "0a582a2a31a3c341483ee7a338346e9703ce4d4001f5428709b5125032ab19f0",
+    "tables/cohort_valuation.csv": "8b09f0cc902721e1f10b1b1a8965d6dea8688e3e8974cc276de76b5de6c56046",
+    "tables/cohort_valuation_by_segment.csv": "2d6cb771a3a19c01eebb136a8f3828b1fbc3d9f4b21cfa53ac97ec6f46b0539f",
+    "tables/forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b",
+    "tables/heterogeneity_by_cell.csv": "05a5a0e3c4d5e1a334b908cca7e18cf6fece3814f52eac9e0cf772343a0373b2",
+    "tables/model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3",
+    "tables/orduz_benchmark.csv": "2b15b417932ec73fc548d7e284c7fd18d517fead56ad831990cd42e31cfe3e70",
+    "tables/parameter_summary.csv": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6",
+    "tables/valuation_backtest.csv": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d"
+  },
+  "python": "3.12.14",
+  "schema_version": 2,
+  "scope": "Two fresh processes on the same host, frozen data, source and locked environment. Observed analysis, decision metrics, diagnostics, post-estimation, diagrams and report rebuilt; fitted baseline and neural outputs preserved.",
+  "seed": null,
+  "status": "pass",
+  "steps": null,
+  "uv_lock_sha256": "4f3b8c7440b852c310ca7c91e48724638e75f51e1b8c2b5360bda15222d6657c",
+  "validations": [
+    {
+      "companion_integrity_verified": false,
+      "implementation_files": 264,
+      "pdf_verified": true,
+      "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+      "status": "pass"
+    },
+    {
+      "companion_integrity_verified": false,
+      "implementation_files": 264,
+      "pdf_verified": true,
+      "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+      "status": "pass"
+    }
+  ]
+}

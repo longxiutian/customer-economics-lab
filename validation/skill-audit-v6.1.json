@@ -1,0 +1,82 @@
+{
+  "artifact_validation": {
+    "companion_integrity_verified": true,
+    "implementation_files": 264,
+    "pdf_verified": true,
+    "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+    "status": "pass"
+  },
+  "companion": "Editable PPTX and native PDF preserved unchanged; source-table and file hashes validated. No new companion rendering claimed.",
+  "date": "2026-10-30",
+  "independent_model_review": false,
+  "numeric_tables_unchanged": 39,
+  "portable_preflight": {
+    "all_extracted_files_byte_equal": true,
+    "files": 450,
+    "fresh_python_environment": true,
+    "installed_validation": {
+      "companion_integrity_verified": true,
+      "implementation_files": 264,
+      "pdf_verified": true,
+      "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+      "status": "pass"
+    },
+    "no_git_checkout": true,
+    "source": "Prepublication v6.1.0 workflow candidate before final validation receipts; exact published source checked separately",
+    "status": "passed",
+    "zip_sha256": "08032058e41ad86bb58b20a004a297d356c26149227199184f41aeff16953df3"
+  },
+  "portable_source_replay": {
+    "compiled_pdf": false,
+    "model_refit": false,
+    "node_setup": "npm 10.9.3 temporary CLI (registry integrity verified); npm ci and pinned Playwright Chromium setup succeeded. No global npm installation.",
+    "numeric_tables_identical": 39,
+    "scope": "No-Git prepublication ZIP candidate; fresh Python environment and actual editable-report replay. Exact tagged source download and current implementation hashes are verified separately after publication.",
+    "status": "passed"
+  },
+  "private_inputs_required_for_public_reproduction": false,
+  "protected_files_unchanged": 68,
+  "release": "v6.1.0",
+  "reproducibility": {
+    "canonical_files": 127,
+    "mismatches": 0,
+    "model_refit": false,
+    "processes": 2,
+    "receipt": "validation/reproducibility-v6.1.json",
+    "same_host_only": true
+  },
+  "requirements": [
+    "exact centered cover and details; left-aligned school/course/term credit",
+    "customer journey heading and model-after-company section order",
+    "explicit citations, reference anchors, licensed asset provenance",
+    "within-cell homogeneity and across-cell heterogeneity with residual dispersion",
+    "pre-renewal diagnostics and posterior strategic breakouts",
+    "attribution-to-incrementality reconciliation, matching value/CAC scope and payback conventions",
+    "public setup, exact-next gates, saved choices, invalidation, full versus report-only modes, visual QA and ZIP handoff"
+  ],
+  "scope": "Root and report skill contract audit; public integrity and replay tooling. No analytical definitions, numeric outputs, model fits, report layout or companion content changed.",
+  "skill_validation": {
+    "executive_report": "passed",
+    "local_links": "all resolved",
+    "root": "passed",
+    "validator": "skill-creator quick_validate.py; transient PyYAML via uv"
+  },
+  "status": "passed",
+  "tests": {
+    "command": "uv run --frozen python -m pytest tests/test_reproducibility.py tests/test_workflow.py tests/test_report.py tests/test_report_v4.py tests/test_query.py -q",
+    "count": 75,
+    "final_reproducibility_suite": "9 passed in 20.36s against final source and refreshed reference artifacts",
+    "scope": "Affected behavioral tests, including six identical-tampering counterexamples; not a new full model suite.",
+    "seconds": 290.49,
+    "status": "passed"
+  },
+  "visual_qa": {
+    "byte_identical_to_v6_0_2": true,
+    "metadata_and_required_text": "pass",
+    "pages_rendered": 49,
+    "pdf_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
+    "pixel_review_pending": false,
+    "status": "pass",
+    "visual_review": "All 49 pages rendered at 110 dpi and reviewed in a contact sheet; cover also inspected at 150 dpi. PDF is byte-identical to v6.0.2, with no new layout or content changes."
+  }
+}
