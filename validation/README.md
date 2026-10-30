@@ -1,3 +1,7 @@
+# Cover update — v6.0.2
+
+The cover now contains exactly two centered lines: **Are We Moving in the Right Direction?** and **A customer-base analysis of cohort-based LTV at Studio North**. The evidence-period and observation-cutoff lines are also centered. PDF metadata matches. The report remains 49 pages with zero overfull boxes. All 48 following pages are pixel-identical to v6.0.0 at 110 dpi, all 39 numeric tables are unchanged, and all fitted/input manifests validate. Six existing affected tests passed in 2.91 seconds. See `cover-update.json` for measured text bounds and exact scope. The original full-suite and two-replay evidence below retains its v6.0.0 scope.
+
 # Cover update — v6.0.1
 
 The cover now contains exactly two centered lines: **Are We Moving in the Right Direction?** and **A customer-base analysis of cohort-based LTV at Studio North**. PDF metadata matches. The report remains 49 pages with zero overfull boxes. All 48 following pages are pixel-identical to v6.0.0 at 110 dpi, all 39 numeric tables are unchanged, and all fitted/input manifests validate. Six existing affected tests passed in 1.51 seconds. See `cover-update.json` for measured text bounds and exact scope. The original full-suite and two-replay evidence below retains its v6.0.0 scope.

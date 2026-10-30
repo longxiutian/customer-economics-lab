@@ -4,14 +4,14 @@
   "build": {
     "engine": "WSL pdflatex",
     "overfull_boxes": 0,
-    "pdf_sha256": "d960ae1488499083a267428846376ab4fc439b145d0b20872cc0c9866fe319b6",
+    "pdf_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
     "source_date_epoch": 1794787200
   },
   "chart_manifest_sha256": "74401a5b542dbe2f1b39049a186b51f566b0e63e01eaf8da8623f6f1747bd159",
   "compiled": true,
   "decision_metrics_manifest_sha256": "4480e42592ea60f91f34461d420d808734e57e6833d60c4d9a24cd2ad6ef2622",
   "diagnostics_manifest_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
-  "diagram_manifest_sha256": "5e7e56136d3847ce2b47e60a811e4f44cd49ace31305204bdced1c611ce80afa",
+  "diagram_manifest_sha256": "34b241363e87c3bebf980ffb5550b251c0027a1e485b27cee48078d25c38c19a",
   "display_formatter_sha256": "ed900a6583350a2e867c353734045409e76e261038be75354794dc0f1a066372",
   "executive_metrics_sha256": "b7f521c70979b5a88ae9f8cfbf0cda9c34e396c86abdfc39fe153f006abb1694",
   "exhibit_registry_sha256": "5a1179d9d1b60e492a00f98ec8360b36f661359c2fa1887b097b25efa06b47a4",
@@ -205,10 +205,10 @@
     "total_cells": 4,
     "weighting": "Original acquired customer counts within each six-cohort window"
   },
-  "report_skill_sha256": "9c54db8646ffcb559c09b5a12031fb5042ab9fbd03e448d055e50f4b454baafb",
+  "report_skill_sha256": "9aca973d9c47fa47ac9a0ba9ea6fbb603043f214ba8e5fc94b3a9d4c6e7702cc",
   "report_source_sha256": "791f8d5f569bfbd5d6b035f129987276ea6506f3d94f40e9ffb69dcaf5558590",
   "source_date_epoch": 1794787200,
-  "style_sha256": "06ca92540010d1d71ef911632b8d53223c2d76118939eeed6c35d8dd364e7545",
+  "style_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb",
   "table_count": 32,
   "tables": {
     "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",

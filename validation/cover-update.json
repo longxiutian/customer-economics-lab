@@ -1,5 +1,5 @@
 {
-  "affected_tests": "6 passed in 1.51s; existing report-format checks and archive URL check",
+  "affected_tests": "6 passed in 2.91s; existing report-format checks and archive URL check",
   "body_pages_pixel_identical_at_110dpi": [
     2,
     3,
@@ -50,6 +50,20 @@
     48,
     49
   ],
+  "centered_detail_rectangles_pdf_points": [
+    [
+      194.218994140625,
+      347.9598083496094,
+      417.7813415527344,
+      359.9150085449219
+    ],
+    [
+      190.43399047851562,
+      368.5818176269531,
+      422.2932434082031,
+      380.5370178222656
+    ]
+  ],
   "centered_line_rectangles_pdf_points": [
     [
       109.80400085449219,
@@ -69,13 +83,13 @@
   "overfull_boxes": 0,
   "pages": 49,
   "protected_artifacts": 71,
-  "release": "v6.0.1",
-  "report_sha256": "d960ae1488499083a267428846376ab4fc439b145d0b20872cc0c9866fe319b6",
-  "scope": "Cover typography and wording only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
+  "release": "v6.0.2",
+  "report_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
+  "scope": "Cover typography, wording and centered evidence/cutoff lines only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
   "status": "passed",
   "subtitle": "A customer-base analysis of cohort-based LTV at Studio North",
   "title": "Are We Moving in the Right Direction?",
   "title_lines": 2,
   "unchanged_numeric_tables": 39,
-  "visual_qa": "All 49 pages rendered and contact sheet inspected; changed cover inspected at full resolution."
+  "visual_qa": "All 49 pages rendered and contact sheet inspected; four centered cover lines inspected at full resolution."
 }
