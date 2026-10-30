@@ -17,3 +17,6 @@ The eight source CSVs, original SQL aggregation, all 37 previously released nume
 The 12-slide companion and its native charts are retained from v5 because their source figures and numeric exhibits are unchanged; this revision's additional CAC and segmentation teaching is in the report and methodology note. Historical v4 and v5 releases remain available.
 
 Larsen and the course materials join the report's explicit citations and references. The source record in `assets/` distinguishes a citation from redistribution permission. The licensed Orduz notebook and its provenance remain unchanged.
+
+
+Version 6.0.1 changes only the cover title and layout: the question and Studio North subtitle each occupy one centered line. PDF metadata and the preview match. The 48 following pages and all numerical exhibits retain the v6.0.0 content.

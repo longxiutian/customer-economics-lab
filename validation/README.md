@@ -1,3 +1,7 @@
+# Cover update — v6.0.1
+
+The cover now contains exactly two centered lines: **Are We Moving in the Right Direction?** and **A customer-base analysis of cohort-based LTV at Studio North**. PDF metadata matches. The report remains 49 pages with zero overfull boxes. All 48 following pages are pixel-identical to v6.0.0 at 110 dpi, all 39 numeric tables are unchanged, and all fitted/input manifests validate. Six existing affected tests passed in 1.51 seconds. See `cover-update.json` for measured text bounds and exact scope. The original full-suite and two-replay evidence below retains its v6.0.0 scope.
+
 # Release validation — v6.0.0
 
 All **187 collected tests are verified across the full and corrective runs**, including six new independent arithmetic counterexamples. The initial full run passed 186 tests in 1052.82 seconds and failed one stale assertion that expected the v5 download URL. Only that expected URL was updated to v6; no executable code changed afterward. The final workflow suite passed all **21 tests in 10.27 seconds**, including the corrected test. Exact output is in `pytest.txt`.
