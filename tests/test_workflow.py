@@ -237,7 +237,7 @@ def test_archive_download_install_requires_no_git(tmp_path, monkeypatch):
     destination = install_archive(_archive(tmp_path), tmp_path / "extracted")
     assert (destination / "SKILL.md").is_file()
     assert not (destination / ".git").exists()
-    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v6.0.0.zip"
+    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v6.0.1.zip"
 
 
 def test_archive_rejects_traversal_before_extracting(tmp_path):

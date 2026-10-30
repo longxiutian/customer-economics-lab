@@ -29,8 +29,9 @@ def test_model_follows_company_economics_and_precedes_forecast_results():
     assert text.index("{retention-triangle}")<text.index("{cohort-layers}")<text.index("{retention-forecast}")<text.index("ltv-and-cac.pdf")
     assert text.index("The renewal mechanism")<text.index("{retention-forecast}")
     assert r"\SectionDivider{06}{Model-based forecasting of cohort trajectories}" in text
-    title="Studio North: are we moving in the right direction? A customer-base analysis of cohort-based LTV"
-    assert r"\ReportCover{"+title+"}" in text
+    title="Are We Moving in the Right Direction?"
+    subtitle="A customer-base analysis of cohort-based LTV at Studio North"
+    assert r"\ReportCover{"+title+"}{"+subtitle+"}" in text
     assert text.index(r"\ReportCover{")<text.index(r"\ReportContents")<text.index(r"\PageTitle{EXECUTIVE SUMMARY}")
     assert "All records describe an illustrative business and are synthetic." not in text
     assert text.count(r"\ReportFigure{retention-forecast}")==1

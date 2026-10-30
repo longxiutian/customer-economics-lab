@@ -17,7 +17,7 @@
     "tables/parameter_summary.csv": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6",
     "tables/valuation_backtest.csv": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d"
   },
-  "report_sha256": "8d5b6a88b4947bf2d8d6893570a19824522a34fc8e5599e9ad6ec5a25d473efa",
+  "report_sha256": "d960ae1488499083a267428846376ab4fc439b145d0b20872cc0c9866fe319b6",
   "scope": "Fresh observed ETL, diagnostics, post-estimation, diagrams and report; verified baseline and neural fitted outputs reused unchanged. No refit or future outcomes.",
   "source_model_manifest_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368"
 }

@@ -1,6 +1,6 @@
 % Report semantics layered over the maintained, unmodified visual package.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{labreport}[2026/10/29 v5.0 Customer economics executive report]
+\ProvidesPackage{labreport}[2026/10/30 v6.0.1 Customer economics executive report]
 \RequirePackage{longxiu-research-brief}
 \RequirePackage{graphicx,amsmath}
 % Preserve literal code in both the printed glyphs and the PDF text layer.
@@ -37,7 +37,7 @@
 \newcommand{\NewPage}{\clearpage}
 \newcommand{\ReportEntry}[1]{\phantomsection\addcontentsline{toc}{section}{#1}}
 \newcommand{\SourceCite}[2]{\hyperlink{ref:#1}{#2}}
-\newcommand{\ReportCover}[1]{\thispagestyle{empty}\vspace*{1.2in}\BriefKicker{STUDIO NORTH}{Management report}{Customer economics}\vspace{.65in}{\color{BriefGreen}\fontsize{24}{31}\selectfont\bfseries\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000 #1\par}\vspace{.55in}{\color{BriefMuted}\fontsize{12}{17}\selectfont Evidence from January 2024--December 2025\par Observation cutoff: January 1, 2026 (exclusive)\par}\vfill{\color{BriefInk}\fontsize{12}{17}\selectfont Kenan-Flagler Business School\par MBA 743: Managing Customer Data\par Mod II 2026\par}\vspace{.4in}\clearpage}
+\newcommand{\ReportCover}[2]{\thispagestyle{empty}\vspace*{1.2in}\BriefKicker{STUDIO NORTH}{Management report}{Customer economics}\vspace{.65in}{\centering\color{BriefGreen}\fontsize{24}{31}\selectfont\bfseries\mbox{#1}\par\vspace{10pt}{\fontsize{16}{21}\selectfont\mdseries\mbox{#2}\par}}\vspace{.55in}{\color{BriefMuted}\fontsize{12}{17}\selectfont Evidence from January 2024--December 2025\par Observation cutoff: January 1, 2026 (exclusive)\par}\vfill{\color{BriefInk}\fontsize{12}{17}\selectfont Kenan-Flagler Business School\par MBA 743: Managing Customer Data\par Mod II 2026\par}\vspace{.4in}\clearpage}
 \renewcommand{\l@section}[2]{\par\addvspace{10pt}\noindent{\bfseries\color{BriefGreen}\hbox to \linewidth{\strut #1\hfil #2}}\par}
 \newcommand{\ReportContents}{\PageTitle{CONTENTS}{Table of contents}{Observed customer economics, model-based forecasts and management action.}\vspace{.25in}\@starttoc{toc}\vfill\Evidence{The report first assesses observed cohort progress, then explains the forecasting model and its implications for strategy. The appendix provides specifications, validation and the analytical handoff.}\clearpage}
 \newcommand{\SectionDivider}[3]{\clearpage\ReportEntry{#1\quad #2}\vspace*{1.6in}\BriefKicker{#1}{Studio North}{Customer economics}\vspace{.4in}{\color{BriefGreen}\fontsize{30}{36}\selectfont\bfseries\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000 #2\par}\vspace{.4in}{\color{BriefMuted}\fontsize{13}{18}\selectfont #3\par}\vfill\clearpage}
@@ -46,7 +46,7 @@
 \newcommand{\ApplyReportPaperSize}{\ifdefined\pdfpagewidth\pdfpagewidth=\paperwidth\pdfpageheight=\paperheight\else\special{papersize=\the\paperwidth,\the\paperheight}\fi}
 \newcommand{\BeginSchemaFoldout}{\clearpage\setlength{\paperwidth}{420mm}\setlength{\paperheight}{297mm}\ApplyReportPaperSize\newgeometry{layoutwidth=420mm,layoutheight=297mm,left=.45in,right=.45in,top=.48in,bottom=.5in}\setlength{\headwidth}{\textwidth}}
 \newcommand{\EndSchemaFoldout}{\clearpage\setlength{\paperwidth}{8.5in}\setlength{\paperheight}{11in}\ApplyReportPaperSize\restoregeometry\setlength{\headwidth}{\textwidth}}
-\hypersetup{pdftitle={Studio North: are we moving in the right direction? A customer-base analysis of cohort-based LTV},pdfauthor={Longxiu Tian},pdfsubject={Subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab reproducible pipeline}}
+\hypersetup{pdftitle={Are We Moving in the Right Direction? A customer-base analysis of cohort-based LTV at Studio North},pdfauthor={Longxiu Tian},pdfsubject={Subscription cohort analysis and randomized campaign evidence},pdfcreator={Customer Economics Lab reproducible pipeline}}
 \ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
 \ifdefined\pdftrailerid\pdftrailerid{}\fi
 \ifdefined\pdfsuppressptexinfo\pdfsuppressptexinfo=15\fi
