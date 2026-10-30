@@ -904,6 +904,8 @@ def _pdf_copyability(path: Path) -> dict:
 
 def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
     """Produce a decision-facing report and required technical/data appendices."""
+    from .workflow import implementation_snapshot
+    implementation = implementation_snapshot()
     output=Path(output_dir).resolve();directory=output/"report";directory.mkdir(parents=True,exist_ok=True)
     _json(output/"model_summary.json") # No silent placeholder forecast.
     charts=build_charts(output)
@@ -954,5 +956,9 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
             if abs(float(page.mediabox.width)-width)>1 or abs(float(page.mediabox.height)-height)>1:raise ValueError("Report must use Letter portrait with one A3 landscape schema foldout")
         manifest.update({"compiled":True,"pages":len(pdf.pages),"pdf":"report/customer-economics-report.pdf"})
         manifest["pdf_copyability"]=_pdf_copyability(source.with_suffix(".pdf"))
+    if implementation != implementation_snapshot():
+        raise ValueError("Implementation changed during report construction; rebuild in a fresh folder")
+    _write_json(output/"implementation_manifest.json", implementation)
+    manifest["implementation_manifest_sha256"] = _sha(output/"implementation_manifest.json")
     _write_json(directory/"report_manifest.json",manifest)
     return manifest

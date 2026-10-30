@@ -32,8 +32,21 @@
     "v4.0.0",
     "v5.0.0",
     "v6.0.0",
-    "v6.0.1"
+    "v6.0.1",
+    "v6.0.2"
   ],
+  "prior_v6_0_2_reproducibility": {
+    "body_pages_pixel_identical": 48,
+    "model_refit": false,
+    "receipt": "validation/cover-update.json",
+    "report_replays": 1,
+    "scope": "Cover typography, wording and centered evidence/cutoff lines only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
+    "unchanged_numeric_tables": 39
+  },
+  "prior_v6_0_2_tests": {
+    "affected": "6 passed in 2.91s",
+    "scope": "Existing report-format checks and the bootstrap release-URL test; analytical code unchanged."
+  },
   "prior_v6_method_review": {
     "accounting_status": "committed",
     "adjudication": "Accepted the matched-estimand, short-horizon, interval, fixed-dose and segmentation-variance clarifications. The noted tiny SD discrepancy comes from rounded prompt inputs; the implementation reconciles unrounded population variances. No refit or data revision required.",
@@ -60,7 +73,7 @@
     "new_counterexample_tests": 6,
     "verified_unique_tests": 187
   },
-  "release": "v6.0.2",
+  "release": "v6.1.0",
   "report": {
     "all_pages_rendered": true,
     "cac_pages": [
@@ -108,22 +121,27 @@
     "subtitle": "A customer-base analysis of cohort-based LTV at Studio North",
     "tables": 32,
     "title": "Are We Moving in the Right Direction?",
-    "visual_qa": "validation/cover-update.json"
+    "visual_qa": "validation/skill-audit-v6.1.json"
   },
   "reproducibility": {
-    "body_pages_pixel_identical": 48,
+    "canonical_files": 127,
+    "mismatches": 0,
     "model_refit": false,
-    "receipt": "validation/cover-update.json",
-    "report_replays": 1,
-    "scope": "Cover typography, wording and centered evidence/cutoff lines only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
-    "unchanged_numeric_tables": 39
+    "processes": 2,
+    "receipt": "validation/reproducibility-v6.1.json",
+    "same_host_only": true
   },
   "review": {
-    "scope": "Local cover layout, selectable text, PDF metadata, compiler and pixel checks; no new model consultation for this formatting-only revision."
+    "scope": "Local skill audit, behavioral tests, artifact integrity, two fresh report processes and portable ZIP checks; no new inference or external model consultation."
   },
-  "scope": "Centered two-line title plus centered evidence-period and observation-cutoff lines; analytical content unchanged.",
+  "scope": "Root and report skill contract audit; public integrity and replay tooling. No analytical definitions, numeric outputs, model fits, report layout or companion content changed.",
+  "skill_audit": "validation/skill-audit-v6.1.json",
   "tests": {
-    "affected": "6 passed in 2.91s",
-    "scope": "Existing report-format checks and the bootstrap release-URL test; analytical code unchanged."
+    "command": "uv run --frozen python -m pytest tests/test_reproducibility.py tests/test_workflow.py tests/test_report.py tests/test_report_v4.py tests/test_query.py -q",
+    "count": 75,
+    "final_reproducibility_suite": "9 passed in 20.36s against final source and refreshed reference artifacts",
+    "scope": "Affected behavioral tests, including six identical-tampering counterexamples; not a new full model suite.",
+    "seconds": 290.49,
+    "status": "passed"
   }
 }

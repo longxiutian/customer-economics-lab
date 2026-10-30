@@ -4,12 +4,12 @@
   "current_generator_source_published": false,
   "current_private_material_found": false,
   "embedded_files": 115,
-  "files_scanned": 444,
+  "files_scanned": 451,
   "findings": 0,
   "forecasts_scored_on_private_truth": false,
   "parsing_errors": 0,
   "prior_release_and_history_preserved": true,
-  "release": "v6.0.2",
+  "release": "v6.1.0",
   "scope": "Final publishable working-tree files, including extracted PDF, presentation and embedded-workbook contents. Sanitized counts only; no private values are returned.",
   "status": "passed"
 }

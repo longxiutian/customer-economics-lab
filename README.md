@@ -14,7 +14,7 @@ In one AI-agent chat, students inspect the exports, classify each dataset's Univ
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v6.0.2 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v6.1.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
@@ -68,13 +68,14 @@ See [version 6 changes](docs/v6-changes.md) for the segmentation objective and a
 
 The frozen observed data release is version **4.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
 
-For an explicitly requested full reproducibility run:
+Read [the reproducibility guide](docs/reproducibility.md) for the complete artifact contract, visual checks, companion provenance and ZIP handoff. Validate saved artifacts or rebuild the report twice from frozen fits:
 
 ```text
-uv run --frozen python lab.py --output outputs/instructor batch --instructor
-uv run --frozen python -m pytest
-uv run --frozen python scripts/verify_reproducibility.py --output outputs/replay-check
+uv run --frozen python scripts/validate_artifacts.py --output examples/reference --companion
+uv run --frozen python scripts/verify_reproducibility.py --mode report --source examples/reference --output outputs/report-repro
 ```
+
+To refit both models in two fresh processes, use `uv run --frozen python scripts/verify_reproducibility.py --mode full --output outputs/full-repro`. Run behavioral tests with `uv run --frozen python -m pytest`. A report replay is not a new inference run.
 
 Batch mode intentionally runs all computations and is not the student-chat workflow. Choose a fresh empty output folder for each run. Use `--no-pdf` before the command only when an editable TeX result is intentionally sufficient. A different model step budget or seed is recorded and invalidates dependent guided outputs. Changes to core code, SQL, templates, or the frozen environment fail closed in an existing guided session; restore the release or begin a new output folder.
 

@@ -39,6 +39,7 @@ def sentinel_runner():
         if stage == 7:
             (output_dir / "report").mkdir(exist_ok=True)
             (output_dir / "report" / "report.pdf").write_bytes(b"test artifact")
+            (output_dir / "implementation_manifest.json").write_text('{"fixture":"implementation"}')
         return {"ready": True, "stage": stage, "choices_seen": choices}
 
     return calls, run
@@ -156,6 +157,8 @@ def test_final_verdict_change_only_rebuilds_report(data_dir, tmp_path, sentinel_
     assert changed["state"]["completed_stage"] == 6
     assert (output / "model_summary.json").exists()
     assert not (output / "report").exists()
+    assert not (output / "implementation_manifest.json").exists()
+    assert (output / "invalidated/revision-001/implementation_manifest.json").exists()
 
 
 def test_model_configuration_change_invalidates_model_and_report(data_dir, tmp_path, sentinel_runner):
@@ -237,7 +240,7 @@ def test_archive_download_install_requires_no_git(tmp_path, monkeypatch):
     destination = install_archive(_archive(tmp_path), tmp_path / "extracted")
     assert (destination / "SKILL.md").is_file()
     assert not (destination / ".git").exists()
-    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v6.0.2.zip"
+    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v6.1.0.zip"
 
 
 def test_archive_rejects_traversal_before_extracting(tmp_path):

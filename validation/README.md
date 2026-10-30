@@ -1,3 +1,11 @@
+# Skill and reproducibility audit — v6.1.0
+
+The root and report skills now preserve the recent cover, section-order, citation, journey, segmentation and CAC decisions. The new public reproducibility guide gives exact validation, report-only, full-inference, visual and ZIP handoff procedures. The implementation manifest binds 264 code, instruction, dependency and vendored files; the complete evidence chain is validated before comparing two runs.
+
+Two fresh report processes from the final source produce 127 byte-identical canonical artifacts. The PDF is byte-identical to v6.0.2, all 39 numeric tables and 68 protected input/model/source/companion files are unchanged, and no model was refitted. Seventy-five affected workflow, report, query and reproducibility tests passed in 290.49 seconds, including identical-tampering rejection. Both skills pass structural validation and all local links resolve. A no-Git ZIP passes fresh-environment artifact validation and an actual editable-report replay. This does not claim a new full inference run, cross-platform byte identity or an automated companion rebuild.
+
+See `skill-audit-v6.1.json` and `reproducibility-v6.1.json` for the current scope. Earlier receipts below retain their historical scope. Publication download verification is attached separately to the release after the tagged source ZIP and assets are retrieved.
+
 # Cover update — v6.0.2
 
 The cover now contains exactly two centered lines: **Are We Moving in the Right Direction?** and **A customer-base analysis of cohort-based LTV at Studio North**. The evidence-period and observation-cutoff lines are also centered. PDF metadata matches. The report remains 49 pages with zero overfull boxes. All 48 following pages are pixel-identical to v6.0.0 at 110 dpi, all 39 numeric tables are unchanged, and all fitted/input manifests validate. Six existing affected tests passed in 2.91 seconds. See `cover-update.json` for measured text bounds and exact scope. The original full-suite and two-replay evidence below retains its v6.0.0 scope.

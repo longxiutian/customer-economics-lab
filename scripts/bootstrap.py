@@ -12,7 +12,7 @@ import zipfile
 from pathlib import Path, PurePosixPath
 
 PUBLIC_REPOSITORY = "longxiutian/customer-economics-lab"
-DEFAULT_REF = "v6.0.2"
+DEFAULT_REF = "v6.1.0"
 MAX_DOWNLOAD = 128 * 1024 * 1024
 MAX_EXTRACTED = 512 * 1024 * 1024
 

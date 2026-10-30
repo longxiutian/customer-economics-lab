@@ -1,5 +1,7 @@
 {
+  "compiled": true,
   "frozen_data_manifest_sha256": "84e78f3e71f5fdd55d28ee231574b5e47f6ed8d4c6b263fb93dd62fe470df959",
+  "model_refit": false,
   "preserved_fitted_artifacts": {
     "benchmark_manifest.json": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83",
     "benchmark_summary.json": "6de1044f6e3871438ac796e87ed24a40aa170b8ef8cc88c0a42f9f42ead83c38",
@@ -18,6 +20,6 @@
     "tables/valuation_backtest.csv": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d"
   },
   "report_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
-  "scope": "Fresh observed ETL, diagnostics, post-estimation, diagrams and report; verified baseline and neural fitted outputs reused unchanged. No refit or future outcomes.",
+  "scope": "Fresh observed ETL, diagnostics, decision metrics, post-estimation, diagrams and report; verified baseline and neural fitted outputs reused unchanged. No refit or future outcomes.",
   "source_model_manifest_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368"
 }

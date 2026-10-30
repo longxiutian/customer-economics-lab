@@ -55,16 +55,16 @@ def _hash(path: Path) -> str:
 
 
 def implementation_snapshot(root: Path | None = None) -> dict:
-    """Fingerprint the executable contract, excluding learner output SQL."""
+    """Fingerprint code, bundled dependencies and instructions, excluding outputs."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("assets/articles", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
     paths.extend(root / name for name in ("lab.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
-    paths.extend(p for p in (root/'scripts').glob('*.mjs') if p.is_file())
+    paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
     return {p.relative_to(root).as_posix(): _hash(p) for p in sorted(set(paths))}
 
 
@@ -297,7 +297,7 @@ class LabWorkflow:
 
     def _archive_artifacts(self, from_stage: int, revision: int, removed: dict) -> list[str]:
         """Keep old evidence recoverable while preventing stale previews."""
-        names = ["report"]
+        names = ["report", "implementation_manifest.json", "report_replay.json"]
         if from_stage <= 4:
             names += ["decision_metrics_manifest.json", "tables/segmentation_objective.csv", "tables/cac_reconciliation.csv"]
             names += ["diagnostics_manifest.json", "tables/friction_contrasts.csv", "tables/friction_balance.csv", "tables/friction_refund_sensitivity.csv"]
