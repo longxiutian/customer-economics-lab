@@ -20,3 +20,6 @@ Larsen and the course materials join the report's explicit citations and referen
 
 
 Version 6.0.1 changes only the cover title and layout: the question and Studio North subtitle each occupy one centered line. PDF metadata and the preview match. The 48 following pages and all numerical exhibits retain the v6.0.0 content.
+
+
+Version 6.0.1 changes only the cover title and layout: the question and Studio North subtitle each occupy one centered line. PDF metadata and the preview match. The evidence-period and observation-cutoff lines are centered as well. The 48 following pages and all numerical exhibits retain the v6.0.0 content.

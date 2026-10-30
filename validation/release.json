@@ -31,7 +31,8 @@
   "previous_releases_preserved": [
     "v4.0.0",
     "v5.0.0",
-    "v6.0.0"
+    "v6.0.0",
+    "v6.0.1"
   ],
   "prior_v6_method_review": {
     "accounting_status": "committed",
@@ -59,7 +60,7 @@
     "new_counterexample_tests": 6,
     "verified_unique_tests": 187
   },
-  "release": "v6.0.1",
+  "release": "v6.0.2",
   "report": {
     "all_pages_rendered": true,
     "cac_pages": [
@@ -91,6 +92,7 @@
       "Mod II 2026"
     ],
     "cover_alignment": "center",
+    "cover_details_alignment": "center",
     "cover_lines": 2,
     "figures": 17,
     "overfull_boxes": 0,
@@ -102,7 +104,7 @@
     ],
     "section_separators": 9,
     "segmentation_objective_page": 12,
-    "sha256": "d960ae1488499083a267428846376ab4fc439b145d0b20872cc0c9866fe319b6",
+    "sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
     "subtitle": "A customer-base analysis of cohort-based LTV at Studio North",
     "tables": 32,
     "title": "Are We Moving in the Right Direction?",
@@ -113,15 +115,15 @@
     "model_refit": false,
     "receipt": "validation/cover-update.json",
     "report_replays": 1,
-    "scope": "Cover typography and wording only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
+    "scope": "Cover typography, wording and centered evidence/cutoff lines only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
     "unchanged_numeric_tables": 39
   },
   "review": {
     "scope": "Local cover layout, selectable text, PDF metadata, compiler and pixel checks; no new model consultation for this formatting-only revision."
   },
-  "scope": "Centered two-line cover title and matching PDF metadata; source/data/model/numerical exhibits unchanged.",
+  "scope": "Centered two-line title plus centered evidence-period and observation-cutoff lines; analytical content unchanged.",
   "tests": {
-    "affected": "6 passed in 1.51s",
+    "affected": "6 passed in 2.91s",
     "scope": "Existing report-format checks and the bootstrap release-URL test; analytical code unchanged."
   }
 }

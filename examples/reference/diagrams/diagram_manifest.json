@@ -70,10 +70,10 @@
     "cohort_lab/model.py": "0fc92f4ce6c76e186f949f4d8bd6254173ce70f092832d5a68f3677c41699fe6",
     "cohort_lab/report.py": "c982fb45b7f36fbf1be3c571fdc9615d9a9cf81352a51c127f3269bfc36a7162",
     "cohort_lab/ucv.py": "db021508bd4723dabe366ee39810f703bbdef1d62166b3bfa242717dbb73799b",
-    "pyproject.toml": "cd974ab2297dcc3c56194f69dbe72d6ff30cdf8bcd8504aba1f1cd3b7f59f608",
-    "skills/executive-report/SKILL.md": "9c54db8646ffcb559c09b5a12031fb5042ab9fbd03e448d055e50f4b454baafb",
+    "pyproject.toml": "c2f291866e9832e76b46fb2459e681d23bf7bfdbfbd8d48561de1e60c8c3fb28",
+    "skills/executive-report/SKILL.md": "9aca973d9c47fa47ac9a0ba9ea6fbb603043f214ba8e5fc94b3a9d4c6e7702cc",
     "templates/customer-economics-report.tex.j2": "31e200aa57068e5e927690ec832acfc776b2577ca40e89300e36819345ed9128",
-    "uv.lock": "9b434e6bfdfd4045bf28034c38817a283f7db91e087a43aa1fb3d2823c7d4331",
+    "uv.lock": "9ff4fcef12ba4633971019fe4cf6f9d1f898bb642d18306a83e011f61a71801e",
     "vendor/archify/SKILL.md": "93434ad579983f4cff639c2b7230c311e0785cc48a25b66b1498e1802be7de91"
   },
   "output_hashes": {
