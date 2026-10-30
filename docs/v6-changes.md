@@ -1,4 +1,6 @@
-# Version 6: segmentation objectives and incremental acquisition cost
+# Release 1.6: segmentation objectives and incremental acquisition cost
+
+The historical labels in this note use the original numbering. See [the release mapping](versioning.md) for the 2026 1.x series and preserved original tags.
 
 Version 6 strengthens the management report's segmentation objective and adds a dedicated **Acquisition cost and incrementality** chapter, retaining the existing experiment and management-action exhibit. It follows the MBA 743 course connections documented in [the methodology note](cac-incrementality.md).
 

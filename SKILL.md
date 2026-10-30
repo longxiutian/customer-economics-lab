@@ -73,6 +73,8 @@ Use the course and term credit specified in the bundled report skill on the cove
 
 ## Reproduce and audit a revision
 
+Use **1.x.x for the 2026 course edition** and reserve **2.x.x for 2027**; the current release is **1.6.1**. Follow [the versioning policy and historical mapping](docs/versioning.md) when publishing: keep package/download labels synchronized, preserve old tags and receipts, and explicitly mark the current GitHub release Latest. Release numbering does not change frozen data, schema, model or upstream asset versions.
+
 Read [the reproducibility guide](docs/reproducibility.md) before a release or reproduction check. It maps the recent report, journey, segmentation and CAC requirements to their canonical sources, artifacts and verification commands. Keep the exact cover text, centering, section order and citation requirements in the bundled report skill; do not reconstruct them from conversation memory.
 
 Choose the verification mode explicitly: saved-artifact integrity, a report replay with verified frozen fits, or a full fresh inference run. Use fresh output directories and compare two separate processes for a reproducibility claim. Include SQL, the diagnostics, decision-metrics and post-estimation manifests, figures, editable TeX, styles and PDF, not just headline tables. Preserve the implementation manifest binding this skill, its linked notes, executable scripts, vendored sources and dependency locks. A changed contract invalidates saved guided work; restore the prior release or start a new output folder.

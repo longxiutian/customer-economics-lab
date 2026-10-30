@@ -1,3 +1,11 @@
+# Release-number reindex — 1.6.1
+
+The current release is **1.6.1**. The 2026 course edition uses 1.x.x and 2027 uses 2.x.x. The new [versioning policy](../docs/versioning.md) maps the historical milestones and two interim cover builds while preserving original tags, release URLs, attached files and old validation receipts.
+
+Package metadata and download defaults agree on 1.6.1. Twenty-one workflow/archive checks passed in 30.40 seconds, the root skill validates, and two fresh report processes match across 127 canonical artifacts. The PDF is byte-identical to the former 6.1.0 publication; all 39 numeric tables and 68 protected input/model/source/companion files remain unchanged. No model refit or new layout claim is made. See `version-reindex-v1.6.1.json` and `reproducibility-v1.6.1.json`. Exact publication-download and historical-release mapping checks are attached separately after publication.
+
+Earlier receipts and headings below retain their original labels and scope.
+
 # Skill and reproducibility audit — v6.1.0
 
 The root and report skills now preserve the recent cover, section-order, citation, journey, segmentation and CAC decisions. The new public reproducibility guide gives exact validation, report-only, full-inference, visual and ZIP handoff procedures. The implementation manifest binds 264 code, instruction, dependency and vendored files; the complete evidence chain is validated before comparing two runs.

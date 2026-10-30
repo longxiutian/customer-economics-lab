@@ -1,0 +1,93 @@
+{
+  "artifact_validation": {
+    "companion_integrity_verified": true,
+    "implementation_files": 265,
+    "pdf_verified": true,
+    "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+    "status": "pass"
+  },
+  "course_year_series": {
+    "2026": "1.x.x",
+    "2027": "2.x.x"
+  },
+  "current_package_and_bootstrap_version": "1.6.1",
+  "date": "2026-10-30",
+  "formerly_numbered": "v6.1.0",
+  "historical_aliases": [
+    {
+      "commit": "e0cce4bcc9523d2b98f6b69028fd4ea7b9512195",
+      "legacy_tag": "v1.0.0",
+      "tag": "v1.1.0"
+    },
+    {
+      "commit": "014b9e85b16afeee0a700f80373ff32a9725ed7e",
+      "legacy_tag": "v2.0.0",
+      "tag": "v1.2.0"
+    },
+    {
+      "commit": "0e403129b022187fd23ea3c85eaa936404b2ff18",
+      "legacy_tag": "v3.0.0",
+      "tag": "v1.3.0"
+    },
+    {
+      "commit": "2294d0d323ed33d9ea8128b33c370fe917e3b4ab",
+      "legacy_tag": "v4.0.0",
+      "tag": "v1.4.0"
+    },
+    {
+      "commit": "938743dc29386da46118ef20ea18727544f8f458",
+      "legacy_tag": "v5.0.0",
+      "tag": "v1.5.0"
+    },
+    {
+      "commit": "ce9b2cb762faeb6dda2920644a9c611c316fb83f",
+      "legacy_tag": "v6.0.0",
+      "tag": "v1.6.0"
+    },
+    {
+      "commit": "18637203f9a688b9250999001fe2ea38ddcfd044",
+      "legacy_tag": "v6.0.1",
+      "tag": "v1.6.0+cover.1"
+    },
+    {
+      "commit": "83e9519bce1432269267fbb3089ae1b7f9a52d9b",
+      "legacy_tag": "v6.0.2",
+      "tag": "v1.6.0+cover.2"
+    }
+  ],
+  "historical_tag_objects_preserved": {
+    "v1.0.0": "e0cce4bcc9523d2b98f6b69028fd4ea7b9512195",
+    "v2.0.0": "a3c0ca743cd89801eacf6a367b4bce5bc187e930",
+    "v3.0.0": "eeff56c05e3656b07026511a57d939bffe208b59",
+    "v4.0.0": "e26feb3f53aa994cd1ae51c18c06d2c4caac8c36",
+    "v5.0.0": "a9a92076f16dc679d8c25e9359c5655259c89c5a",
+    "v6.0.0": "ba9cc397e595c95f89dc0d029229f1d763bcb227",
+    "v6.0.1": "110e5291a0f3a49dabac43ade354562ecf2bd77f",
+    "v6.0.2": "482965eb0382e81f37872d5cfa71b06cdd0d08d9",
+    "v6.1.0": "7238f422330eef2b771726ef872c6347431a77e2"
+  },
+  "numeric_tables_unchanged": 39,
+  "pdf_byte_identical_to_previous_release": true,
+  "pdf_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
+  "protected_files_unchanged": 68,
+  "release": "v1.6.1",
+  "reproducibility": {
+    "canonical_files": 127,
+    "mismatches": 0,
+    "model_refit": false,
+    "processes": 2,
+    "receipt": "validation/reproducibility-v1.6.1.json",
+    "same_host_only": true
+  },
+  "scope": "Release-number reindex and refreshed provenance only. No report content, data, fitted model, numeric or companion changes.",
+  "skill_validation": "passed",
+  "status": "passed",
+  "tests": {
+    "command": "uv run --frozen python -m pytest tests/test_workflow.py -q",
+    "count": 21,
+    "scope": "Existing workflow, archive and download-default checks; no new model test run.",
+    "seconds": 30.4,
+    "status": "passed"
+  },
+  "visual_review_scope": "Previous 49-page visual review is retained; the complete PDF is byte-identical."
+}

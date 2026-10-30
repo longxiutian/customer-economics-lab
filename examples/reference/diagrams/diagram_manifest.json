@@ -60,7 +60,7 @@
     }
   },
   "knowledge_asset_hashes": {
-    "SKILL.md": "4b48c1bc2260b68219b225ce88dacbf97c46a905271458faf8c9aa00f57a297f",
+    "SKILL.md": "0a7fef67b3c726182a138abc227bc4fdcdf16d606309a0f651db52baef922a65",
     "assets/articles/orduz-2024-cohort-revenue-retention/LICENSE.txt": "1c9a7f32efac4883fe8c5c8af34a52dd90aeb0e015af6f1ba83759f83a4e4a88",
     "assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf": "c375ec4ace9717cb64d7abb17fe6e04720a15e5a5aafdbcb912fa59e52255ca4",
     "cohort_lab/analysis.py": "23c68226917edd2e173c0b8de56b7b4e63b6ce78188029affd94350e593f5482",
@@ -70,10 +70,10 @@
     "cohort_lab/model.py": "0fc92f4ce6c76e186f949f4d8bd6254173ce70f092832d5a68f3677c41699fe6",
     "cohort_lab/report.py": "500448d993184acf685a1630ef8e3655dcd36450949fd740f2bd9c1a507e8436",
     "cohort_lab/ucv.py": "db021508bd4723dabe366ee39810f703bbdef1d62166b3bfa242717dbb73799b",
-    "pyproject.toml": "2da5eabc369d1e295de782a7e0fdb1a6721f630431a46042fdd50d6fddcf1d17",
+    "pyproject.toml": "06a8138bb62664f6ed3c4d2b64d011739a557d74e8e09cb23e99939462b11bdc",
     "skills/executive-report/SKILL.md": "8e6c281ef1d9f94e89f7f7e9cd76d31179bc01f28f929f3d7802735634646e7c",
     "templates/customer-economics-report.tex.j2": "31e200aa57068e5e927690ec832acfc776b2577ca40e89300e36819345ed9128",
-    "uv.lock": "4f3b8c7440b852c310ca7c91e48724638e75f51e1b8c2b5360bda15222d6657c",
+    "uv.lock": "7728c68646f371f856987f8e86280d2ba1f81afb363c57f2e2ee35fece1de098",
     "vendor/archify/SKILL.md": "93434ad579983f4cff639c2b7230c311e0785cc48a25b66b1498e1802be7de91"
   },
   "output_hashes": {

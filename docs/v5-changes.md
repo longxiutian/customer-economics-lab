@@ -1,4 +1,6 @@
-# Version 5: journey diagnostics and model-based cohort forecasting
+# Release 1.5: journey diagnostics and model-based cohort forecasting
+
+The historical labels in this note use the original numbering. See [the release mapping](versioning.md) for the 2026 1.x series and preserved original tags.
 
 Version 5 preserves the version 4.0 source exports, baseline model code, posterior draws and neural comparison. It changes the management report and adds auditable diagnostic and post-estimation outputs. The v4.0.0 release remains available.
 

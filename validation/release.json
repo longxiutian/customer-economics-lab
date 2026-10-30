@@ -33,7 +33,8 @@
     "v5.0.0",
     "v6.0.0",
     "v6.0.1",
-    "v6.0.2"
+    "v6.0.2",
+    "v6.1.0"
   ],
   "prior_v6_0_2_reproducibility": {
     "body_pages_pixel_identical": 48,
@@ -46,6 +47,22 @@
   "prior_v6_0_2_tests": {
     "affected": "6 passed in 2.91s",
     "scope": "Existing report-format checks and the bootstrap release-URL test; analytical code unchanged."
+  },
+  "prior_v6_1_0_reproducibility": {
+    "canonical_files": 127,
+    "mismatches": 0,
+    "model_refit": false,
+    "processes": 2,
+    "receipt": "validation/reproducibility-v6.1.json",
+    "same_host_only": true
+  },
+  "prior_v6_1_0_tests": {
+    "command": "uv run --frozen python -m pytest tests/test_reproducibility.py tests/test_workflow.py tests/test_report.py tests/test_report_v4.py tests/test_query.py -q",
+    "count": 75,
+    "final_reproducibility_suite": "9 passed in 20.36s against final source and refreshed reference artifacts",
+    "scope": "Affected behavioral tests, including six identical-tampering counterexamples; not a new full model suite.",
+    "seconds": 290.49,
+    "status": "passed"
   },
   "prior_v6_method_review": {
     "accounting_status": "committed",
@@ -73,7 +90,7 @@
     "new_counterexample_tests": 6,
     "verified_unique_tests": 187
   },
-  "release": "v6.1.0",
+  "release": "v1.6.1",
   "report": {
     "all_pages_rendered": true,
     "cac_pages": [
@@ -128,20 +145,69 @@
     "mismatches": 0,
     "model_refit": false,
     "processes": 2,
-    "receipt": "validation/reproducibility-v6.1.json",
+    "receipt": "validation/reproducibility-v1.6.1.json",
     "same_host_only": true
   },
   "review": {
-    "scope": "Local skill audit, behavioral tests, artifact integrity, two fresh report processes and portable ZIP checks; no new inference or external model consultation."
+    "scope": "Local numbering and immutable-history audit, workflow tests, two fresh report replays, artifact integrity and tagged-download verification. Prior methodological and visual reviews retain their original scope."
   },
-  "scope": "Root and report skill contract audit; public integrity and replay tooling. No analytical definitions, numeric outputs, model fits, report layout or companion content changed.",
+  "scope": "Release-number reindex and refreshed provenance only. No report content, data, fitted model, numeric or companion changes.",
   "skill_audit": "validation/skill-audit-v6.1.json",
   "tests": {
-    "command": "uv run --frozen python -m pytest tests/test_reproducibility.py tests/test_workflow.py tests/test_report.py tests/test_report_v4.py tests/test_query.py -q",
-    "count": 75,
-    "final_reproducibility_suite": "9 passed in 20.36s against final source and refreshed reference artifacts",
-    "scope": "Affected behavioral tests, including six identical-tampering counterexamples; not a new full model suite.",
-    "seconds": 290.49,
+    "command": "uv run --frozen python -m pytest tests/test_workflow.py -q",
+    "count": 21,
+    "scope": "Existing workflow, archive and download-default checks; no new model test run.",
+    "seconds": 30.4,
     "status": "passed"
+  },
+  "version_reindex_receipt": "validation/version-reindex-v1.6.1.json",
+  "versioning": {
+    "course_year": 2026,
+    "former_release_label": "v6.1.0",
+    "historical_aliases": [
+      {
+        "commit": "e0cce4bcc9523d2b98f6b69028fd4ea7b9512195",
+        "legacy_tag": "v1.0.0",
+        "tag": "v1.1.0"
+      },
+      {
+        "commit": "014b9e85b16afeee0a700f80373ff32a9725ed7e",
+        "legacy_tag": "v2.0.0",
+        "tag": "v1.2.0"
+      },
+      {
+        "commit": "0e403129b022187fd23ea3c85eaa936404b2ff18",
+        "legacy_tag": "v3.0.0",
+        "tag": "v1.3.0"
+      },
+      {
+        "commit": "2294d0d323ed33d9ea8128b33c370fe917e3b4ab",
+        "legacy_tag": "v4.0.0",
+        "tag": "v1.4.0"
+      },
+      {
+        "commit": "938743dc29386da46118ef20ea18727544f8f458",
+        "legacy_tag": "v5.0.0",
+        "tag": "v1.5.0"
+      },
+      {
+        "commit": "ce9b2cb762faeb6dda2920644a9c611c316fb83f",
+        "legacy_tag": "v6.0.0",
+        "tag": "v1.6.0"
+      },
+      {
+        "commit": "18637203f9a688b9250999001fe2ea38ddcfd044",
+        "legacy_tag": "v6.0.1",
+        "tag": "v1.6.0+cover.1"
+      },
+      {
+        "commit": "83e9519bce1432269267fbb3089ae1b7f9a52d9b",
+        "legacy_tag": "v6.0.2",
+        "tag": "v1.6.0+cover.2"
+      }
+    ],
+    "next_course_year_series": "2.x.x",
+    "policy": "docs/versioning.md",
+    "series": "1.x.x"
   }
 }
