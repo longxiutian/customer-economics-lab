@@ -13,8 +13,8 @@ from decimal import Decimal
 from pathlib import Path
 
 DATA_AS_OF = "2026-01-01T00:00:00Z"
-SCHEMA_VERSION = "2.0"
-DATASET_VERSION = "4.0"
+SCHEMA_VERSION = "3.0"
+DATASET_VERSION = "5.0"
 
 SCHEMAS = {
     "people.csv": {
@@ -41,15 +41,17 @@ SCHEMAS = {
     "acquisition_attribution.csv": {
         "person_id": "VARCHAR", "first_paid_transaction_id": "VARCHAR", "credited_campaign_id": "VARCHAR",
         "source_type": "VARCHAR", "attribution_rule": "VARCHAR", "credited_at": "TIMESTAMP"},
-    "experiment_assignments.csv": {
-        "experiment_id": "VARCHAR", "person_id": "VARCHAR", "tested_campaign_id": "VARCHAR",
-        "assigned_at": "TIMESTAMP", "arm": "VARCHAR", "followup_end_at": "TIMESTAMP"},
+    "channel_holdouts.csv": {
+        "test_id": "VARCHAR", "channel": "VARCHAR", "primary_need": "VARCHAR",
+        "assigned_at": "TIMESTAMP", "followup_end_at": "TIMESTAMP", "arm": "VARCHAR",
+        "n_assigned": "INTEGER", "n_buyers": "INTEGER",
+        "media_spend": "DECIMAL(12,2)", "other_acquisition_spend": "DECIMAL(12,2)"},
 }
 PRIMARY_KEYS = {
     "people.csv": ["person_id"], "subscription_periods.csv": ["period_id"],
     "transactions.csv": ["transaction_id"], "product_events.csv": ["event_id"],
     "feedback.csv": ["response_id"], "campaign_spend.csv": ["campaign_id", "spend_date"],
-    "acquisition_attribution.csv": ["person_id"], "experiment_assignments.csv": ["experiment_id", "person_id"],
+    "acquisition_attribution.csv": ["person_id"], "channel_holdouts.csv": ["test_id", "arm"],
 }
 NULLABLE = {
     "subscription_periods.csv": {"cancellation_effective_at"},
@@ -58,14 +60,14 @@ NULLABLE = {
     "campaign_spend.csv": {"target_need"}, "acquisition_attribution.csv": {"credited_campaign_id"},
 }
 GRAINS = {
-    "people.csv": "One person, including eligible prospects who never purchase.",
+    "people.csv": "One person in the operational customer-history panel.",
     "subscription_periods.csv": "One scheduled monthly cycle; a paid outcome establishes retained membership for that cycle.",
     "transactions.csv": "One payment or refund event; each payment is one order and refunds reuse its order ID.",
     "product_events.csv": "One observed product/support interaction; no event does not mean no subscription.",
     "feedback.csv": "One completed linked survey response; nonresponse is missing, not a zero rating.",
     "campaign_spend.csv": "One campaign per spending date; aggregate before joining to customer outcomes.",
     "acquisition_attribution.csv": "One acquired person and the recorded credit for the first successful payment.",
-    "experiment_assignments.csv": "One eligible person per randomized experiment, including all nonbuyers.",
+    "channel_holdouts.csv": "One arm per channel acquisition test in a separate pilot sample; all assigned prospects remain in the counts.",
 }
 
 
@@ -210,26 +212,21 @@ def validate_data(data_dir: Path) -> dict:
     for name, timestamp in [("product_events.csv", "occurred_at"), ("feedback.csv", "submitted_at")]:
         for r in rows[name]:
             if datetime.fromisoformat(r[timestamp]) >= cutoff: raise ValueError("Future product/feedback observation.")
-    experiments = defaultdict(list)
-    assigned_people = set()
-    for r in rows["experiment_assignments.csv"]:
-        pid = r["person_id"]
-        if pid in assigned_people: raise ValueError("Overlapping experiments are not part of this dataset.")
-        assigned_people.add(pid)
-        if r["arm"] not in {"treatment", "control"}: raise ValueError("Invalid randomized arm.")
-        if people[pid]["attributes_recorded_at"] >= r["assigned_at"] or people[pid]["record_created_at"] >= r["assigned_at"]:
-            raise ValueError("Experiment eligibility was not established before assignment.")
+    tests = defaultdict(list)
+    for r in rows["channel_holdouts.csv"]:
+        if r["arm"] not in {"treatment", "control"}: raise ValueError("Invalid holdout arm")
+        if not 0 <= int(r["n_buyers"]) <= int(r["n_assigned"]) or int(r["n_assigned"]) <= 0:
+            raise ValueError("Invalid acquisition-only assignment/buyer counts")
         if r["assigned_at"] >= r["followup_end_at"] or datetime.fromisoformat(r["followup_end_at"]) > cutoff:
-            raise ValueError("Invalid or immature experiment window.")
-        if pid in firsts and firsts[pid]["occurred_at"] <= r["assigned_at"]: raise ValueError("Experiment includes a prior buyer.")
-        if r["tested_campaign_id"] not in campaigns: raise ValueError("Unknown experiment campaign.")
-        campaign = campaigns[r["tested_campaign_id"]][0]
-        if campaign["target_need"] != people[pid]["primary_need"]: raise ValueError("Experiment target mismatch.")
-        experiments[r["experiment_id"]].append(r)
-    for group in experiments.values():
-        if len({(r["tested_campaign_id"], r["assigned_at"], r["followup_end_at"]) for r in group}) != 1:
-            raise ValueError("Experiment has inconsistent campaign or followup.")
-        if {r["arm"] for r in group} != {"treatment", "control"}: raise ValueError("Experiment is missing its own control.")
+            raise ValueError("Invalid or incomplete channel test window")
+        if r["channel"] not in {"search", "partner"} or r["primary_need"] not in {"save_time", "build_skill"}:
+            raise ValueError("Unsupported channel test population")
+        tests[r["test_id"]].append(r)
+    for group in tests.values():
+        if len(group) != 2 or {r["arm"] for r in group} != {"treatment", "control"}:
+            raise ValueError("Each channel test requires its own treatment and control")
+        if len({tuple(r[k] for k in ["channel", "primary_need", "assigned_at", "followup_end_at"]) for r in group}) != 1:
+            raise ValueError("Channel test arms have different population or window")
     return {"status": "passed", "files_checked": len(SCHEMAS), "row_counts": {k: len(v) for k, v in rows.items()},
-            "acquired_people": len(firsts), "eligible_experiment_people": len(assigned_people),
+            "acquired_people": len(firsts), "channel_test_assigned": sum(int(r["n_assigned"]) for r in rows["channel_holdouts.csv"]),
             "manifest_sha256": _digest(manifest_path)}

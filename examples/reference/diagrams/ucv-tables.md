@@ -9,7 +9,7 @@ Each field appears once in the best-fitting category. Empty categories are evide
 
 ## people.csv
 
-**CRM** — One person, including eligible prospects who never purchase.
+**CRM** — One person in the operational customer-history panel.
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
@@ -19,7 +19,7 @@ Each field appears once in the best-fitting category. Empty categories are evide
 - `household_type`: Profile descriptor; the subscription unit remains one individual.
 - `region`: Geographic profile descriptor, not an observed preference.
 - `record_created_at`: CRM relationship provenance; registration does not establish a paid customer.
-- `attributes_recorded_at`: Profile provenance: verifies attributes were available before acquisition or assignment.
+- `attributes_recorded_at`: Profile provenance: verifies attributes were available before acquisition.
 - `primary_need`: A stated intention recorded before acquisition, not a need inferred from future behavior.
 
 ## subscription_periods.csv
@@ -95,14 +95,17 @@ Each field appears once in the best-fitting category. Empty categories are evide
 - `credited_at`: When credit was recorded, not necessarily the acquisition or exposure time.
 - `attribution_rule`: Measurement metadata for engagement credit, not a customer action itself.
 
-## experiment_assignments.csv
+## channel_holdouts.csv
 
-**Experiment platform** — One eligible person per randomized experiment, including all nonbuyers.
+**Channel acquisition pilots** — One arm per channel acquisition test in a separate pilot sample; all assigned prospects remain in the counts.
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `experiment_id`<br>`person_id`<br>`tested_campaign_id` | — | `assigned_at`†<br>`arm`†<br>`followup_end_at`† | — |
+| `test_id`<br>`channel`<br>`primary_need` | `n_buyers`<br>`media_spend`†<br>`other_acquisition_spend`† | `assigned_at`†<br>`arm`†<br>`followup_end_at`†<br>`n_assigned`† | — |
 
-- `assigned_at`: Experimental relationship/design metadata; assignment is not observed exposure or purchase.
+- `n_assigned`: All randomized eligible prospects, including nonbuyers; an arm-level design count, not a customer relationship history.
+- `media_spend`: Focal campaign media in the pilot budget; firm-side spending, not customer activity.
+- `other_acquisition_spend`: Incremental creative/vendor acquisition costs in the pilot budget; excluded from the separate operational cohort ledger.
+- `assigned_at`: Randomization date in a separate acquisition-only pilot sample.
 - `arm`: Randomized intervention assignment; control nonbuyers must remain in the denominator.
 - `followup_end_at`: Prespecified measurement window, not a subscription end date.

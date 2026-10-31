@@ -6,10 +6,10 @@
   "code_sha256": "8b4ca1cdc9f0ed8f209f758e972d862579fce4a8c87859790ff80e21c610f9c4",
   "future_outcomes_read": false,
   "model": "Hierarchical shifted-Beta-Geometric retention + Gamma revenue; CPU NumPyro",
-  "model_manifest_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368",
-  "predictions_sha256": "799de82820b8289bfe81be3c518db32f2f50e49c10fe724b23b5b633d6c70ec7",
-  "rows": 1176,
+  "model_manifest_sha256": "508d5ac2754f13af75c768c26c1ec594e752c9a04bb994a0f3c8b1bfd560cd46",
+  "predictions_sha256": "10df614f8ea66f05dccf97d6d870578c575b216af23f4cb409806589eb65fac9",
+  "rows": 1152,
   "scope": "Remaining contribution during the next twelve calendar months, separate from first-twelve-receipt LTV.",
-  "template_manifest_sha256": "60aea7f3559f59831ef98913c5e68147c3765cbe969951874febdc2c924fd1d6",
+  "template_manifest_sha256": "32dfcb5e2dede5e480132965165960127a6c27b7474d8dd166c7677643ceaefd",
   "version": 1
 }

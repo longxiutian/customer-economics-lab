@@ -1,17 +1,28 @@
 {
+  "channel_holdout_design": {
+    "channel_comparison": "Each channel has its own eligible audience and control. Compare value/cost planning estimates, not a randomized head-to-head channel effect.",
+    "control": "Withhold that focal campaign; all other background conditions continue.",
+    "cost_scope": "Focal media plus incremental campaign-specific creative/vendor costs, both counted once; fixed costs outside acquisition are excluded.",
+    "outcome": "First paid acquisition through any route within 31 days. All assigned nonbuyers remain in n_assigned.",
+    "source_scope": "Separate synthetic pilot sample and budget; not part of the operational customer-history panel. Aggregated arm export, with no person identifier or downstream financial outcomes.",
+    "treatment": "Offer the focal acquisition campaign at the recorded spend.",
+    "unit": "Eligible never-paid prospect; 500 randomized to each arm within each channel-by-baseline-need test; disjoint people across tests.",
+    "value_benchmark": "Matching July 2025 operational cohort, channel and primary need; explicitly assume additional pilot customers have comparable twelve-receipt contribution value.",
+    "window": "2025-07-01 inclusive to 2025-08-01 exclusive"
+  },
   "currency": "USD",
   "data_as_of": "2026-01-01T00:00:00Z",
-  "dataset_version": "4.0",
+  "dataset_version": "5.0",
   "definitions": {
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
     "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
-    "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
+    "attribution": "One credited ordinary campaign within the acquisition month. Source credit is not a causal label.",
     "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
+    "channel_holdouts": "Separate, disjoint acquisition-only pilot sample. One row per randomized arm; all assigned prospects, buyers through every route, and focal acquisition spend. No customer-level linkage, revenue, retention or lifetime outcomes. Never join pilot counts or costs into cohort accounting or model fitting.",
     "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
-    "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
+    "company_scope": "The operational cohort panel and its recorded acquisition spending. The separate acquisition-only pilot sample and pilot budget are outside this panel.",
     "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
-    "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
     "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
     "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
@@ -21,75 +32,47 @@
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
   },
-  "experiment_specs": [
-    {
-      "assigned_at": "2025-05-01 00:00:00",
-      "assigned_per_arm": 250,
-      "channel": "search",
-      "control": "Withhold this focal campaign; record purchases through every route. Own controls are not shared with the other experiment.",
-      "cost_scope": "Focal campaign media only; treatment spends the recorded campaign budget, control spends zero focal media.",
-      "eligibility": "CRM and baseline attributes exist before assignment; no prior payment; no person enters another test.",
-      "experiment_id": "EXP-01",
-      "followup_end_at": "2025-06-01 00:00:00",
-      "primary_need": "save_time",
-      "randomization": "Balanced randomized assignment among preexisting, never-paid eligible prospects.",
-      "tested_campaign_id": "TEST-01-search-save_time"
-    },
-    {
-      "assigned_at": "2025-09-01 00:00:00",
-      "assigned_per_arm": 250,
-      "channel": "partner",
-      "control": "Withhold this focal campaign; record purchases through every route. Own controls are not shared with the other experiment.",
-      "cost_scope": "Focal campaign media only; treatment spends the recorded campaign budget, control spends zero focal media.",
-      "eligibility": "CRM and baseline attributes exist before assignment; no prior payment; no person enters another test.",
-      "experiment_id": "EXP-02",
-      "followup_end_at": "2025-10-01 00:00:00",
-      "primary_need": "build_skill",
-      "randomization": "Balanced randomized assignment among preexisting, never-paid eligible prospects.",
-      "tested_campaign_id": "TEST-02-partner-build_skill"
-    }
-  ],
   "files": {
     "acquisition_attribution.csv": {
-      "row_count": 5891,
-      "sha256": "84ca32ddd2f6f53d0edaad5c0173c61ec0f6a7f89c5478d019b9f1d222bbf809"
+      "row_count": 5703,
+      "sha256": "301da5f5b0b24e99a3dc5885fb1bd608b5b7a616126b33e4b4e223a168833758"
     },
     "campaign_spend.csv": {
-      "row_count": 294,
-      "sha256": "84f837d7510dd4e21a1a3e270fb3791629fbc39a7946366ed2a3668464a5b592"
+      "row_count": 288,
+      "sha256": "a6110f1403dbe518ce5243c1392fd99fbfa101c66525f3371997055f304c0e8d"
     },
-    "experiment_assignments.csv": {
-      "row_count": 1000,
-      "sha256": "d9534b6d3a694cb8e7cdd3ef2677f24a9845df9d7f8c54c282c5c15250d9251a"
+    "channel_holdouts.csv": {
+      "row_count": 8,
+      "sha256": "dcb650ee562ca1a6cb3d30be87d8646cf1dbb6288f62715d4057ce554b2ef1c4"
     },
     "feedback.csv": {
-      "row_count": 3439,
-      "sha256": "910ea88cd40674bb8f016501ea339c43d43d2736bf866247a72e0b26ad7aa033"
+      "row_count": 3321,
+      "sha256": "505c0c76028273363eefc13f70ca396b94b7601c910be65e7e2cb00693752568"
     },
     "people.csv": {
-      "row_count": 6703,
-      "sha256": "762854ca81d8f1b0f336882a089c8fa4bdefaf76a3ddc2008d5f4c8f5818c21f"
+      "row_count": 5703,
+      "sha256": "d65009952863c9e7a434d1ac51629bd7181c5ea8f776c0b9ec9b53d85e3d9826"
     },
     "product_events.csv": {
-      "row_count": 71212,
-      "sha256": "4a066be382b24cd91ad4fe165b9803e1951017dbd0cf9e14c31f4bd44732e478"
+      "row_count": 69590,
+      "sha256": "007185d413810f602b14b0addf046c6603610482609ea9f858d989e1c76dc63a"
     },
     "subscription_periods.csv": {
-      "row_count": 44080,
-      "sha256": "aa5f4577ff8ea8f04968c25977384cc0b1441ae56fd619fdc49cc510fb40084c"
+      "row_count": 43082,
+      "sha256": "f99a5d171330038a9b3291b5995b0e22cf5f7e4cb9fa94473482ae3c72b3cc7f"
     },
     "transactions.csv": {
-      "row_count": 53717,
-      "sha256": "91cf544ba22abdf5065b6fbd7801653b81051073859771f4a9a90fa9f279fa43"
+      "row_count": 52605,
+      "sha256": "302397ee13f7e6c806a59ab33a4567d372f6fbd86d07a22ccf1ffeda40bfc2fb"
     }
   },
   "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
-  "provenance": "Frozen original synthetic business records prepared by the instructor. Analytical reproducibility starts from these hash-verified files; generation and unreleased future outcomes are maintained separately.",
-  "schema_version": "2.0",
+  "provenance": "Original synthetic teaching data. Version 5.0 removes all 1,000 legacy test prospects, their linked customer records and six test-spend rows from version 4.0 without changing retained rows. A separately frozen acquisition-only pilot summary replaces the former experimental data. Reproducibility begins from these published, hash-verified exports; no private generator or future labels are required.",
+  "schema_version": "3.0",
   "source_cutoffs": {
     "acquisition_attribution.csv": "2026-01-01T00:00:00Z",
     "campaign_spend.csv": "2026-01-01T00:00:00Z",
-    "experiment_assignments.csv": "2026-01-01T00:00:00Z",
+    "channel_holdouts.csv": "2026-01-01T00:00:00Z",
     "feedback.csv": "2026-01-01T00:00:00Z",
     "people.csv": "2026-01-01T00:00:00Z",
     "product_events.csv": "2026-01-01T00:00:00Z",

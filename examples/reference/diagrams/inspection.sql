@@ -12,7 +12,7 @@ CREATE VIEW campaign_spend AS SELECT * FROM read_csv_auto('C:/Users/longxiu/Docu
 
 CREATE VIEW acquisition_attribution AS SELECT * FROM read_csv_auto('C:/Users/longxiu/Documents/ChatGPT/customer-economics-lab/data/acquisition_attribution.csv', header=true);
 
-CREATE VIEW experiment_assignments AS SELECT * FROM read_csv_auto('C:/Users/longxiu/Documents/ChatGPT/customer-economics-lab/data/experiment_assignments.csv', header=true);
+CREATE VIEW channel_holdouts AS SELECT * FROM read_csv_auto('C:/Users/longxiu/Documents/ChatGPT/customer-economics-lab/data/channel_holdouts.csv', header=true);
 
 SELECT count(*) FROM people;
 
@@ -28,4 +28,4 @@ SELECT count(*) FROM campaign_spend;
 
 SELECT count(*) FROM acquisition_attribution;
 
-SELECT count(*) FROM experiment_assignments;
+SELECT count(*) FROM channel_holdouts;

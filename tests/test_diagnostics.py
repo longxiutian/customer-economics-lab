@@ -25,7 +25,7 @@ def test_pre_renewal_window_missingness_ties_and_censored_outcomes(hand_data, tm
     _write(hand_data, "product_events.csv", events); _write(hand_data, "feedback.csv", responses); _seal(hand_data)
     out = tmp_path / "out"; build_views(hand_data, out)
     f = pd.read_csv(out / "tables/friction_subjects.csv").set_index("person_id")
-    assert set(f.index) == {"A", "B", "C"}  # Treatment/control buyers stay excluded.
+    assert set(f.index) == {"A", "B", "C", "X"}  # The independent pilot has no person-level join.
     assert f.loc["A", "early_core_actions"] == 1
     assert f.loc["B", "early_core_actions"] == 0
     assert f.loc["B", "onboarding_completions"] == 0
@@ -38,7 +38,7 @@ def test_pre_renewal_window_missingness_ties_and_censored_outcomes(hand_data, tm
     assert f.loc["A", "in_window_refunds"] == 1  # Refund does not erase membership.
     assert f.loc["A", "contribution_age0"] == 55  # Includes the dated refund.
     summary = pd.read_csv(out / "tables/friction_segment_summary.csv")
-    assert (summary.groupby("scheme").n_acquired.sum() == 3).all()
+    assert (summary.groupby("scheme").n_acquired.sum() == 4).all()
     features = ["onboarding_completions", "early_core_actions", "early_support_contacts", "response_id", "survey_group"]
     before = f[features].copy()
     # A later response/event cannot retroactively become an early feature.

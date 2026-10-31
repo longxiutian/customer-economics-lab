@@ -32,7 +32,7 @@ def test_reconciliation_rejects_changed_value():
         p._same([1., 2.], [1., 2.01], "changed")
 
 
-@pytest.mark.parametrize("case", ["maturity", "experimental", "missing_comparator", "changed_value"])
+@pytest.mark.parametrize("case", ["maturity", "missing_comparator", "changed_value"])
 def test_complete_breakout_selection_and_reconciliation(tmp_path, monkeypatch, case):
     from cohort_lab import report
     monkeypatch.setattr(p, "validate_analysis", lambda *_: None)
@@ -63,9 +63,6 @@ def test_complete_breakout_selection_and_reconciliation(tmp_path, monkeypatch, c
                 panel.extend(key | dict(age_month=a, n_acquired=10, n_retained=10,
                     net_revenue=80, contribution=40) for a in range(length))
                 costs.append(key | dict(n_acquired=10, acquisition_spend=20, cac=2))
-                n_excluded = int(case == "experimental" and cohort == "2025-07-01"
-                                 and channel == "partner" and need == "build_skill")
-                exclusions.append(key | dict(age_month=0, n_acquired=10-n_excluded))
                 observed = float(discounted[:length].sum())
                 values.append(key | dict(n_acquired=10, acquisition_spend=20, cac=2,
                     observed_months=length, horizon_months=12, ltv_before_cac_mean=total,
@@ -79,7 +76,7 @@ def test_complete_breakout_selection_and_reconciliation(tmp_path, monkeypatch, c
     if case == "changed_value": values[0]["net_ltv_mean"] += .01
     for name, rows in [("cohort_age_summary", panel), ("cohort_acquisition_costs", costs),
                        ("cohort_valuation_by_segment", values), ("forecast_curve", curves),
-                       ("cohort_age_ex_tests", exclusions), ("cohort_cash_economics", company)]:
+                       ("cohort_cash_economics", company)]:
         pd.DataFrame(rows).to_csv(tables / (name + ".csv"), index=False)
     for name in ["posterior_draws.json", "model_manifest.json"]:
         (tmp_path / name).write_text(json.dumps({}), encoding="utf-8")
@@ -89,7 +86,7 @@ def test_complete_breakout_selection_and_reconciliation(tmp_path, monkeypatch, c
         assert not (tmp_path / "postestimation_manifest.json").exists()
     else:
         receipt = p.build_postestimation(tmp_path)
-        month = "06" if case == "experimental" else "07"
+        month = "07"
         assert receipt["selected_cohort"] == f"2025-{month}-01"
         assert receipt["comparison_cohort"] == f"2024-{month}-01"
         result = pd.read_csv(tables / "strategic_segment_breakout.csv")

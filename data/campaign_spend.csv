@@ -287,9 +287,3 @@ CORE-23-search-build_skill,2025-12-20,search,build_skill,1401.10,247.26
 CORE-23-search-save_time,2025-12-01,search,save_time,1712.75,302.25
 CORE-23-search-save_time,2025-12-10,search,save_time,2283.67,403.00
 CORE-23-search-save_time,2025-12-20,search,save_time,1712.77,302.26
-TEST-01-search-save_time,2025-05-01,search,save_time,195.00,0.00
-TEST-01-search-save_time,2025-05-10,search,save_time,260.00,0.00
-TEST-01-search-save_time,2025-05-20,search,save_time,195.00,0.00
-TEST-02-partner-build_skill,2025-09-01,partner,build_skill,270.00,0.00
-TEST-02-partner-build_skill,2025-09-10,partner,build_skill,360.00,0.00
-TEST-02-partner-build_skill,2025-09-20,partner,build_skill,270.00,0.00

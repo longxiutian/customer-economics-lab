@@ -1,52 +1,49 @@
 {
-  "analysis_code_sha256": "23c68226917edd2e173c0b8de56b7b4e63b6ce78188029affd94350e593f5482",
+  "analysis_code_sha256": "0f01738a32dd0d0e448332c316f1787347d70d65655d795747002f8f7b89c919",
   "duckdb_version": "2.0.0",
   "executed_sql_hashes": {
-    "00_sources.sql": "f71568f08c29b511c3545a53e5c3941c9750a843373419a20338e5b77c124ec4",
-    "01_views.sql": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a",
-    "02_exports.sql": "c201e33b9d07400f6496c77f7e006a60630ae197d2fe1e83809f027b7d4d0050",
-    "02_friction.sql": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129",
-    "03_summary.sql": "b2ffe30dcb16b4a1cbe1f1379c7f41344f20212302429b41234211b2eec99c04"
+    "00_sources.sql": "b945662713363249c8f60a1a66407bf2fd2c1086d9ebcabc9cedc86fa843bbce",
+    "01_views.sql": "572e13d4957f6396bd2f2be71039d30678aded800a06d34be6944c9b7f3825c6",
+    "02_exports.sql": "8d59ed0689a22c85a808588fc13475a8d89ddd59b0a6bcec5a83277dd2dfa86a",
+    "02_friction.sql": "c0ab1323b4a08c569a33bc78ff17c8affc2d8d88a6e796bf1e4f2b9cf317efdb",
+    "03_summary.sql": "1d7dc40aab0c8334dcd0e23597c8b86936c17f940bd9bd7e6ba668ac7d829cde"
   },
   "input_csv_hashes": {
-    "acquisition_attribution.csv": "84ca32ddd2f6f53d0edaad5c0173c61ec0f6a7f89c5478d019b9f1d222bbf809",
-    "campaign_spend.csv": "84f837d7510dd4e21a1a3e270fb3791629fbc39a7946366ed2a3668464a5b592",
-    "experiment_assignments.csv": "d9534b6d3a694cb8e7cdd3ef2677f24a9845df9d7f8c54c282c5c15250d9251a",
-    "feedback.csv": "910ea88cd40674bb8f016501ea339c43d43d2736bf866247a72e0b26ad7aa033",
-    "people.csv": "762854ca81d8f1b0f336882a089c8fa4bdefaf76a3ddc2008d5f4c8f5818c21f",
-    "product_events.csv": "4a066be382b24cd91ad4fe165b9803e1951017dbd0cf9e14c31f4bd44732e478",
-    "subscription_periods.csv": "aa5f4577ff8ea8f04968c25977384cc0b1441ae56fd619fdc49cc510fb40084c",
-    "transactions.csv": "91cf544ba22abdf5065b6fbd7801653b81051073859771f4a9a90fa9f279fa43"
+    "acquisition_attribution.csv": "301da5f5b0b24e99a3dc5885fb1bd608b5b7a616126b33e4b4e223a168833758",
+    "campaign_spend.csv": "a6110f1403dbe518ce5243c1392fd99fbfa101c66525f3371997055f304c0e8d",
+    "channel_holdouts.csv": "dcb650ee562ca1a6cb3d30be87d8646cf1dbb6288f62715d4057ce554b2ef1c4",
+    "feedback.csv": "505c0c76028273363eefc13f70ca396b94b7601c910be65e7e2cb00693752568",
+    "people.csv": "d65009952863c9e7a434d1ac51629bd7181c5ea8f776c0b9ec9b53d85e3d9826",
+    "product_events.csv": "007185d413810f602b14b0addf046c6603610482609ea9f858d989e1c76dc63a",
+    "subscription_periods.csv": "f99a5d171330038a9b3291b5995b0e22cf5f7e4cb9fa94473482ae3c72b3cc7f",
+    "transactions.csv": "302397ee13f7e6c806a59ab33a4567d372f6fbd86d07a22ccf1ffeda40bfc2fb"
   },
-  "input_data_manifest_sha256": "84e78f3e71f5fdd55d28ee231574b5e47f6ed8d4c6b263fb93dd62fe470df959",
-  "input_receipt_sha256": "cbea82164efd207b1030f7b5c02edb1f76ba044b0692e9c55722edb3856dd76a",
+  "input_data_manifest_sha256": "1a961a911c997b5e88dab9f61cde1f634d5031308c57636e8537de343dfc1dd6",
+  "input_receipt_sha256": "2da43b3d53906943ccc2228e1930be0b171f5e404aae63a56aa96a8e2e062809",
   "output_table_hashes": {
-    "cohort_acquisition_costs.csv": "b6f1e4f67d7ea6115f274898ffc09a322cae8d608939eb80f71da89aa6752f0e",
-    "cohort_age_ex_tests.csv": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6",
-    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
-    "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
-    "cohort_economics_ex_tests.csv": "bae38913ad902082d6aa6d436d64e4a706a70e405a7731a826f9980477502c6f",
-    "cohort_six_month_comparison.csv": "42ca6b5685fdee92e4f68f02ae4cbd437af7aa9651b329e1ea41847d209df460",
-    "cohort_totals.csv": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c",
-    "company_month.csv": "902f4bb2cdc810882e394c13669c80dc53dd8e719b4971b8dfcfea163590c298",
-    "company_totals.csv": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
-    "customer_month.csv": "3bef6e11692af70524770c250a1b8dba089e4dfb9f4ba580dc2425cfbb00753f",
-    "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
-    "experiment_summary.csv": "ff85887251293880185659e69b38027778ebbf785c2b438c2fbea994ec7733dc",
+    "channel_cac.csv": "32ffe647ec21bbcbd29d3523d42e959df6f672950652d64c917ebcc6a0f45388",
+    "cohort_acquisition_costs.csv": "aaa8d0438d98db89da96f3cd36c99fba5601d412e84d6eaa4ceb6b4f67bf3a7f",
+    "cohort_age_summary.csv": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",
+    "cohort_cash_economics.csv": "f4ab3b07a66288a118371b410b1cfefdc64917c4674934d19b369ac8cbcb44c6",
+    "cohort_six_month_comparison.csv": "623e0e6c08a37b2c514c95952bced74695be6e986c2eb419077dc35ccaa4091b",
+    "cohort_totals.csv": "d3db2cdc99e27e9f10a35d185609c6ed7dc59eba0a6b1f5f0157785ade567821",
+    "company_month.csv": "95c6f15d5a983a8ff622d681dd937d83bcce909f10c36dab8f31dddbca8aa1b4",
+    "company_totals.csv": "a909ba0bc555a2d4f7aa7f4a74627a357f29a6519a96434400b5025d54660b38",
+    "customer_month.csv": "f41903110c9208f2695135cb162c5e6e911d5595948b2148d5d3c19cd9b98f40",
     "friction_cohort_segments.csv": "3ee91d24013c4060414c160e1f54bba43b27fa2bdd75a47d7cdef6eec0c183b4",
     "friction_cohort_summary.csv": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
     "friction_matched_comparison.csv": "995d7d4b7b88728d7beeb418fa41f0bc49da9968d02a60ca2eb9ac5175f1721d",
     "friction_segment_summary.csv": "9c16185d34fb4ef6056c639506c4656f4a0f1f65f80755e67b8314080575b171",
-    "friction_source_audit.csv": "303598a08ace6f75c84902022b37ec925736d9b27eb4c861ce3fc755c01bdf49",
+    "friction_source_audit.csv": "6a3b3a049f3178595c2f6201fe10517e4cfee77bf62d87b987f37bdd5a3c1a74",
     "friction_subjects.csv": "a4fed44132628a96499558d5ec22ecac0b5f9b5cf2aeea30dc2667e6fc321a23",
-    "friction_timing_audit.csv": "7db7c4e05c74b3d4e0470a241ea10dc420e45057e9c0d7761d76314ac0a7a35d",
+    "friction_timing_audit.csv": "7b62b5ec512d5867f72a455260cb95034136cb9238a306e68e0715d78c303c10",
     "segmentation_comparison.csv": "d14b65521fab9d858a16175d3924b9f3ec5e03f7fa316b0422b4261d0f700e81",
     "segmentation_profile.csv": "bd29e96eef73e893047eb410588bbb168188f95dc53bd08248d28bde15722c47"
   },
   "schema_version": "1.0",
   "source_sql_hashes": {
-    "01_views.sql": "ef7751547d0b30635f8a4b550d42bda331a3eb393bdd756e81cff491b715a32a",
-    "02_friction.sql": "dfc289d3f12c62eb446d2733d7b7e0c414ed007aa9486d73a1ca4b020a8df129"
+    "01_views.sql": "572e13d4957f6396bd2f2be71039d30678aded800a06d34be6944c9b7f3825c6",
+    "02_friction.sql": "c0ab1323b4a08c569a33bc78ff17c8affc2d8d88a6e796bf1e4f2b9cf317efdb"
   },
-  "summary_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898"
+  "summary_sha256": "43bdd1d317f432fdcf473d177c6195736b819283d2b725c74c91afbb24f201a4"
 }

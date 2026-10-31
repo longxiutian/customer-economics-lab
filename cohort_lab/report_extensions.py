@@ -37,7 +37,7 @@ def add_journey_chart(output, read, done):
     fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(.5, 1.04), frameon=False, fontsize=8, ncol=3)
     axes[1, 0].legend(loc="lower left", frameon=False, fontsize=7)
     done(fig, "journey-cohort-diagnostics", ["friction_cohort_summary.csv"],
-         "All 24 acquisition cohorts within each need; paid non-experimental people. Features in [0,27 days). First-renewal and age5 outcomes are separate; future outcomes stay missing. Channels are pooled here; adjusted contrasts retain channel and year.",
+         "All 24 acquisition cohorts within each need; operational paid customers. Features in [0,27 days). First-renewal and age5 outcomes are separate; future outcomes stay missing. Channels are pooled here; adjusted contrasts retain channel and year.",
          {"cohorts": sorted(f.cohort_month.unique()), "needs": ["save_time", "build_skill"], "future_outcomes_imputed": False})
 
 
@@ -103,7 +103,7 @@ def extension_context(output):
         r = first.loc[scheme]
         return f"{pp(r.difference)} percentage points (95% interval {pp(r.ci_lower)} to {pp(r.ci_upper)})"
     sentence = (f"After standardizing acquisition year, channel and need, the first-renewal gap is {contrast_text('onboarding')} for no completion versus completion, and {contrast_text('early_use')} for no core use versus core use. These estimates provide little separation, but their intervals do not establish equivalence. The signals record whether steps occurred, not the effort required or the value experienced.")
-    flow = (f"{audit.all_acquired:,.0f} acquired customers minus {audit.acquired_experimental:,.0f} buyers assigned to either experimental arm leaves {audit.diagnostic_customers:,.0f} paid non-experimental customers with a complete 27-day window. First renewal is observed for {audit.age1_observed_customers:,.0f} (Jan 2024--Nov 2025); age 5 for {audit.mature_customers:,.0f} (Jan 2024--Jul 2025). All assigned prospects remain in the campaign analysis, including nonbuyers.")
+    flow = (f"The operational panel contains {audit.all_acquired:,.0f} acquired customers; {audit.diagnostic_customers:,.0f} have a complete 27-day exposure window. First renewal is observed for {audit.age1_observed_customers:,.0f} (Jan 2024--Nov 2025); age 5 for {audit.mature_customers:,.0f} (Jan 2024--Jul 2025).")
     response = f.response_id.notna().sum()
     survey = (f"Onboarding responses are recorded for {response:,} of {len(f):,} customers ({response/len(f):.1%}). Invitations are unavailable, so no response combines uninvited people and people who did not answer. Difficulty categories are nominal and self-reported; a missing response is not a report of no difficulty.")
     adjust_rows = []
@@ -160,4 +160,4 @@ def extension_context(output):
             "strategic_comparison_table": small(_latex_table(["Acquisition group", "N", "Age-5 retained", "Net 12-receipt value", "Payback receipt"], prior_rows, "p{.23\\linewidth}YYYY")),
             "strategic_rank_table": small(_latex_table(["Channel", "Positive gap / pairs", "Median gap (range)", "Fully observed: positive / pairs"], rank_rows)),
             "strategic_retention_sentence": _tex(search_sentence),
-            "strategic_scope": _tex(f"Latest non-experimental four-cell cohort with six observed receipts: {selected[:7]}. Same-month prior-year comparator: {prior[:7]}. All {manifest['reconciliation']['cells']} acquisition-cell values and all {manifest['reconciliation']['cohorts']} cohort paths reconcile to the saved baseline before selection; no refit.")}
+            "strategic_scope": _tex(f"Latest four-cell cohort with six observed receipts: {selected[:7]}. Same-month prior-year comparator: {prior[:7]}. All {manifest['reconciliation']['cells']} acquisition-cell values and all {manifest['reconciliation']['cohorts']} cohort paths reconcile to the saved baseline before selection; no refit.")}

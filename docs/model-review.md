@@ -8,7 +8,7 @@ The main model and its priors are specified independently of the hidden generati
 
 Version 4 is deliberated with Claude Opus 5.5 at maximum effort, first on the design and then on the rendered report and companion slides. Codex executes the tests locally; provider consultation is not represented as test execution. The release receipt records the completed reviews and their adjudication. Prior releases remain historical artifacts and do not validate this release's new data or fits.
 
-The design review called for economically meaningful but overlapping customer groups, a distinct cohort trend, and comparisons that separate customer mix from progress within comparable groups. The public report verifies those patterns from the observed records. Its segmentation comparison uses the same mature paid customers and the same six-receipt window for all four two-group strategies, excludes both experimental arms, and retains a cohort-centered diagnostic. Group averages are not treated as causal effects or as evidence that members are homogeneous.
+The design review called for economically meaningful but overlapping customer groups, a distinct cohort trend, and comparisons that separate customer mix from progress within comparable groups. The public report verifies those patterns from the observed records. Its segmentation comparison uses the same mature paid customers and the same six-receipt window for all four two-group strategies, uses the operational customer panel, and retains a cohort-centered diagnostic. Group averages are not treated as causal effects or as evidence that members are homogeneous.
 
 ## Main model and comparison
 
@@ -36,6 +36,6 @@ The four-chain convergence gate requires finite diagnostics, R-hat at most 1.01,
 
 The decision horizon is twelve monthly receipts. Cash payback is undiscounted; contribution value is discounted at 1% monthly. CAC is deducted once. Parameter bands hold economic ratios fixed and omit renewal/revenue process noise, future costs and regime change. The probability of nonnegative **expected** cash is a posterior-parameter quantity, not a guarantee of actual recovery.
 
-One year-end origin and one three-month holdout do not establish universal forecast accuracy. Cohort and channel differences remain descriptive. Campaign incrementality is evaluated separately using all randomized prospects, including nonbuyers, within its outcome window. Favorable LTV cannot substitute for a controlled test of additional spending.
+One year-end origin and one three-month holdout do not establish universal forecast accuracy. Cohort and channel differences remain descriptive. Acquisition incrementality is evaluated separately using arm-level pilot summaries, including all assigned nonbuyers, within a 31-day window. The finale combines matching contribution value with channel iCAC under a stated value assumption.
 
 Executed counts, diagnostics and hash comparisons are recorded under `validation/` and in the report. Receipts identify the tested platform and dependency versions; cross-platform byte identity is not assumed. `scripts/validate_model_stability.py` is an optional starting-value sensitivity check, not an unexecuted release claim.

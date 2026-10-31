@@ -49,35 +49,16 @@ def test_independent_real_guided_forward_walk_stops_on_questions(tmp_path):
 
 
 
-def test_stage5_rejects_tampered_experiment_outputs(tmp_path):
+def test_stage5_rejects_tampered_channel_outputs(tmp_path):
     from cohort_lab.workflow import execute_stage
     from cohort_lab.analysis import build_views
     build_views(ROOT / "data", tmp_path)
-    summary = tmp_path / "tables" / "experiment_summary.csv"
-    summary.write_text(summary.read_text().replace("250", "999", 1))
+    summary = tmp_path / "tables" / "channel_cac.csv"
+    summary.write_text(summary.read_text().replace("500", "999", 1))
     with pytest.raises(ValueError, match="hash mismatch"):
         execute_stage(5, ROOT / "data", tmp_path, {}, compile_pdf=False)
 
 
-def test_experiment_effects_scale_unequal_assignment_arms():
-    """A 4-person treatment must compare with twice the 2-person control totals."""
-    sql = (ROOT / "sql" / "01_views.sql").read_text()
-    effect_sql = sql.split("CREATE OR REPLACE VIEW experiment_effects AS", 1)[1].split("CREATE OR REPLACE VIEW segmentation_subjects AS", 1)[0]
-    con = duckdb.connect()
-    try:
-        con.execute("""CREATE TABLE experiment_summary AS SELECT * FROM (VALUES
-          ('X','search','save_time','treatment',4,3,60.0,24.0,10.0,TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01',31.0,16.0),
-          ('X','search','save_time','control',2,1,12.0,5.0,0.0,TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01',31.0,12.5))
-          t(experiment_id,channel,primary_need,arm,n_assigned,n_buyers,net_revenue,contribution,media_spend,assigned_at,followup_end_at,followup_days,contribution_sample_variance)""")
-        con.execute("CREATE VIEW experiment_effects AS" + effect_sql)
-        result = con.execute("SELECT incremental_buyers,incremental_net_revenue,incremental_contribution,incremental_contribution_after_media,incremental_contribution_after_media_per_prospect,incremental_cac,iroas FROM experiment_effects").fetchone()
-        assert [float(x) for x in result] == pytest.approx([1,36,14,4,1,10,3.6])
-        interval=con.execute("SELECT incremental_contribution_after_media_per_prospect_se,incremental_contribution_after_media_per_prospect_ci_lower,incremental_contribution_after_media_per_prospect_ci_upper,followup_days FROM experiment_effects").fetchone()
-        # T contributions [0,8,8,8] give s^2=16; C [0,5] gives s^2=12.5.
-        se=(16/4+12.5/2)**.5
-        assert [float(x) for x in interval] == pytest.approx([se,1-1.96*se,1+1.96*se,31])
-    finally:
-        con.close()
 
 
 def test_zip_bootstrap_never_invokes_git(tmp_path, monkeypatch):
@@ -132,14 +113,11 @@ def test_report_preserves_the_learners_distinct_judgment(tmp_path, monkeypatch):
         "valuation_backtest.csv": pd.DataFrame([dict(cohort_month='2024-12-01',observed_months_at_origin=1,pred_ltv_before_cac=120,actual_ltv_before_cac=100)]),
         "segmentation_comparison.csv": pd.DataFrame([dict(scheme="primary_need", weighted_within_variance=2, n_groups=2, min_group_size=10,n_customers=20,variance_reduction=.2,cohort_centered_variance_reduction=.15)]),
         "segmentation_profile.csv": pd.DataFrame([dict(scheme="primary_need",segment=need,n=10,retained_share=.6,mean_contribution=100,variance=2) for need in ['save_time','build_skill']]),
-        "experiment_effects.csv": pd.DataFrame(),
-        "experiment_summary.csv": pd.DataFrame(),
         "cohort_totals.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,retained_share=.5 if year==2024 else .7) for year in [2024,2025] for month in range(1,7)]),
         "cohort_cash_economics.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,cac=100 if year==2024 else 80,cumulative_contribution_per_customer=120 if year==2024 else 140,balance_per_customer=20 if year==2024 else 60) for year in [2024,2025] for month in range(1,7)]),
-        "cohort_age_ex_tests.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=5 if year==2024 else 7)
+        "cohort_age_summary.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",channel=channel,primary_need=need,age_month=5,n_acquired=10,n_retained=5 if year==2024 else 7)
             for year in [2024,2025] for month in range(1,7)
             for channel in ['search','partner'] for need in ['save_time','build_skill']]),
-        "cohort_economics_ex_tests.csv": pd.DataFrame([dict(cohort_month=f"{year}-{month:02d}-01",age_month=5,n_acquired=40,n_retained=20 if year==2024 else 28,excluded_test_buyers=0,excluded_test_spend=0,acquisition_spend=4000 if year==2024 else 3200,cumulative_contribution=4800 if year==2024 else 5600,balance_after_acquisition=800 if year==2024 else 2400) for year in [2024,2025] for month in range(1,7)]),
     }
     monkeypatch.setattr(report, "_table", lambda output, name: fixtures[name].copy())
     context = report._context(tmp_path)
@@ -163,14 +141,14 @@ def test_raw_source_as_of_replay_matches_only_history_known_then(tmp_path):
     fields = {"people.csv":"attributes_recorded_at", "subscription_periods.csv":"renewal_due_at",
               "transactions.csv":"occurred_at", "product_events.csv":"occurred_at",
               "feedback.csv":"submitted_at", "campaign_spend.csv":"spend_date",
-              "acquisition_attribution.csv":"credited_at", "experiment_assignments.csv":"assigned_at"}
+              "acquisition_attribution.csv":"credited_at", "channel_holdouts.csv":"assigned_at"}
     manifest = json.loads((ROOT / "data" / "data_manifest.json").read_text())
     manifest.update(dataset_version="audit-as-of", data_as_of="2025-10-01T00:00:00Z")
     manifest["source_cutoffs"] = {name:manifest["data_as_of"] for name in SCHEMAS}
     for name, columns in SCHEMAS.items():
         with (ROOT / "data" / name).open(newline="",encoding="utf-8") as f:
             rows = [r for r in csv.DictReader(f) if r[fields[name]] < cutoff[:len(r[fields[name]])]]
-        if name == "experiment_assignments.csv":
+        if name == "channel_holdouts.csv":
             rows = [r for r in rows if r["followup_end_at"] <= cutoff]
         path = historic / name
         with path.open("w",newline="",encoding="utf-8") as f:
@@ -187,26 +165,10 @@ def test_raw_source_as_of_replay_matches_only_history_known_then(tmp_path):
         expected = complete[complete[date_field]<"2025-10-01"].reset_index(drop=True)
         actual = pd.read_csv(replay/"tables"/(name+".csv"))
         pd.testing.assert_frame_equal(expected,actual,check_exact=True)
-    # Both experiments completed before the cutoff; future purchases must not
-    # leak into their prespecified outcomes in either raw-source replay.
-    expected = pd.read_csv(full/"tables/experiment_effects.csv")
-    actual = pd.read_csv(replay/"tables/experiment_effects.csv")
-    uncertainty_columns = [
-        "incremental_contribution_after_media_per_prospect_se",
-        "incremental_contribution_after_media_per_prospect_ci_lower",
-        "incremental_contribution_after_media_per_prospect_ci_upper",
-        "incremental_contribution_after_media_se",
-        "incremental_contribution_after_media_ci_lower",
-        "incremental_contribution_after_media_ci_upper",
-    ]
-    # Truncating unrelated future source rows can change DuckDB's reduction
-    # order for DOUBLE sample variance. Allow only sub-picodollar roundoff in
-    # the six variance-derived SE/CI fields; financial points, dates, counts,
-    # conversion measures, and every other column must still agree exactly.
-    pd.testing.assert_frame_equal(expected.drop(columns=uncertainty_columns),
-                                  actual.drop(columns=uncertainty_columns),check_exact=True)
-    pd.testing.assert_frame_equal(expected[uncertainty_columns],actual[uncertainty_columns],
-                                  check_exact=False,rtol=0,atol=1e-12)
+    # Acquisition pilot summaries are independent of later customer transactions.
+    pd.testing.assert_frame_equal(pd.read_csv(full/"tables/channel_cac.csv"),
+                                  pd.read_csv(replay/"tables/channel_cac.csv"),check_exact=True)
+
 
 
 @pytest.fixture

@@ -1,22 +1,43 @@
 {
-  "all_pages_contact_sheet_reviewed": true,
-  "full_size_pages_reviewed": [
-    1,
-    2,
-    3,
-    12,
-    14,
-    27,
-    28,
-    29,
-    30,
-    31,
-    48,
-    49
+  "a3_landscape_page": 40,
+  "citation_keys": [
+    "bouhnick",
+    "course2026",
+    "fader2007",
+    "fader2010",
+    "larsen2019",
+    "mccarthy2017",
+    "orduz2024"
   ],
+  "companion": {
+    "chart_values_checked": 1776,
+    "embedded_workbooks": 5,
+    "native_charts": 5,
+    "native_tables": 6,
+    "package_fonts_and_reimport_checks": "Passed Artifact Tool package integrity, Arial font checks, native table/chart structure, chart workbooks and first-party reimport. Conservative table-height diagnostics were checked against the native PowerPoint render.",
+    "pdf_sha256": "b320e818e34354a921254cd5cd9899681433375202f79f0e2e5059c3343ed608",
+    "pptx_sha256": "e9c78f4dbc1456b6f8487d528e0490b3ad72fc6040a45f762226435eb4dd1736",
+    "renderer": "Microsoft PowerPoint 16.0 on Windows, SaveAs format 32 (PDF), all slides",
+    "slides": 13,
+    "table_chart_source_matching": true
+  },
+  "final_report_pixel_check": "Compared all pages across final corrections: only pages 16 and 41 changed from the fully reviewed draft; both final pages were rendered and inspected.",
+  "letter_portrait_pages": 49,
   "overfull_boxes": 0,
-  "pages_rendered": 49,
-  "report_sha256": "8d5b6a88b4947bf2d8d6893570a19824522a34fc8e5599e9ad6ec5a25d473efa",
-  "scope": "Rendered all pages at 110 dpi; reviewed the full contact sheet and full-size cover, contents, summary, segmentation, CAC and reference pages. Existing unmodified exhibits retain their prior validation.",
-  "status": "passed"
+  "report_figures": 16,
+  "report_pages": 50,
+  "report_pdf_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+  "report_tables": 31,
+  "reviewed_checks": [
+    "Cover placement and course metadata",
+    "Contents and early channel holdout section",
+    "Model follows company economics",
+    "Descriptive acquisition results precede contribution forecasts",
+    "Finale states value assumptions and avoids subtracting acquisition cost twice",
+    "Citations and reproducibility appendix",
+    "Chart and table readability, clipping, pagination and copyability"
+  ],
+  "scope": "All 50 report pages and all 13 native PowerPoint slides rendered and inspected, including full-size review. Numeric artifact checks are separately recorded.",
+  "section_dividers": 10,
+  "status": "pass"
 }

@@ -1,0 +1,99 @@
+{
+  "benchmark_steps": 10000,
+  "compared_files": 20,
+  "comparisons": {
+    "benchmark_manifest.json": {
+      "run_a_sha256": "aa1fcbb58c970fa0fa0ce83164ccbb86def68aed34aaeca5d9a2a0f5c3aee061",
+      "run_b_sha256": "aa1fcbb58c970fa0fa0ce83164ccbb86def68aed34aaeca5d9a2a0f5c3aee061"
+    },
+    "benchmark_summary.json": {
+      "run_a_sha256": "7a5dfdf4f6966431c1bc32dc0d7af2d271b2358c5de62f2312505a8bb23f108e",
+      "run_b_sha256": "7a5dfdf4f6966431c1bc32dc0d7af2d271b2358c5de62f2312505a8bb23f108e"
+    },
+    "challenge/baseline_manifest.json": {
+      "run_a_sha256": "bfd1c6ea85f583a605eb5e58bd66579aaf8813a1e16cc8cc318b0ff4cb1a9b22",
+      "run_b_sha256": "bfd1c6ea85f583a605eb5e58bd66579aaf8813a1e16cc8cc318b0ff4cb1a9b22"
+    },
+    "challenge/baseline_predictions.csv": {
+      "run_a_sha256": "10df614f8ea66f05dccf97d6d870578c575b216af23f4cb409806589eb65fac9",
+      "run_b_sha256": "10df614f8ea66f05dccf97d6d870578c575b216af23f4cb409806589eb65fac9"
+    },
+    "challenge/prediction_grid.csv": {
+      "run_a_sha256": "c3d4d1e0122bda89737e694783898642e9f2d58361dd984dbb8523fc3c6e75a2",
+      "run_b_sha256": "c3d4d1e0122bda89737e694783898642e9f2d58361dd984dbb8523fc3c6e75a2"
+    },
+    "challenge/submission_template.csv": {
+      "run_a_sha256": "866724b0a3229bfbf027f50b8f553aaaeeea8397a2391312cdaf5851af820db1",
+      "run_b_sha256": "866724b0a3229bfbf027f50b8f553aaaeeea8397a2391312cdaf5851af820db1"
+    },
+    "challenge/template_manifest.json": {
+      "run_a_sha256": "32dfcb5e2dede5e480132965165960127a6c27b7474d8dd166c7677643ceaefd",
+      "run_b_sha256": "32dfcb5e2dede5e480132965165960127a6c27b7474d8dd166c7677643ceaefd"
+    },
+    "model_manifest.json": {
+      "run_a_sha256": "508d5ac2754f13af75c768c26c1ec594e752c9a04bb994a0f3c8b1bfd560cd46",
+      "run_b_sha256": "508d5ac2754f13af75c768c26c1ec594e752c9a04bb994a0f3c8b1bfd560cd46"
+    },
+    "model_summary.json": {
+      "run_a_sha256": "9a500e25f0e3b50157e1e19dc13458638e955fa197a6ac08b47f1a126f97a8ac",
+      "run_b_sha256": "9a500e25f0e3b50157e1e19dc13458638e955fa197a6ac08b47f1a126f97a8ac"
+    },
+    "posterior_draws.json": {
+      "run_a_sha256": "26cc4c9a1e34b7fd7bc84c44e08650849ad14c425a16cc3c0ab96bc899fd7c6e",
+      "run_b_sha256": "26cc4c9a1e34b7fd7bc84c44e08650849ad14c425a16cc3c0ab96bc899fd7c6e"
+    },
+    "tables/backtest.csv": {
+      "run_a_sha256": "4e656a8c237acddabe952f3d187a095322648daa8eb1ab184bad69f522c66c00",
+      "run_b_sha256": "4e656a8c237acddabe952f3d187a095322648daa8eb1ab184bad69f522c66c00"
+    },
+    "tables/calendar_fit_checks.csv": {
+      "run_a_sha256": "4cd6b5bdb1b7a212b2fbe3a94cbeee9789d455f80c8391a88e982f6f04637ab6",
+      "run_b_sha256": "4cd6b5bdb1b7a212b2fbe3a94cbeee9789d455f80c8391a88e982f6f04637ab6"
+    },
+    "tables/cohort_valuation.csv": {
+      "run_a_sha256": "58341ee2a04306716d650dac9085296df3bc50f16cd5e73d2e6a76305a319b14",
+      "run_b_sha256": "58341ee2a04306716d650dac9085296df3bc50f16cd5e73d2e6a76305a319b14"
+    },
+    "tables/cohort_valuation_by_segment.csv": {
+      "run_a_sha256": "77ea14d0766e4140bb3ce25ca3965b817cf9a96c8e81ded59af68c655796d51a",
+      "run_b_sha256": "77ea14d0766e4140bb3ce25ca3965b817cf9a96c8e81ded59af68c655796d51a"
+    },
+    "tables/forecast_curve.csv": {
+      "run_a_sha256": "9cbc86a0e40e6bed50c8f1f3f454fee44eba25ac404c719384ce2fb46a125070",
+      "run_b_sha256": "9cbc86a0e40e6bed50c8f1f3f454fee44eba25ac404c719384ce2fb46a125070"
+    },
+    "tables/heterogeneity_by_cell.csv": {
+      "run_a_sha256": "772f9fb3a39c68a4d583a92a244587c3241785f22436bb7bc48d853a504b07c8",
+      "run_b_sha256": "772f9fb3a39c68a4d583a92a244587c3241785f22436bb7bc48d853a504b07c8"
+    },
+    "tables/model_fit_checks.csv": {
+      "run_a_sha256": "24badc6d92977c12f0d2dffc99ad8a50e87444bcbd5444af62ea31097c7e8feb",
+      "run_b_sha256": "24badc6d92977c12f0d2dffc99ad8a50e87444bcbd5444af62ea31097c7e8feb"
+    },
+    "tables/orduz_benchmark.csv": {
+      "run_a_sha256": "f4e6ec4724f16b3da6522a03c6d2ca2736587783058f09c9e14dc59a5f158248",
+      "run_b_sha256": "f4e6ec4724f16b3da6522a03c6d2ca2736587783058f09c9e14dc59a5f158248"
+    },
+    "tables/parameter_summary.csv": {
+      "run_a_sha256": "10ac94dfb3e6d07acdca3fb40320a9bd3d43b460831c5bab0544fba6adc43aa0",
+      "run_b_sha256": "10ac94dfb3e6d07acdca3fb40320a9bd3d43b460831c5bab0544fba6adc43aa0"
+    },
+    "tables/valuation_backtest.csv": {
+      "run_a_sha256": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d",
+      "run_b_sha256": "fefbd1b80b4850a77a50af71bf1036a16a210a48ddbfbbacc42abe661b49697d"
+    }
+  },
+  "fresh_processes": 2,
+  "frozen_data_manifest_sha256": "1a961a911c997b5e88dab9f61cde1f634d5031308c57636e8537de343dfc1dd6",
+  "main_seed": 20261116,
+  "main_steps": 3000,
+  "mismatches": [],
+  "model_refit": true,
+  "platform": "Windows-11-10.0.22631-SP0",
+  "public_reproduction": "uv run --frozen python scripts/verify_reproducibility.py --mode full --output outputs/full-repro --parallel",
+  "python": "3.12.14",
+  "same_host_only": true,
+  "scope": "Two fresh processes independently ran observed build_views, fit_and_forecast, run_benchmark, validate_retention_comparison and baseline_predictions. No pilot revenue/retention or future outcome is used. Final reporting was rebuilt and checked separately; this receipt does not claim execution of the full-mode verifier.",
+  "status": "pass",
+  "uv_lock_sha256": "fc50701df587f29b211c5e1ef1650d1ac2e7790078370e8b600f59ef830b8080"
+}

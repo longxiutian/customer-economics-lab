@@ -104,80 +104,6 @@ SELECT calendar_month, sum(n_retained)::INTEGER AS n_retained,
        sum(acquisition_spend)::DECIMAL(18,2) AS acquisition_spend
 FROM company_month GROUP BY calendar_month;
 
-CREATE OR REPLACE VIEW experiment_person AS
-SELECT e.experiment_id, e.person_id, e.tested_campaign_id, e.arm,
-       e.assigned_at, e.followup_end_at, c.channel, c.target_need AS primary_need,
-       max(CASE WHEN t.transaction_type = 'payment' THEN 1 ELSE 0 END)::INTEGER AS buyer,
-       coalesce(sum(t.gross_amount - t.discount_amount - t.refund_amount), 0)::DECIMAL(18,2) AS net_revenue,
-       coalesce(sum(t.gross_amount - t.discount_amount - t.refund_amount - t.variable_cost), 0)::DECIMAL(18,2) AS contribution
-FROM experiment_assignments e JOIN campaign_metadata c ON c.campaign_id = e.tested_campaign_id
-LEFT JOIN transactions t ON t.person_id = e.person_id AND t.occurred_at >= e.assigned_at AND t.occurred_at < e.followup_end_at
-GROUP BY e.experiment_id, e.person_id, e.tested_campaign_id, e.arm,
-         e.assigned_at, e.followup_end_at, c.channel, c.target_need;
-
-CREATE OR REPLACE VIEW experiment_spend AS
-WITH designs AS (
- SELECT DISTINCT experiment_id, tested_campaign_id, assigned_at, followup_end_at FROM experiment_assignments
-)
-SELECT d.experiment_id, sum(s.media_spend)::DECIMAL(18,2) AS media_spend
-FROM designs d JOIN campaign_spend s ON s.campaign_id = d.tested_campaign_id
-AND s.spend_date >= CAST(d.assigned_at AS DATE) AND s.spend_date < CAST(d.followup_end_at AS DATE)
-GROUP BY d.experiment_id;
-
-CREATE OR REPLACE VIEW experiment_summary AS
-SELECT e.experiment_id, e.channel, e.primary_need, e.arm, count(*)::INTEGER AS n_assigned,
-       sum(e.buyer)::INTEGER AS n_buyers, sum(e.net_revenue)::DECIMAL(18,2) AS net_revenue,
-       sum(e.contribution)::DECIMAL(18,2) AS contribution,
-       CASE WHEN e.arm = 'treatment' THEN max(s.media_spend) ELSE 0 END::DECIMAL(18,2) AS media_spend,
-       min(e.assigned_at) AS assigned_at, max(e.followup_end_at) AS followup_end_at,
-       epoch(max(e.followup_end_at) - min(e.assigned_at))/86400.0 AS followup_days,
-       var_samp(e.contribution::DOUBLE) AS contribution_sample_variance
-FROM experiment_person e JOIN experiment_spend s USING (experiment_id)
-GROUP BY e.experiment_id, e.channel, e.primary_need, e.arm;
-
-CREATE OR REPLACE VIEW experiment_effects AS
-WITH paired AS (
- SELECT t.experiment_id, t.channel, t.primary_need, t.n_assigned AS n_treatment, c.n_assigned AS n_control,
-        t.assigned_at, t.followup_end_at, t.followup_days,
-        t.n_buyers AS buyers_treatment, c.n_buyers AS buyers_control,
-        t.n_buyers::DOUBLE/t.n_assigned AS purchase_rate_treatment,
-        c.n_buyers::DOUBLE/c.n_assigned AS purchase_rate_control,
-        t.n_buyers - c.n_buyers * t.n_assigned::DOUBLE/c.n_assigned AS incremental_buyers,
-        t.net_revenue - c.net_revenue * t.n_assigned::DOUBLE/c.n_assigned AS incremental_net_revenue,
-        t.contribution - c.contribution * t.n_assigned::DOUBLE/c.n_assigned AS incremental_contribution,
-        t.media_spend - c.media_spend * t.n_assigned::DOUBLE/c.n_assigned AS incremental_media_spend,
-        sqrt(t.contribution_sample_variance/t.n_assigned
-           + c.contribution_sample_variance/c.n_assigned) AS contribution_difference_per_prospect_se
- FROM experiment_summary t JOIN experiment_summary c USING (experiment_id, channel, primary_need)
- WHERE t.arm = 'treatment' AND c.arm = 'control'
-), effects AS (
- SELECT *, purchase_rate_treatment - purchase_rate_control AS purchase_rate_difference,
-        sqrt(purchase_rate_treatment*(1-purchase_rate_treatment)/n_treatment
-           + purchase_rate_control*(1-purchase_rate_control)/n_control) AS purchase_rate_difference_se
- FROM paired
-)
-SELECT experiment_id, channel, primary_need, n_treatment, n_control, buyers_treatment, buyers_control,
-       assigned_at, followup_end_at, followup_days,
-       purchase_rate_treatment, purchase_rate_control, purchase_rate_difference, purchase_rate_difference_se,
-       greatest(-1.0, purchase_rate_difference - 1.96*purchase_rate_difference_se) AS purchase_rate_ci_lower,
-       least(1.0, purchase_rate_difference + 1.96*purchase_rate_difference_se) AS purchase_rate_ci_upper,
-       incremental_buyers, incremental_net_revenue, incremental_contribution, incremental_media_spend,
-       incremental_contribution - incremental_media_spend AS incremental_contribution_after_media,
-       (incremental_contribution - incremental_media_spend)/n_treatment AS incremental_contribution_after_media_per_prospect,
-       contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_se,
-       (incremental_contribution - incremental_media_spend)/n_treatment
-           - 1.96*contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_ci_lower,
-       (incremental_contribution - incremental_media_spend)/n_treatment
-           + 1.96*contribution_difference_per_prospect_se AS incremental_contribution_after_media_per_prospect_ci_upper,
-       n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_se,
-       incremental_contribution - incremental_media_spend
-           - 1.96*n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_ci_lower,
-       incremental_contribution - incremental_media_spend
-           + 1.96*n_treatment*contribution_difference_per_prospect_se AS incremental_contribution_after_media_ci_upper,
-       CASE WHEN incremental_buyers > 0 THEN incremental_media_spend/incremental_buyers END AS incremental_cac,
-       incremental_net_revenue/nullif(incremental_media_spend, 0) AS iroas
-FROM effects;
-
 CREATE OR REPLACE VIEW segmentation_subjects AS
 WITH six_month_people AS (
  SELECT c.person_id, a.cohort_month, a.channel, a.primary_need, a.age_band, a.region,
@@ -186,7 +112,6 @@ WITH six_month_people AS (
  FROM customer_month c JOIN acquired_customers a USING (person_id)
  WHERE c.age_month < 6 AND a.cohort_month + INTERVAL '6 months' <= (SELECT data_as_of FROM lab_settings)
    AND a.channel IN ('search','partner')
-   AND NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
  GROUP BY c.person_id, a.cohort_month, a.channel, a.primary_need, a.age_band, a.region
  HAVING count(*) = 6
 )
@@ -274,51 +199,35 @@ SELECT t.*, c.acquisition_spend, c.cac, c.cumulative_contribution,
 FROM cohort_totals t JOIN cohort_cash_economics c USING (cohort_month, cohort_index, age_month, calendar_month, n_acquired)
 WHERE t.age_month = 5;
 
--- Presentation sensitivity check: retain the same joining windows, but exclude
--- experiment-assigned buyers (both arms) and spending within the test designs.
--- This is descriptive comparability, not a replacement causal estimand or model input.
-CREATE OR REPLACE VIEW cohort_economics_ex_tests AS
-WITH regular_people AS (
- SELECT c.cohort_month, c.cohort_index, c.age_month, c.calendar_month,
-        count(*)::INTEGER AS n_acquired, sum(c.retained)::INTEGER AS n_retained,
-        sum(c.contribution)::DECIMAL(18,2) AS contribution
- FROM customer_month c
- WHERE NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
- GROUP BY c.cohort_month,c.cohort_index,c.age_month,c.calendar_month
-), test_spending AS (
- SELECT CAST(date_trunc('month', s.spend_date) AS DATE) AS cohort_month,
-        sum(s.media_spend+s.other_acquisition_spend)::DECIMAL(18,2) AS excluded_test_spend
- FROM campaign_spend s
- WHERE EXISTS (SELECT 1 FROM experiment_assignments e
-               WHERE e.tested_campaign_id=s.campaign_id
-               AND s.spend_date>=CAST(e.assigned_at AS DATE)
-               AND s.spend_date<CAST(e.followup_end_at AS DATE))
- GROUP BY cohort_month
-), cumulative AS (
- SELECT p.*, raw.n_acquired-p.n_acquired AS excluded_test_buyers,
-        coalesce(s.excluded_test_spend,0)::DECIMAL(18,2) AS excluded_test_spend,
-        (raw.acquisition_spend-coalesce(s.excluded_test_spend,0))::DECIMAL(18,2) AS acquisition_spend,
-        sum(p.contribution) OVER (PARTITION BY p.cohort_month ORDER BY p.age_month
-             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)::DECIMAL(18,2) AS cumulative_contribution
- FROM regular_people p JOIN cohort_cash_economics raw
- USING (cohort_month,cohort_index,age_month,calendar_month)
- LEFT JOIN test_spending s USING (cohort_month)
+-- Acquisition-only pilot evidence is deliberately separate from customer history.
+CREATE OR REPLACE VIEW channel_cac AS
+WITH paired AS (
+ SELECT t.test_id,t.channel,t.primary_need,t.assigned_at,t.followup_end_at,
+        date_diff('day',t.assigned_at,t.followup_end_at)::INTEGER AS followup_days,
+        CAST(date_trunc('month',t.assigned_at) AS DATE) AS value_cohort_month,
+        t.n_assigned AS n_treatment,c.n_assigned AS n_control,
+        t.n_buyers AS buyers_treatment,c.n_buyers AS buyers_control,
+        t.n_assigned::DOUBLE/c.n_assigned AS scale_to_treatment,
+        (t.media_spend+t.other_acquisition_spend)::DECIMAL(18,2) AS spend_treatment,
+        (c.media_spend+c.other_acquisition_spend)::DECIMAL(18,2) AS spend_control,
+        t.n_buyers::DOUBLE/t.n_assigned AS purchase_rate_treatment,
+        c.n_buyers::DOUBLE/c.n_assigned AS purchase_rate_control
+ FROM channel_holdouts t JOIN channel_holdouts c USING(test_id,channel,primary_need,assigned_at,followup_end_at)
+ WHERE t.arm='treatment' AND c.arm='control'
+), lift AS (
+ SELECT *,scale_to_treatment*buyers_control AS expected_background_buyers,
+        buyers_treatment-scale_to_treatment*buyers_control AS incremental_buyers,
+        spend_treatment-scale_to_treatment*spend_control AS incremental_spend,
+        n_treatment*sqrt(purchase_rate_treatment*(1-purchase_rate_treatment)/n_treatment
+          +purchase_rate_control*(1-purchase_rate_control)/n_control) AS incremental_buyers_se
+ FROM paired
+), intervals AS (
+ SELECT *,incremental_buyers-1.96*incremental_buyers_se AS buyers_ci_lower,
+        incremental_buyers+1.96*incremental_buyers_se AS buyers_ci_upper
+ FROM lift
 )
-SELECT cohort_month,cohort_index,age_month,calendar_month,n_acquired,n_retained,
-       n_retained::DOUBLE/n_acquired AS retained_share,
-       excluded_test_buyers,excluded_test_spend,acquisition_spend,
-       acquisition_spend/n_acquired AS cac,cumulative_contribution,
-       cumulative_contribution/n_acquired AS cumulative_contribution_per_customer,
-       (cumulative_contribution-acquisition_spend)::DECIMAL(18,2) AS balance_after_acquisition,
-       (cumulative_contribution-acquisition_spend)/n_acquired AS balance_per_customer
-FROM cumulative;
-
--- A descriptive within-group comparison on the same nonexperimental population.
--- Remove both assigned arms, including control buyers, before taking ratios.
-CREATE OR REPLACE VIEW cohort_age_ex_tests AS
-SELECT cohort_month, channel, primary_need, age_month,
-       count(*)::INTEGER AS n_acquired, sum(retained)::INTEGER AS n_retained,
-       sum(retained)::DOUBLE/count(*) AS retained_share
-FROM customer_month c
-WHERE NOT EXISTS (SELECT 1 FROM experiment_assignments e WHERE e.person_id=c.person_id)
-GROUP BY cohort_month, channel, primary_need, age_month;
+SELECT *,spend_treatment/nullif(buyers_treatment,0) AS credited_cac,
+       CASE WHEN incremental_buyers>0 THEN incremental_spend/incremental_buyers END AS icac,
+       CASE WHEN buyers_ci_upper>0 THEN incremental_spend/buyers_ci_upper END AS icac_ci_lower,
+       CASE WHEN buyers_ci_lower>0 THEN incremental_spend/buyers_ci_lower END AS icac_ci_upper
+FROM intervals;

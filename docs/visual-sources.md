@@ -6,13 +6,12 @@ logo, student data or article figure is included.
 
 ## Archify
 
-The lab actually invokes Archify's native `dataflow`, `timeline` and `workflow` renderers.
-Inputs are editable JSON generated from raw CSV inspection and a saved SQL
-selection of one observed synthetic customer timeline. The interactive HTML
-contains the upstream viewer/template; it is not a custom image labeled Archify.
-Two separate conceptual maps represent the pre-acquisition `save_time` and
-`build_skill` segments. Their proposed experiences are explicitly hypotheses;
-they are not silently inferred from one customer's recorded timeline.
+The lab invokes Archify's native dataflow, ERD, workflow and architecture renderers.
+Inputs are editable JSON generated from raw CSV inspection and declared analytical
+relationships. The interactive HTML contains the upstream viewer/template.
+One original conceptual business-journey SVG introduces potential benefits and
+friction points for Studio North. It is a qualitative orientation, not an observed
+customer timeline or a measured satisfaction curve; no segment-specific maps are added.
 
 * Project: [tt-a1i/archify](https://github.com/tt-a1i/archify)
 * Version: **3.2.0**
@@ -50,5 +49,5 @@ use the font bundled with Matplotlib. No private template content is copied.
 `report/chart_manifest.json` identifies each source table and its hash, the
 selection or normalization used, and deterministic output hashes. Figures
 distinguish customer age from calendar time and observed data from predictions.
-Experiment figures retain nonbuyers in the assigned denominator. Reports never
+Channel acquisition tables retain nonbuyers in the assigned denominator. Reports never
 infer campaign causality from differences between acquisition-channel LTVs.

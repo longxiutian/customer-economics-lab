@@ -1,36 +1,36 @@
 {
-  "analysis_summary_sha256": "1eee9c1f59a6ae427407117d0da09b1cb76e4579811d37bf141c0b397b0d6898",
-  "benchmark_manifest_sha256": "f91e70222f3ed396546f7169bdf65602f6d33a5a56a6be2fe16457420fc7ea83",
+  "analysis_summary_sha256": "43bdd1d317f432fdcf473d177c6195736b819283d2b725c74c91afbb24f201a4",
+  "benchmark_manifest_sha256": "aa1fcbb58c970fa0fa0ce83164ccbb86def68aed34aaeca5d9a2a0f5c3aee061",
   "build": {
     "engine": "WSL pdflatex",
     "overfull_boxes": 0,
-    "pdf_sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
+    "pdf_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
     "source_date_epoch": 1794787200
   },
-  "chart_manifest_sha256": "74401a5b542dbe2f1b39049a186b51f566b0e63e01eaf8da8623f6f1747bd159",
+  "chart_manifest_sha256": "73704f05341008673d84e52f788a812372413e7090a13499b0c62453e676878d",
   "compiled": true,
-  "decision_metrics_manifest_sha256": "4480e42592ea60f91f34461d420d808734e57e6833d60c4d9a24cd2ad6ef2622",
-  "diagnostics_manifest_sha256": "c5e1f2d8259e5c0a742d2d55388706d1884740fb6466c90a841586d9087f2c2a",
-  "diagram_manifest_sha256": "ca0c91fd8be7e904e37f95c2339b3b628df1a675df9ba50bd684853f5b5b2def",
+  "decision_metrics_manifest_sha256": "3b9d863a1c8a9798f0aa938e0aa4e30181a68e1b13efc047f2686081a3285c72",
+  "diagnostics_manifest_sha256": "440b909edec70f680fda38fdd8c9bef889fff795e6752c6dd84453a4fdcda8f7",
+  "diagram_manifest_sha256": "10e6ed099037889ed58cd7b5c77fc32fdb75c94560552141725ffef0220818ab",
   "display_formatter_sha256": "ed900a6583350a2e867c353734045409e76e261038be75354794dc0f1a066372",
-  "executive_metrics_sha256": "b7f521c70979b5a88ae9f8cfbf0cda9c34e396c86abdfc39fe153f006abb1694",
-  "exhibit_registry_sha256": "5a1179d9d1b60e492a00f98ec8360b36f661359c2fa1887b097b25efa06b47a4",
-  "figure_count": 17,
-  "implementation_manifest_sha256": "f3d0487a556e81568be018eed070f5ee325b9aa1bd7e40d02743451d92656fc4",
+  "executive_metrics_sha256": "12f91ab0197704592e845a190e70d10957407bbf4642de897e2339fa53d97d0f",
+  "exhibit_registry_sha256": "b9e7b53749f0ab18303ecfae65ac7f5518563c981db19dfb4ea5ef9d2bbeff29",
+  "figure_count": 16,
+  "implementation_manifest_sha256": "aded9cacc209f42fc50c17a3ec6ce2d7140f35e332aed22627599ecaad48f689",
   "learner_choices_sha256": null,
-  "matched_cohort_comparison_sha256": "cf105f234fbf384aa142756c3e62f4636aa9aa0ab942fdc0346ae82fab59d2f7",
-  "model_summary_sha256": "0c9cef6ed0c88d15177ae3f7422a55b4bf3d063771f47845dff9af0d1c41b7d6",
-  "pages": 49,
-  "parameter_summary_sha256": "abeb52175b639314b88a5f5342ad9ddcafc9ac3dbf2c4b1c73890865044308e6",
+  "matched_cohort_comparison_sha256": "7de6227b4d3a3dee2b7063ae4e70b34c3d1c546fdb3ec7fc4ed17ff813aaeab8",
+  "model_summary_sha256": "9a500e25f0e3b50157e1e19dc13458638e955fa197a6ac08b47f1a126f97a8ac",
+  "pages": 50,
+  "parameter_summary_sha256": "10ac94dfb3e6d07acdca3fb40320a9bd3d43b460831c5bab0544fba6adc43aa0",
   "pdf": "report/customer-economics-report.pdf",
   "pdf_copyability": {
     "commands": 2,
-    "distinct_fields": 52,
+    "distinct_fields": 53,
     "extractor": "pypdf",
     "source_filenames": 8,
     "status": "passed"
   },
-  "postestimation_manifest_sha256": "d264235587604b71405433be0b9233af3317f33e1ade05404dc70578d2de450c",
+  "postestimation_manifest_sha256": "3e0bae12c8e79fa1be771c48575735535a4de86606ed589b18b14edabf6bbf6a",
   "renewal_window_evidence": {
     "age_month": 5,
     "earlier": {
@@ -91,27 +91,6 @@
       "retained_share": 0.5216637781629117,
       "year": 2024
     },
-    "experiment_excluded": {
-      "earlier": {
-        "blended_cac": 107.67369150779896,
-        "cash_after_cac_per_customer": -1.1568804159445414,
-        "contribution_per_customer": 106.51681109185441,
-        "excluded_test_buyers": 0,
-        "excluded_test_spend": 0.0,
-        "n_acquired": 1154,
-        "retained_share": 0.5216637781629117
-      },
-      "later": {
-        "blended_cac": 85.31269001982815,
-        "cash_after_cac_per_customer": 45.79626569729015,
-        "contribution_per_customer": 131.10895571711833,
-        "excluded_test_buyers": 98,
-        "excluded_test_spend": 650.0,
-        "n_acquired": 1513,
-        "retained_share": 0.6159947124917383
-      },
-      "scope": "Same joining windows and age; exclude both experimental arms' buyers and all their observed contribution, and test-window campaign spending. Descriptive sensitivity, not causal adjustment."
-    },
     "fixed_paid_mix": [
       {
         "channel": "search",
@@ -145,15 +124,15 @@
     ],
     "later": {
       "age_month": 5,
-      "blended_cac": 80.52644320297952,
-      "cash_after_cac_per_customer": 49.45847299813781,
+      "blended_cac": 85.31269001982815,
+      "cash_after_cac_per_customer": 45.79626569729015,
       "cohort_weights": {
-        "2025-01-01": 0.14711359404096835,
-        "2025-02-01": 0.14835505896958412,
-        "2025-03-01": 0.15332091868404718,
-        "2025-04-01": 0.15518311607697083,
-        "2025-05-01": 0.22470515207945377,
-        "2025-06-01": 0.1713221601489758
+        "2025-01-01": 0.1566424322538004,
+        "2025-02-01": 0.1579643093192333,
+        "2025-03-01": 0.16325181758096496,
+        "2025-04-01": 0.16523463317911435,
+        "2025-05-01": 0.17448777263714474,
+        "2025-06-01": 0.18241903502974224
       },
       "cohorts": [
         "2025-01-01",
@@ -163,8 +142,8 @@
         "2025-05-01",
         "2025-06-01"
       ],
-      "contribution_per_customer": 129.9849162011173,
-      "n_acquired": 1611,
+      "contribution_per_customer": 131.1089557171183,
+      "n_acquired": 1513,
       "n_cohorts": 6,
       "paid_cells": [
         {
@@ -198,36 +177,34 @@
       ],
       "paid_fixed_mix_retention": 0.6022810824549802,
       "paid_raw_retention": 0.6159947124917383,
-      "retained_share": 0.6089385474860335,
+      "retained_share": 0.6159947124917383,
       "year": 2025
     },
     "observed_receipts": 6,
-    "standardization": "Paid channel-by-stated-need composition fixed to the earlier window; both experimental arms and organic customers excluded",
+    "standardization": "Paid channel-by-stated-need composition fixed to the earlier window; operational customer panel only",
     "total_cells": 4,
     "weighting": "Original acquired customer counts within each six-cohort window"
   },
-  "report_skill_sha256": "8e6c281ef1d9f94e89f7f7e9cd76d31179bc01f28f929f3d7802735634646e7c",
-  "report_source_sha256": "791f8d5f569bfbd5d6b035f129987276ea6506f3d94f40e9ffb69dcaf5558590",
+  "report_skill_sha256": "a786977d01248083b1b07695897ffd3502ff4f53a4d86d3cd88bfd934c380feb",
+  "report_source_sha256": "9d542db5351072b56bf9a8af15147429db9d4445fdbc620b888a17496f1cb5a9",
   "source_date_epoch": 1794787200,
   "style_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb",
-  "table_count": 32,
+  "table_count": 31,
   "tables": {
-    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
-    "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
-    "cohort_economics_ex_tests.csv": "bae38913ad902082d6aa6d436d64e4a706a70e405a7731a826f9980477502c6f",
-    "cohort_totals.csv": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c",
-    "cohort_valuation.csv": "8b09f0cc902721e1f10b1b1a8965d6dea8688e3e8974cc276de76b5de6c56046",
-    "company_month.csv": "902f4bb2cdc810882e394c13669c80dc53dd8e719b4971b8dfcfea163590c298",
-    "company_totals.csv": "cd09f71a34e3cb39320aa25c227c620301f7031e9a65413366d15703edbefdc7",
-    "experiment_effects.csv": "d0619d1e03d0c50632c3f6a77de6cf78d2b1f2c373b9276ff6826e6e87529113",
-    "forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b",
+    "cohort_age_summary.csv": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",
+    "cohort_cash_economics.csv": "f4ab3b07a66288a118371b410b1cfefdc64917c4674934d19b369ac8cbcb44c6",
+    "cohort_totals.csv": "d3db2cdc99e27e9f10a35d185609c6ed7dc59eba0a6b1f5f0157785ade567821",
+    "cohort_valuation.csv": "58341ee2a04306716d650dac9085296df3bc50f16cd5e73d2e6a76305a319b14",
+    "company_month.csv": "95c6f15d5a983a8ff622d681dd937d83bcce909f10c36dab8f31dddbca8aa1b4",
+    "company_totals.csv": "a909ba0bc555a2d4f7aa7f4a74627a357f29a6519a96434400b5025d54660b38",
+    "forecast_curve.csv": "9cbc86a0e40e6bed50c8f1f3f454fee44eba25ac404c719384ce2fb46a125070",
     "friction_cohort_summary.csv": "b7d0ae3c1077f7f984b09af699175b0a6ea02351fb9e48af2676b3f0fd8a8000",
-    "model_fit_checks.csv": "79b7582bfc00f57e5300b55112207aec7a2b41ee472fa1e96ebb5560a79868c3",
-    "segment_forecast_curves.csv": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
-    "strategic_segment_breakout.csv": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
+    "model_fit_checks.csv": "24badc6d92977c12f0d2dffc99ad8a50e87444bcbd5444af62ea31097c7e8feb",
+    "segment_forecast_curves.csv": "9ce52aae5b9c2e77b021f8a8f73a57d8dbec8f655c3e5920c6865fac69e0344d",
+    "strategic_segment_breakout.csv": "c8c43ab5a4b9c62eb8fb89b81cac1dc3a95394f1cf9d97f7bb62c4ff1989b63c"
   },
-  "template_sha256": "31e200aa57068e5e927690ec832acfc776b2577ca40e89300e36819345ed9128",
-  "ucv_sha256": "38e82c54d8359f9516219946bcd4e921621fce067bba93bd3894f8f574cec978",
+  "template_sha256": "5662a02d61152dbd8d89aa1b19e2c70c6754712148889e653e96793ddb69891c",
+  "ucv_sha256": "e2fb729c159384685223c94ca046a62452efe8abe906441fd006523cc48dd5b2",
   "upstream_style_sha256": "91e70aa320b5f8d40f8f860d0150f205c5d9ae6bbd5829d3b316f83ea47431b5",
   "upstream_style_version": "2026-08-22-v1.1",
   "version": 3

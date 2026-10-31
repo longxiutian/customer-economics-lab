@@ -1,7 +1,7 @@
 """Export acquisition-cell trajectories from frozen draws, without fitting.
 
 All 12-receipt cell values and whole-cohort paths must reconcile with the saved
-baseline before selecting the latest non-experimental six-receipt cohort.
+baseline before selecting the latest six-receipt cohort.
 """
 from __future__ import annotations
 
@@ -82,22 +82,16 @@ def build_postestimation(output_dir: Path) -> dict:
         _same(cash, old.cumulative_after_acquisition, f"{cohort}/cash")
     curves = pd.DataFrame(records)
     _csv(tables / "segment_forecast_curves.csv", curves)
-    ex = pd.read_csv(tables / "cohort_age_ex_tests.csv").query("age_month==0").set_index(KEYS)
     candidates = []
     paid = values.reset_index().query("channel in ['search','partner']")
     for cohort, cells in paid.groupby("cohort_month", sort=True):
         if len(cells) != 4 or cells.observed_months.min() < 6: continue
-        if all(tuple(r[k] for k in KEYS) in ex.index and ex.loc[tuple(r[k] for k in KEYS), "n_acquired"] == r.n_acquired for _, r in cells.iterrows()):
-            candidates.append(cohort)
-    if not candidates: raise ValueError("No non-experimental four-cell cohort with six observed receipts")
+        candidates.append(cohort)
+    if not candidates: raise ValueError("No four-cell cohort with six observed receipts")
     selected = max(candidates)
     prior = (pd.Timestamp(selected) - pd.DateOffset(years=1)).strftime("%Y-%m-%d")
     breakout = paid[paid.cohort_month.isin([selected, prior])].copy()
     if len(breakout) != 8: raise ValueError("Same-season strategic comparator is unavailable")
-    for _, r in breakout.iterrows():
-        key = tuple(r[k] for k in KEYS)
-        if key not in ex.index or ex.loc[key, "n_acquired"] != r.n_acquired:
-            raise ValueError("Strategic comparator contains experimental buyers")
     age5 = frame[frame.age_month == 5][KEYS + ["n_retained"]]
     breakout = breakout.merge(age5, on=KEYS, validate="one_to_one")
     breakout["retained_share_age5"] = breakout.n_retained / breakout.n_acquired
@@ -106,17 +100,16 @@ def build_postestimation(output_dir: Path) -> dict:
     gap_records = []
     for (cohort, channel), cells in paid[paid.observed_months >= 6].groupby(["cohort_month", "channel"], sort=True):
         if set(cells.primary_need) != {"build_skill", "save_time"}: continue
-        if not all(tuple(r[k] for k in KEYS) in ex.index and ex.loc[tuple(r[k] for k in KEYS), "n_acquired"] == r.n_acquired for _, r in cells.iterrows()): continue
         cells = cells.set_index("primary_need")
         gap_records.append({"cohort_month": cohort, "channel": channel,
                             "build_minus_save_net_value": float(cells.loc["build_skill", "net_ltv_mean"] - cells.loc["save_time", "net_ltv_mean"]),
                             "fully_observed": bool((cells.forecast_share.abs() < 1e-9).all()),
                             "max_forecast_share": float(cells.forecast_share.max())})
     _csv(tables / "strategic_rank_stability.csv", pd.DataFrame(gap_records))
-    inputs = ["cohort_age_summary.csv", "cohort_acquisition_costs.csv", "cohort_cash_economics.csv", "cohort_age_ex_tests.csv",
+    inputs = ["cohort_age_summary.csv", "cohort_acquisition_costs.csv", "cohort_cash_economics.csv",
               "cohort_valuation_by_segment.csv", "forecast_curve.csv"]
     manifest = {"version": 1, "refit": False, "selected_cohort": selected, "comparison_cohort": prior,
-                "selection": "Latest four-cell paid cohort with >=6 observed receipts and no experimental buyers; compare same month one year earlier. Selection uses maturity and assignment, never economic outcomes.",
+                "selection": "Latest four-cell paid cohort with >=6 observed receipts; compare same month one year earlier. Selection uses maturity, never economic outcomes.",
                 "scope": "Acquisition channel × baseline stated need only. Observed values spliced to conditional expected forecasts from existing draws. Bands are 5th–95th parameter percentiles; fixed cost ratios and no customer-process uncertainty. Average CAC and value do not identify marginal or causal returns.",
                 "reconciliation": {"status": "passed", "cells": len(values), "cohorts": len(aggregate), "rtol": 1e-9, "atol": 1e-8},
                 "code_sha256": _hash(Path(__file__)), "model_code_sha256": _hash(Path(__file__).with_name("model.py")),
@@ -131,7 +124,7 @@ def validate_postestimation(output_dir: Path) -> dict:
     output = Path(output_dir)
     m = json.loads((output / "postestimation_manifest.json").read_text())
     expected = {"segment_forecast_curves.csv", "strategic_segment_breakout.csv", "strategic_rank_stability.csv"}
-    inputs = {"cohort_age_summary.csv", "cohort_acquisition_costs.csv", "cohort_cash_economics.csv", "cohort_age_ex_tests.csv", "cohort_valuation_by_segment.csv", "forecast_curve.csv"}
+    inputs = {"cohort_age_summary.csv", "cohort_acquisition_costs.csv", "cohort_cash_economics.csv", "cohort_valuation_by_segment.csv", "forecast_curve.csv"}
     if set(m["output_hashes"]) != expected or set(m["input_hashes"]) != inputs:
         raise ValueError("Unexpected post-estimation output contract")
     for key, path in [("code_sha256", Path(__file__)), ("model_code_sha256", Path(__file__).with_name("model.py")),

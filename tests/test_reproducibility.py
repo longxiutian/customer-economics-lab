@@ -29,7 +29,7 @@ def test_instruction_script_and_vendor_edits_change_the_snapshot(tmp_path):
 
 
 def test_inventory_includes_new_manifests_and_sql_but_not_visual_qa(tmp_path):
-    extra = ["sql/02_friction.sql", "tables/cac_reconciliation.csv", "diagrams/inspection.sql",
+    extra = ["sql/02_friction.sql", "tables/channel_cac.csv", "diagrams/inspection.sql",
              "diagrams/ucv-tables.md", "diagrams/business-journey.json", "report/chart_manifest.json",
              "report/customer-economics-report.tex", "report/figures/cac.pdf"]
     excluded = ["report/preview.png", "report/build.log", "queries/question.sql", "lab_state.json"]
@@ -62,7 +62,7 @@ def verified_reference(tmp_path_factory):
 
 
 @pytest.mark.parametrize("relative", [
-    "tables/cac_reconciliation.csv", "decision_metrics_manifest.json",
+    "tables/channel_cac.csv", "decision_metrics_manifest.json",
     "diagrams/business-journey.svg", "report/figures/channel-segment-retention.png",
     "report/labreport.sty", "implementation_manifest.json",
 ])

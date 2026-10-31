@@ -16,11 +16,11 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-DATASET_VERSION = "4.0"
+DATASET_VERSION = "5.0"
 DATA_FILES = (
     "people.csv", "subscription_periods.csv", "transactions.csv",
     "product_events.csv", "feedback.csv", "campaign_spend.csv",
-    "acquisition_attribution.csv", "experiment_assignments.csv",
+    "acquisition_attribution.csv", "channel_holdouts.csv",
 )
 STAGES = (
     "Check the environment and understand the company question",
@@ -215,12 +215,11 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
         from .analysis import validate_analysis
         validate_analysis(output_dir)
         table_dir = output_dir / "tables"
-        result = {"assignments_summary": _preview_csv(table_dir / "experiment_summary.csv")}
-        if (table_dir / "experiment_effects.csv").exists():
-            result["effects"] = _preview_csv(table_dir / "experiment_effects.csv")
+        result = {"channel_acquisition": _preview_csv(table_dir / "channel_cac.csv")}
         result["interpretation"] = (
-            "Keep all assigned prospects and each experiment's own control. The test identifies its tested context; "
-            "historical cohort differences and buyer LTV are not automatically causal marketing effects."
+            "Describe assigned counts, buyers, background acquisitions, acquisition spending and iCAC. "
+            "These separate pilot summaries do not enter customer histories or model fitting. "
+            "Reserve the connection to contribution LTV for the final channel decision."
         )
         return result
     if stage == 6:
@@ -299,7 +298,7 @@ class LabWorkflow:
         """Keep old evidence recoverable while preventing stale previews."""
         names = ["report", "implementation_manifest.json", "report_replay.json"]
         if from_stage <= 4:
-            names += ["decision_metrics_manifest.json", "tables/segmentation_objective.csv", "tables/cac_reconciliation.csv"]
+            names += ["decision_metrics_manifest.json", "tables/segmentation_objective.csv", "tables/channel_value_decision.csv"]
             names += ["diagnostics_manifest.json", "tables/friction_contrasts.csv", "tables/friction_balance.csv", "tables/friction_refund_sensitivity.csv"]
         if from_stage <= 6:
             names += ["postestimation_manifest.json", "tables/segment_forecast_curves.csv", "tables/strategic_segment_breakout.csv", "tables/strategic_rank_stability.csv"]

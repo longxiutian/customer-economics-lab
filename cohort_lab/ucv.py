@@ -23,7 +23,7 @@ SOURCE_NAMES = {
     "transactions.csv": "Finance", "product_events.csv": "Product and support",
     "feedback.csv": "Customer research", "campaign_spend.csv": "Marketing spending",
     "acquisition_attribution.csv": "Marketing attribution",
-    "experiment_assignments.csv": "Experiment platform",
+    "channel_holdouts.csv": "Channel acquisition pilots",
 }
 
 # Explicit choices are reviewed rather than guessed from field-name substrings.
@@ -59,9 +59,10 @@ FIELD_GROUPS = {
         "Identifiers": ["person_id", "first_paid_transaction_id", "credited_campaign_id"],
         "Engagement": ["source_type", "credited_at", "attribution_rule"],
     },
-    "experiment_assignments.csv": {
-        "Identifiers": ["experiment_id", "person_id", "tested_campaign_id"],
-        "Relationship": ["assigned_at", "arm", "followup_end_at"],
+    "channel_holdouts.csv": {
+        "Identifiers": ["test_id", "channel", "primary_need"],
+        "Engagement": ["n_buyers", "media_spend", "other_acquisition_spend"],
+        "Relationship": ["assigned_at", "arm", "followup_end_at", "n_assigned"],
     },
 }
 
@@ -75,7 +76,7 @@ CONTEXT_ONLY_FIELDS = {
     "feedback.csv": ["journey_stage"],
     "campaign_spend.csv": ["target_need", "spend_date", "channel", "media_spend", "other_acquisition_spend"],
     "acquisition_attribution.csv": ["source_type", "credited_at", "attribution_rule"],
-    "experiment_assignments.csv": ["assigned_at", "arm", "followup_end_at"],
+    "channel_holdouts.csv": ["assigned_at", "arm", "followup_end_at", "n_assigned", "media_spend", "other_acquisition_spend"],
 }
 
 RATIONALE = {
@@ -84,7 +85,7 @@ RATIONALE = {
         "household_type": "Profile descriptor; the subscription unit remains one individual.",
         "region": "Geographic profile descriptor, not an observed preference.",
         "record_created_at": "CRM relationship provenance; registration does not establish a paid customer.",
-        "attributes_recorded_at": "Profile provenance: verifies attributes were available before acquisition or assignment.",
+        "attributes_recorded_at": "Profile provenance: verifies attributes were available before acquisition.",
         "primary_need": "A stated intention recorded before acquisition, not a need inferred from future behavior.",
     },
     "subscription_periods.csv": {
@@ -118,8 +119,11 @@ RATIONALE = {
         "credited_at": "When credit was recorded, not necessarily the acquisition or exposure time.",
         "attribution_rule": "Measurement metadata for engagement credit, not a customer action itself.",
     },
-    "experiment_assignments.csv": {
-        "assigned_at": "Experimental relationship/design metadata; assignment is not observed exposure or purchase.",
+    "channel_holdouts.csv": {
+        "n_assigned": "All randomized eligible prospects, including nonbuyers; an arm-level design count, not a customer relationship history.",
+        "media_spend": "Focal campaign media in the pilot budget; firm-side spending, not customer activity.",
+        "other_acquisition_spend": "Incremental creative/vendor acquisition costs in the pilot budget; excluded from the separate operational cohort ledger.",
+        "assigned_at": "Randomization date in a separate acquisition-only pilot sample.",
         "arm": "Randomized intervention assignment; control nonbuyers must remain in the denominator.",
         "followup_end_at": "Prespecified measurement window, not a subscription end date.",
     },

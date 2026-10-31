@@ -1,0 +1,55 @@
+{
+  "dataset_version": "5.0",
+  "new_source": "channel_holdouts.csv",
+  "new_source_rows": 8,
+  "new_source_sha256": "dcb650ee562ca1a6cb3d30be87d8646cf1dbb6288f62715d4057ce554b2ef1c4",
+  "operational_files": {
+    "acquisition_attribution.csv": {
+      "current_rows": 5703,
+      "prior_rows": 5891,
+      "removed_rows": 188,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "campaign_spend.csv": {
+      "current_rows": 288,
+      "prior_rows": 294,
+      "removed_rows": 6,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "feedback.csv": {
+      "current_rows": 3321,
+      "prior_rows": 3439,
+      "removed_rows": 118,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "people.csv": {
+      "current_rows": 5703,
+      "prior_rows": 6703,
+      "removed_rows": 1000,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "product_events.csv": {
+      "current_rows": 69590,
+      "prior_rows": 71212,
+      "removed_rows": 1622,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "subscription_periods.csv": {
+      "current_rows": 43082,
+      "prior_rows": 44080,
+      "removed_rows": 998,
+      "retained_bytes_and_order_unchanged": true
+    },
+    "transactions.csv": {
+      "current_rows": 52605,
+      "prior_rows": 53717,
+      "removed_rows": 1112,
+      "retained_bytes_and_order_unchanged": true
+    }
+  },
+  "retired_source": "experiment_assignments.csv",
+  "retired_source_present": false,
+  "schema_version": "3.0",
+  "scope": "All surviving operational raw rows preserve their exact bytes and order. The new acquisition-only pilot is an independent synthetic research sample and budget.",
+  "status": "pass"
+}

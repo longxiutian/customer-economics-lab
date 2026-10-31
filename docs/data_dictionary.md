@@ -10,20 +10,20 @@ The observed exports are frozen and hash-verified. Data generation is maintained
 
 `data/data_dictionary.json` contains the exact columns, types, nullability and
 primary keys. `data/data_manifest.json` records file hashes, row counts, source
-cutoffs, definitions and experiment designs. The loader refuses changed exports.
+cutoffs, definitions and channel pilot design. The loader refuses changed exports.
 
 ## Eight source exports
 
 | File | Row meaning | Key and joins |
 |---|---|---|
-| `people.csv` | One person, including prospects who never buy | `person_id` joins every person-level source. Baseline attributes precede acquisition or assignment. |
+| `people.csv` | One operational customer | `person_id` joins every person-level source. Baseline attributes precede acquisition. Pilot prospects are in a separate sample. |
 | `subscription_periods.csv` | One scheduled monthly subscription cycle | `period_id`; one `subscription_id` per person. A paid outcome establishes retained membership. |
 | `transactions.csv` | One payment or refund event | `transaction_id`; joins `period_id` and `person_id`. Refunds reference an earlier payment. |
 | `product_events.csv` | One observed interaction | `event_id`, `person_id`. Usage is distinct from membership. |
 | `feedback.csv` | One completed linked survey | `response_id`, `person_id`. Nonresponse is missing evidence. |
 | `campaign_spend.csv` | One campaign per spending date | `(campaign_id, spend_date)`. Sum independently before joining outcomes. |
 | `acquisition_attribution.csv` | One acquired person and credit for the first payment | `person_id`, `first_paid_transaction_id`, optionally `credited_campaign_id`. |
-| `experiment_assignments.csv` | One eligible prospect in one randomized test | `(experiment_id, person_id)`. Includes nonbuyers and each test's own controls. |
+| `channel_holdouts.csv` | One randomized arm in a separate acquisition-only pilot | `(test_id, arm)`. Assignment totals, buyers and focal acquisition spending; no person-level join. |
 
 The joins are deliberately ordinary, documented joins. This lab does not require
 identity inference or a matching algorithm.
@@ -48,8 +48,7 @@ is `(campaign_id, spend_date)`, while the derived view has one row per campaign.
 Refund `related_transaction_id` points to the original payment in the same ledger.
 
 The separate `diagrams/source-systems.html` overview traces raw sources through
-saved DuckDB SQL views to observed cohort economics, model forecasts, randomized
-test effects and the company decision. Native SVG/PNG exports accompany both
+saved DuckDB SQL views to observed cohort economics, model forecasts, channel acquisition costs and the company decision. Native SVG/PNG exports accompany both
 diagrams; `diagram_manifest.json` hashes all report inputs. The diagrams do not
 imply a database server needs to be provisioned.
 
@@ -122,9 +121,7 @@ discounts and refunds vary. Neither revenue nor contribution is company net prof
 
 ## Acquisition spending and attribution
 
-The channels are `search` and `partner`. Some randomized control buyers have
-`organic` credit. Ordinary campaigns and experimental campaigns have separate
-IDs. Every paid campaign explicitly targets one `primary_need`, so source/need
+The operational acquisition channels are `search` and `partner`. Every paid campaign explicitly targets one `primary_need`, so source/need
 cost aggregation is supported. Spend cannot be allocated to age or region merely
 in proportion to resulting conversions or revenue.
 
@@ -136,31 +133,16 @@ across months would require an explicit cost-allocation rule.
 
 Source/need CAC is recorded targeted spending divided by credited first-paid
 customers. Organic segment CAC is **undefined**, not zero. Company-wide CAC is
-all tracked acquisition spending divided by all acquired customers, including
-experimental buyers and controls. It is not fully loaded company CAC, and it is
+all tracked acquisition spending divided by all acquired customers, in the operational panel. It is not fully loaded company CAC, and it is
 not incremental CAC. All tracked campaign expenses enter company totals once.
 
-## Randomized experiments
+## Acquisition-only channel pilots
 
-`EXP-01` tests a search campaign for `save_time` prospects in May 2025.
-`EXP-02` tests a partner campaign for `build_skill` prospects in September 2025.
-Each assigns 250 preexisting, never-paid eligible prospects to treatment and 250
-to its own control. Assignment is balanced and seeded. Profile attributes exist
-before assignment. No prospect participates in both tests.
+`channel_holdouts.csv` is a separate synthetic research sample and budget, not a customer-history table. Each row is one randomized arm, keyed by `(test_id, arm)`. The four disjoint July 2025 tests cover Search/Partner × save time/build skill, with 500 eligible never-paid prospects per arm. `n_buyers` counts first acquisitions through any route during the 31-day window; `n_assigned` retains nonbuyers. `media_spend` and `other_acquisition_spend` are focal acquisition costs. The holdout withholds only that campaign.
 
-The prespecified outcome window is the assignment calendar month, ending
-exclusively at the first day of the next month. The treatment spends the focal
-campaign budget; control spends zero on that focal campaign. All assigned
-prospects stay in the denominator, including nonbuyers. A control buyer with
-organic credit still contributes to control outcomes. The two tests have
-different eligible populations and cannot be treated as a randomized head-to-head
-channel comparison.
+The source has no customer-level linkage, subsequent revenue or retention. Never join its pilot counts or spending into the operational cohort ledger, journey diagnostics or model fitting. SQL produces `channel_cac.csv`: scale controls to treatment size, subtract background acquisitions and costs, then divide additional acquisition spending by additional buyers. Nonpositive lift leaves iCAC undefined. The approximate interval inverts the positive range of the acquisition-lift interval with recorded costs fixed.
 
-SQL compares per-assigned-person outcomes and scales the control totals to the
-treatment group size. It reports incremental customers, net revenue and
-contribution, then subtracts incremental media spending. Incremental CAC is blank
-if the estimated additional customer count is nonpositive. Purchase-rate intervals
-are approximate 95% unpooled normal intervals, not certainty about profitability.
+The finale joins matching cohort/channel/need contribution value **before CAC** to iCAC in `channel_value_decision.csv`. Additional customers' value is an explicit planning assumption, not a measured lifetime campaign outcome. See [the complete design and formulas](cac-incrementality.md).
 
 ## Derived tables
 

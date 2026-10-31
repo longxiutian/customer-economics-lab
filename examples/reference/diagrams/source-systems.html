@@ -5250,7 +5250,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <path data-edge-from="marketing" data-edge-to="raw" data-edge-label="campaign_id" data-edge-key="3" data-edge-id="flow3" data-composition-points="156,499;207.5,499;207.5,426;259,426" d="M 156 499 L 207.5 499 L 207.5 426 L 259 426" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="assignments" data-edge-to="raw" data-edge-label="all assignments" data-edge-key="4" data-edge-id="flow4" data-composition-points="156,613;207.5,613;207.5,444;259,444" d="M 156 613 L 207.5 613 L 207.5 444 L 259 444" class="a-default" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="raw" data-edge-to="cohorts" data-edge-label="customer_month" data-edge-key="5" data-edge-id="flow5" data-composition-points="371,399;422.5,399;422.5,271;474,271" d="M 371 399 L 422.5 399 L 422.5 271 L 474 271" class="a-default" data-animate="edge" style="--step:5" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="raw" data-edge-to="experiment" data-edge-label="experiment_person" data-edge-key="6" data-edge-id="flow6" data-composition-points="371,417;422.5,417;422.5,499;474,499" d="M 371 417 L 422.5 417 L 422.5 499 L 474 499" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="raw" data-edge-to="experiment" data-edge-label="channel_cac" data-edge-key="6" data-edge-id="flow6" data-composition-points="371,417;422.5,417;422.5,499;474,499" d="M 371 417 L 422.5 417 L 422.5 499 L 474 499" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="experiment" data-edge-to="effects" data-edge-label="arm comparison" data-edge-key="7" data-edge-id="flow7" data-composition-points="586,499;689,499" d="M 586 499 L 689 499" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="cohorts" data-edge-to="forecast" data-edge-label="cohort histories" data-edge-key="8" data-edge-id="flow8" data-composition-points="586,271;689,271" d="M 586 271 L 689 271" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="effects" data-edge-to="decision" data-edge-label="tested effects" data-edge-key="9" data-edge-id="flow9" data-composition-points="801,499;852.5,499;852.5,394;904,394" d="M 801 499 L 852.5 499 L 852.5 394 L 904 394" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
@@ -5305,16 +5305,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="100" y="513.2" class="t-muted" font-size="7" text-anchor="middle">campaign / person</text>
         </g>
 
-        <g id="node-assignments" data-node-id="assignments" data-node-label="Random assignment" tabindex="0" role="button" aria-label="Focus Random assignment, test × person_id, 01 / Eight frozen CSV exports" aria-pressed="false" data-node-kind="database" data-node-sublabel="test × person_id" data-node-context="01 / Eight frozen CSV exports">
-          <title>Random assignment · test × person_id · 01 / Eight frozen CSV exports</title>
+        <g id="node-assignments" data-node-id="assignments" data-node-label="Channel pilots" tabindex="0" role="button" aria-label="Focus Channel pilots, test / arm, 01 / Eight frozen CSV exports" aria-pressed="false" data-node-kind="database" data-node-sublabel="test / arm" data-node-context="01 / Eight frozen CSV exports">
+          <title>Channel pilots · test / arm · 01 / Eight frozen CSV exports</title>
           <rect x="44" y="584" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="44" y="584" width="112" height="58" rx="6" class="c-database" data-animate="node" style="--step:4" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(50 590) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="100" y="615" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Random assignment</text>
-          <text data-detail="context" x="100" y="628.4" class="t-muted" font-size="7" text-anchor="middle">test × person_id</text>
+          <text data-node-label="" data-detail-anchor="" x="105" y="605" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Channel pilots</text>
+          <text data-detail="context" x="100" y="621" class="t-muted" font-size="7" text-anchor="middle">test / arm</text>
         </g>
 
         <g id="node-raw" data-node-id="raw" data-node-label="DuckDB SQL" tabindex="0" role="button" aria-label="Focus DuckDB SQL, validate → aggregate, 02 / Replay saved SQL" aria-pressed="false" data-node-kind="backend" data-node-sublabel="validate → aggregate" data-node-context="02 / Replay saved SQL">
@@ -5340,8 +5340,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="530" y="285.9" class="t-muted" font-size="7" text-anchor="middle">age / segment / cost</text>
         </g>
 
-        <g id="node-experiment" data-node-id="experiment" data-node-label="Saved test views" tabindex="0" role="button" aria-label="Focus Saved test views, all assigned people, 03 / Auditable output tables" aria-pressed="false" data-node-kind="database" data-node-sublabel="all assigned people" data-node-context="03 / Auditable output tables">
-          <title>Saved test views · all assigned people · 03 / Auditable output tables</title>
+        <g id="node-experiment" data-node-id="experiment" data-node-label="Saved test views" tabindex="0" role="button" aria-label="Focus Saved test views, acquisitions + costs, 03 / Auditable output tables" aria-pressed="false" data-node-kind="database" data-node-sublabel="acquisitions + costs" data-node-context="03 / Auditable output tables">
+          <title>Saved test views · acquisitions + costs · 03 / Auditable output tables</title>
           <rect x="474" y="470" width="112" height="58" rx="6" class="c-mask"/>
           <rect x="474" y="470" width="112" height="58" rx="6" class="c-database" data-animate="node" style="--step:7" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(480 476) scale(0.6875)">
@@ -5349,7 +5349,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="530" y="501" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Saved test views</text>
-          <text data-detail="context" x="530" y="514.4" class="t-muted" font-size="7" text-anchor="middle">all assigned people</text>
+          <text data-detail="context" x="530" y="514.4" class="t-muted" font-size="7" text-anchor="middle">acquisitions + costs</text>
         </g>
 
         <g id="node-forecast" data-node-id="forecast" data-node-label="Forecast + compare" tabindex="0" role="button" aria-label="Focus Forecast + compare, retention → value, 04 / Explain uncertainty" aria-pressed="false" data-node-kind="backend" data-node-sublabel="retention → value" data-node-context="04 / Explain uncertainty">
@@ -5410,9 +5410,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <rect x="382.2" y="314" width="80.6" height="16" rx="4" class="c-mask"/>
           <text x="422.5" y="325" class="t-edge-default" font-size="8" text-anchor="middle">customer_month</text>
         </g>
-        <g data-detail="context" data-edge-from="raw" data-edge-to="experiment" data-edge-label="experiment_person" data-edge-key="6" data-edge-id="flow6">
-          <rect x="374.85" y="437" width="95.3" height="16" rx="4" class="c-mask"/>
-          <text x="422.5" y="448" class="t-edge-default" font-size="8" text-anchor="middle">experiment_person</text>
+        <g data-detail="context" data-edge-from="raw" data-edge-to="experiment" data-edge-label="channel_cac" data-edge-key="6" data-edge-id="flow6">
+          <rect x="389.55" y="437" width="65.9" height="16" rx="4" class="c-mask"/>
+          <text x="422.5" y="448" class="t-edge-default" font-size="8" text-anchor="middle">channel_cac</text>
         </g>
         <g data-detail="context" data-edge-from="experiment" data-edge-to="effects" data-edge-label="arm comparison" data-edge-key="7" data-edge-id="flow7">
           <rect x="597.2" y="478" width="80.6" height="16" rx="4" class="c-mask"/>
@@ -5626,10 +5626,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <h3>Same key, different grains</h3>
         </div>
         <ul>
-          <li>people.csv: 6,703 rows; one person, including nonbuyers</li>
-          <li>subscription_periods.csv: 44,080 rows; one scheduled subscription period</li>
-          <li>transactions.csv: 53,717 rows; one payment or refund event</li>
-          <li>product_events.csv: 71,212 rows; one observed interaction</li>
+          <li>people.csv: 5,703 rows; one operational customer</li>
+          <li>subscription_periods.csv: 43,082 rows; one scheduled subscription period</li>
+          <li>transactions.csv: 52,605 rows; one payment or refund event</li>
+          <li>product_events.csv: 69,590 rows; one observed interaction</li>
         </ul>
       </div>
 
@@ -5639,10 +5639,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <h3>The denominator is a business choice</h3>
         </div>
         <ul>
-          <li>feedback.csv: 3,439 rows; one submitted response</li>
-          <li>campaign_spend.csv: 294 rows; one campaign-spending date</li>
-          <li>acquisition_attribution.csv: 5,891 rows; one acquired person and credited source</li>
-          <li>experiment_assignments.csv: 1,000 rows; one eligible person per experiment</li>
+          <li>feedback.csv: 3,321 rows; one submitted response</li>
+          <li>campaign_spend.csv: 288 rows; one campaign-spending date</li>
+          <li>acquisition_attribution.csv: 5,703 rows; one acquired person and credited source</li>
+          <li>channel_holdouts.csv: 8 rows; one randomized arm per channel test</li>
         </ul>
       </div>
 
@@ -5654,7 +5654,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <ul>
           <li>Observed: customer_month → cohort_age_summary, cohort_cash_economics and company_month. Compare cohorts at the same age.</li>
           <li>Forecast: retention and revenue models extend young cohorts, with uncertainty. They do not establish campaign incrementality.</li>
-          <li>Experimental: experiment_person → experiment_summary → experiment_effects. Keep every assigned person, including nonbuyers.</li>
+          <li>Acquisition pilots: channel_holdouts → channel_cac. All assigned prospects contribute; no pilot revenue or retention enters the model.</li>
           <li>person_id links one profile to many periods, transactions, events and responses. period_id links one renewal cycle to many financial events.</li>
           <li>Aggregate campaign_spend by campaign_id before joining acquisition counts; campaign_id alone is not the raw spend table&#39;s primary key.</li>
         </ul>
