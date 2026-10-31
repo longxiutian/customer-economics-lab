@@ -40,8 +40,7 @@ def _read(path):
 def hand_data(tmp_path):
     """Jan: contribution 85 then 70; cost 120; payback age 1. No March survivors.
 
-    Feb experiment: 2 assigned per arm, one buyer each. Treated contribution 15,
-    control 6, media 8 => incremental contribution after media +1, not +7.
+    Separate acquisition pilot: 2 assigned per arm, one buyer each; acquisition lift is zero. Its budget is independent of the customer ledger.
     """
     d = tmp_path / "sources"
     d.mkdir()
@@ -95,12 +94,13 @@ def hand_data(tmp_path):
         attrs.append({"person_id": pid, "first_paid_transaction_id": tid, "credited_campaign_id": campaign,
                       "source_type": "paid_campaign" if campaign else "organic", "attribution_rule": "fixture_rule",
                       "credited_at": f"2024-{month:02d}-04 00:00:00"})
-    exps = [{"experiment_id": "TEST", "person_id": pid, "tested_campaign_id": "EX",
-             "assigned_at": "2024-02-01 00:00:00", "arm": arm, "followup_end_at": "2024-03-01 00:00:00"}
-            for pid, arm in [("X", "treatment"), ("Z", "treatment"), ("Y", "control"), ("W", "control")]]
+    pilots = [{"test_id":"PILOT", "channel":"search", "primary_need":"save_time",
+               "assigned_at":"2024-02-01 00:00:00", "followup_end_at":"2024-03-01 00:00:00",
+               "arm":arm, "n_assigned":2, "n_buyers":1, "media_spend":media, "other_acquisition_spend":"0.00"}
+              for arm,media in [("treatment","8.00"),("control","0.00")]]
     all_rows = {"people.csv": people, "subscription_periods.csv": periods, "transactions.csv": transactions,
                 "campaign_spend.csv": costs, "acquisition_attribution.csv": attrs,
-                "experiment_assignments.csv": exps, "product_events.csv": [], "feedback.csv": []}
+                "channel_holdouts.csv": pilots, "product_events.csv": [], "feedback.csv": []}
     for name, rows in all_rows.items(): _write(d, name, rows)
     _seal(d)
     return d
@@ -138,20 +138,6 @@ def test_future_is_missing_and_observed_churn_is_zero(hand_data, tmp_path):
     assert all(r["calendar_month"] < "2024-04-01" for r in rows)
 
 
-def test_experiment_keeps_nonbuyers_and_organic_controls(hand_data, tmp_path):
-    out = tmp_path / "analysis"
-    build_views(hand_data, out)
-    rows = _read(out / "tables" / "experiment_summary.csv")
-    assert [int(r["n_assigned"]) for r in rows] == [2, 2]
-    assert [int(r["n_buyers"]) for r in rows] == [1, 1]
-    effect = _read(out / "tables" / "experiment_effects.csv")[0]
-    assert float(effect["incremental_buyers"]) == 0
-    assert effect["incremental_cac"] == ""  # undefined, not zero or infinity.
-    assert float(effect["iroas"]) == 1.25
-    assert float(effect["incremental_contribution_after_media"]) == 1
-    assert float(effect["incremental_contribution_after_media_per_prospect"]) == 0.5
-    organic = [r for r in _read(out / "tables" / "cohort_acquisition_costs.csv") if r["channel"] == "organic"][0]
-    assert organic["n_acquired"] == "1" and organic["cac"] == "" and organic["acquisition_spend"] == ""
 
 
 def test_modified_source_fails_closed(hand_data):
@@ -161,14 +147,14 @@ def test_modified_source_fails_closed(hand_data):
         validate_data(hand_data)
 
 
-@pytest.mark.parametrize("problem", ["duplicate", "refund", "prior_buyer", "future", "reactivation", "missing_control"])
+@pytest.mark.parametrize("problem", ["duplicate", "refund", "invalid_buyers", "future", "reactivation", "missing_control"])
 def test_semantic_errors_fail_even_with_refreshed_fixture_hashes(hand_data, problem):
     if problem == "duplicate":
         name = "people.csv"; rows = _read(hand_data/name); rows.append(dict(rows[0])); expected = "Duplicate primary"
     elif problem == "refund":
         name = "transactions.csv"; rows = _read(hand_data/name); rows[-1]["refund_amount"] = "200.00"; expected = "Refund exceeds"
-    elif problem == "prior_buyer":
-        name = "experiment_assignments.csv"; rows = _read(hand_data/name); rows[0]["person_id"] = "A"; expected = "prior buyer"
+    elif problem == "invalid_buyers":
+        name = "channel_holdouts.csv"; rows = _read(hand_data/name); rows[0]["n_buyers"] = "3"; expected = "counts"
     elif problem == "future":
         name = "transactions.csv"; rows = _read(hand_data/name); rows[0]["occurred_at"] = "2024-04-03 09:00:00"; expected = "outside observed"
     elif problem == "reactivation":
@@ -176,8 +162,8 @@ def test_semantic_errors_fail_even_with_refreshed_fixture_hashes(hand_data, prob
         rows.append({**rows[3], "period_id": "B3", "period_start": "2024-03-03", "period_end": "2024-04-03", "renewal_due_at": "2024-03-03 08:00:00"})
         expected = "reactivation"
     else:
-        name = "experiment_assignments.csv"; rows = [r for r in _read(hand_data/name) if r["arm"] == "treatment"]
-        expected = "own control"
+        name = "channel_holdouts.csv"; rows = [r for r in _read(hand_data/name) if r["arm"] == "treatment"]
+        expected = "treatment and control"
     _write(hand_data, name, rows); _seal(hand_data)
     with pytest.raises(ValueError, match=expected): validate_data(hand_data)
 

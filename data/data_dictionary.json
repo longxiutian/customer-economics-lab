@@ -3,12 +3,12 @@
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
     "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
-    "attribution": "One credited campaign within the acquisition month. Dates and campaign windows align by design. The export supplies credit, not a reconstructed journey or a causal label.",
+    "attribution": "One credited ordinary campaign within the acquisition month. Source credit is not a causal label.",
     "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
+    "channel_holdouts": "Separate, disjoint acquisition-only pilot sample. One row per randomized arm; all assigned prospects, buyers through every route, and focal acquisition spend. No customer-level linkage, revenue, retention or lifetime outcomes. Never join pilot counts or costs into cohort accounting or model fitting.",
     "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
-    "company_scope": "All acquired customers, including experimental buyers and controls, and all recorded acquisition spending. Company-wide CAC is tracked acquisition spending / acquired customers, not fully loaded company CAC.",
+    "company_scope": "The operational cohort panel and its recorded acquisition spending. The separate acquisition-only pilot sample and pilot budget are outside this panel.",
     "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
-    "experiment_scope": "All assigned eligible prospects remain in denominators. Purchase outcomes do not depend on attributed source. Control buyers may have organic credit.",
     "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
     "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
     "net_revenue": "gross_amount minus discount_amount minus refund_amount, summed over the dated financial ledger.",
@@ -18,7 +18,7 @@
     "time": "UTC. data_as_of is exclusive. Monthly period statuses are known at renewal. Future pending periods are scheduling records, not observed retention.",
     "usage": "Observed core_action events. A retained subscriber can have no core_action event; usage and membership are different measures."
   },
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "tables": {
     "acquisition_attribution.csv": {
       "columns": [
@@ -97,20 +97,20 @@
         "spend_date"
       ]
     },
-    "experiment_assignments.csv": {
+    "channel_holdouts.csv": {
       "columns": [
         {
-          "name": "experiment_id",
+          "name": "test_id",
           "nullable": false,
           "type": "VARCHAR"
         },
         {
-          "name": "person_id",
+          "name": "channel",
           "nullable": false,
           "type": "VARCHAR"
         },
         {
-          "name": "tested_campaign_id",
+          "name": "primary_need",
           "nullable": false,
           "type": "VARCHAR"
         },
@@ -120,20 +120,40 @@
           "type": "TIMESTAMP"
         },
         {
+          "name": "followup_end_at",
+          "nullable": false,
+          "type": "TIMESTAMP"
+        },
+        {
           "name": "arm",
           "nullable": false,
           "type": "VARCHAR"
         },
         {
-          "name": "followup_end_at",
+          "name": "n_assigned",
           "nullable": false,
-          "type": "TIMESTAMP"
+          "type": "INTEGER"
+        },
+        {
+          "name": "n_buyers",
+          "nullable": false,
+          "type": "INTEGER"
+        },
+        {
+          "name": "media_spend",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "other_acquisition_spend",
+          "nullable": false,
+          "type": "DECIMAL(12,2)"
         }
       ],
-      "grain": "One eligible person per randomized experiment, including all nonbuyers.",
+      "grain": "One arm per channel acquisition test in a separate pilot sample; all assigned prospects remain in the counts.",
       "primary_key": [
-        "experiment_id",
-        "person_id"
+        "test_id",
+        "arm"
       ]
     },
     "feedback.csv": {
@@ -217,7 +237,7 @@
           "type": "VARCHAR"
         }
       ],
-      "grain": "One person, including eligible prospects who never purchase.",
+      "grain": "One person in the operational customer-history panel.",
       "primary_key": [
         "person_id"
       ]

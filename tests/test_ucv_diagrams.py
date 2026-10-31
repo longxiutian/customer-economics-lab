@@ -78,10 +78,9 @@ def test_erd_retains_every_column_and_uses_a_unique_campaign_parent():
     assert spend["campaign_id"]["key"]==["pk","fk"]
     assert spend["campaign_id"]["references"]=="campaign_metadata.campaign_id"
     assert "not a ninth source" in entities["campaign_metadata"]["sublabel"]
-    tested={a["name"]:a for a in entities["experiment_assignments"]["attributes"]}
-    assert tested["tested_campaign_id"]["references"]=="campaign_metadata.campaign_id"
-    test_link=next(r for r in erd["relationships"] if r["from"]=="experiment_assignments" and r["to"]=="campaign_metadata")
-    assert "campaign_metadata" in test_link["label"]
+    tested={a["name"]:a for a in entities["channel_holdouts"]["attributes"]}
+    assert not any("references" in a for a in tested.values())
+    assert not any(r["from"]=="channel_holdouts" or r["to"]=="channel_holdouts" for r in erd["relationships"])
     assert "transactions.related_transaction_id → transactions.transaction_id" in json.dumps(erd["cards"],ensure_ascii=False)
     compact=_report_erd_candidate()
     assert compact["relationships"]==erd["relationships"]

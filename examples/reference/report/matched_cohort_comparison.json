@@ -58,27 +58,6 @@
     "retained_share": 0.5216637781629117,
     "year": 2024
   },
-  "experiment_excluded": {
-    "earlier": {
-      "blended_cac": 107.67369150779896,
-      "cash_after_cac_per_customer": -1.1568804159445414,
-      "contribution_per_customer": 106.51681109185441,
-      "excluded_test_buyers": 0,
-      "excluded_test_spend": 0.0,
-      "n_acquired": 1154,
-      "retained_share": 0.5216637781629117
-    },
-    "later": {
-      "blended_cac": 85.31269001982815,
-      "cash_after_cac_per_customer": 45.79626569729015,
-      "contribution_per_customer": 131.10895571711833,
-      "excluded_test_buyers": 98,
-      "excluded_test_spend": 650.0,
-      "n_acquired": 1513,
-      "retained_share": 0.6159947124917383
-    },
-    "scope": "Same joining windows and age; exclude both experimental arms' buyers and all their observed contribution, and test-window campaign spending. Descriptive sensitivity, not causal adjustment."
-  },
   "fixed_paid_mix": [
     {
       "channel": "search",
@@ -112,15 +91,15 @@
   ],
   "later": {
     "age_month": 5,
-    "blended_cac": 80.52644320297952,
-    "cash_after_cac_per_customer": 49.45847299813781,
+    "blended_cac": 85.31269001982815,
+    "cash_after_cac_per_customer": 45.79626569729015,
     "cohort_weights": {
-      "2025-01-01": 0.14711359404096835,
-      "2025-02-01": 0.14835505896958412,
-      "2025-03-01": 0.15332091868404718,
-      "2025-04-01": 0.15518311607697083,
-      "2025-05-01": 0.22470515207945377,
-      "2025-06-01": 0.1713221601489758
+      "2025-01-01": 0.1566424322538004,
+      "2025-02-01": 0.1579643093192333,
+      "2025-03-01": 0.16325181758096496,
+      "2025-04-01": 0.16523463317911435,
+      "2025-05-01": 0.17448777263714474,
+      "2025-06-01": 0.18241903502974224
     },
     "cohorts": [
       "2025-01-01",
@@ -130,8 +109,8 @@
       "2025-05-01",
       "2025-06-01"
     ],
-    "contribution_per_customer": 129.9849162011173,
-    "n_acquired": 1611,
+    "contribution_per_customer": 131.1089557171183,
+    "n_acquired": 1513,
     "n_cohorts": 6,
     "paid_cells": [
       {
@@ -165,18 +144,16 @@
     ],
     "paid_fixed_mix_retention": 0.6022810824549802,
     "paid_raw_retention": 0.6159947124917383,
-    "retained_share": 0.6089385474860335,
+    "retained_share": 0.6159947124917383,
     "year": 2025
   },
   "observed_receipts": 6,
   "source_hashes": {
-    "cohort_age_ex_tests.csv": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6",
-    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
-    "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
-    "cohort_economics_ex_tests.csv": "bae38913ad902082d6aa6d436d64e4a706a70e405a7731a826f9980477502c6f",
-    "cohort_totals.csv": "4b75d86100078acffa0a2d9404f8dcc94c52d48f70f266eff72fb8d9c833b53c"
+    "cohort_age_summary.csv": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",
+    "cohort_cash_economics.csv": "f4ab3b07a66288a118371b410b1cfefdc64917c4674934d19b369ac8cbcb44c6",
+    "cohort_totals.csv": "d3db2cdc99e27e9f10a35d185609c6ed7dc59eba0a6b1f5f0157785ade567821"
   },
-  "standardization": "Paid channel-by-stated-need composition fixed to the earlier window; both experimental arms and organic customers excluded",
+  "standardization": "Paid channel-by-stated-need composition fixed to the earlier window; operational customer panel only",
   "total_cells": 4,
   "weighting": "Original acquired customer counts within each six-cohort window"
 }

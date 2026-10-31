@@ -5,14 +5,14 @@
     "challenge/template_manifest.json"
   ],
   "code_sha256": "8b4ca1cdc9f0ed8f209f758e972d862579fce4a8c87859790ff80e21c610f9c4",
-  "cohort_input_sha256": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
+  "cohort_input_sha256": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",
   "future_months": 12,
   "origin_month": "2025-12-01",
   "output_hashes": {
-    "challenge/prediction_grid.csv": "a058d2b3cf5fa812603a972a194a591ee1932f597c0e0e7f2e16a3af72e701af",
-    "challenge/submission_template.csv": "a1fbc9af3af96675015b3252da50c69fe34d79035a1d4adae27cf92bf1fb7976"
+    "challenge/prediction_grid.csv": "c3d4d1e0122bda89737e694783898642e9f2d58361dd984dbb8523fc3c6e75a2",
+    "challenge/submission_template.csv": "866724b0a3229bfbf027f50b8f553aaaeeea8397a2391312cdaf5851af820db1"
   },
-  "rows": 1176,
+  "rows": 1152,
   "scope": "Next twelve calendar months for the existing observed acquisition cohorts; no new cohorts or future labels.",
   "version": 1
 }

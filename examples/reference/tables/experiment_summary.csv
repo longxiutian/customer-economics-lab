@@ -1,5 +1,0 @@
-experiment_id,channel,primary_need,arm,n_assigned,n_buyers,net_revenue,contribution,media_spend,assigned_at,followup_end_at,followup_days,contribution_sample_variance
-EXP-01,search,save_time,control,250,25,1528.25,690.75,0.00,2025-05-01T00:00:00,2025-06-01T00:00:00,31.0,80.84084437751004
-EXP-01,search,save_time,treatment,250,73,4134.75,1817.45,650.00,2025-05-01T00:00:00,2025-06-01T00:00:00,31.0,147.17809032128537
-EXP-02,partner,build_skill,control,250,29,1830.00,844.10,0.00,2025-09-01T00:00:00,2025-10-01T00:00:00,30.0,98.86895887550189
-EXP-02,partner,build_skill,treatment,250,61,3665.75,1659.15,900.00,2025-09-01T00:00:00,2025-10-01T00:00:00,30.0,159.0683036546184

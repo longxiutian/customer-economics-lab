@@ -7,8 +7,8 @@ import numpy as np
 import pandas as pd
 from .analysis import validate_analysis, _hash
 
-INPUTS = {"segmentation_comparison.csv", "segmentation_profile.csv", "experiment_summary.csv", "experiment_effects.csv"}
-OUTPUTS = {"segmentation_objective.csv", "cac_reconciliation.csv"}
+INPUTS = {"segmentation_comparison.csv", "segmentation_profile.csv", "channel_cac.csv"}
+OUTPUTS = {"segmentation_objective.csv", "channel_value_decision.csv"}
 
 
 def segmentation_objective(comparison: pd.DataFrame, profile: pd.DataFrame) -> pd.DataFrame:
@@ -41,83 +41,47 @@ def segmentation_objective(comparison: pd.DataFrame, profile: pd.DataFrame) -> p
     return pd.DataFrame(rows).sort_values("between_share", ascending=False)
 
 
-def _ratio_record(row: dict) -> dict:
-    spend, buyers, se = row["incremental_media_spend"], row["incremental_buyers"], row["incremental_buyers_se"]
-    if spend < 0:
-        raise ValueError("This reconciliation expects nonnegative incremental media spend")
-    lower, upper = buyers - 1.96*se, buyers + 1.96*se
-    status = "finite" if lower > 0 else "unbounded" if upper > 0 else "no_positive_lift"
-    row.update(incremental_buyers_ci_lower=lower, incremental_buyers_ci_upper=upper,
-        incremental_media_cac=spend/buyers if buyers > 0 else np.nan,
-        icac_ci_lower=spend/upper if upper > 0 else np.nan,
-        icac_ci_upper=spend/lower if lower > 0 else np.nan, icac_interval_status=status,
-        treatment_media_cac=row["media_spend_treatment"]/row["buyers_treatment"] if row["buyers_treatment"] else np.nan,
-        incremental_spend_per_treated_buyer=spend/row["buyers_treatment"] if row["buyers_treatment"] else np.nan,
-        estimated_background_share=row["expected_buyers_without_tested_campaign"]/row["buyers_treatment"] if row["buyers_treatment"] else np.nan)
-    return row
-
-
-def cac_reconciliation(arms: pd.DataFrame, effects: pd.DataFrame) -> pd.DataFrame:
-    if effects.experiment_id.duplicated().any() or set(arms.experiment_id) != set(effects.experiment_id):
-        raise ValueError("Experimental source coverage mismatch")
-    rows = []
-    for exp, group in arms.groupby("experiment_id", sort=True):
-        if len(group) != 2 or set(group.arm) != {"treatment", "control"}:
-            raise ValueError("Each experiment requires one treatment and one control")
-        g = group.set_index("arm"); t, c = g.loc["treatment"], g.loc["control"]
-        for field in ["channel", "primary_need", "assigned_at", "followup_end_at", "followup_days"]:
-            if t[field] != c[field]: raise ValueError("Experimental populations or horizons differ")
-        if min(t.n_assigned, c.n_assigned) <= 0 or not (0 <= t.n_buyers <= t.n_assigned and 0 <= c.n_buyers <= c.n_assigned):
-            raise ValueError("Invalid assignment or buyer denominator")
-        k = float(t.n_assigned/c.n_assigned)
-        pt, pc = t.n_buyers/t.n_assigned, c.n_buyers/c.n_assigned
-        row = dict(experiment_id=exp, scope="individual_test", channel=t.channel, primary_need=t.primary_need,
-            assigned_at=t.assigned_at, followup_end_at=t.followup_end_at, followup_days=float(t.followup_days),
-            n_treatment=int(t.n_assigned), n_control=int(c.n_assigned), scale_to_treatment=k,
-            buyers_treatment=int(t.n_buyers), buyers_control=int(c.n_buyers),
-            media_spend_treatment=float(t.media_spend), media_spend_control=float(c.media_spend),
-            expected_buyers_without_tested_campaign=float(k*c.n_buyers),
-            incremental_buyers=float(t.n_buyers-k*c.n_buyers),
-            incremental_buyers_se=float(t.n_assigned*np.sqrt(pt*(1-pt)/t.n_assigned+pc*(1-pc)/c.n_assigned)),
-            incremental_media_spend=float(t.media_spend-k*c.media_spend),
-            incremental_contribution=float(t.contribution-k*c.contribution))
-        row["incremental_contribution_after_media"] = row["incremental_contribution"]-row["incremental_media_spend"]
-        saved = effects.set_index("experiment_id").loc[exp]
-        fields = ["incremental_buyers", "incremental_media_spend", "incremental_contribution", "incremental_contribution_after_media"]
-        if not np.allclose([row[f] for f in fields], [saved[f] for f in fields], rtol=1e-9, atol=1e-8):
-            raise ValueError("CAC reconciliation differs from saved intention-to-treat results")
-        rows.append(_ratio_record(row))
-    if not rows: raise ValueError("No experimental comparisons")
-    # Sum separately standardized effects, not a pooled-arm rate difference.
-    pool = {name: sum(r[name] for r in rows) for name in ["n_treatment", "n_control", "buyers_treatment", "buyers_control",
-        "media_spend_treatment", "media_spend_control", "expected_buyers_without_tested_campaign", "incremental_buyers",
-        "incremental_media_spend", "incremental_contribution", "incremental_contribution_after_media"]}
-    pool.update(experiment_id="TESTED_PROGRAM", scope="descriptive_tested_program_rollup", channel="multiple", primary_need="multiple",
-        assigned_at="", followup_end_at="", followup_days=np.nan, scale_to_treatment=np.nan,
-        incremental_buyers_se=float(np.sqrt(sum(r["incremental_buyers_se"]**2 for r in rows))))
-    rows.append(_ratio_record(pool))
-    return pd.DataFrame(rows)
+def channel_value_decision(cac: pd.DataFrame, values: pd.DataFrame) -> pd.DataFrame:
+    keys = ["cohort_month", "channel", "primary_need"]
+    source = cac.rename(columns={"value_cohort_month": "cohort_month"})
+    value_cols = keys + ["n_acquired", "observed_months", "horizon_months", "forecast_share", "ltv_before_cac_mean", "ltv_before_cac_p05", "ltv_before_cac_p95"]
+    result = source.merge(values[value_cols], on=keys, how="left", validate="many_to_one")
+    if result.ltv_before_cac_mean.isna().any() or not (result.horizon_months == 12).all():
+        raise ValueError("Each channel test needs its matching twelve-receipt value benchmark")
+    result["assumed_value_per_additional_customer"] = result.ltv_before_cac_mean
+    result["value_less_icac"] = result.ltv_before_cac_mean - result.icac
+    result["planning_net_value"] = result.incremental_buyers*result.ltv_before_cac_mean - result.incremental_spend
+    result["value_to_icac"] = result.ltv_before_cac_mean/result.icac
+    result["break_even_value"] = result.icac
+    result["scope"] = "Planning projection: assume additional pilot customers have matching operational-cohort contribution value and no value change for customers who would acquire anyway. Not an experimentally measured lifetime return."
+    return result
 
 
 def build_decision_metrics(output_dir: Path) -> dict:
-    output = Path(output_dir); validate_analysis(output); tables = output/"tables"
-    read = lambda n: pd.read_csv(tables/n)
-    results = {"segmentation_objective.csv":segmentation_objective(read("segmentation_comparison.csv"), read("segmentation_profile.csv")),
-               "cac_reconciliation.csv":cac_reconciliation(read("experiment_summary.csv"), read("experiment_effects.csv"))}
-    for name, frame in results.items(): frame.to_csv(tables/name,index=False,float_format="%.10f",lineterminator="\n")
-    manifest = {"version":1,"code_sha256":_hash(Path(__file__)),
-        "input_hashes":{n:_hash(tables/n) for n in sorted(INPUTS)},"output_hashes":{n:_hash(tables/n) for n in sorted(OUTPUTS)},
-        "segmentation_scope":"Same mature nonexperimental paid customers, six receipts and two-group candidate partitions. Population variance equals customer-weighted within plus between variance. Descriptive, not intervention or future prediction effects.",
-        "cac_scope":"Randomized all-assigned acquisition tests; background acquisitions standardized to treatment-arm size. Incremental media costs and buyer effects reconcile to the existing SQL outputs. No private outcomes, lifetime extrapolation or all-company calibration.",
-        "uncertainty":"Approximate unadjusted 95% normal buyer-lift interval, conditional on fixed media spend; invert only the positive effect region. Intervals crossing zero have no finite upper iCAC bound. No clipping or fabricated finite estimate.",
-        "pooling":"Sum each test's separately standardized effects and costs; independent tests supply summed variances. This fixed tested-program rollup spans different populations and windows and is not company-wide or marginal CAC."}
+    output=Path(output_dir); validate_analysis(output); tables=output/"tables"
+    results={"segmentation_objective.csv":segmentation_objective(pd.read_csv(tables/"segmentation_comparison.csv"),pd.read_csv(tables/"segmentation_profile.csv"))}
+    inputs=set(INPUTS)
+    if (output/"model_manifest.json").exists():
+        from .report import _validate_model_outputs
+        _validate_model_outputs(output)
+        inputs.add("cohort_valuation_by_segment.csv")
+        results["channel_value_decision.csv"]=channel_value_decision(pd.read_csv(tables/"channel_cac.csv"),pd.read_csv(tables/"cohort_valuation_by_segment.csv"))
+    for name,frame in results.items():frame.to_csv(tables/name,index=False,float_format="%.10f",lineterminator="\n")
+    manifest={"version":2,"code_sha256":_hash(Path(__file__)),
+        "input_hashes":{n:_hash(tables/n) for n in sorted(inputs)},"output_hashes":{n:_hash(tables/n) for n in sorted(results)},
+        "segmentation_scope":"Same mature operational customers, six receipts and two-group candidate partitions. Customer-weighted within and between variance.",
+        "cac_scope":"Separate acquisition-only pilot summaries; SQL estimates background buyers, lift and iCAC using all assigned prospects and media plus other incremental acquisition spending. No pooled program CAC or experimental revenue/retention outcomes.",
+        "value_scope":"Planning join after fitting: matching cohort/channel/need contribution before CAC, twelve receipts at 1% monthly discount. Additional-customer value and no effect on would-be buyers are explicit assumptions. No experiment enters the model."}
     (output/"decision_metrics_manifest.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n',encoding="utf-8")
     return manifest
 
 
 def validate_decision_metrics(output_dir: Path) -> dict:
     output=Path(output_dir);m=json.loads((output/"decision_metrics_manifest.json").read_text(encoding="utf-8"))
-    if set(m["input_hashes"])!=INPUTS or set(m["output_hashes"])!=OUTPUTS or m["code_sha256"]!=_hash(Path(__file__)):
+    fitted=(output/"model_manifest.json").exists()
+    expected_inputs=INPUTS | ({"cohort_valuation_by_segment.csv"} if fitted else set())
+    expected_outputs=OUTPUTS if fitted else {"segmentation_objective.csv"}
+    if set(m["input_hashes"])!=expected_inputs or set(m["output_hashes"])!=expected_outputs or m["code_sha256"]!=_hash(Path(__file__)):
         raise ValueError("Decision-metrics provenance mismatch")
     for n,h in {**m["input_hashes"],**m["output_hashes"]}.items():
         if _hash(output/"tables"/n)!=h:raise ValueError(f"Decision-metrics hash mismatch: {n}")

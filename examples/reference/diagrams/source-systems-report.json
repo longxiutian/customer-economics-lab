@@ -5,7 +5,7 @@
       "items": [
         "Source files are separate CSV exports with documented keys. DuckDB executes saved SQL locally; no database server is required.",
         "customer_month and cohort_age_summary supply retained customers and revenue; cohort_cash_economics adds acquisition cost and cash recovery.",
-        "experiment_person keeps every randomized prospect, including nonbuyers; experiment_effects uses each test's own control and outcome window."
+        "channel_holdouts preserves all assigned counts and each test's own control. channel_cac estimates acquisition cost; no pilot revenue or retention enters the model."
       ],
       "title": "Saved evidence, not a hidden answer"
     },
@@ -157,7 +157,7 @@
       "id": "marketing",
       "label": "Marketing + tests",
       "lane": "sources",
-      "sublabel": "spend / credit / assignment",
+      "sublabel": "spend / credit / pilot totals",
       "type": "database",
       "width": 200
     },
@@ -191,9 +191,9 @@
     {
       "col": 2,
       "id": "incrementality",
-      "label": "Randomized effects",
+      "label": "Channel iCAC",
       "lane": "evidence",
-      "sublabel": "all assigned; own controls",
+      "sublabel": "additional spend / buyers",
       "type": "backend",
       "width": 200
     },

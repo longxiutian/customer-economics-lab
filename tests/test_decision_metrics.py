@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from cohort_lab.decision_metrics import segmentation_objective, cac_reconciliation
+from cohort_lab.decision_metrics import segmentation_objective, channel_value_decision
 
 
 def test_course_partition_example_moves_variation_between_cells():
@@ -33,48 +33,15 @@ def test_partition_uses_customer_weights_and_rejects_different_complexity():
         segmentation_objective(comparison, profile)
 
 
-def experiment(exp="x", nt=100, nc=50, bt=20, bc=5, st=300, sc=20):
-    arms = pd.DataFrame([dict(experiment_id=exp, arm=arm, channel="search", primary_need="save_time",
-        assigned_at="2025-01-01", followup_end_at="2025-02-01", followup_days=31,
-        n_assigned=n, n_buyers=b, media_spend=s, contribution=v)
-        for arm, n, b, s, v in [("treatment", nt, bt, st, 1000), ("control", nc, bc, sc, 100)]])
-    k = nt/nc
-    effects = pd.DataFrame([dict(experiment_id=exp, incremental_buyers=bt-k*bc,
-        incremental_media_spend=st-k*sc, incremental_contribution=1000-k*100,
-        incremental_contribution_after_media=1000-k*100-st+k*sc)])
-    return arms, effects
-
-
-def test_unequal_arms_and_nonzero_control_cost_change_both_sides_of_bridge():
-    r = cac_reconciliation(*experiment()).iloc[0]
-    assert r.expected_buyers_without_tested_campaign == 10
-    assert r.incremental_buyers == 10 and r.incremental_media_spend == 260
-    assert r.treatment_media_cac == 15
-    assert r.incremental_spend_per_treated_buyer == 13
-    assert r.incremental_media_cac == 26
-    assert r.incremental_buyers_se == pytest.approx(100*np.sqrt(.2*.8/100+.1*.9/50))
-
-
-def test_near_zero_lift_does_not_manufacture_finite_upper_cac_bound():
-    r = cac_reconciliation(*experiment(bt=11)).iloc[0]
-    assert r.incremental_buyers == 1 and r.icac_interval_status == "unbounded"
-    assert np.isnan(r.icac_ci_upper) and r.icac_ci_lower > 0
-    zero = cac_reconciliation(*experiment(bt=10)).iloc[0]
-    assert np.isnan(zero.incremental_media_cac) and np.isnan(zero.icac_ci_upper)
-
-
-def test_pool_sums_standardized_effects_instead_of_aggregating_arm_rates():
-    a, ea = experiment("x")
-    b, eb = experiment("y", nt=50, nc=100, bt=15, bc=20, st=200, sc=40)
-    r = cac_reconciliation(pd.concat([a, b]), pd.concat([ea, eb])).iloc[-1]
-    assert r.expected_buyers_without_tested_campaign == 20  # 2*5 + .5*20, not 25.
-    assert r.incremental_buyers == 15 and r.incremental_media_spend == 440
-    assert r.incremental_media_cac == pytest.approx(440/15)
-    assert np.isnan(r.followup_days)
-
-
-def test_bridge_rejects_inconsistent_saved_effects():
-    arms, effects = experiment()
-    effects.loc[0, "incremental_buyers"] += 1
-    with pytest.raises(ValueError, match="saved intention-to-treat"):
-        cac_reconciliation(arms, effects)
+def test_value_join_uses_pre_cac_value_once_and_requires_matching_cell():
+    cac=pd.DataFrame([dict(test_id="a",value_cohort_month="2025-07-01",channel="search",primary_need="save_time",incremental_buyers=60,incremental_spend=10000,icac=10000/60)])
+    value=pd.DataFrame([dict(cohort_month="2025-07-01",channel="search",primary_need="save_time",n_acquired=80,observed_months=6,horizon_months=12,forecast_share=.4,ltv_before_cac_mean=300,ltv_before_cac_p05=280,ltv_before_cac_p95=320,net_ltv_mean=200,cac=100)])
+    result=channel_value_decision(cac,value).iloc[0]
+    assert result.planning_net_value==8000
+    assert result.value_less_icac==pytest.approx(300-10000/60)
+    # Historic CAC/net LTV is irrelevant to the prospective acquisition subtraction.
+    value.net_ltv_mean=-999;value.cac=1299
+    assert channel_value_decision(cac,value).iloc[0].planning_net_value==8000
+    value.channel="partner"
+    with pytest.raises(ValueError,match="matching"):
+        channel_value_decision(cac,value)

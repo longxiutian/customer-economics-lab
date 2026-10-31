@@ -63,11 +63,10 @@ cohort_month,channel,primary_need,n_acquired,acquisition_spend,cac
 2025-04-01,partner,save_time,45,3562.20,79.16
 2025-04-01,search,build_skill,56,5403.28,96.48714285714286
 2025-04-01,search,save_time,80,7493.60,93.67
-2025-05-01,organic,save_time,25,,
 2025-05-01,partner,build_skill,73,6051.70,82.89999999999999
 2025-05-01,partner,save_time,49,3661.30,74.7204081632653
 2025-05-01,search,build_skill,58,5514.00,95.06896551724138
-2025-05-01,search,save_time,157,8210.30,52.29490445859872
+2025-05-01,search,save_time,84,7560.30,90.00357142857143
 2025-06-01,partner,build_skill,74,6037.44,81.58702702702702
 2025-06-01,partner,save_time,46,3573.12,77.67652173913044
 2025-06-01,search,build_skill,62,5483.28,88.44
@@ -80,8 +79,7 @@ cohort_month,channel,primary_need,n_acquired,acquisition_spend,cac
 2025-08-01,partner,save_time,47,3139.60,66.8
 2025-08-01,search,build_skill,63,5009.60,79.51746031746032
 2025-08-01,search,save_time,91,6443.00,70.8021978021978
-2025-09-01,organic,build_skill,29,,
-2025-09-01,partner,build_skill,138,6418.50,46.51086956521739
+2025-09-01,partner,build_skill,77,5518.50,71.66883116883118
 2025-09-01,partner,save_time,50,3090.25,61.805
 2025-09-01,search,build_skill,57,4944.50,86.74561403508773
 2025-09-01,search,save_time,87,6279.00,72.17241379310344

@@ -35,12 +35,8 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
         return actual_save(fig,directory,name)
     monkeypatch.setattr(report,"_save",capture)
     manifest=report.build_charts(output)
-    assert len(manifest["figures"])==9
-    experiment=manifest["figures"]["experiment-effects"]["display_values"]
-    effects=pd.read_csv(output/"tables/experiment_effects.csv")
-    np.testing.assert_allclose(experiment["ci_lower"],effects.incremental_contribution_after_media_per_prospect_ci_lower)
-    np.testing.assert_allclose(experiment["ci_upper"],effects.incremental_contribution_after_media_per_prospect_ci_upper)
-    assert experiment["followup_days"]==[31,30]
+    assert len(manifest["figures"])==8
+    assert "experiment-effects" not in manifest["figures"]
     assert manifest["figures"]["cohort-triangles"]["display_values"]["age_months"]==list(range(24))
     assert len(manifest["figures"]["cohort-triangles"]["display_values"]["cohorts"])==24
     assert saved["retention"].shape==(24,24)
@@ -174,7 +170,7 @@ def test_executive_template_has_business_model_and_required_appendices():
     assert template.index("The renewal mechanism") < template.index("ltv-and-cac.pdf")
     assert r"\VAR{parameter_table}" in template
     assert r"\VAR{ucv_tables_first}" in template and r"\VAR{ucv_tables_second}" in template
-    assert "Management actions and accountability" in template
+    assert "Translate customer economics" in template
     for phrase in ("Learner judgment", "Instructor reference build", "In this exercise", "Choose the next action"):
         assert phrase not in template
 
@@ -202,13 +198,9 @@ def test_executive_kpis_are_matched_age_acquisition_value_and_cash(evidence,monk
         one=cash[(cash.age_month==5)&cash.cohort_month.isin(months)].sort_values("cohort_month")
         weights=one.n_acquired/one.n_acquired.sum()
         expected.append([float((one[col]*weights).sum()) for col in ["cac","cumulative_contribution_per_customer","balance_per_customer"]])
-    assert f"{context["renewal_window_evidence"]["experiment_excluded"]["later"]["cash_after_cac_per_customer"]:,.2f}" in context["learner_action"]
-    assert "not use it as an automatic causal gate" in context["learner_action"]
-    assert "verify that controls stayed protected" in context["learner_action"]
     window=context["renewal_window_evidence"]
     if window["later"]["retained_share"]>window["earlier"]["retained_share"] and window["improved_cells"]==window["total_cells"]:
         assert "Retention also improves within each channel" in context["executive_verdict"]
-    assert "intervals include zero" in context["executive_experiment_sentence"]
     assert "dollars squared" in context["segmentation_sentence"]
     assert list(kpi.window_start)==[months[0] for months in windows]
     assert list(kpi.window_end)==[months[-1] for months in windows]
@@ -252,30 +244,6 @@ def test_fixed_mix_comparison_does_not_mistake_mix_change_for_within_cell_change
     assert all(len(result[key]["cohorts"])==6 for key in ["earlier","later"])
 
 
-def test_ex_test_sql_removes_both_arms_and_all_their_later_contribution():
-    """An excluded buyer's later receipts must not survive the comparability filter."""
-    import duckdb
-    sql=(report.ROOT/"sql/01_views.sql").read_text(encoding="utf-8").split("CREATE OR REPLACE VIEW cohort_economics_ex_tests AS",1)[1]
-    # This fixture tests the whole-cohort exclusion view; later views have
-    # their own field requirements and independent arithmetic fixtures.
-    sql=sql.split("\nCREATE OR REPLACE VIEW ",1)[0]
-    con=duckdb.connect()
-    try:
-        con.execute("""CREATE TABLE customer_month AS SELECT person_id,DATE '2025-05-01' cohort_month,16 cohort_index,age_month,
-             CAST(DATE '2025-05-01'+age_month*INTERVAL '1 month' AS DATE) calendar_month,1 retained,contribution
-             FROM (VALUES ('ordinary',0,10),('ordinary',1,20),('treatment',0,30),('treatment',1,40),('control',0,50),('control',1,60)) t(person_id,age_month,contribution)""")
-        con.execute("""CREATE TABLE experiment_assignments AS SELECT * FROM (VALUES
-            ('treatment','TEST',TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01'),
-            ('control','TEST',TIMESTAMP '2025-05-01',TIMESTAMP '2025-06-01')) t(person_id,tested_campaign_id,assigned_at,followup_end_at)""")
-        con.execute("""CREATE TABLE campaign_spend AS SELECT * FROM (VALUES
-            ('TEST',DATE '2025-05-10',5,0),('ORDINARY',DATE '2025-05-10',90,10),
-            ('TEST',DATE '2025-07-10',15,0)) t(campaign_id,spend_date,media_spend,other_acquisition_spend)""")
-        con.execute("""CREATE TABLE cohort_cash_economics AS SELECT DISTINCT cohort_month,cohort_index,age_month,calendar_month,
-             3 n_acquired,105 acquisition_spend FROM customer_month""")
-        con.execute("CREATE VIEW cohort_economics_ex_tests AS"+sql)
-        actual=con.execute("SELECT n_acquired,n_retained,excluded_test_buyers,excluded_test_spend,acquisition_spend,cumulative_contribution,balance_per_customer FROM cohort_economics_ex_tests ORDER BY age_month").fetchall()
-        assert [[float(x) for x in row] for row in actual]==[[1,1,2,5,100,10,-90],[1,1,2,5,100,30,-70]]
-    finally:con.close()
 
 
 def test_native_pdf_commands_and_all_schema_fields_are_copyable(tmp_path):
@@ -333,9 +301,9 @@ def test_exhibit_registry_numbers_in_order_and_rejects_ambiguous_references():
 
 
 def test_each_ucv_table_has_a_stable_numbered_caption():
-    source={"file":"experiment_assignments.csv","source":"Experiments","grain":"assigned person",
+    source={"file":"channel_holdouts.csv","source":"Experiments","grain":"assigned person",
             "columns":{"Identifiers":["person_id"],"Engagement":[],"Relationship":["arm"],"Perception":[]}}
     rendered=report._ucv_table(source)
     registry=report._caption_registry(rendered)
-    assert registry[0]["label"]=="tab:ucv-experiment-assignments"
-    assert "experiment\\_assignments.csv" in registry[0]["caption_tex"]
+    assert registry[0]["label"]=="tab:ucv-channel-holdouts"
+    assert "channel\\_holdouts.csv" in registry[0]["caption_tex"]

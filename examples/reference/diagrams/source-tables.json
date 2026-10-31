@@ -3,7 +3,7 @@
     {
       "dot": "cyan",
       "items": [
-        "people: One person, including eligible prospects who never purchase.",
+        "people: One person in the operational customer-history panel.",
         "subscription_periods: One scheduled monthly cycle; a paid outcome establishes retained membership for that cycle.",
         "transactions: One payment or refund event; each payment is one order and refunds reuse its order ID.",
         "product_events: One observed product/support interaction; no event does not mean no subscription."
@@ -24,7 +24,7 @@
       "items": [
         "Cardinality describes how many child records can reference one parent. A known person can have no purchase, event or feedback.",
         "acquisition_attribution has at most one row per person; its optional credited_campaign_id is blank for organic credit.",
-        "experiment_assignments has a composite key: experiment_id + person_id. Its tested_campaign_id references campaign_metadata.campaign_id, not campaign_spend. Its people include nonbuyers, who must remain in the analysis.",
+        "channel_holdouts has the key test_id + arm and no person-level foreign key. It is a separate acquisition-only sample and budget; compare its own arms to estimate iCAC.",
         "Shared IDs make documented joins possible. They do not turn recorded credit into causal evidence or a complete journey."
       ],
       "title": "Read the links without changing the denominator"
@@ -368,22 +368,15 @@
       "attributes": [
         {
           "key": "pk",
-          "name": "experiment_id",
+          "name": "test_id",
           "type": "VARCHAR"
         },
         {
-          "key": [
-            "pk",
-            "fk"
-          ],
-          "name": "person_id",
-          "references": "people.person_id",
+          "name": "channel",
           "type": "VARCHAR"
         },
         {
-          "key": "fk",
-          "name": "tested_campaign_id",
-          "references": "campaign_metadata.campaign_id",
+          "name": "primary_need",
           "type": "VARCHAR"
         },
         {
@@ -391,17 +384,34 @@
           "type": "TIMESTAMP"
         },
         {
+          "name": "followup_end_at",
+          "type": "TIMESTAMP"
+        },
+        {
+          "key": "pk",
           "name": "arm",
           "type": "VARCHAR"
         },
         {
-          "name": "followup_end_at",
-          "type": "TIMESTAMP"
+          "name": "n_assigned",
+          "type": "INTEGER"
+        },
+        {
+          "name": "n_buyers",
+          "type": "INTEGER"
+        },
+        {
+          "name": "media_spend",
+          "type": "DECIMAL(12,2)"
+        },
+        {
+          "name": "other_acquisition_spend",
+          "type": "DECIMAL(12,2)"
         }
       ],
       "col": 2,
-      "id": "experiment_assignments",
-      "label": "experiment_assignments",
+      "id": "channel_holdouts",
+      "label": "channel_holdouts",
       "row": 1,
       "sublabel": "Raw CSV export",
       "tag": "Acquisition measurement",
@@ -470,7 +480,7 @@
         "focus": [
           "people",
           "acquisition_attribution",
-          "experiment_assignments",
+          "channel_holdouts",
           "campaign_metadata",
           "campaign_spend"
         ],
@@ -562,30 +572,10 @@
       "toOptional": true
     },
     {
-      "from": "experiment_assignments",
-      "fromCardinality": "many",
-      "fromOptional": true,
-      "id": "relation8",
-      "label": "person_id",
-      "to": "people",
-      "toCardinality": "one",
-      "toOptional": false
-    },
-    {
-      "from": "experiment_assignments",
-      "fromCardinality": "many",
-      "fromOptional": true,
-      "id": "relation9",
-      "label": "test \u2192 campaign_metadata",
-      "to": "campaign_metadata",
-      "toCardinality": "one",
-      "toOptional": false
-    },
-    {
       "from": "campaign_spend",
       "fromCardinality": "many",
       "fromOptional": true,
-      "id": "relation10",
+      "id": "relation8",
       "label": "campaign_id",
       "to": "campaign_metadata",
       "toCardinality": "one",

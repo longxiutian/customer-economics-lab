@@ -10,7 +10,9 @@ Predict expected retained members, net revenue, and contribution in each future 
 
 This is **remaining value over the next twelve calendar months**, not the report's contribution LTV over each cohort's first twelve monthly receipts. An older cohort can have completed its first twelve receipts and still produce valuable revenue in 2026. The oldest cohort requires predictions at ages 24–35, beyond the largest observed age of 23. Explain that extrapolation and the assumptions supporting it.
 
-The [design commitment](../assets/challenge/design-commitment.json) and [sealed-answer commitment](../assets/challenge/answer-commitment.json) record salted hashes established before evaluating model forecasts. They contain no outcomes or random keys. The instructor retains the underlying files and salts for later verification.
+The archived [design commitment](../assets/challenge/design-commitment.json) and [sealed-answer commitment](../assets/challenge/answer-commitment.json) remain unchanged for provenance. They predate dataset 5.0 and do not certify an answer file for its revised customer population. They contain no outcomes or random keys.
+
+Before scoring this edition, the instructor must prepare and seal an answer file for exactly the 5,703 people in the released `data/people.csv`. Preserve the already realized future outcomes for those people; do not redraw outcomes or change them in response to forecasts. Filter person-level future records before aggregating to the current prediction grid, and verify its `n_acquired` and `origin_retained` exposures. Filtering an older aggregate answer file by cell keys is insufficient. This release rebuilds the public grid and forecasts but has not read, rebuilt or validated the private future answer key. Forecast creation and format validation are available; future scoring requires that instructor-side reconciliation.
 
 ## Reproducible baseline and submission
 

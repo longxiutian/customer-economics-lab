@@ -28,14 +28,14 @@ def test_model_follows_company_economics_and_precedes_forecast_results():
     assert text.index("What the model contributes")<text.index("{retention-forecast}")
     assert text.index("{retention-triangle}")<text.index("{cohort-layers}")<text.index("{retention-forecast}")<text.index("ltv-and-cac.pdf")
     assert text.index("The renewal mechanism")<text.index("{retention-forecast}")
-    assert r"\SectionDivider{06}{Model-based forecasting of cohort trajectories}" in text
+    assert r"\SectionDivider{07}{Model-based forecasting of cohort trajectories}" in text
     title="Are We Moving in the Right Direction?"
     subtitle="A customer-base analysis of cohort-based LTV at Studio North"
     assert r"\ReportCover{"+title+"}{"+subtitle+"}" in text
     assert text.index(r"\ReportCover{")<text.index(r"\ReportContents")<text.index(r"\PageTitle{EXECUTIVE SUMMARY}")
     assert "All records describe an illustrative business and are synthetic." not in text
     assert text.count(r"\ReportFigure{retention-forecast}")==1
-    assert text.count(r"\SectionDivider{")==9
+    assert text.count(r"\SectionDivider{")==10
     assert r"\SectionDivider{APPENDIX}" in text
     assert "journey-save-time" not in text and "journey-build-skill" not in text
     for bad in ["Read the whole sequence", "Check whether progress", "Show the unobserved", "Require the next campaign"]:
@@ -72,5 +72,5 @@ def test_management_report_separates_observation_forecast_and_classroom_protocol
     for bad in ['student workflow','future competition','challenge model','private data-generation skill']:
         assert bad not in template
     assert 'Differences use unrounded values' in template
-    assert 'controls remained protected' in template
+    assert 'No pilot contribution, retention or lifetime treatment effect is estimated.' in template
     assert 'A3 / CONTRIBUTION FORECASTS' in template

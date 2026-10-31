@@ -7,8 +7,7 @@ SELECT a.*, first_paid_at + INTERVAL '27 days' AS landmark_at,
        first_paid_at + INTERVAL '27 days' <= (SELECT data_as_of FROM lab_settings) AS exposure_complete,
        cohort_month + INTERVAL '6 months' <= (SELECT data_as_of FROM lab_settings) AS age5_observed
 FROM acquired_customers a
-WHERE channel IN ('search','partner')
-  AND NOT EXISTS (SELECT 1 FROM experiment_assignments x WHERE x.person_id=a.person_id);
+WHERE channel IN ('search','partner');
 
 CREATE OR REPLACE TEMP TABLE friction_subjects AS
 WITH events AS (
@@ -159,11 +158,7 @@ FROM feedback f JOIN acquired_customers a USING(person_id) GROUP BY journey_stag
 CREATE OR REPLACE VIEW friction_timing_audit AS
 SELECT 27 AS exposure_days,
        (SELECT count(*) FROM acquired_customers)::INTEGER AS all_acquired,
-       (SELECT count(*) FROM acquired_customers a WHERE EXISTS
-          (SELECT 1 FROM experiment_assignments x WHERE x.person_id=a.person_id))::INTEGER AS acquired_experimental,
-       (SELECT count(*) FROM acquired_customers a WHERE channel NOT IN ('search','partner') AND NOT EXISTS
-          (SELECT 1 FROM experiment_assignments x WHERE x.person_id=a.person_id))::INTEGER AS other_nonexperimental_channels,
-       (SELECT count(*) FROM friction_population)::INTEGER AS eligible_paid_non_test,
+       (SELECT count(*) FROM friction_population)::INTEGER AS eligible_paid_customers,
        (SELECT count(*) FROM friction_population WHERE NOT exposure_complete)::INTEGER AS incomplete_exposure,
        count(*)::INTEGER AS diagnostic_customers,
        count(retained_age1)::INTEGER AS age1_observed_customers,

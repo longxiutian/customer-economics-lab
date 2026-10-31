@@ -3,20 +3,20 @@
     {
       "dot": "emerald",
       "items": [
-        "people.csv: 6,703 rows; one person, including nonbuyers",
-        "subscription_periods.csv: 44,080 rows; one scheduled subscription period",
-        "transactions.csv: 53,717 rows; one payment or refund event",
-        "product_events.csv: 71,212 rows; one observed interaction"
+        "people.csv: 5,703 rows; one operational customer",
+        "subscription_periods.csv: 43,082 rows; one scheduled subscription period",
+        "transactions.csv: 52,605 rows; one payment or refund event",
+        "product_events.csv: 69,590 rows; one observed interaction"
       ],
       "title": "Same key, different grains"
     },
     {
       "dot": "orange",
       "items": [
-        "feedback.csv: 3,439 rows; one submitted response",
-        "campaign_spend.csv: 294 rows; one campaign-spending date",
-        "acquisition_attribution.csv: 5,891 rows; one acquired person and credited source",
-        "experiment_assignments.csv: 1,000 rows; one eligible person per experiment"
+        "feedback.csv: 3,321 rows; one submitted response",
+        "campaign_spend.csv: 288 rows; one campaign-spending date",
+        "acquisition_attribution.csv: 5,703 rows; one acquired person and credited source",
+        "channel_holdouts.csv: 8 rows; one randomized arm per channel test"
       ],
       "title": "The denominator is a business choice"
     },
@@ -25,7 +25,7 @@
       "items": [
         "Observed: customer_month \u2192 cohort_age_summary, cohort_cash_economics and company_month. Compare cohorts at the same age.",
         "Forecast: retention and revenue models extend young cohorts, with uncertainty. They do not establish campaign incrementality.",
-        "Experimental: experiment_person \u2192 experiment_summary \u2192 experiment_effects. Keep every assigned person, including nonbuyers.",
+        "Acquisition pilots: channel_holdouts \u2192 channel_cac. All assigned prospects contribute; no pilot revenue or retention enters the model.",
         "person_id links one profile to many periods, transactions, events and responses. period_id links one renewal cycle to many financial events.",
         "Aggregate campaign_spend by campaign_id before joining acquisition counts; campaign_id alone is not the raw spend table's primary key."
       ],
@@ -73,7 +73,7 @@
     {
       "from": "raw",
       "id": "flow6",
-      "label": "experiment_person",
+      "label": "channel_cac",
       "to": "experiment"
     },
     {
@@ -143,10 +143,10 @@
     },
     {
       "id": "assignments",
-      "label": "Random assignment",
+      "label": "Channel pilots",
       "row": 4,
       "stage": 0,
-      "sublabel": "test \u00d7 person_id",
+      "sublabel": "test / arm",
       "type": "database"
     },
     {
@@ -171,7 +171,7 @@
       "label": "Saved test views",
       "row": 3,
       "stage": 2,
-      "sublabel": "all assigned people",
+      "sublabel": "acquisitions + costs",
       "type": "database"
     },
     {

@@ -1,25 +1,24 @@
 {
-  "code_sha256": "6e62aecfd03878331e15d0c5e2ea9071fc4f91a5cea003b40996c11ba941059e",
+  "code_sha256": "4c6980c5390bd59271c974010dfbeee9f4fd8049e3d48f424367822981db202b",
   "comparison_cohort": "2024-07-01",
-  "draws_sha256": "11b29e1ec30b13e07018b7951573cb00eb1122a884b9b8a6fcb5e9483c50a55f",
+  "draws_sha256": "26cc4c9a1e34b7fd7bc84c44e08650849ad14c425a16cc3c0ab96bc899fd7c6e",
   "input_hashes": {
-    "cohort_acquisition_costs.csv": "b6f1e4f67d7ea6115f274898ffc09a322cae8d608939eb80f71da89aa6752f0e",
-    "cohort_age_ex_tests.csv": "46056f07290c2fd034c7f4688375dd9594df2fa84bf65c782175a046605d5ef6",
-    "cohort_age_summary.csv": "5ca46808b188b2c3dc6cc7bee98ba7b38132730e23f01a9c1c521191be13df53",
-    "cohort_cash_economics.csv": "c120e8da38447d711ce65e767c7c7ba8a883b07ff03ad9db5179aea4c39d4572",
-    "cohort_valuation_by_segment.csv": "2d6cb771a3a19c01eebb136a8f3828b1fbc3d9f4b21cfa53ac97ec6f46b0539f",
-    "forecast_curve.csv": "07caa3d858705b15cf19e6443277e3e05ec63f064a2320f8e7f9b27f3808be9b"
+    "cohort_acquisition_costs.csv": "aaa8d0438d98db89da96f3cd36c99fba5601d412e84d6eaa4ceb6b4f67bf3a7f",
+    "cohort_age_summary.csv": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",
+    "cohort_cash_economics.csv": "f4ab3b07a66288a118371b410b1cfefdc64917c4674934d19b369ac8cbcb44c6",
+    "cohort_valuation_by_segment.csv": "77ea14d0766e4140bb3ce25ca3965b817cf9a96c8e81ded59af68c655796d51a",
+    "forecast_curve.csv": "9cbc86a0e40e6bed50c8f1f3f454fee44eba25ac404c719384ce2fb46a125070"
   },
-  "model_code_sha256": "0fc92f4ce6c76e186f949f4d8bd6254173ce70f092832d5a68f3677c41699fe6",
-  "model_manifest_sha256": "f5b6ca984d5af25f5eb5af95c9202e3d1b214fc4feb611aab99e7717ff872368",
+  "model_code_sha256": "ef1b344d7c88f1a8186f5f0d45fdd9cd699626cea3529e85ad68b3d506683d84",
+  "model_manifest_sha256": "508d5ac2754f13af75c768c26c1ec594e752c9a04bb994a0f3c8b1bfd560cd46",
   "output_hashes": {
-    "segment_forecast_curves.csv": "6934ff35550154420a1aacfe4a704762969033d4dccfd07feb1640c263d24792",
-    "strategic_rank_stability.csv": "c84e72b45729e9bb70e718931a83030f746cf434fa9a1b74b41d62600c3b69f0",
-    "strategic_segment_breakout.csv": "1ef3552e179d29b96db3e7d6e9ca875158199e01cd74da5c12e64b82954fbcbf"
+    "segment_forecast_curves.csv": "9ce52aae5b9c2e77b021f8a8f73a57d8dbec8f655c3e5920c6865fac69e0344d",
+    "strategic_rank_stability.csv": "b9779bf266fd3b98ad887bef86c6f9f644361f8aafa3598cbcb30aa2a4d29336",
+    "strategic_segment_breakout.csv": "c8c43ab5a4b9c62eb8fb89b81cac1dc3a95394f1cf9d97f7bb62c4ff1989b63c"
   },
   "reconciliation": {
     "atol": 1e-08,
-    "cells": 98,
+    "cells": 96,
     "cohorts": 24,
     "rtol": 1e-09,
     "status": "passed"
@@ -27,6 +26,6 @@
   "refit": false,
   "scope": "Acquisition channel \u00d7 baseline stated need only. Observed values spliced to conditional expected forecasts from existing draws. Bands are 5th\u201395th parameter percentiles; fixed cost ratios and no customer-process uncertainty. Average CAC and value do not identify marginal or causal returns.",
   "selected_cohort": "2025-07-01",
-  "selection": "Latest four-cell paid cohort with >=6 observed receipts and no experimental buyers; compare same month one year earlier. Selection uses maturity and assignment, never economic outcomes.",
+  "selection": "Latest four-cell paid cohort with >=6 observed receipts; compare same month one year earlier. Selection uses maturity, never economic outcomes.",
   "version": 1
 }

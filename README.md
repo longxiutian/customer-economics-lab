@@ -1,6 +1,6 @@
 # Customer Economics Lab
 
-Current release: **1.6.1**, in the **2026 1.x.x series**. The 2027 edition will use 2.x.x. See [release numbering and historical mappings](docs/versioning.md).
+Current release: **1.7.0**, in the **2026 1.x.x series**. The 2027 edition will use 2.x.x. See [release numbering and historical mappings](docs/versioning.md).
 
 **Are we moving in the right direction as a company?**
 
@@ -16,7 +16,7 @@ In one AI-agent chat, students inspect the exports, classify each dataset's Univ
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.6.1 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.7.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
@@ -64,11 +64,11 @@ For example, `SELECT cohort_month, n_acquired, cac FROM cohort_six_month_compari
 
 Use the [business brief](docs/business_brief.md), [data dictionary](docs/data_dictionary.md), and [sources](docs/sources.md) as references. The final report separates observed evidence, forecasts, assumptions, and the learner's recommendation.
 
-See [1.6 release changes](docs/v6-changes.md) for the segmentation objective and acquisition-cost reconciliation, and [CAC and LTV methodology](docs/cac-incrementality.md) for the course connections. The earlier [1.5 release changes](docs/v5-changes.md) describe journey diagnostics, strategic breakouts and report replay without refitting.
+See [1.7 release changes](docs/v1.7-changes.md) for the acquisition-only holdout design and [CAC and LTV methodology](docs/cac-incrementality.md) for the course connection. The early report section lists channel results; the finale joins iCAC with contribution value before acquisition cost.
 
 ## Instructor reproducibility
 
-The frozen observed data release is version **4.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
+The frozen observed data release is version **5.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
 
 Read [the reproducibility guide](docs/reproducibility.md) for the complete artifact contract, visual checks, companion provenance and ZIP handoff. Validate saved artifacts or rebuild the report twice from frozen fits:
 

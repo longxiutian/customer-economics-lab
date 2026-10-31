@@ -33,13 +33,13 @@
     "actual_backend": "cpu",
     "actual_x64": true,
     "convergence_limitation": "A finite, stable variational objective is not proof of posterior convergence or calibrated uncertainty; AutoNormal is an approximation.",
-    "final_loss_mean": 1419.08071651,
-    "final_two_window_relative_loss_change": 0.00025405,
+    "final_loss_mean": 1408.8479946,
+    "final_two_window_relative_loss_change": 0.0003784,
     "finite_objective": true,
     "finite_posterior": true,
-    "initial_loss_mean": 1678.99684229,
-    "n_training_risk_sets": 844,
-    "training_churn_pearson_dispersion": 1.05468844
+    "initial_loss_mean": 1664.31640322,
+    "n_training_risk_sets": 840,
+    "training_churn_pearson_dispersion": 1.05414897
   },
   "forecast_origin": "Each eligible cell's September count; all three months are forecast recursively without conditioning on held-out survivors.",
   "held_out_calendar_months": [
@@ -67,11 +67,11 @@
     "Comparative performance is reported whether or not the network outperforms the main survival model."
   ],
   "model": "Orduz-derived Bayesian neural conditional-churn benchmark",
-  "n_cells": 258,
+  "n_cells": 252,
   "new_holdout_cohorts_excluded": true,
   "priors": "Independent Laplace(location=0, scale=1) on every hidden/output weight and bias.",
-  "retention_mae": 1.334809680371808,
-  "retention_wape": 0.04699520981658385,
+  "retention_mae": 1.3324397013809788,
+  "retention_wape": 0.04829207604602426,
   "role": "Separate retention-only comparison; does not determine executive LTV or cash payback.",
   "runtime": {
     "jax": "0.12.0.1",
@@ -80,10 +80,10 @@
     "numpyro": "0.22.0",
     "scipy": "1.18.1"
   },
-  "scoring_data_sha256": "da35dc41dcf1c0c2a1679e06ea7ab806e97134c1228f20a57c16a0be98e29619",
+  "scoring_data_sha256": "d103e52bfaa4d1e29a8eab508f660c0600d4800839f868945db238c3d6a69215",
   "source": "https://juanitorduz.github.io/revenue_retention_numpyro/",
-  "table_sha256": "2b15b417932ec73fc548d7e284c7fd18d517fead56ad831990cd42e31cfe3e70",
+  "table_sha256": "f4e6ec4724f16b3da6522a03c6d2ca2736587783058f09c9e14dc59a5f158248",
   "training_cutoff_exclusive": "2025-10-01",
-  "training_data_sha256": "58dacdfef7aeb1b1bc5cec426351526737b6bd9e5939dcf5ede63bada9fa1ef3",
+  "training_data_sha256": "a72127fc62122eb3ed27e3e0afd6cd52884367422117900056843cd7592c9b0b",
   "training_last_calendar_month": "2025-09-01"
 }

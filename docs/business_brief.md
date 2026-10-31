@@ -6,18 +6,18 @@ Management is reviewing the next acquisition budget and the pace of expansion. T
 
 > Are we moving in the right direction as a company? Are successive customer cohorts becoming more valuable relative to what we spend to acquire them?
 
-Customers state their primary need as **saving time** or **building skills** before acquisition. Search campaigns reach people actively seeking help; partner campaigns reach members through professional communities and workshops. The data also contain organic purchases made by experimental control participants. These are observed acquisition labels, not proof that a channel caused a member's long-run value.
+Customers state their primary need as **saving time** or **building skills** before acquisition. Search campaigns reach people actively seeking help; partner campaigns reach members through professional communities and workshops. These are observed acquisition labels, not proof that a channel caused a member's long-run value.
 
 The two needs suggest different reasons to renew. A professional facing an immediate deadline may value a fast finished output; someone developing a capability may value a sequence of lessons and future projects. These are plausible business explanations to assess against the data, not assumptions that all members of a group behave alike. The baseline stated need and original acquisition channel remain fixed attributes for analysis even when later experience changes.
 
 One broad experience map introduces discovery, evaluation, subscription, first value, regular use and renewal, with potential benefits and friction points. It is an orientation to the service, not a measured satisfaction curve or a separate journey for each segment. The analytical question remains whether later joining cohorts improve within comparable groups as well as through a changing customer mix.
 
-The operating team provides eight separate exports from CRM, billing, renewals, product/support, surveys, marketing spending, attribution, and campaign experiments. Their shared keys allow ordinary record linkage, but their row units and clocks differ. DuckDB SQL turns these records into saved, reconciled analytical views. Those views support the management assessment and remain available for independent review.
+The operating team provides eight separate exports from CRM, billing, renewals, product/support, surveys, marketing spending, attribution, and separate channel acquisition pilots. Seven operational exports share keys for ordinary record linkage. The eighth contains aggregate pilot arms in a separate research sample and budget, with no customer-history join. Their row units and clocks differ. DuckDB SQL turns these records into saved, reconciled analytical views. Those views support the management assessment and remain available for independent review.
 
 ## Comparison rules
 
 - Joining cohorts run from **January 2024 through December 2025**. The observation cutoff is **January 1, 2026, 00:00 UTC**, exclusive. Later cohort ages have not happened yet; they are not zero outcomes.
-- A customer joins a cohort on their first successful positive payment. A later refund reduces value but does not erase the acquisition. CRM creation and experiment assignment are separate events.
+- A customer joins a cohort on their first successful positive payment. A later refund reduces value but does not erase the acquisition. CRM creation is a separate event.
 - `age_month = 0` is the first-paid calendar month. The core dataset has one individual subscription per person and no reactivation. Renewal records establish contractual retention; product usage and paying activity are different measurements.
 - Revenue reflects payments, discounts, and separately dated refunds. Contribution deducts explicit nonmarketing variable costs. Compare values per original acquired customer, not only among survivors.
 - Acquisition spending includes the documented media and other acquisition costs. Campaigns are monthly and explicitly target a primary-need group. Do not silently redistribute their costs across other segment definitions.
@@ -29,7 +29,7 @@ The operating team provides eight separate exports from CRM, billing, renewals, 
 
 1. Determine whether newer cohorts create more contribution value relative to acquisition spending and recover that spending fast enough to support growth.
 2. Distinguish a shift toward stronger customer/channel groups from improvement within those groups. Use simple, interpretable segments and preserve residual differences among their members.
-3. Decide where to continue, constrain, or test acquisition spending. Separate randomized campaign evidence from descriptive channel economics and forecasts for immature cohorts.
+3. Decide where to continue, constrain, or test acquisition spending. Use the acquisition holdouts to estimate channel iCAC, then compare it with matching contribution LTV before CAC under an explicit additional-customer value assumption.
 4. Assign monitoring responsibilities and conditions for revisiting the recommendation. Growing revenue alone does not establish improving unit economics or sustainable company cash generation.
 
 The executive report labels conclusions as **observed**, **forecast**, or **assumed**. Its opening recommendation is backed by the cohort and acquisition evidence; model details, parameters, data classifications, and reproducibility receipts follow in technical appendices. A mixed or uncertain conclusion is appropriate when the evidence supports it. Fixed costs and the causal long-run value of advertising remain outside what these exports establish.

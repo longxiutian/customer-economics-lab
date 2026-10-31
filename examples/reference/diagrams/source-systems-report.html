@@ -5303,8 +5303,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="548.4000000000001" y="131" class="t-muted" font-size="8" text-anchor="middle">renewals / transactions</text>
         </g>
 
-        <g id="node-marketing" data-node-id="marketing" data-node-label="Marketing + tests" tabindex="0" role="button" aria-label="Focus Marketing + tests, spend / credit / assignment, Eight source exports" aria-pressed="false" data-node-kind="database" data-node-sublabel="spend / credit / assignment" data-node-context="Eight source exports">
-          <title>Marketing + tests · spend / credit / assignment · Eight source exports</title>
+        <g id="node-marketing" data-node-id="marketing" data-node-label="Marketing + tests" tabindex="0" role="button" aria-label="Focus Marketing + tests, spend / credit / pilot totals, Eight source exports" aria-pressed="false" data-node-kind="database" data-node-sublabel="spend / credit / pilot totals" data-node-context="Eight source exports">
+          <title>Marketing + tests · spend / credit / pilot totals · Eight source exports</title>
           <rect x="680.4000000000001" y="93" width="200" height="52" rx="8" class="c-mask"/>
           <rect x="680.4000000000001" y="93" width="200" height="52" rx="8" class="c-database" data-animate="node" style="--step:2" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(686.4000000000001 99) scale(0.6875)">
@@ -5312,7 +5312,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="780.4000000000001" y="114" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Marketing + tests</text>
-          <text data-detail="context" x="780.4000000000001" y="131" class="t-muted" font-size="8" text-anchor="middle">spend / credit / assignment</text>
+          <text data-detail="context" x="780.4000000000001" y="131" class="t-muted" font-size="8" text-anchor="middle">spend / credit / pilot totals</text>
         </g>
 
         <g id="node-sql" data-node-id="sql" data-node-label="Saved DuckDB SQL views" tabindex="0" role="button" aria-label="Focus Saved DuckDB SQL views, person_id / period_id / campaign_id, Reproducible ETL" aria-pressed="false" data-node-kind="backend" data-node-sublabel="person_id / period_id / campaign_id" data-node-context="Reproducible ETL">
@@ -5348,15 +5348,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="548.4000000000001" y="379" class="t-muted" font-size="8" text-anchor="middle">forecast with uncertainty</text>
         </g>
 
-        <g id="node-incrementality" data-node-id="incrementality" data-node-label="Randomized effects" tabindex="0" role="button" aria-label="Focus Randomized effects, all assigned; own controls, Three complementary forms of evidence" aria-pressed="false" data-node-kind="backend" data-node-sublabel="all assigned; own controls" data-node-context="Three complementary forms of evidence">
-          <title>Randomized effects · all assigned; own controls · Three complementary forms of evidence</title>
+        <g id="node-incrementality" data-node-id="incrementality" data-node-label="Channel iCAC" tabindex="0" role="button" aria-label="Focus Channel iCAC, additional spend / buyers, Three complementary forms of evidence" aria-pressed="false" data-node-kind="backend" data-node-sublabel="additional spend / buyers" data-node-context="Three complementary forms of evidence">
+          <title>Channel iCAC · additional spend / buyers · Three complementary forms of evidence</title>
           <rect x="680.4000000000001" y="341" width="200" height="52" rx="8" class="c-mask"/>
           <rect x="680.4000000000001" y="341" width="200" height="52" rx="8" class="c-backend" data-animate="node" style="--step:6" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(686.4000000000001 347) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="780.4000000000001" y="362" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Randomized effects</text>
-          <text data-detail="context" x="780.4000000000001" y="379" class="t-muted" font-size="8" text-anchor="middle">all assigned; own controls</text>
+          <text data-node-label="" data-detail-anchor="" x="780.4000000000001" y="362" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Channel iCAC</text>
+          <text data-detail="context" x="780.4000000000001" y="379" class="t-muted" font-size="8" text-anchor="middle">additional spend / buyers</text>
         </g>
 
         <g id="node-decision" data-node-id="decision" data-node-label="Are we moving forward?" tabindex="0" role="button" aria-label="Focus Are we moving forward?, LTV / CAC / cash payback, Company direction and next action" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="LTV / CAC / cash payback" data-node-context="Company direction and next action">
@@ -5585,7 +5585,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <ul>
           <li>Source files are separate CSV exports with documented keys. DuckDB executes saved SQL locally; no database server is required.</li>
           <li>customer_month and cohort_age_summary supply retained customers and revenue; cohort_cash_economics adds acquisition cost and cash recovery.</li>
-          <li>experiment_person keeps every randomized prospect, including nonbuyers; experiment_effects uses each test&#39;s own control and outcome window.</li>
+          <li>channel_holdouts preserves all assigned counts and each test&#39;s own control. channel_cac estimates acquisition cost; no pilot revenue or retention enters the model.</li>
         </ul>
       </div>
 

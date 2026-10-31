@@ -1,0 +1,9 @@
+test_id,channel,primary_need,assigned_at,followup_end_at,arm,n_assigned,n_buyers,media_spend,other_acquisition_spend
+CH-01,search,save_time,2025-07-01 00:00:00,2025-08-01 00:00:00,treatment,500,90,10000.00,1000.00
+CH-01,search,save_time,2025-07-01 00:00:00,2025-08-01 00:00:00,control,500,40,0.00,0.00
+CH-02,search,build_skill,2025-07-01 00:00:00,2025-08-01 00:00:00,treatment,500,84,10000.00,1000.00
+CH-02,search,build_skill,2025-07-01 00:00:00,2025-08-01 00:00:00,control,500,35,0.00,0.00
+CH-03,partner,save_time,2025-07-01 00:00:00,2025-08-01 00:00:00,treatment,500,80,10000.00,1000.00
+CH-03,partner,save_time,2025-07-01 00:00:00,2025-08-01 00:00:00,control,500,40,0.00,0.00
+CH-04,partner,build_skill,2025-07-01 00:00:00,2025-08-01 00:00:00,treatment,500,100,10000.00,1000.00
+CH-04,partner,build_skill,2025-07-01 00:00:00,2025-08-01 00:00:00,control,500,35,0.00,0.00

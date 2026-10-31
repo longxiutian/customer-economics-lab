@@ -15,20 +15,17 @@ from cohort_lab.data import SCHEMAS, validate_data
 SQL_DIR = Path(__file__).resolve().parents[1] / "sql"
 SOURCE_SQL = ("01_views.sql", "02_friction.sql")
 TABLE_SORTS = {
+    "channel_cac": "test_id",
     "customer_month": "person_id, age_month",
     "cohort_age_summary": "cohort_month, channel, primary_need, age_month",
-    "cohort_age_ex_tests": "cohort_month, channel, primary_need, age_month",
     "cohort_acquisition_costs": "cohort_month, channel, primary_need",
     "company_month": "calendar_month, cohort_month",
-    "experiment_summary": "experiment_id, arm",
     "segmentation_comparison": "scheme",
     "segmentation_profile": "scheme, segment",
     "cohort_totals": "cohort_month, age_month",
     "cohort_cash_economics": "cohort_month, age_month",
     "company_totals": "calendar_month",
-    "experiment_effects": "experiment_id",
     "cohort_six_month_comparison": "cohort_month",
-    "cohort_economics_ex_tests": "cohort_month, age_month",
     "friction_subjects": "person_id",
     "friction_segment_summary": "scheme, segment",
     "friction_cohort_segments": "cohort_month, channel, primary_need, scheme, segment",
@@ -83,16 +80,10 @@ def _assert_analysis(con) -> dict:
         "ledger_cost_reconciles": "SELECT (SELECT sum(variable_cost) FROM customer_month) - (SELECT sum(variable_cost) FROM transactions)",
         "company_revenue_reconciles": "SELECT (SELECT sum(net_revenue) FROM company_totals) - (SELECT sum(net_revenue) FROM customer_month)",
         "company_spend_reconciles": "SELECT (SELECT sum(acquisition_spend) FROM company_totals) - (SELECT sum(media_spend+other_acquisition_spend) FROM campaign_spend)",
-        "all_assigned_counted": "SELECT (SELECT sum(n_assigned) FROM experiment_summary) - (SELECT count(*) FROM experiment_assignments)",
-        "one_spend_per_experiment": "SELECT (SELECT sum(media_spend) FROM experiment_summary) - (SELECT sum(media_spend) FROM experiment_spend)",
         "organic_CAC_unsupported": "SELECT count(*) FROM cohort_acquisition_costs WHERE channel IN ('organic','unknown') AND cac IS NOT NULL",
         "gross_minus_refunds_reconciles": "SELECT (SELECT sum(gross_payment_revenue-net_revenue) FROM customer_month) - (SELECT sum(refund_amount) FROM transactions)",
-        "ex_test_customer_counts_reconcile": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE x.n_acquired+x.excluded_test_buyers<>c.n_acquired",
-        "ex_test_cell_counts_reconcile": "SELECT count(*) FROM (SELECT cohort_month,age_month,sum(n_acquired) AS n_acquired,sum(n_retained) AS n_retained FROM cohort_age_ex_tests GROUP BY cohort_month,age_month) c JOIN cohort_economics_ex_tests x USING(cohort_month,age_month) WHERE c.n_acquired<>x.n_acquired OR c.n_retained<>x.n_retained",
-        "ex_test_spending_reconciles": "SELECT count(*) FROM cohort_economics_ex_tests x JOIN cohort_cash_economics c USING (cohort_month,age_month) WHERE abs(x.acquisition_spend+x.excluded_test_spend-c.acquisition_spend)>0.000001",
         "friction_unique_customers": "SELECT count(*)-count(DISTINCT person_id) FROM friction_subjects",
         "friction_precedes_outcomes": "SELECT renewals_before_landmark+feature_window_violations+outcome_transactions_before_landmark FROM friction_timing_audit",
-        "friction_no_experimental_buyers": "SELECT count(*) FROM friction_subjects f JOIN experiment_assignments x USING(person_id)",
         "friction_complete_denominators": "SELECT count(*) FROM (SELECT scheme,sum(n_acquired) n,sum(n_age5_observed) n5 FROM friction_segment_summary GROUP BY scheme) WHERE n<>(SELECT count(*) FROM friction_subjects) OR n5<>(SELECT count(*) FROM friction_subjects WHERE age5_observed)",
         "friction_future_outcomes_missing": "SELECT count(*) FROM friction_subjects WHERE NOT age5_observed AND (retained_age5 IS NOT NULL OR contribution_ages1_5 IS NOT NULL)",
     }
@@ -139,7 +130,6 @@ def build_views(data_dir: Path, output_dir: Path) -> dict:
         summary_queries = {
             "cohort_overview": "SELECT cohort_month,n_acquired,acquisition_spend,cac,observed_months,first_observed_payback_age,cash_payback_month FROM cohort_cash_economics WHERE age_month=0 ORDER BY cohort_month",
             "six_month_comparison": "SELECT cohort_month,n_acquired,retained_share,revenue_retention,cac,cumulative_contribution_per_customer,balance_per_customer FROM cohort_six_month_comparison ORDER BY cohort_month",
-            "experiment_effects": "SELECT * FROM experiment_effects ORDER BY experiment_id",
             "segmentation": "SELECT * FROM segmentation_comparison ORDER BY scheme",
         }
         summaries = {key: _records(con, query) for key, query in summary_queries.items()}
@@ -151,9 +141,8 @@ def build_views(data_dir: Path, output_dir: Path) -> dict:
         "schema_version": "1.0", "data_as_of": manifest["data_as_of"], "timezone": manifest["timezone"],
         "currency": manifest["currency"], "definitions": manifest["definitions"],
         "source_validation": source_validation, "sql_checks": checks, "table_row_counts": row_counts,
-        "experiment_interval": "Approximate 95% normal intervals: purchase-rate differences use unpooled Bernoulli standard errors; contribution-after-media per prospect uses sqrt(s_T^2/n_T+s_C^2/n_C), with sample contribution variances over every assigned person including nonbuyers with zero outcomes. Recorded media spending is treated as fixed and changes the mean, not its standard error. Total-pilot contribution intervals scale the per-prospect interval by n_T. Each experiment retains its own controls and explicit assignment/follow-up dates; windows can differ. These are not long-run LTV intervals, do not include cost uncertainty, and have no correction for comparing different tests.",
-        "segmentation_scope": "The same paid customers with six complete observed acquisition-age months, excluding both experiment arms. Four baseline schemes each have two groups; outcome is six-receipt contribution including zeros after churn. Variance reduction compares with the pooled outcome. A second comparison centers outcomes by joining month before grouping. Both are descriptive discrimination, not treatment effects.",
-        "friction_scope": "Post-acquisition diagnostic groups use [first payment, first payment + 27 days), with complete exposure and both experimental arms excluded. First-renewal retention is primary; age-5 retention and ages1–5 contribution are secondary, including zeros after exit and original-customer denominators. No recorded survey response and unanswered difficulty items remain distinct. Timing assertions verify first renewals and outcome transactions follow the window. Refunds are retained and separately flagged; their presence does not establish exit. Cancellation-request times are unavailable. No diagnostic feature enters the valuation model; no acquisition spending is allocated to these groups.",
+        "segmentation_scope": "The same paid customers with six complete observed acquisition-age months, Four baseline schemes each have two groups; outcome is six-receipt contribution including zeros after churn. Variance reduction compares with the pooled outcome. A second comparison centers outcomes by joining month before grouping. Both are descriptive discrimination, not treatment effects.",
+        "friction_scope": "Post-acquisition diagnostic groups use [first payment, first payment + 27 days), with complete exposure. First-renewal retention is primary; age-5 retention and ages1–5 contribution are secondary, including zeros after exit and original-customer denominators. No recorded survey response and unanswered difficulty items remain distinct. Timing assertions verify first renewals and outcome transactions follow the window. Refunds are retained and separately flagged; their presence does not establish exit. Cancellation-request times are unavailable. No diagnostic feature enters the valuation model; no acquisition spending is allocated to these groups.",
         "money": "Source amounts are integer cents rendered as decimal money. DuckDB monetary sums use DECIMAL. Ratios and statistical quantities use floating point.",
         **summaries,
     }

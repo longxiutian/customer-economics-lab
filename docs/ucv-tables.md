@@ -1,22 +1,25 @@
 # Universal Customer View by source dataset
 
-Identifiers include record-linking keys and descriptive profile fields (such as age, household, region or campaign target group); not every identifier is unique. Engagement describes observed interactions and their measurement context. Relationship describes contractual/commercial context. Perception records stated views or intentions.
+**Identifiers:** Keys and profile descriptors identify or link people, groups and records; not every identifier is unique.
+**Engagement:** Observed customer interactions and their measurement context. Firm marketing activity and attribution metadata are retained as explicitly marked contextual evidence; they do not establish individual exposure, action or a causal effect.
+**Relationship:** Contractual and commercial arrangements, customer status, and explicitly marked operational context for relationship economics.
+**Perception:** Customer-reported views or intentions, distinguished from behavior and analyst inference.
 
-Each field appears once in the best-fitting category. Empty categories are evidence gaps, not zeros. Some accounting and experiment-design fields support analysis without directly describing a customer; notes identify those cases.
+Each field appears once in the best-fitting category. Empty categories are evidence gaps, not zeros. A dagger (†) marks contextual or operational placement. Such a field supports interpretation without itself establishing a customer action or attitude; its rationale follows the table. The dagger is not part of the field name.
 
 ## people.csv
 
-**CRM** — One person, including eligible prospects who never purchase.
+**CRM** — One person in the operational customer-history panel.
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `person_id`<br>`age_band`<br>`household_type`<br>`region` | — | `record_created_at`<br>`attributes_recorded_at` | `primary_need` |
+| `person_id`<br>`age_band`<br>`household_type`<br>`region` | — | `record_created_at`†<br>`attributes_recorded_at`† | `primary_need` |
 
 - `age_band`: Profile descriptor; it identifies a demographic group, not a unique person.
 - `household_type`: Profile descriptor; the subscription unit remains one individual.
 - `region`: Geographic profile descriptor, not an observed preference.
 - `record_created_at`: CRM relationship provenance; registration does not establish a paid customer.
-- `attributes_recorded_at`: Profile provenance: verifies attributes were available before acquisition or assignment.
+- `attributes_recorded_at`: Profile provenance: verifies attributes were available before acquisition.
 - `primary_need`: A stated intention recorded before acquisition, not a need inferred from future behavior.
 
 ## subscription_periods.csv
@@ -37,10 +40,10 @@ Each field appears once in the best-fitting category. Empty categories are evide
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `transaction_id`<br>`person_id`<br>`period_id`<br>`related_transaction_id`<br>`order_id` | `occurred_at`<br>`transaction_type`<br>`charge_type`<br>`quantity`<br>`gross_amount`<br>`discount_amount`<br>`refund_amount` | `unit_price`<br>`variable_cost` | — |
+| `transaction_id`<br>`person_id`<br>`period_id`<br>`related_transaction_id`<br>`order_id` | `occurred_at`<br>`transaction_type`<br>`charge_type`<br>`quantity`<br>`gross_amount`<br>`discount_amount`<br>`refund_amount` | `unit_price`†<br>`variable_cost`† | — |
 
-- `unit_price`: Commercial terms of the purchased item; the billed quantity and amounts are observed engagement.
-- `variable_cost`: Operational accounting support for relationship economics, not a customer-reported perception.
+- `unit_price`: The item's commercial price term is Relationship context; billed quantity and realized amounts record transaction Engagement.
+- `variable_cost`: Firm-side accounting context for relationship economics; unlike billed amounts, it does not record a customer payment or reported perception.
 - `related_transaction_id`: A refund links to the original payment; it does not identify another customer.
 - `refund_amount`: Observed financial reversal; a reason for dissatisfaction is not recorded here.
 
@@ -60,7 +63,7 @@ Each field appears once in the best-fitting category. Empty categories are evide
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `response_id`<br>`person_id` | `submitted_at`<br>`journey_stage` | — | `ease_rating`<br>`value_rating`<br>`main_difficulty` |
+| `response_id`<br>`person_id` | `submitted_at`<br>`journey_stage`† | — | `ease_rating`<br>`value_rating`<br>`main_difficulty` |
 
 - `submitted_at`: Survey-response activity and timing, not the attitude itself.
 - `journey_stage`: Context of the response, not a measured universal customer path.
@@ -72,13 +75,13 @@ Each field appears once in the best-fitting category. Empty categories are evide
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `campaign_id`<br>`target_need` | `spend_date`<br>`channel`<br>`media_spend`<br>`other_acquisition_spend` | — | — |
+| `campaign_id`<br>`target_need`† | `spend_date`†<br>`channel`†<br>`media_spend`†<br>`other_acquisition_spend`† | — | — |
 
-- `target_need`: Campaign targeting descriptor; no individual stated preference is observed in this aggregate ledger.
+- `target_need`: Identifies the campaign's target group; unlike a person's primary_need, it is not an individually stated intention. Channel describes the firm's marketing activity, so it is Engagement context instead.
 - `spend_date`: Timing of firm marketing activity, not a customer touchpoint timestamp.
 - `channel`: Context of firm marketing activity; it does not prove an individual's exposure.
-- `media_spend`: Campaign-level operational support for acquisition economics, not individual engagement.
-- `other_acquisition_spend`: Campaign-level creative/vendor costs; aggregate once before joining customers.
+- `media_spend`: Firm-side campaign spending is retained as Engagement context, not individual engagement or evidence of exposure.
+- `other_acquisition_spend`: Firm-side creative/vendor costs are Engagement context, not observed customer activity; aggregate once before joining customers.
 
 ## acquisition_attribution.csv
 
@@ -86,20 +89,23 @@ Each field appears once in the best-fitting category. Empty categories are evide
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `person_id`<br>`first_paid_transaction_id`<br>`credited_campaign_id` | `source_type`<br>`credited_at`<br>`attribution_rule` | — | — |
+| `person_id`<br>`first_paid_transaction_id`<br>`credited_campaign_id` | `source_type`†<br>`credited_at`†<br>`attribution_rule`† | — | — |
 
 - `source_type`: Recorded acquisition-path credit; an attribution label does not establish incrementality.
 - `credited_at`: When credit was recorded, not necessarily the acquisition or exposure time.
 - `attribution_rule`: Measurement metadata for engagement credit, not a customer action itself.
 
-## experiment_assignments.csv
+## channel_holdouts.csv
 
-**Experiment platform** — One eligible person per randomized experiment, including all nonbuyers.
+**Channel acquisition pilots** — One arm per channel acquisition test in a separate pilot sample; all assigned prospects remain in the counts.
 
 | Identifiers | Engagement | Relationship | Perception |
 | --- | --- | --- | --- |
-| `experiment_id`<br>`person_id`<br>`tested_campaign_id` | — | `assigned_at`<br>`arm`<br>`followup_end_at` | — |
+| `test_id`<br>`channel`<br>`primary_need` | `n_buyers`<br>`media_spend`†<br>`other_acquisition_spend`† | `assigned_at`†<br>`arm`†<br>`followup_end_at`†<br>`n_assigned`† | — |
 
-- `assigned_at`: Experimental relationship/design metadata; assignment is not observed exposure or purchase.
+- `n_assigned`: All randomized eligible prospects, including nonbuyers; an arm-level design count, not a customer relationship history.
+- `media_spend`: Focal campaign media in the pilot budget; firm-side spending, not customer activity.
+- `other_acquisition_spend`: Incremental creative/vendor acquisition costs in the pilot budget; excluded from the separate operational cohort ledger.
+- `assigned_at`: Randomization date in a separate acquisition-only pilot sample.
 - `arm`: Randomized intervention assignment; control nonbuyers must remain in the denominator.
 - `followup_end_at`: Prespecified measurement window, not a subscription end date.

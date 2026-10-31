@@ -1,213 +1,57 @@
 {
-  "boundary_receipt": "validation/private-boundary.json",
-  "companion": {
-    "editable_charts": 5,
-    "editable_tables": 5,
-    "pdf_sha256": "fbb8705a4da14127e2d835fa8ccd2247b555bd99c27f5f1a4edb3d0f612392fb",
-    "pptx_sha256": "20b2f4408a980732ad08b705fa96536fcfbf7eec997289a134fa5bd9f07bfa9c",
-    "slides": 12,
-    "status": "Retained unchanged from v5"
+  "acquisition_tests": 4,
+  "artifact_validation": {
+    "companion_integrity_verified": true,
+    "implementation_files": 266,
+    "pdf_verified": true
   },
-  "dataset_version": "4.0",
-  "date": "2026-10-30",
-  "fit_provenance": "Frozen v4 NUTS and neural fitted artifacts are retained unchanged. This release replays observed ETL, diagnostics, decision metrics, post-estimation and reporting, without a new inference run or future-outcome scoring.",
-  "main_model": {
-    "baseline_historical_value_mae": 24.667540275769145,
-    "divergences": 0,
-    "historical_value_mae": 4.021891373613598,
-    "inference": "NumPyro NUTS on CPU",
-    "max_r_hat": 1.002323772673553,
-    "min_ess": 1023.2638189283109,
-    "retention": "Hierarchical shifted-Beta-Geometric",
-    "revenue": "Gamma"
+  "assets": {
+    "assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf": "c375ec4ace9717cb64d7abb17fe6e04720a15e5a5aafdbcb912fa59e52255ca4",
+    "examples/reference/report/customer-economics-report.pdf": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+    "teaching/customer-economics-lab.pdf": "b320e818e34354a921254cd5cd9899681433375202f79f0e2e5059c3343ed608",
+    "teaching/customer-economics-lab.pptx": "e9c78f4dbc1456b6f8487d528e0490b3ad72fc6040a45f762226435eb4dd1736"
   },
-  "orduz_comparison": {
-    "actual_fit": true,
-    "held_out_cells": 258,
-    "model": "Orduz-derived Bayesian neural conditional-churn benchmark",
-    "retention_mae": 1.334809680371808,
-    "role": "Separate retention-only comparison; does not determine executive LTV or cash payback."
+  "canonical_report_artifacts_identical": 122,
+  "companion_slides": 13,
+  "data_manifest_sha256": "1a961a911c997b5e88dab9f61cde1f634d5031308c57636e8537de343dfc1dd6",
+  "dataset_version": "5.0",
+  "fitted_and_challenge_artifacts_identical": 20,
+  "fresh_model_processes": 2,
+  "future_challenge": {
+    "future_outcomes_read": false,
+    "instructor_action": "Reconcile existing future person-level outcomes to the 5703 released people and seal the matching answer file before scoring. The archived commitment predates this population.",
+    "private_answer_key_validated_for_dataset_5": false,
+    "public_grid_and_baseline_rebuilt": true
   },
-  "previous_releases_preserved": [
-    "v4.0.0",
-    "v5.0.0",
-    "v6.0.0",
-    "v6.0.1",
-    "v6.0.2",
-    "v6.1.0"
+  "implementation_manifest_sha256": "aded9cacc209f42fc50c17a3ec6ce2d7140f35e332aed22627599ecaad48f689",
+  "operational_customers": 5703,
+  "pilot_arm_rows": 8,
+  "public_download_check": "Performed after publication against the actual tagged ZIP; the separate receipt is attached to the GitHub release.",
+  "receipts": [
+    "data-migration.json",
+    "refit-v1.7.0.json",
+    "reproducibility-v1.7.0.json",
+    "visual-qa.json",
+    "pytest.txt",
+    "private-boundary.json"
   ],
-  "prior_v6_0_2_reproducibility": {
-    "body_pages_pixel_identical": 48,
-    "model_refit": false,
-    "receipt": "validation/cover-update.json",
-    "report_replays": 1,
-    "scope": "Cover typography, wording and centered evidence/cutoff lines only; one fresh observed report replay from unchanged fitted artifacts, plus pixel comparison against v6.0.0. No new inference or numerical-analysis revision.",
-    "unchanged_numeric_tables": 39
+  "report_pages": 50,
+  "report_replay_processes": 2,
+  "schema_version": "3.0",
+  "skills": {
+    "executive_report": "valid",
+    "root": "valid"
   },
-  "prior_v6_0_2_tests": {
-    "affected": "6 passed in 2.91s",
-    "scope": "Existing report-format checks and the bootstrap release-URL test; analytical code unchanged."
-  },
-  "prior_v6_1_0_reproducibility": {
-    "canonical_files": 127,
-    "mismatches": 0,
-    "model_refit": false,
-    "processes": 2,
-    "receipt": "validation/reproducibility-v6.1.json",
-    "same_host_only": true
-  },
-  "prior_v6_1_0_tests": {
-    "command": "uv run --frozen python -m pytest tests/test_reproducibility.py tests/test_workflow.py tests/test_report.py tests/test_report_v4.py tests/test_query.py -q",
-    "count": 75,
-    "final_reproducibility_suite": "9 passed in 20.36s against final source and refreshed reference artifacts",
-    "scope": "Affected behavioral tests, including six identical-tampering counterexamples; not a new full model suite.",
-    "seconds": 290.49,
-    "status": "passed"
-  },
-  "prior_v6_method_review": {
-    "accounting_status": "committed",
-    "adjudication": "Accepted the matched-estimand, short-horizon, interval, fixed-dose and segmentation-variance clarifications. The noted tiny SD discrepancy comes from rounded prompt inputs; the implementation reconciles unrounded population variances. No refit or data revision required.",
-    "effort": "max",
-    "incomplete": false,
-    "model": "claude-opus-5-5",
-    "scope": "Self-contained methodology critique; no claim of repository, source-data or full-report inspection.",
-    "stop_reason": "end_turn",
-    "verdict": "Approved with necessary clarifications, incorporated in the final report. Execution and rendering checks were local."
-  },
-  "prior_v6_reproducibility": {
-    "canonical_files": 125,
-    "mismatches": 0,
-    "model_refit": false,
-    "protected_artifacts": 55,
-    "receipt": "validation/reproducibility.json",
-    "scope": "Two fresh same-host observed ETL, diagnostics, decision-metrics, post-estimation, diagram and report processes with verified frozen fitted outputs. No inference refit or future-outcome scoring; byte equality is not a cross-platform claim.",
-    "unchanged_prior_numeric_tables": 37
-  },
-  "prior_v6_tests": {
-    "additional_integration_receipt": "validation/decision-metrics-integration.json",
-    "final_workflow_suite": "21 passed in 10.27s after updating only that assertion to v6; no executable code changed after the full run",
-    "initial_full_suite": "186 passed, one stale v5 download-URL assertion failed in 1052.82s",
-    "new_counterexample_tests": 6,
-    "verified_unique_tests": 187
-  },
-  "release": "v1.6.1",
-  "report": {
-    "all_pages_rendered": true,
-    "cac_pages": [
-      27,
-      28,
-      29,
-      30,
-      31
-    ],
-    "citation_keys": [
-      "bouhnick",
-      "course2026",
-      "fader2007",
-      "fader2010",
-      "larsen2019",
-      "mccarthy2017",
-      "orduz2024"
-    ],
-    "copyability": {
-      "commands": 2,
-      "distinct_fields": 52,
-      "extractor": "pypdf",
-      "source_filenames": 8,
-      "status": "passed"
-    },
-    "course_credit": [
-      "Kenan-Flagler Business School",
-      "MBA 743: Managing Customer Data",
-      "Mod II 2026"
-    ],
-    "cover_alignment": "center",
-    "cover_details_alignment": "center",
-    "cover_lines": 2,
-    "figures": 17,
-    "overfull_boxes": 0,
-    "pages": 49,
-    "reference_entries": 7,
-    "references_pages": [
-      48,
-      49
-    ],
-    "section_separators": 9,
-    "segmentation_objective_page": 12,
-    "sha256": "04514f847f95bad3d38c5089deb2a80b22e55392918d1eef33fb5706f187a749",
-    "subtitle": "A customer-base analysis of cohort-based LTV at Studio North",
-    "tables": 32,
-    "title": "Are We Moving in the Right Direction?",
-    "visual_qa": "validation/skill-audit-v6.1.json"
-  },
-  "reproducibility": {
-    "canonical_files": 127,
-    "mismatches": 0,
-    "model_refit": false,
-    "processes": 2,
-    "receipt": "validation/reproducibility-v1.6.1.json",
-    "same_host_only": true
-  },
-  "review": {
-    "scope": "Local numbering and immutable-history audit, workflow tests, two fresh report replays, artifact integrity and tagged-download verification. Prior methodological and visual reviews retain their original scope."
-  },
-  "scope": "Release-number reindex and refreshed provenance only. No report content, data, fitted model, numeric or companion changes.",
-  "skill_audit": "validation/skill-audit-v6.1.json",
+  "source_csv_files": 8,
+  "status": "pass_with_declared_scope",
   "tests": {
-    "command": "uv run --frozen python -m pytest tests/test_workflow.py -q",
-    "count": 21,
-    "scope": "Existing workflow, archive and download-default checks; no new model test run.",
-    "seconds": 30.4,
-    "status": "passed"
+    "collected": 187,
+    "final_followup_passed": 17,
+    "full_run_failed": 2,
+    "full_run_passed": 185,
+    "passing_unique_tests_across_runs": 187,
+    "unresolved_failures": 0
   },
-  "version_reindex_receipt": "validation/version-reindex-v1.6.1.json",
-  "versioning": {
-    "course_year": 2026,
-    "former_release_label": "v6.1.0",
-    "historical_aliases": [
-      {
-        "commit": "e0cce4bcc9523d2b98f6b69028fd4ea7b9512195",
-        "legacy_tag": "v1.0.0",
-        "tag": "v1.1.0"
-      },
-      {
-        "commit": "014b9e85b16afeee0a700f80373ff32a9725ed7e",
-        "legacy_tag": "v2.0.0",
-        "tag": "v1.2.0"
-      },
-      {
-        "commit": "0e403129b022187fd23ea3c85eaa936404b2ff18",
-        "legacy_tag": "v3.0.0",
-        "tag": "v1.3.0"
-      },
-      {
-        "commit": "2294d0d323ed33d9ea8128b33c370fe917e3b4ab",
-        "legacy_tag": "v4.0.0",
-        "tag": "v1.4.0"
-      },
-      {
-        "commit": "938743dc29386da46118ef20ea18727544f8f458",
-        "legacy_tag": "v5.0.0",
-        "tag": "v1.5.0"
-      },
-      {
-        "commit": "ce9b2cb762faeb6dda2920644a9c611c316fb83f",
-        "legacy_tag": "v6.0.0",
-        "tag": "v1.6.0"
-      },
-      {
-        "commit": "18637203f9a688b9250999001fe2ea38ddcfd044",
-        "legacy_tag": "v6.0.1",
-        "tag": "v1.6.0+cover.1"
-      },
-      {
-        "commit": "83e9519bce1432269267fbb3089ae1b7f9a52d9b",
-        "legacy_tag": "v6.0.2",
-        "tag": "v1.6.0+cover.2"
-      }
-    ],
-    "next_course_year_series": "2.x.x",
-    "policy": "docs/versioning.md",
-    "series": "1.x.x"
-  }
+  "uv_lock_sha256": "fc50701df587f29b211c5e1ef1650d1ac2e7790078370e8b600f59ef830b8080",
+  "version": "1.7.0"
 }
