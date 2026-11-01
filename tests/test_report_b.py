@@ -41,8 +41,11 @@ def test_reference_planning_has_seven_and_nine_payment_recovery():
     assert result.loc[("partner", "build_skill"), "break_even_value_share"] == pytest.approx(.5648265)
 
 
-def test_variant_b_is_explicit_and_default_replay_remains_a(tmp_path):
+def test_current_data_defaults_to_b_and_preserves_a_as_archived(tmp_path):
     kwargs = dict(mode="report", source=tmp_path / "fit", steps=3000, pdf=True)
-    assert "--variant" not in command_for(tmp_path / "a", **kwargs)
+    default = command_for(tmp_path / "default", **kwargs)
+    assert default[default.index("--variant") + 1] == "B"
+    with pytest.raises(ValueError, match="archived"):
+        command_for(tmp_path / "a", variant="A", **kwargs)
     command = command_for(tmp_path / "b", variant="B", **kwargs)
     assert command[command.index("--variant") + 1] == "B"

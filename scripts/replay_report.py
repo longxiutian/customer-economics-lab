@@ -15,7 +15,7 @@ from cohort_lab.report import build_report, _validate_model_outputs
 from cohort_lab.workflow import verify_frozen_inputs
 
 
-def replay(source: Path, output: Path, *, compile_pdf: bool = True, variant: str = "A") -> dict:
+def replay(source: Path, output: Path, *, compile_pdf: bool = True, variant: str = "B") -> dict:
     source, output = source.resolve(), output.resolve()
     if output.exists() and any(output.iterdir()):
         raise ValueError("Use a fresh empty report replay directory")
@@ -48,6 +48,6 @@ if __name__ == "__main__":
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--instructor", action="store_true", required=True)
     parser.add_argument("--no-pdf", action="store_true", help="Rebuild editable TeX; do not claim a compiled PDF")
-    parser.add_argument("--variant", choices=("A","B"), default="A")
+    parser.add_argument("--variant", choices=("B",), default="B")
     args = parser.parse_args()
     print(json.dumps(replay(args.source, args.output, compile_pdf=not args.no_pdf,variant=args.variant), indent=2))

@@ -14,7 +14,7 @@ from pathlib import Path
 
 DATA_AS_OF = "2026-01-01T00:00:00Z"
 SCHEMA_VERSION = "3.0"
-DATASET_VERSION = "5.0"
+DATASET_VERSION = "5.1"
 
 SCHEMAS = {
     "people.csv": {
@@ -67,7 +67,7 @@ GRAINS = {
     "feedback.csv": "One completed linked survey response; nonresponse is missing, not a zero rating.",
     "campaign_spend.csv": "One campaign per spending date; aggregate before joining to customer outcomes.",
     "acquisition_attribution.csv": "One acquired person and the recorded credit for the first successful payment.",
-    "channel_holdouts.csv": "One arm per channel acquisition test in a separate pilot sample; all assigned prospects remain in the counts.",
+    "channel_holdouts.csv": "One arm per completed monthly channel acquisition test in a separate research sample; all assigned prospects remain in the counts.",
 }
 
 
@@ -227,6 +227,13 @@ def validate_data(data_dir: Path) -> dict:
             raise ValueError("Each channel test requires its own treatment and control")
         if len({tuple(r[k] for k in ["channel", "primary_need", "assigned_at", "followup_end_at"]) for r in group}) != 1:
             raise ValueError("Channel test arms have different population or window")
+        start = datetime.fromisoformat(group[0]["assigned_at"])
+        end = datetime.fromisoformat(group[0]["followup_end_at"])
+        if (end - start).total_seconds() != 31 * 86400:
+            raise ValueError("Channel tests require the fixed 31-day follow-up window")
+    windows = [(g[0]["channel"], g[0]["primary_need"], g[0]["followup_end_at"]) for g in tests.values()]
+    if len(windows) != len(set(windows)):
+        raise ValueError("Ambiguous latest channel test: duplicate population and completion date")
     return {"status": "passed", "files_checked": len(SCHEMAS), "row_counts": {k: len(v) for k, v in rows.items()},
             "acquired_people": len(firsts), "channel_test_assigned": sum(int(r["n_assigned"]) for r in rows["channel_holdouts.csv"]),
             "manifest_sha256": _digest(manifest_path)}

@@ -95,7 +95,7 @@ def hand_data(tmp_path):
                       "source_type": "paid_campaign" if campaign else "organic", "attribution_rule": "fixture_rule",
                       "credited_at": f"2024-{month:02d}-04 00:00:00"})
     pilots = [{"test_id":"PILOT", "channel":"search", "primary_need":"save_time",
-               "assigned_at":"2024-02-01 00:00:00", "followup_end_at":"2024-03-01 00:00:00",
+               "assigned_at":"2024-02-01 00:00:00", "followup_end_at":"2024-03-03 00:00:00",
                "arm":arm, "n_assigned":2, "n_buyers":1, "media_spend":media, "other_acquisition_spend":"0.00"}
               for arm,media in [("treatment","8.00"),("control","0.00")]]
     all_rows = {"people.csv": people, "subscription_periods.csv": periods, "transactions.csv": transactions,

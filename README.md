@@ -68,7 +68,7 @@ See [1.7 release changes](docs/v1.7-changes.md) for the acquisition-only holdout
 
 ## Instructor reproducibility
 
-The frozen observed data release is version **5.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
+The frozen observed data release is version **5.1**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
 
 Read [the reproducibility guide](docs/reproducibility.md) for the complete artifact contract, visual checks, companion provenance and ZIP handoff. Validate saved artifacts or rebuild the report twice from frozen fits:
 

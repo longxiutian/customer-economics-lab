@@ -16,6 +16,7 @@ SQL_DIR = Path(__file__).resolve().parents[1] / "sql"
 SOURCE_SQL = ("01_views.sql", "02_friction.sql")
 TABLE_SORTS = {
     "channel_cac": "test_id",
+    "channel_cac_current": "channel,primary_need",
     "customer_month": "person_id, age_month",
     "cohort_age_summary": "cohort_month, channel, primary_need, age_month",
     "cohort_acquisition_costs": "cohort_month, channel, primary_need",

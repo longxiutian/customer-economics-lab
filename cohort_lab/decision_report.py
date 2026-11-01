@@ -7,7 +7,7 @@ def decision_context(output):
     from .decision_metrics import validate_decision_metrics
     validate_decision_metrics(output)
     segments=_table(output,"segmentation_objective.csv")
-    cac=_table(output,"channel_cac.csv").sort_values("test_id")
+    cac=_table(output,"channel_cac_current.csv").sort_values("test_id")
     value=_table(output,"channel_value_decision.csv").sort_values("test_id")
     def money(x):
         if pd.isna(x):return "Not defined"

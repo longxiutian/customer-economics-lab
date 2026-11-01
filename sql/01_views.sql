@@ -204,7 +204,7 @@ CREATE OR REPLACE VIEW channel_cac AS
 WITH paired AS (
  SELECT t.test_id,t.channel,t.primary_need,t.assigned_at,t.followup_end_at,
         date_diff('day',t.assigned_at,t.followup_end_at)::INTEGER AS followup_days,
-        CAST(date_trunc('month',t.assigned_at) AS DATE) AS value_cohort_month,
+        CAST(date_trunc('month',t.assigned_at) AS DATE) AS test_month,
         t.n_assigned AS n_treatment,c.n_assigned AS n_control,
         t.n_buyers AS buyers_treatment,c.n_buyers AS buyers_control,
         t.n_assigned::DOUBLE/c.n_assigned AS scale_to_treatment,
@@ -231,3 +231,11 @@ SELECT *,spend_treatment/nullif(buyers_treatment,0) AS credited_cac,
        CASE WHEN buyers_ci_upper>0 THEN incremental_spend/buyers_ci_upper END AS icac_ci_lower,
        CASE WHEN buyers_ci_lower>0 THEN incremental_spend/buyers_ci_lower END AS icac_ci_upper
 FROM intervals;
+
+-- The export contains only complete, fixed-window tests validated against the cutoff.
+-- Update each cell from its latest result, even if lift is weak or unfavorable.
+CREATE OR REPLACE VIEW channel_cac_current AS
+SELECT * FROM channel_cac
+QUALIFY row_number() OVER (
+    PARTITION BY channel,primary_need ORDER BY followup_end_at DESC,test_id
+) = 1;
