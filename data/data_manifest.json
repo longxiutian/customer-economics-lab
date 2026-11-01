@@ -1,27 +1,29 @@
 {
   "channel_holdout_design": {
+    "budget": "Each enrollment wave has four treatment arms at $11,000 each: $44,000. Six waves total $264,000, separate from the operational acquisition ledger. All controls have zero focal campaign spending.",
+    "cadence": "Monthly fixed-window tests. Keep all completed waves; update each cell from its latest completed test, regardless of direction or significance. Do not pool months or channels. No early stopping or use of incomplete waves.",
     "channel_comparison": "Each channel has its own eligible audience and control. Compare value/cost planning estimates, not a randomized head-to-head channel effect.",
     "control": "Withhold that focal campaign; all other background conditions continue.",
     "cost_scope": "Focal media plus incremental campaign-specific creative/vendor costs, both counted once; fixed costs outside acquisition are excluded.",
     "outcome": "First paid acquisition through any route within 31 days. All assigned nonbuyers remain in n_assigned.",
-    "source_scope": "Separate synthetic pilot sample and budget; not part of the operational customer-history panel. Aggregated arm export, with no person identifier or downstream financial outcomes.",
+    "source_scope": "Separate synthetic acquisition research sample and budget; not part of the operational customer-history panel. Aggregated arm export, with no person identifier or downstream financial outcomes.",
     "treatment": "Offer the focal acquisition campaign at the recorded spend.",
-    "unit": "Eligible never-paid prospect; 500 randomized to each arm within each channel-by-baseline-need test; disjoint people across tests.",
-    "value_benchmark": "Matching July 2025 operational cohort, channel and primary need; explicitly assume additional pilot customers have comparable twelve-receipt contribution value.",
-    "window": "2025-07-01 inclusive to 2025-08-01 exclusive"
+    "unit": "Eligible never-paid prospect; 500 randomized to each arm within each channel-by-baseline-need test; fresh, disjoint people across all 24 tests.",
+    "value_benchmark": "Latest common operational cohort with at least six observed receipts in each tested channel/need cell (July 2025 at this cutoff). Latest completed iCAC is used for forward planning; additional buyers are assumed to have that benchmark value.",
+    "window": "Six monthly enrollment waves from July through December 2025; each starts on the first and closes exactly 31 days later. The final wave closes at the January 1, 2026 cutoff."
   },
   "currency": "USD",
   "data_as_of": "2026-01-01T00:00:00Z",
-  "dataset_version": "5.0",
+  "dataset_version": "5.1",
   "definitions": {
     "CAC": "Recorded acquisition cost / first-paid customers. These are attribution/accounting ratios, not incremental CAC. Organic segment CAC is unsupported, not zero.",
     "acquisition": "First positive successful payment; an initial payment remains an acquisition if later refunded. CRM creation is not acquisition.",
     "acquisition_cost": "Recorded media plus campaign-specific creative/vendor acquisition costs. Discounts reduce transaction revenue and are not counted again as acquisition spending.",
     "attribution": "One credited ordinary campaign within the acquisition month. Source credit is not a causal label.",
     "business": "Studio North is a fictional monthly creative-work membership for independent professionals. Members use ready-to-use templates to save time or guided learning to build skills; standard ($50) and premium ($75) subscriptions can renew monthly, with optional paid workshops/add-ons.",
-    "channel_holdouts": "Separate, disjoint acquisition-only pilot sample. One row per randomized arm; all assigned prospects, buyers through every route, and focal acquisition spend. No customer-level linkage, revenue, retention or lifetime outcomes. Never join pilot counts or costs into cohort accounting or model fitting.",
+    "channel_holdouts": "Separate disjoint monthly acquisition-only research samples. One row per completed randomized arm; all assigned prospects, buyers through every route, and focal acquisition spend. No customer-level linkage, revenue, retention or lifetime outcomes. Never join these counts or costs into operational cohort accounting or model fitting.",
     "cohort": "Calendar month of the first paid transaction. cohort_index and age_month are zero-based; age 0 is the acquisition month.",
-    "company_scope": "The operational cohort panel and its recorded acquisition spending. The separate acquisition-only pilot sample and pilot budget are outside this panel.",
+    "company_scope": "The operational cohort panel and its recorded acquisition spending. The separate recurring acquisition-test budget is outside this panel and must be funded separately; these tables are not complete company cash flow.",
     "contribution": "Net revenue minus incurred variable_cost, before acquisition spending and fixed costs. Refund rows do not duplicate original service costs.",
     "forecast": "Separate observed cash contribution from model forecasts. A 12-month horizon and 1% monthly discount use first receipt t=age_month+1; cash payback is undiscounted.",
     "gross_payment_revenue": "Sum gross_amount minus discount_amount on successful payment rows, before refunds; positive for every retained person-month. Net revenue equals this payment revenue minus refunds.",
@@ -42,8 +44,8 @@
       "sha256": "a6110f1403dbe518ce5243c1392fd99fbfa101c66525f3371997055f304c0e8d"
     },
     "channel_holdouts.csv": {
-      "row_count": 8,
-      "sha256": "dcb650ee562ca1a6cb3d30be87d8646cf1dbb6288f62715d4057ce554b2ef1c4"
+      "row_count": 48,
+      "sha256": "1233899b79e24005af9e1863bcb1b220b762534d536cdff432e5c184a164764b"
     },
     "feedback.csv": {
       "row_count": 3321,
@@ -67,7 +69,23 @@
     }
   },
   "license": "Original synthetic teaching data; no real personal, course, or licensed-source records.",
-  "provenance": "Original synthetic teaching data. Version 5.0 removes all 1,000 legacy test prospects, their linked customer records and six test-spend rows from version 4.0 without changing retained rows. A separately frozen acquisition-only pilot summary replaces the former experimental data. Reproducibility begins from these published, hash-verified exports; no private generator or future labels are required.",
+  "provenance": "Original synthetic teaching data. Version 5.1 preserves all seven operational CSVs and the complete original July acquisition-test export byte for byte, appending 40 arm summaries for five further monthly enrollment waves. Only the acquisition research history changes. Analysis starts from the frozen, hash-verified exports; no private generator or future outcomes are required.",
+  "revision_lineage": {
+    "added_arm_rows": 40,
+    "fitted_model_reuse": "Permitted only after verifying that every saved model and benchmark input hash still matches the freshly rebuilt operational model inputs.",
+    "operational_files_unchanged": [
+      "acquisition_attribution.csv",
+      "campaign_spend.csv",
+      "feedback.csv",
+      "people.csv",
+      "product_events.csv",
+      "subscription_periods.csv",
+      "transactions.csv"
+    ],
+    "preserved_holdout_prefix_bytes": 870,
+    "previous_dataset_version": "5.0",
+    "previous_holdout_sha256": "dcb650ee562ca1a6cb3d30be87d8646cf1dbb6288f62715d4057ce554b2ef1c4"
+  },
   "schema_version": "3.0",
   "source_cutoffs": {
     "acquisition_attribution.csv": "2026-01-01T00:00:00Z",

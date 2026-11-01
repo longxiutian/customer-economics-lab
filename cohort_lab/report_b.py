@@ -1,4 +1,4 @@
-"""Version B presents the same verified cohort evidence for an executive reader."""
+"""Version B pairs monthly acquisition costs with verified operating-cohort evidence."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -10,7 +10,7 @@ import pandas as pd
 
 
 def incremental_planning(values: pd.DataFrame, cells: pd.DataFrame, paths: pd.DataFrame) -> pd.DataFrame:
-    """Price the saved benchmark contribution path at pilot iCAC, without a refit."""
+    """Price the saved benchmark contribution path at current iCAC, without a refit."""
     keys = ["cohort_month", "channel", "primary_need"]
     result = values.merge(cells[keys + ["cac", "payback_month"]], on=keys, how="left",
                           validate="one_to_one").rename(columns={
@@ -42,7 +42,7 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
     names = ["channel_value_decision.csv", "strategic_segment_breakout.csv",
              "segment_forecast_curves.csv", "segmentation_objective.csv",
              "segmentation_profile.csv", "cohort_valuation.csv", "company_totals.csv",
-             "strategic_rank_stability.csv"]
+             "strategic_rank_stability.csv", "channel_cac.csv", "channel_cac_current.csv"]
     frames = {name: _table(output, name) for name in names}
     sources = {name: _sha(output / "tables" / name) for name in names}
     charts["sources"].update(sources)
@@ -55,6 +55,13 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
     if len(positive) < 2 or pd.isna(best.planning_payback_receipt):
         raise ValueError("Review the comparison narrative: the reference decision has changed")
     runner = positive.iloc[1]
+    if (len(positive) != 2 or not (positive.primary_need == "build_skill").all()
+            or not best.icac_ci_upper < best.ltv_before_cac_mean
+            or not runner.icac_ci_lower < runner.ltv_before_cac_mean < runner.icac_ci_upper
+            or plan[plan.primary_need == "save_time"].planning_payback_receipt.notna().any()):
+        raise ValueError("Review the acquisition-choice prose against the current cost evidence")
+    from .holdout_report import prepare_holdout_history
+    holdout_context, holdout_evidence = prepare_holdout_history(output, charts, plan)
     label = lambda r: str(r.channel).title() + " / " + str(r.primary_need).replace("_", " ")
     money = lambda x: _dollars(x)
     table = lambda heads, rows, layout=None: r"{\fontsize{9}{11.2}\selectfont " + _latex_table(heads, rows, layout) + "}"
@@ -86,7 +93,8 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
     context["parameter_table"]="\n".join(line for line in context["parameter_table"].splitlines() if "organic" not in line)
     source_map = [
         ("fig:business-journey", ["diagrams/business-journey.json"]),
-        ("tab:channel-results-b", ["tables/channel_cac.csv"]),
+        ("fig:channel-icac-history", ["tables/channel_cac.csv"]),
+        ("tab:channel-results-b", ["tables/channel_cac_current.csv"]),
         ("fig:retention-triangle", ["tables/cohort_totals.csv"]),
         ("fig:cash-triangle", ["tables/cohort_cash_economics.csv"]),
         ("tab:need-profile-b", ["tables/segmentation_profile.csv"]),
@@ -143,12 +151,12 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
     fig.legend(handles=[
         Line2D([0], [0], color=COLORS["teal"], label="Contribution: solid observed / dashed forecast"),
         Line2D([0], [0], color=COLORS["muted"], ls=":", label="Historical average CAC"),
-        Line2D([0], [0], color=COLORS["orange"], ls="-.", label="Pilot iCAC")],
+        Line2D([0], [0], color=COLORS["orange"], ls="-.", label="Latest completed test: iCAC")],
         loc="upper center", bbox_to_anchor=(.5, 1.045), ncol=2, frameon=False, fontsize=8)
     figure_files = _save(fig, directory / "figures", "incremental-cash-paths")
     charts["figures"]["incremental-cash-paths"] = {
         "files": figure_files, "sources": names[:3],
-        "notes": "Mean contribution compared with historical CAC and pilot iCAC; incremental recovery conditional on path transfer.",
+        "notes": "Mean contribution compared with historical CAC and latest completed iCAC; incremental recovery conditional on path transfer.",
         "display_values": display_paths,
         "sha256": {name: _sha(directory / "figures" / name) for name in figure_files}}
     _write_json(directory / "chart_manifest.json", charts)
@@ -158,8 +166,9 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
         "higher_contribution": contribution_gain,
         "candidate": {"channel": best.channel, "primary_need": best.primary_need,
                       "selection_rule": "Largest point contribution value less iCAC among tested campaigns"},
-        "planning_calculation": "Saved cumulative cash after historical CAC + historical CAC; compare with pilot iCAC. First crossing counted from payment 1.",
-        "scope": "Frozen data and fits as A. These presentation calculations do not identify experimental customer value."})
+        "planning_calculation": "Saved cumulative cash after historical CAC + historical CAC; compare with current iCAC. First crossing counted from payment 1.",
+        "continuous_holdouts": holdout_evidence,
+        "scope": "Same seven operational CSVs and fitted models as A; acquisition-only history extended to six monthly waves in dataset 5.1. No experimental customer-value outcomes."})
     counts = [[label(r), f"{int(r.buyers_treatment)} / {int(r.buyers_control)}", str(int(r.incremental_buyers)),
                money(r.credited_cac), money(r.icac)] for r in plan.sort_values("test_id").itertuples()]
     costs = [[label(r), money(r.historical_cac), money(r.credited_cac), money(r.icac)] for r in plan.itertuples()]
@@ -202,7 +211,7 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
         "b_best_ci": _tex(f"{money(best.icac_ci_lower)}–{money(best.icac_ci_upper)}"),
         "b_runner_ci": _tex(f"{money(runner.icac_ci_lower)}–{money(runner.icac_ci_upper)}"),
         "b_channel_table": table(["Channel / stated need", "Buyers: campaign / holdout", "Additional buyers", "Credited CAC", "iCAC"], counts, r"p{.26\linewidth}YYYY"),
-        "b_cost_table": table(["Channel / stated need", "Historical avg. CAC", "Pilot credited CAC", "Pilot iCAC"], costs, r"p{.30\linewidth}YYY"),
+        "b_cost_table": table(["Channel / stated need", "Historical avg. CAC", "Latest credited CAC", "Latest iCAC"], costs, r"p{.30\linewidth}YYY"),
         "b_decision_table": table(["Campaign / stated need", "First-year value", "iCAC (95% interval)", "Value less iCAC", "Break-even value share"], decision, r"p{.23\linewidth}Yp{.25\linewidth}YY"),
         "b_value_table": table(["Channel / stated need", "Customers", "Value before CAC", "Historical CAC", "Value after CAC", "Forecast share"], value_rows, r"p{.23\linewidth}rYYYY"),
         "b_need_table": table(["Stated need", "Customers", "Retained at sixth payment", "Six-payment contribution"], need_rows, r"p{.24\linewidth}rYY"),
@@ -238,4 +247,5 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
         f"{int(example.incremental_buyers)} buyers. Dividing {money(example.incremental_spend)} by those "
         f"additional buyers gives {money(example.icac)} iCAC, versus {money(example.credited_cac)} "
         "when every treated buyer receives campaign credit.")
+    summary.update(holdout_context)
     return summary

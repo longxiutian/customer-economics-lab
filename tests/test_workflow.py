@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from cohort_lab.workflow import DATA_FILES, InputIntegrityError, LabWorkflow, WorkflowError, run_batch, verify_frozen_inputs
+from cohort_lab.workflow import DATA_FILES, DATASET_VERSION, InputIntegrityError, LabWorkflow, WorkflowError, run_batch, verify_frozen_inputs
 from scripts.bootstrap import archive_url, install_archive
 
 
@@ -15,7 +15,7 @@ from scripts.bootstrap import archive_url, install_archive
 def data_dir(tmp_path):
     directory = tmp_path / "data"
     directory.mkdir()
-    manifest = {"dataset_version": "5.0", "schema_version": "3.0", "data_as_of": "2026-01-01T00:00:00Z", "files": {}}
+    manifest = {"dataset_version": DATASET_VERSION, "schema_version": "3.0", "data_as_of": "2026-01-01T00:00:00Z", "files": {}}
     for name in DATA_FILES:
         content = "person_id,value\np1,1\n"
         (directory / name).write_bytes(content.encode("utf-8"))

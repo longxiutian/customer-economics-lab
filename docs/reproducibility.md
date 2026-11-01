@@ -4,13 +4,13 @@ Run every command below from the extracted repository with the frozen environmen
 
 ## Three different verification claims
 
-**Validate saved artifacts without recomputation:**
+**Validate a current report without further recomputation** (after the single replay below):
 
 ```text
-uv run --frozen python scripts/validate_artifacts.py --output examples/reference --companion
+uv run --frozen python scripts/validate_artifacts.py --output outputs/report-replay
 ```
 
-This validates frozen raw inputs, SQL-derived outputs, both fitted models and their matched validation cells, journey diagnostics, segmentation/CAC metrics, posterior post-estimation, diagrams, figures, editable report source, styles, PDF and source bindings. The implementation manifest includes Python and Node scripts, both skills and their references, linked documentation, vendored Archify files and dependency locks. The companion flag additionally checks its frozen PPTX/PDF and all declared analytical source-table hashes. Integrity does not establish numerical correctness or visual quality on its own.
+This validates frozen raw inputs, SQL-derived outputs, both fitted models and their matched validation cells, journey diagnostics, segmentation/CAC metrics, posterior post-estimation, diagrams, figures, editable report source, styles, PDF and source bindings. The implementation manifest includes Python and Node scripts, both skills and their references, linked documentation, vendored Archify files and dependency locks. `examples/reference` is archived A: use it as the source of verified fitted outputs, not as a current-source report-validation target. Its preserved teaching companion also belongs to that archived analysis; `--companion` requires the matching historical checkout and bound tables. This report revision does not update the slide deck. Integrity does not establish numerical correctness or visual quality on its own.
 
 **Rebuild the report twice without fitting either model:**
 
@@ -18,7 +18,7 @@ This validates frozen raw inputs, SQL-derived outputs, both fitted models and th
 uv run --frozen python scripts/verify_reproducibility.py --mode report --source examples/reference --output outputs/report-repro
 ```
 
-Each fresh Python process validates and copies only the baseline and neural manifests and their declared fitted outputs. It rebuilds observed DuckDB ETL, diagnostics, decision metrics, posterior post-estimation, diagrams, figures, editable TeX and PDF. It verifies the resulting evidence chain, then compares every canonical artifact. The original eight CSVs, synthetic holdouts, posterior draws and fitted outputs are preserved. `report_replay.json` records the reused hashes; `reproducibility.json` explicitly records `model_refit: false`. This mode does not recreate the optional twelve-calendar-month challenge predictions or learner choices. It builds the analyst reference report.
+Each fresh Python process validates and copies only the baseline and neural manifests and their declared fitted outputs. It rebuilds observed DuckDB ETL, diagnostics, decision metrics, posterior post-estimation, diagrams, figures, editable TeX and PDF. It verifies the resulting evidence chain, then compares every canonical artifact. Replay preserves the current dataset's eight frozen CSVs, posterior draws and fitted outputs. `report_replay.json` records the reused hashes; `reproducibility.json` explicitly records `model_refit: false`. This mode does not recreate the optional twelve-calendar-month challenge predictions or learner choices. It builds the current analyst report.
 
 For a single report replay, use:
 
@@ -38,7 +38,7 @@ Add `--no-pdf` to either verifier or the single replay only when editable TeX is
 
 ## What is compared and preserved
 
-For the fifteen-page executive comparison, use [the Version B contract and commands](report-version-b.md). Add `--variant B` to the single replay or the report-mode verifier. The released A artifact is preserved; the B implementation and calculation/source-map artifacts receive their own manifests. This is an editorial variant of 1.7.0, not a model refit or a new release.
+For the fifteen-page executive report, use [the Version B contract and commands](report-version-b.md). Current builds default to B; the explicit `--variant B` remains supported. Frozen A and the original B comparison are preserved. The current continuous-testing revision extends acquisition inputs in dataset 5.1, with new calculation/source-map manifests, while retaining the operating data and verified fits. It is not a model refit or a published semantic release.
 
 The verifier includes all numerical tables, saved SQL, analysis/input/model/benchmark/diagnostics/decision-metrics/post-estimation/implementation manifests, summaries and posterior draws; diagram JSON, HTML, SVG, PNG, UCV Markdown and inspection SQL; report TeX, style files, manifests, registry, evidence tables, figures and optional PDF; and challenge or replay receipts where that mode produces them. It validates the manifests before comparison, so two identically stale outputs do not pass. Logs, learner state, ad hoc query receipts, previews and page renders are separate evidence, not canonical output comparisons.
 
@@ -56,10 +56,10 @@ Byte equality is a same-host, same-environment claim. Pin Python and Node depend
 | Early journey signals with [0,27)-day exposure, operational panel, original denominators, survey missingness, common support and uncertainty | Report skill, `sql/02_friction.sql`, `diagnostics.py` | `friction_*` SQL tables, contrasts, balance, refund sensitivity, `diagnostics_manifest.json` |
 | Acquisition-stratum LTV and observed/forecast payback; maturity-based example selection and cross-cohort ranking checks | Report skill, `postestimation.py`, unchanged model path functions | Reconciliation of all baseline cells/paths, strategic breakout, segment curves, ranking stability, `postestimation_manifest.json` |
 | Acquisition-only channel holdouts upfront: credited CAC → background correction → iCAC, including other acquisition costs | Root skill stage 5, [CAC methodology](cac-incrementality.md), `decision_metrics.py`, `decision_report.py` | `channel_holdouts.csv`, saved SQL `channel_cac.csv`, early design/results section; no pilot outcomes enter the model |
-| Observed blended CAC paired with average cohort contribution LTV; finale pairs channel iCAC with matching contribution value before CAC under explicit assumptions | Same methodology note; report and root skills | `channel_value_decision.csv`, matching July 2025 channel/need benchmark and forecast share. No double subtraction or claim of experimentally identified lifetime return. |
+| Historical average CAC paired with average cohort contribution LTV; finale pairs channel iCAC with matching contribution value before CAC under explicit assumptions | Same methodology note; report and root skills | `channel_value_decision.csv`, latest completed tests and the maturity-selected July 2025 channel/need value benchmark, with both dates and forecast share. No double subtraction or claim of experimentally identified lifetime return. |
 | All 24 cohorts, comparable ages/weights, missing future cells, stable dark retention labels and signed cash colors | Root and report skills, `report.py`, `display.py`, saved SQL | Chart manifest, matched-cohort evidence, executive metrics, complete figures and original-denominator tables |
 
-The revised skills preserve decisions, not frozen numerical answers: derive displayed values from validated saved outputs. Dataset 5.0 removes legacy experiments and linked records, replacing them with acquisition-only pilot summaries. Refit both models after that source change; subsequent reporting-only changes may replay those new fits. Distinguish lab undiscounted cash payback from the course's discounted contribution payback.
+The revised skills preserve decisions, not frozen numerical answers: derive displayed values from validated saved outputs. Dataset 5.0 removed legacy experiments and linked records and required refitting both models. Dataset 5.1 preserves all seven operating CSVs and the original July acquisition rows, adding five monthly acquisition-only waves. Its fresh model inputs are byte-identical, so the verified 5.0 fits can be reused; all acquisition calculations, decisions, diagrams and report artifacts must be rebuilt. Report reuse accurately: this changes experimental input history without refitting the operating LTV models. Distinguish lab undiscounted cash payback from the course's discounted contribution payback.
 
 ## Visual and companion checks
 

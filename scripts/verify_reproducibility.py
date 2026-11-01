@@ -47,10 +47,12 @@ def compared_files(run: Path, pdf: bool) -> list[str]:
     return sorted(names)
 
 
-def command_for(run: Path, *, mode: str, source: Path, steps: int, pdf: bool, variant: str="A") -> list[str]:
+def command_for(run: Path, *, mode: str, source: Path, steps: int, pdf: bool, variant: str="B") -> list[str]:
+    if variant != "B":
+        raise ValueError("Version A is archived; use its preserved release to reproduce it")
     if mode == "report":
         command = [sys.executable, str(ROOT / "scripts/replay_report.py"), "--source", str(source), "--output", str(run)]
-        if variant!="A":command.extend(["--variant",variant])
+        command.extend(["--variant",variant])
         if not pdf:
             command.append("--no-pdf")
         return command + ["--instructor"]
@@ -74,7 +76,7 @@ def compare_runs(runs: list[Path], *, pdf: bool) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("full", "report"), default="full")
-    parser.add_argument("--variant", choices=("A","B"), default="A",help="Report replay layout; A preserves the released format")
+    parser.add_argument("--variant", choices=("B",), default="B",help="Current report; A remains archived with its original inputs")
     parser.add_argument("--source", type=Path, help="Verified fitted output for report mode; default examples/reference")
     parser.add_argument("--output", type=Path, default=ROOT / "outputs/reproducibility")
     parser.add_argument("--steps", type=int, help="Full-inference mode only; default 3000")
@@ -83,8 +85,6 @@ def main() -> None:
     args = parser.parse_args()
     if args.mode == "full" and args.source is not None:
         parser.error("--source is only used in report mode")
-    if args.mode=="full" and args.variant!="A":
-        parser.error("Use report replay for the Version B presentation comparison")
     if args.mode == "report" and args.steps is not None:
         parser.error("Report mode reuses fitted outputs; --steps would imply a refit")
     steps = 3000 if args.steps is None else args.steps

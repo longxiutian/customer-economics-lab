@@ -23,7 +23,7 @@ SOURCE_NAMES = {
     "transactions.csv": "Finance", "product_events.csv": "Product and support",
     "feedback.csv": "Customer research", "campaign_spend.csv": "Marketing spending",
     "acquisition_attribution.csv": "Marketing attribution",
-    "channel_holdouts.csv": "Channel acquisition pilots",
+    "channel_holdouts.csv": "Monthly acquisition holdouts",
 }
 
 # Explicit choices are reviewed rather than guessed from field-name substrings.
@@ -121,11 +121,11 @@ RATIONALE = {
     },
     "channel_holdouts.csv": {
         "n_assigned": "All randomized eligible prospects, including nonbuyers; an arm-level design count, not a customer relationship history.",
-        "media_spend": "Focal campaign media in the pilot budget; firm-side spending, not customer activity.",
-        "other_acquisition_spend": "Incremental creative/vendor acquisition costs in the pilot budget; excluded from the separate operational cohort ledger.",
-        "assigned_at": "Randomization date in a separate acquisition-only pilot sample.",
+        "media_spend": "Focal campaign media in the monthly research budget; firm-side spending, not customer activity.",
+        "other_acquisition_spend": "Incremental creative/vendor acquisition costs in the monthly research budget; excluded from the separate operational cohort ledger.",
+        "assigned_at": "Randomization date in a separate acquisition-only monthly sample.",
         "arm": "Randomized intervention assignment; control nonbuyers must remain in the denominator.",
-        "followup_end_at": "Prespecified measurement window, not a subscription end date.",
+        "followup_end_at": "Fixed 31-day window end; only completed waves enter current iCAC. Not a subscription end date.",
     },
 }
 

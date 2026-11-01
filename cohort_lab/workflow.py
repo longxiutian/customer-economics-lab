@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Callable
 
-DATASET_VERSION = "5.0"
+DATASET_VERSION = "5.1"
 DATA_FILES = (
     "people.csv", "subscription_periods.csv", "transactions.csv",
     "product_events.csv", "feedback.csv", "campaign_spend.csv",
@@ -215,10 +215,12 @@ def execute_stage(stage: int, data_dir: Path, output_dir: Path, choices: dict,
         from .analysis import validate_analysis
         validate_analysis(output_dir)
         table_dir = output_dir / "tables"
-        result = {"channel_acquisition": _preview_csv(table_dir / "channel_cac.csv")}
+        result = {"channel_acquisition_history": _preview_csv(table_dir / "channel_cac.csv"),
+                  "current_channel_acquisition": _preview_csv(table_dir / "channel_cac_current.csv")}
         result["interpretation"] = (
-            "Describe assigned counts, buyers, background acquisitions, acquisition spending and iCAC. "
-            "These separate pilot summaries do not enter customer histories or model fitting. "
+            "Describe the monthly history and latest completed tests: assigned counts, buyers, background, spending and iCAC. "
+            "Update each cell by completion date after its fixed 31-day window, including unfavorable results. "
+            "These separate acquisition summaries do not enter customer histories or model fitting. "
             "Reserve the connection to contribution LTV for the final channel decision."
         )
         return result

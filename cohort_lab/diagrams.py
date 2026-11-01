@@ -27,7 +27,7 @@ SOURCES = {
     "feedback.csv": ("Customer research", "one submitted response"),
     "campaign_spend.csv": ("Marketing", "one campaign-spending date"),
     "acquisition_attribution.csv": ("Marketing", "one acquired person and credited source"),
-    "channel_holdouts.csv": ("Channel acquisition pilots", "one randomized arm per channel test"),
+    "channel_holdouts.csv": ("Monthly acquisition tests", "one arm per completed monthly test"),
 }
 
 
@@ -62,7 +62,7 @@ def _system_candidate(inventory):
         {"id":"billing","type":"database","label":"Payments + renewals","sublabel":"transaction / period","stage":0,"row":1},
         {"id":"experience","type":"database","label":"Events + feedback","sublabel":"many / person_id","stage":0,"row":2},
         {"id":"marketing","type":"database","label":"Spend + attribution","sublabel":"campaign / person","stage":0,"row":3},
-        {"id":"assignments","type":"database","label":"Channel pilots","sublabel":"test / arm","stage":0,"row":4},
+        {"id":"assignments","type":"database","label":"Monthly holdouts","sublabel":"test / arm","stage":0,"row":4},
         {"id":"raw","type":"backend","label":"DuckDB SQL","sublabel":"validate → aggregate","stage":1,"row":2,"height":104},
         {"id":"cohorts","type":"database","label":"Saved cohort views","sublabel":"age / segment / cost","stage":2,"row":1},
         {"id":"experiment","type":"database","label":"Saved test views","sublabel":"acquisitions + costs","stage":2,"row":3},
@@ -80,7 +80,7 @@ def _system_candidate(inventory):
         "nodes":nodes,"flows":[{"id":f"flow{i}","from":a,"to":b,"label":label} for i,(a,b,label) in enumerate(edges)],
         "cards":[{"dot":"emerald","title":"Same key, different grains","items":[f"{x['file']}: {x['rows']:,} rows; {x['grain']}" for x in inventory[:4]]},
                  {"dot":"orange","title":"The denominator is a business choice","items":[f"{x['file']}: {x['rows']:,} rows; {x['grain']}" for x in inventory[4:]]},
-                 {"dot":"cyan","title":"The same business, three kinds of evidence","items":["Observed: customer_month → cohort_age_summary, cohort_cash_economics and company_month. Compare cohorts at the same age.","Forecast: retention and revenue models extend young cohorts, with uncertainty. They do not establish campaign incrementality.","Acquisition pilots: channel_holdouts → channel_cac. All assigned prospects contribute; no pilot revenue or retention enters the model.","person_id links one profile to many periods, transactions, events and responses. period_id links one renewal cycle to many financial events.","Aggregate campaign_spend by campaign_id before joining acquisition counts; campaign_id alone is not the raw spend table's primary key."]}]}
+                 {"dot":"cyan","title":"The same business, three kinds of evidence","items":["Observed: customer_month → cohort_age_summary, cohort_cash_economics and company_month. Compare cohorts at the same age.","Forecast: retention and revenue models extend young cohorts, with uncertainty. They do not establish campaign incrementality.","Monthly holdouts: channel_holdouts → channel_cac (history) → channel_cac_current (latest). All assigned prospects count; no test revenue or retention enters the model.","person_id links one profile to many periods, transactions, events and responses. period_id links one renewal cycle to many financial events.","Aggregate campaign_spend by campaign_id before joining acquisition counts; campaign_id alone is not the raw spend table's primary key."]}]}
 
 
 def _erd_candidate():
@@ -155,7 +155,7 @@ def _report_system_candidate():
     nodes = [
         {"id":"experience","lane":"sources","col":0,"type":"database","label":"People + experience","sublabel":"profiles / events / feedback"},
         {"id":"membership","lane":"sources","col":1,"type":"database","label":"Membership + cash","sublabel":"renewals / transactions"},
-        {"id":"marketing","lane":"sources","col":2,"type":"database","label":"Marketing + tests","sublabel":"spend / credit / pilot totals"},
+        {"id":"marketing","lane":"sources","col":2,"type":"database","label":"Marketing + tests","sublabel":"spend / credit / monthly tests"},
         {"id":"sql","lane":"sql","col":1,"type":"backend","label":"Saved DuckDB SQL views","sublabel":"person_id / period_id / campaign_id","width":220},
         {"id":"observed","lane":"evidence","col":0,"type":"backend","label":"Observed economics","sublabel":"cohorts at the same age"},
         {"id":"forecast","lane":"evidence","col":1,"type":"backend","label":"Retention + revenue","sublabel":"forecast with uncertainty"},
@@ -174,7 +174,7 @@ def _report_system_candidate():
             "lanes":[{"id":"sources","label":"Eight source exports"},{"id":"sql","label":"Reproducible ETL"},
                      {"id":"evidence","label":"Three complementary forms of evidence"},{"id":"decision","label":"Company direction and next action"}],
             "nodes":nodes,"edges":[{"id":f"report-edge{i}","from":a,"to":b,"fromSide":"bottom","toSide":"top","route":"drop"} for i,(a,b) in enumerate(links)],
-            "cards":[{"dot":"cyan","title":"Saved evidence, not a hidden answer","items":["Source files are separate CSV exports with documented keys. DuckDB executes saved SQL locally; no database server is required.","customer_month and cohort_age_summary supply retained customers and revenue; cohort_cash_economics adds acquisition cost and cash recovery.","channel_holdouts preserves all assigned counts and each test's own control. channel_cac estimates acquisition cost; no pilot revenue or retention enters the model."]},
+            "cards":[{"dot":"cyan","title":"Saved evidence, not a hidden answer","items":["Source files are separate CSV exports with documented keys. DuckDB executes saved SQL locally; no database server is required.","customer_month and cohort_age_summary supply retained customers and revenue; cohort_cash_economics adds acquisition cost and cash recovery.","channel_holdouts preserves each monthly test and its own control. channel_cac_current selects the latest completed cost estimate; no test revenue or retention enters the model."]},
                      {"dot":"orange","title":"Read alongside the detailed schema","items":["The source-tables ERD retains every field, key and cardinality; the UCV appendix identifies available and missing kinds of customer evidence.","One person has many periods, transactions, events and responses. Aggregate daily campaign spending before joining acquired customers.","A model forecasts future value; it cannot turn attribution credit or an observed cohort trend into an incremental campaign effect."]}]}
 
 

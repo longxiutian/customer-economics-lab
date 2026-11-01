@@ -1,33 +1,65 @@
 \SectionDivider{APPENDIX}{Technical and data appendix}{Acquisition calculations, cohort detail, segmentation, model validation and the reproducible handoff.}
 \ReportEntry{Appendix A\quad Acquisition tests and planning}
-\PageTitle{A1 / ACQUISITION DESIGN}{Assignment, acquisition\newline and the two denominators}{Four separate July 2025 pilots; no person-level join to the operational history.}
-Each pilot randomly assigns 500 never-paid prospects to its focal campaign and 500 to control. All assigned nonbuyers remain in the acquisition rates. Acquisitions through any route count during the 31-day window; the end date is exclusive. The tests have disjoint people and independent research budgets.
-\TableCaption{channel-buyers}{Arm totals and estimated additional acquisitions. T is treatment; C is control.}
+\PageTitle{A1 / ACQUISITION DESIGN}{Monthly assignment\newline and the two denominators}{Six enrollment waves, four channel--need tests per wave, and fresh prospects throughout.}
+Each month, each test randomly assigns 500 never-paid prospects to its focal campaign and 500 to control. All assigned nonbuyers remain in the acquisition rates. Acquisitions through every route count over exactly 31 days; the end date is exclusive. The 24 tests use \VAR{b_test_prospects} distinct people, with no reuse across waves or simultaneous tests. Their research sample and budget are separate from the operating panel.
+\TableCaption{channel-buyers}{Latest completed wave: \VAR{b_latest_test_month}. T is treatment; C is control. Earlier waves appear in Appendix A3--A4.}
 \VAR{channel_counts_table}
 For unequal arm sizes, scale the control by $k=N_T/N_C$. Additional acquisitions are $B_T-kB_C$; additional spending is $S_T-kS_C$.
 \[
 \text{Credited CAC}=\frac{S_T}{B_T},\qquad
 \text{iCAC}=\frac{S_T-kS_C}{B_T-kB_C}.
 \]
-\TableCaption{channel-cost}{Acquisition spending includes focal media and other incremental acquisition costs.}
+\TableCaption{channel-cost}{Latest wave. Each treatment arm spends \$10,000 on media and \$1,000 on other incremental acquisition costs. Control focal spending is zero.}
 \VAR{channel_cost_table}
 \Section{What the holdout removes}
-Background acquisitions can reflect prior brand exposure and other marketing. They are acquisitions without the focal campaign, not a company-wide estimate of marketing-free organic demand. Each campaign is tested against its own control; the four tests do not randomize a common audience across channels.
-\Evidence{Sources: \Code{channel_holdouts.csv} and saved SQL \Code{channel_cac.csv}. The counterfactual cost interpretation follows \SourceCite{larsen2019}{Larsen (2019)} and the acquisition-cost discussion in \SourceCite{course2026}{Tian (2026)}, Topic 3.}
+Background acquisitions can reflect prior brand exposure and other marketing. They are acquisitions without the focal campaign, not a company-wide estimate of marketing-free organic demand. Every wave uses contemporaneous controls. Channels have separate eligible audiences; these are not head-to-head channel assignments.
+\Evidence{Sources: \Code{channel_holdouts.csv}, saved SQL \Code{channel_cac.csv} for all tests, and \Code{channel_cac_current.csv} for each cell's latest result. The cost interpretation follows \SourceCite{larsen2019}{Larsen (2019)} and \SourceCite{course2026}{Tian (2026)}, Topic 3.}
 
 \NewPage
 \PageTitle{A2 / ACQUISITION UNCERTAINTY}{Acquisition lift\newline and uncertainty in iCAC}{Technical appendix | The acquisition denominator is uncertain even when recorded spending is fixed.}
 \Section{Acquisition holdout uncertainty}
-\TableCaption{channel-uncertainty}{Acquisition-only pilot estimates with approximate 95\% intervals. Costs are treated as fixed.}
+\TableCaption{channel-uncertainty}{Latest completed wave: approximate 95\% intervals for each test, with recorded costs fixed.}
 \VAR{channel_interval_table}
 \Evidence{The acquisition-rate difference uses an unpooled Bernoulli standard error over all assigned prospects. Scale the interval to treatment size, then invert its positive range for iCAC. A lift interval crossing zero has no finite upper iCAC bound. These are acquisition-cost intervals; the value projection does not claim a joint lifetime-return confidence interval.}
 
 \Section{Interpretation and scope}
-Each comparison includes all assigned prospects and its own control. The counts estimate first paid acquisition within the stated 31-day window. The cost numerator includes the focal media and other incremental acquisition costs. There are no experimental contribution, retention or lifetime outcomes in this source.
+Each comparison includes all assigned prospects and its own control. These are per-test intervals, not simultaneous coverage for 24 tests. Each wave has a fixed sample and analysis date; the program does not stop a wave early when a favorable result appears. The monthly series describes changing cost estimates without identifying why they changed.
 \Section{The value assumption is separate}
-The final planning table joins each acquisition result to a matching operational cohort's contribution value before CAC. It assumes the additional customers have that value and that the campaign does not change the value of customers who would acquire anyway. Varying that value changes the recommendation; iCAC itself is the break-even contribution-value threshold.
+The final planning table joins the latest completed test in each cell to the latest common operational cohort with at least six observed receipts: \VAR{b_month}. It assumes additional customers have that contribution value and the campaign does not change the value of customers who would acquire anyway. The July-cost comparison holds today's value benchmarks fixed; it does not reconstruct a decision made in July. No experimental contribution, retention or lifetime outcomes enter the model.
 \Section{Incremental cash recovery}
-The saved benchmark cash path is already net of historical CAC. Add that cost back to obtain cumulative contribution, then find its first crossing of pilot iCAC. Count monthly payments from one. This is an undiscounted expected-path calculation; first-year value is discounted. The new \Code{incremental-planning.csv} saves both recovery measures and the break-even value share. It does not refit a model or use experimental retention outcomes.
+The saved benchmark cash path is already net of historical CAC. Add that cost back to obtain cumulative contribution, then find its first crossing of current iCAC. Count monthly payments from one. This is an undiscounted expected-path calculation; first-year value is discounted. \Code{incremental-planning.csv} saves both recovery measures and the break-even value share. It does not refit a model or measure realized experimental payback.
+
+\NewPage
+\PageTitle{A3 / COMPLETE TEST HISTORY}{Acquisition results\newline from July through September}{Every completed test is retained, including unfavorable estimates.}
+\TableCaption{holdout-history-early}{The first three enrollment waves. Each row has 500 treatment and 500 control prospects, \$11,000 treatment spending and zero control focal spending. T / C lists buyers through all routes.}
+\VAR{b_history_early}
+\Section{Credited and incremental cost}
+With equal arm sizes, additional buyers are treatment buyers minus control buyers. Credited CAC divides \$11,000 by all treatment buyers. iCAC divides the same amount by additional buyers. For unequal arms, the scaling in Appendix A1 applies to both control acquisitions and costs.
+\Section{Separate comparisons for each wave}
+The source preserves separate test identifiers, assignment dates and end dates. A prospect is never reused in another test. The monthly estimates are not pooled: an old conversion rate cannot substitute for the current wave's background acquisition rate.
+\Evidence{Saved SQL: \Code{channel_cac.csv}. The original July arm records are preserved; subsequent waves extend the acquisition-only history.}
+
+\NewPage
+\PageTitle{A4 / COMPLETE TEST HISTORY}{Acquisition results\newline from October through December}{Later waves replace the cost estimates used in current planning.}
+\TableCaption{holdout-history-late}{The final three enrollment waves. Every test retains 500 prospects per arm, \$11,000 treatment spending and a 31-day window. Intervals are approximate per-test 95\% intervals.}
+\VAR{b_history_late}
+\Section{The current estimate is selected by date}
+For each channel--need cell, \Code{channel_cac_current.csv} selects the test with the latest completed follow-up. Selection does not depend on its point estimate or statistical significance. Incomplete windows are rejected before analysis. If lift is nonpositive, iCAC is undefined; a weak new result does not justify reverting to an older favorable estimate.
+\Section{Cost changes can change the investment priority}
+\VAR{b_holdout_trend} \VAR{b_decision_shift} Value and cost therefore remain separate inputs until the acquisition decision is made.
+\Evidence{The full series and selected test IDs are bound into \Code{version-b-evidence.json}. Current planning uses \Code{channel_value_decision.csv}.}
+
+\NewPage
+\PageTitle{A5 / CONTINUOUS TESTING}{A recurring acquisition\newline measurement and spending cycle}{Each wave closes on schedule; the next spending review uses the newly completed evidence.}
+\TableCaption{holdout-schedule}{Enrollment starts on the first of each month and ends exactly 31 days later. September and November results therefore become available on the second of the following month.}
+\VAR{b_holdout_schedule}
+\Section{The monthly operating process}
+Marketing defines each wave's eligible audience, campaign and spending level before assignment. Analytics preserves assignment and counts all first paid acquisitions through the end of the window. Once the window closes, the new iCAC and its interval replace the prior estimate for that cell. Unfinished waves never inform the current estimate.
+
+At each spending review, Finance and Marketing pair current costs with the latest suitably mature contribution benchmarks. They choose a spending step and acceptable recovery period, then retain holdouts at the new level. If eligibility, price or campaign changes, document that change with the new test; the earlier iCAC does not establish the cost of unlimited scale.
+\Section{Fund the measurement program explicitly}
+The observed program spends \VAR{b_wave_budget} per wave and \VAR{b_program_budget} across six waves. These budgets are separate from the operating ledger. The company exhibits therefore cannot be read as total cash available after testing: they exclude both test spending and subsequent test-customer contribution. Finance must reconcile that broader cash position before committing further funds.
+\Evidence{Monthly repetition is this case's operating design. Larsen's acquisition-incrementality argument motivates the holdout correction; it does not prescribe this cadence or these sample sizes.}
 
 \NewPage
 \ReportEntry{Appendix B\quad Cohort and segment detail}
@@ -55,7 +87,7 @@ Higher revenue retention can coexist with customer losses when remaining members
 \ReportFigure{strategic-paths}{Observed and forecast acquisition-segment paths. The upper row shows retention; the lower row shows undiscounted cumulative contribution less CAC per original customer. The vertical marker separates six observed receipts from the remaining forecast.}{strategic-segment-paths.pdf}{4.2in}
 \Evidence{Saved output: \Code{segment_forecast_curves.csv}. Shading is the 5th--95th posterior parameter range. Original denominators remain fixed. Narrow conditional bands exclude future customer-level variation, uncertain costs and changes in the business. \VAR{strategic_scope}}
 \Section{The benchmark and the decision cost}
-These paths retain the original cohort denominators and subtract the operating cohort's historical CAC. Figure~\ref{fig:incremental-cash-b} restores that cost to recover contribution and compares the same path with pilot iCAC. The model's forecast path is unchanged.
+These paths retain the original cohort denominators and subtract the operating cohort's historical CAC. Figure~\ref{fig:incremental-cash-b} restores that cost to recover contribution and compares the same path with current iCAC. The model's forecast path is unchanged.
 
 \NewPage
 \ReportEntry{Appendix C\quad Segmentation and journey diagnostics}
@@ -198,7 +230,7 @@ The model and each baseline use the same withheld outcome cells. Their errors ar
 \VAR{valuation_backtest_sentence}
 \TableCaption{valuation-backtest}{Cohort-level historical value and payback forecasts, separating already observed recovery from forecast recovery.}
 \VAR{valuation_backtest_table}
-\Evidence{Saved model output: \Code{valuation_backtest.csv}. LTV values are discounted contribution before blended CAC, per original acquired customer. ``Observed / forecast'' counts the receipts within the common 12-month horizon; payback month counts receipts from 1.}
+\Evidence{Saved model output: \Code{valuation_backtest.csv}. LTV values are discounted contribution before historical average CAC, per original acquired customer. ``Observed / forecast'' counts the receipts within the common 12-month horizon; payback month counts receipts from 1.}
 \Section{Why total-value and forecast-tail errors are the same}
 Observed contribution is copied identically into the actual and predicted totals. The forecast covers only the remaining months. Consequently, total LTV error equals the error in the unobserved tail; the long observed prefix does not create additional predictive accuracy. Rows are ordered by the amount of history available at the origin.
 \Section{The baseline and its weakest-information case}
@@ -214,7 +246,7 @@ Forecast payback is the first crossing of acquisition cost by the \textbf{poster
 \VAR{architecture_figure}
 \Evidence{The diagram is rendered by the bundled Archify package from original source specifications. The accompanying \Code{diagrams/source-tables.html} and SVG show the full table-level schema and cardinality. Dataset classifications on the following pages list concrete fields.}
 \Section{Keys do not make unlike records interchangeable}
-A person can have many renewal periods, ledger transactions, product events and survey responses. Those tables must be aggregated at the intended grain before they are joined. Acquisition spending is a campaign-level record; it does not become a customer-level observation merely because it can be allocated across acquired customers. Channel pilot summaries have a separate arm-level grain and no customer-history join.
+A person can have many renewal periods, ledger transactions, product events and survey responses. Those tables must be aggregated at the intended grain before they are joined. Acquisition spending is a campaign-level record; it does not become a customer-level observation merely because it can be allocated across acquired customers. Monthly test summaries have a separate arm-level grain and no customer-history join.
 \Section{Analytical contracts}
 \TableCaption{data-contracts}{Source-to-analysis definitions that preserve grain, timing, denominator and cost scope.}
 \VAR{data_contract_table}
@@ -237,7 +269,7 @@ A person can have many renewal periods, ledger transactions, product events and 
 \VAR{ucv_tables_second}
 
 \NewPage
-\PageTitle{E5 / UNIVERSAL CUSTOMER VIEW}{Marketing credit\newline and channel pilot summaries}{Technical appendix | A dagger marks contextual placement. It is not part of a source field's name.}
+\PageTitle{E5 / UNIVERSAL CUSTOMER VIEW}{Marketing credit\newline and monthly test summaries}{Technical appendix | A dagger marks contextual placement. It is not part of a source field's name.}
 \VAR{ucv_tables_third}
 \Section{Sources and model adaptations}
 \VAR{source_note}
@@ -260,7 +292,7 @@ The skills guide execution and judgment; they do not calculate the results. They
 \Section{The code and configuration execute the analysis}
 Canonical SQL transforms the separate exports into cohort and company views. Model settings define the renewal, revenue and valuation calculations. Saved outputs feed the charts, narrative quantities, tables and TeX templates. Human judgments are recorded separately from computed evidence.
 
-For this comparison, A is the frozen 1.7.0 report. B uses the same observed records and verified fitted outputs. It adds a presentation calculation that compares the saved contribution paths with pilot iCAC. The B source and build option preserve this choice explicitly.
+The frozen 1.7.0 report and the original B comparison remain preserved. This B revision uses dataset 5.1: the seven operational CSVs and fitted models are unchanged, while five monthly waves extend the original July acquisition tests. Current cost selection and the contribution-path comparison are rebuilt from saved tables. Reused model-input hashes must match the freshly rebuilt operating inputs.
 
 \Section{The manifests and checks establish reproduction}
 Source hashes, SQL, model settings, output tables, figure data, template/style files and the skills are bound into manifests. A report replay verifies the frozen fitted outputs and rebuilds the observed analysis, diagrams and document in a fresh directory. Two separate replay processes are compared before claiming same-environment reproduction.

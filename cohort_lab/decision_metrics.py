@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from .analysis import validate_analysis, _hash
 
-INPUTS = {"segmentation_comparison.csv", "segmentation_profile.csv", "channel_cac.csv"}
+INPUTS = {"segmentation_comparison.csv", "segmentation_profile.csv", "channel_cac.csv", "channel_cac_current.csv"}
 OUTPUTS = {"segmentation_objective.csv", "channel_value_decision.csv"}
 
 
@@ -43,7 +43,15 @@ def segmentation_objective(comparison: pd.DataFrame, profile: pd.DataFrame) -> p
 
 def channel_value_decision(cac: pd.DataFrame, values: pd.DataFrame) -> pd.DataFrame:
     keys = ["cohort_month", "channel", "primary_need"]
-    source = cac.rename(columns={"value_cohort_month": "cohort_month"})
+    # Select value by observed maturity, independently of test dates and outcomes.
+    cells = set(zip(cac.channel, cac.primary_need))
+    eligible = values[values.observed_months >= 6]
+    months = [month for month, group in eligible.groupby("cohort_month")
+              if cells <= set(zip(group.channel, group.primary_need))]
+    if not months:
+        raise ValueError("Each channel test needs a matching value benchmark with six observed receipts")
+    source = cac.drop(columns=["value_cohort_month"], errors="ignore").copy()
+    source["cohort_month"] = max(months)
     value_cols = keys + ["n_acquired", "observed_months", "horizon_months", "forecast_share", "ltv_before_cac_mean", "ltv_before_cac_p05", "ltv_before_cac_p95"]
     result = source.merge(values[value_cols], on=keys, how="left", validate="many_to_one")
     if result.ltv_before_cac_mean.isna().any() or not (result.horizon_months == 12).all():
@@ -65,13 +73,13 @@ def build_decision_metrics(output_dir: Path) -> dict:
         from .report import _validate_model_outputs
         _validate_model_outputs(output)
         inputs.add("cohort_valuation_by_segment.csv")
-        results["channel_value_decision.csv"]=channel_value_decision(pd.read_csv(tables/"channel_cac.csv"),pd.read_csv(tables/"cohort_valuation_by_segment.csv"))
+        results["channel_value_decision.csv"]=channel_value_decision(pd.read_csv(tables/"channel_cac_current.csv"),pd.read_csv(tables/"cohort_valuation_by_segment.csv"))
     for name,frame in results.items():frame.to_csv(tables/name,index=False,float_format="%.10f",lineterminator="\n")
-    manifest={"version":2,"code_sha256":_hash(Path(__file__)),
+    manifest={"version":3,"code_sha256":_hash(Path(__file__)),
         "input_hashes":{n:_hash(tables/n) for n in sorted(inputs)},"output_hashes":{n:_hash(tables/n) for n in sorted(results)},
         "segmentation_scope":"Same mature operational customers, six receipts and two-group candidate partitions. Customer-weighted within and between variance.",
-        "cac_scope":"Separate acquisition-only pilot summaries; SQL estimates background buyers, lift and iCAC using all assigned prospects and media plus other incremental acquisition spending. No pooled program CAC or experimental revenue/retention outcomes.",
-        "value_scope":"Planning join after fitting: matching cohort/channel/need contribution before CAC, twelve receipts at 1% monthly discount. Additional-customer value and no effect on would-be buyers are explicit assumptions. No experiment enters the model."}
+        "cac_scope":"Monthly disjoint acquisition-only holdouts. Preserve every completed wave in channel_cac; channel_cac_current selects the latest completed test for each channel/need without screening its result. No pooling across time or channels; no experimental revenue/retention outcomes.",
+        "value_scope":"Planning join after fitting: latest current iCAC and the latest common operational cohort with at least six observed receipts in every tested channel/need cell. Twelve receipts of contribution before CAC at 1% monthly discount. Additional-customer value and no effect on would-be buyers are assumptions. No experiment enters the model."}
     (output/"decision_metrics_manifest.json").write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n',encoding="utf-8")
     return manifest
 

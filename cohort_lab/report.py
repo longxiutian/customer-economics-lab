@@ -293,13 +293,13 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
         fig,(ax,share)=plt.subplots(2,1,figsize=(7.1,3.0),sharex=True,gridspec_kw={"height_ratios":[4,1],"hspace":.16});x=np.arange(len(val))
         ax.fill_between(x,val.ltv_before_cac_p05,val.ltv_before_cac_p95,color=COLORS["teal"],alpha=.16,label="5th–95th percentile")
         ax.plot(x,val.ltv_before_cac_mean,color=COLORS["teal"],lw=2,label="12-month LTV before CAC")
-        ax.plot(x,val.cac,color=COLORS["orange"],lw=1.8,label="Blended CAC")
+        ax.plot(x,val.cac,color=COLORS["orange"],lw=1.8,label="Historical average CAC")
         ax.yaxis.set_major_formatter(FuncFormatter(_currency));ax.grid(axis="y",alpha=.12);ax.set_ylabel("Dollars / customer");ax.set_ylim(bottom=0)
         ax.legend(frameon=False,fontsize=8,ncol=3,loc="lower left",bbox_to_anchor=(0,1.02),borderaxespad=0)
         share.bar(x,val.forecast_share.clip(0,1),color=COLORS["muted"],width=.75)
         share.set_ylim(0,1);share.set_yticks([0,1],["0%","100%"],fontsize=7);share.set_ylabel("Forecast\nshare",fontsize=8)
         _months(share,list(val.cohort_month))
-        done(fig,"ltv-and-cac",["cohort_valuation.csv"],"Common 12-month discounted contribution horizon; bar strip shows forecast share. Blended CAC divides tracked spend by all acquired customers, not marginal customers.",{"forecast_share":val.forecast_share.tolist(),"y_axis_min":0})
+        done(fig,"ltv-and-cac",["cohort_valuation.csv"],"Common 12-month discounted contribution horizon; bar strip shows forecast share. Historical average CAC divides tracked spend by all acquired customers, not marginal customers.",{"forecast_share":val.forecast_share.tolist(),"y_axis_min":0})
         fc=read("forecast_curve.csv",("cohort_month","age_month","contribution_mean","contribution_p05","contribution_p95","observed","n_retained_mean","n_retained_p05","n_retained_p95"))
         is_observed=fc.observed.astype(str).str.lower().isin(["true","1"])
         observed_ages=fc.assign(observed_count=is_observed.astype(int)).groupby("cohort_month").observed_count.sum()
@@ -478,9 +478,9 @@ def _context(output: Path) -> dict:
     ca,cz=a["blended_cac"],z["blended_cac"]
     has_economics=True
     rows=[["Sixth-month retained share",f"{a['retained_share']:.1%}",f"{z['retained_share']:.1%}","Observed at age index 5"],
-          ["Blended CAC",f"${ca:,.2f}",f"${cz:,.2f}","Tracked spending / all acquired people"],
+          ["Historical average CAC",f"${ca:,.2f}",f"${cz:,.2f}","Tracked spending / all acquired people"],
           ["Six-month contribution / customer",f"${a['contribution_per_customer']:,.2f}",f"${z['contribution_per_customer']:,.2f}","After recorded variable costs"],
-          ["Six-month cash after acquisition",_dollars(a["cash_after_cac_per_customer"],2),_dollars(z["cash_after_cac_per_customer"],2),"Contribution less blended CAC"]]
+          ["Six-month cash after acquisition",_dollars(a["cash_after_cac_per_customer"],2),_dollars(z["cash_after_cac_per_customer"],2),"Contribution less historical average CAC"]]
     progress=(f"At age 5, six-month cash after acquisition changes from {_dollars(a['cash_after_cac_per_customer'],2)} to {_dollars(z['cash_after_cac_per_customer'],2)} per original customer. The comparison uses January--June {a['year']} and the same joining months of {z['year']}, weighted by acquired cohort size. Table 1 reports the matching retention, contribution and blended-CAC evidence. These are descriptive comparisons, not campaign effects.")
     renewal_improving=(z["retained_share"]>a["retained_share"] and window["improved_cells"]==window["total_cells"])
     facet_sentence=(f"Age-5 paid retention is {a['paid_raw_retention']:.1%} for January--June {a['year']} versus {z['paid_raw_retention']:.1%} for the same {z['year']} joining months. Fixing the earlier channel-by-need mix gives {a['paid_fixed_mix_retention']:.1%} versus {z['paid_fixed_mix_retention']:.1%}; {window['improved_cells']} of {window['total_cells']} paid groups improve. This removes changes in these groups' shares, not all customer differences or confounding.")
@@ -489,7 +489,7 @@ def _context(output: Path) -> dict:
     improving = (cz < ca and z["contribution_per_customer"] > a["contribution_per_customer"]
                  and z["cash_after_cac_per_customer"] > a["cash_after_cac_per_customer"])
     renewal_claim=("Retention also improves within each channel--need group." if renewal_improving else "Renewal is not clearly improving across successive cohorts.")
-    executive_verdict = (("Customer economics are strengthening: lower blended CAC, higher contribution and more cash recovered over six months. "+renewal_claim+" Channel investment also depends on the cost of additional customers and their expected contribution value.")
+    executive_verdict = (("Customer economics are strengthening: lower historical average CAC, higher contribution and more cash recovered over six months. "+renewal_claim+" Channel investment also depends on the cost of additional customers and their expected contribution value.")
                          if improving else "The cohort evidence does not establish broad economic improvement. Evaluate renewal, acquisition cost, contribution and cash recovery together, then resolve the weak channel--need cells before expanding the budget.")
     default_action = ("Use the channel holdouts and matching contribution-value estimates to prioritize acquisition within a stated cash-payback limit. Review each new joining cohort at common ages within its channel and stated-need group."
                       if improving else "Keep acquisition expansion conditional on better cohort economics. Assign Marketing, Product and Analytics a review of the channel and customer-need cells where retention or acquisition cost has deteriorated, then assess the proposed correction.")
@@ -740,7 +740,7 @@ def _appendix_context(output: Path) -> dict:
         ["Customer survival", "Renewing contractual membership; original cohort size is the retained-share denominator."],
         ["Revenue and contribution", "Ledger payments less discounts/refunds; contribution also subtracts recorded variable costs."],
         ["Acquisition investment", "Tracked spend, including campaigns with no attributed acquisitions; no invented organic-source CAC."],
-        ["Channel pilot unit", "Separate randomized arm totals; all assigned prospects contribute to acquisition rates. No pilot revenue or retention outcomes enter valuation."],
+        ["Channel test unit", "Separate randomized arm totals; all assigned prospects contribute to acquisition rates. No pilot revenue or retention outcomes enter valuation."],
         ["Unknown future", "Right-censored ages stay unobserved. Missing survey responses remain missing perceptions."],
     ]
     return {
@@ -852,10 +852,12 @@ def _pdf_copyability(path: Path) -> dict:
     return {"extractor":"pypdf","commands":2,"source_filenames":len(SCHEMAS),"distinct_fields":len(fields),"status":"passed"}
 
 
-def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="A") -> dict:
+def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="B") -> dict:
     """Produce a decision-facing report and required technical/data appendices."""
     from .workflow import implementation_snapshot
     if variant not in {"A", "B"}:raise ValueError("Report variant must be A or B")
+    if variant == "A":
+        raise ValueError("Version A is archived with dataset 5.0. Use its preserved release to reproduce A; current data require Version B.")
     implementation = implementation_snapshot()
     output=Path(output_dir).resolve();directory=output/"report";directory.mkdir(parents=True,exist_ok=True)
     _json(output/"model_summary.json") # No silent placeholder forecast.
