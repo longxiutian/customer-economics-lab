@@ -93,10 +93,12 @@ def validate(output: Path, *, pdf: bool = True, companion: bool = False) -> dict
     for key, relative in bindings.items():
         check(output / relative, report[key + "_sha256"])
     for key, relative in {"style": "templates/labreport.sty", "upstream_style": "templates/longxiu-research-brief.sty",
-                          "template": "templates/customer-economics-report.tex.j2", "display_formatter": "cohort_lab/display.py",
+                          "template": report.get("template_file","templates/customer-economics-report.tex.j2"), "display_formatter": "cohort_lab/display.py",
                           "report_skill": "skills/executive-report/SKILL.md"}.items():
         check(ROOT / relative, report[key + "_sha256"])
     check_files(output / "tables", report["tables"])
+    if report.get("variant")=="B":
+        check_files(output/"report",report["variant_artifacts"])
     if report["learner_choices_sha256"] is not None:
         check(output / "learner_choices.json", report["learner_choices_sha256"])
     elif (output / "learner_choices.json").exists():
