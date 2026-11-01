@@ -16,7 +16,7 @@ End the deck with the following FAQ section. These are prompts students can copy
 
 3. **Find a more useful segmentation strategy.**
 
-   “Compare alternative segmentations using the available customer attributes. Seek within-cell homogeneity and across-cell heterogeneity in customer economics. Evaluate held-out performance, segment size, stability and actionability, accounting for cohort differences. Does any strategy improve meaningfully on our current channel-and-need groups, and what different management action would it support?”
+   “Compare alternative segmentations using the available customer attributes. Seek within-cell homogeneity and across-cell heterogeneity in customer economics, comparing strategies at similar complexity. Evaluate held-out performance, segment size, stability and actionability, accounting for cohort differences. Does any strategy improve meaningfully on our current channel-and-need groups, and what different management action would it support?”
 
 4. **Identify what could change the recommendation.**
 
