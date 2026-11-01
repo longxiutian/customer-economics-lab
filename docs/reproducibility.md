@@ -38,6 +38,8 @@ Add `--no-pdf` to either verifier or the single replay only when editable TeX is
 
 ## What is compared and preserved
 
+For the fifteen-page executive comparison, use [the Version B contract and commands](report-version-b.md). Add `--variant B` to the single replay or the report-mode verifier. The released A artifact is preserved; the B implementation and calculation/source-map artifacts receive their own manifests. This is an editorial variant of 1.7.0, not a model refit or a new release.
+
 The verifier includes all numerical tables, saved SQL, analysis/input/model/benchmark/diagnostics/decision-metrics/post-estimation/implementation manifests, summaries and posterior draws; diagram JSON, HTML, SVG, PNG, UCV Markdown and inspection SQL; report TeX, style files, manifests, registry, evidence tables, figures and optional PDF; and challenge or replay receipts where that mode produces them. It validates the manifests before comparison, so two identically stale outputs do not pass. Logs, learner state, ad hoc query receipts, previews and page renders are separate evidence, not canonical output comparisons.
 
 `implementation_manifest.json` is bound into the report manifest. It also drives guided-session invalidation. Changing instructions, executable source, a lock or a vendored dependency requires a fresh output folder or restoration of the prior release. Do not edit a hash receipt to make an old result pass. Saved SQL questions remain under the learner's output directory and do not change the canonical implementation.

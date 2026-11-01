@@ -47,9 +47,10 @@ def compared_files(run: Path, pdf: bool) -> list[str]:
     return sorted(names)
 
 
-def command_for(run: Path, *, mode: str, source: Path, steps: int, pdf: bool) -> list[str]:
+def command_for(run: Path, *, mode: str, source: Path, steps: int, pdf: bool, variant: str="A") -> list[str]:
     if mode == "report":
         command = [sys.executable, str(ROOT / "scripts/replay_report.py"), "--source", str(source), "--output", str(run)]
+        if variant!="A":command.extend(["--variant",variant])
         if not pdf:
             command.append("--no-pdf")
         return command + ["--instructor"]
@@ -73,6 +74,7 @@ def compare_runs(runs: list[Path], *, pdf: bool) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--mode", choices=("full", "report"), default="full")
+    parser.add_argument("--variant", choices=("A","B"), default="A",help="Report replay layout; A preserves the released format")
     parser.add_argument("--source", type=Path, help="Verified fitted output for report mode; default examples/reference")
     parser.add_argument("--output", type=Path, default=ROOT / "outputs/reproducibility")
     parser.add_argument("--steps", type=int, help="Full-inference mode only; default 3000")
@@ -81,6 +83,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.mode == "full" and args.source is not None:
         parser.error("--source is only used in report mode")
+    if args.mode=="full" and args.variant!="A":
+        parser.error("Use report replay for the Version B presentation comparison")
     if args.mode == "report" and args.steps is not None:
         parser.error("Report mode reuses fitted outputs; --steps would imply a refit")
     steps = 3000 if args.steps is None else args.steps
@@ -94,7 +98,7 @@ def main() -> None:
     parent.mkdir(parents=True, exist_ok=True)
     runs = [parent / "run-a", parent / "run-b"]
     def command(run):
-        return command_for(run, mode=args.mode, source=source, steps=steps, pdf=not args.no_pdf)
+        return command_for(run, mode=args.mode, source=source, steps=steps, pdf=not args.no_pdf,variant=args.variant)
     if args.parallel:
         with contextlib.ExitStack() as stack:
             jobs = []
@@ -118,7 +122,7 @@ def main() -> None:
             print(f"{run.name} completed", flush=True)
     if snapshot != implementation_snapshot():
         raise ValueError("Implementation changed during verification; no reproducibility claim made")
-    receipt = {"schema_version": 2, "mode": args.mode, "model_refit": args.mode == "full",
+    receipt = {"schema_version": 2, "mode": args.mode, "report_variant":args.variant,"model_refit": args.mode == "full",
                "scope": "Two fresh processes on the same host, frozen data, source and locked environment. " +
                         ("Observed analysis, decision metrics, diagnostics, post-estimation, diagrams and report rebuilt; fitted baseline and neural outputs preserved." if args.mode == "report" else "Both models refitted; observed analysis, forecasts, challenge predictions, diagrams and report rebuilt."),
                "python": platform.python_version(), "platform": platform.platform(),

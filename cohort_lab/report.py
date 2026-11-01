@@ -127,7 +127,7 @@ def _cohort_colorbar(fig, axes, cohorts, palette):
     bar.set_label("Acquisition cohort: older → newer",fontsize=9)
 
 
-def _triangle(ax, matrix, title, mode, ages, cohorts, test_months=()):
+def _triangle(ax, matrix, title, mode, ages, cohorts, test_months=(), *, payment_numbers=False):
     a=matrix.to_numpy(dtype=float)
     # Light backgrounds keep the numerals readable without changing their meaning.
     cmap=LinearSegmentedColormap.from_list("retention",["#FFFFFF","#BEDFD2"])
@@ -135,9 +135,9 @@ def _triangle(ax, matrix, title, mode, ages, cohorts, test_months=()):
     kw={"vmin":0,"vmax":1,"cmap":cmap} if mode=="rate" else {
         "cmap":diverge,"norm":TwoSlopeNorm(vmin=min(-1.,float(np.nanmin(a))),vcenter=0,vmax=max(1.,float(np.nanmax(a))))}
     ax.imshow(np.ma.masked_invalid(a),aspect="auto",**kw)
-    ax.set_xticks(range(len(ages)),ages,fontsize=7)
+    ax.set_xticks(range(len(ages)),[a+1 for a in ages] if payment_numbers else ages,fontsize=7)
     ax.set_yticks(range(len(cohorts)),[x[:7]+(" *" if x[:7] in test_months else "") for x in cohorts],fontsize=8)
-    ax.set_title(title,loc="left",pad=30 if mode=="cash" else 12);ax.set_xlabel("Age index (0 = first paid month)")
+    ax.set_title(title,loc="left",pad=30 if mode=="cash" else 12);ax.set_xlabel("Monthly payment (1 = joining month)" if payment_numbers else "Age index (0 = first paid month)")
     ax.set_ylabel("Acquisition cohort")
     for r in range(a.shape[0]):
         for c in range(a.shape[1]):
@@ -174,7 +174,7 @@ def _validate_model_outputs(output: Path) -> dict:
     return {"status":"passed","model_manifest_sha256":_sha(output/"model_manifest.json")}
 
 
-def build_charts(output_dir: Path) -> dict:
+def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
     """Create analysis charts; add forecast charts when model outputs exist."""
     output = Path(output_dir).resolve()
     from .analysis import validate_analysis
@@ -214,14 +214,14 @@ def build_charts(output_dir: Path) -> dict:
     fig,axes=plt.subplots(2,1,figsize=(10.5,13),gridspec_kw={"hspace":.23})
     for ax,matrix,title,mode in [(axes[0],rate,"Contractual retention · % of original cohort","rate"),
                                 (axes[1],bal,"Observed cash after acquisition · $ per acquired person","cash")]:
-        _triangle(ax,matrix,title,mode,ages,cohorts,[])
+        _triangle(ax,matrix,title,mode,ages,cohorts,[],payment_numbers=payment_numbers)
     done(fig, "cohort-triangles", ["cohort_totals.csv", "cohort_cash_economics.csv"],
          "Every acquisition cohort and every observed age; future ages remain blank, not zero. Cash uses original cohort size.",triangle_values)
     for name,matrix,title,mode in [
         ("cohort-retention-triangle",rate,"Contractual retention · % of original cohort","rate"),
         ("cohort-cash-triangle",bal,"Observed cash after acquisition · $ per acquired person","cash")]:
         fig,ax=plt.subplots(figsize=(7.1,6.3))
-        _triangle(ax,matrix,title,mode,ages,cohorts,[])
+        _triangle(ax,matrix,title,mode,ages,cohorts,[],payment_numbers=payment_numbers)
         done(fig,name,["cohort_totals.csv","cohort_cash_economics.csv"],
              "All 24 joining cohorts, full observed age range; the upper-right missing region is unobserved rather than zero.",triangle_values)
 
@@ -234,6 +234,8 @@ def build_charts(output_dir: Path) -> dict:
     for ax,title in zip(axes,["Retained people", "Net revenue retention"]):
         ax.set_title(title,loc="left");ax.set_xlabel("Age index (0 = first paid month)");ax.yaxis.set_major_formatter(PercentFormatter(1));ax.grid(axis="y",alpha=.16);ax.set_ylim(bottom=0)
         ax.set_xlim(0,max(ages));ax.set_xticks([0,6,12,18,23])
+        if payment_numbers:
+            ax.set_xticklabels([1,7,13,19,24]);ax.set_xlabel("Monthly payment")
     axes[0].set_ylim(0,1.05)
     _cohort_colorbar(fig,axes,cohorts,palette)
     done(fig,"retention-and-revenue",["cohort_totals.csv"],"All 24 joining cohorts; shared chronological color scale and observed-age endpoints. Revenue is normalized to each cohort's first-period revenue.",{"cohorts":cohorts,"max_display_age":max(ages),"chronological_colors":{co:matplotlib.colors.to_hex(colors[co]) for co in cohorts}})
@@ -251,6 +253,9 @@ def build_charts(output_dir: Path) -> dict:
         ax.set_title(channel.title()+" · "+need.replace("_"," "),loc="left",fontsize=10.5)
         ax.set_ylim(0,1.05);ax.set_xlim(0,max(ages));ax.set_xticks([0,6,12,18,23]);ax.yaxis.set_major_formatter(PercentFormatter(1));ax.grid(alpha=.13)
     for ax in axes[1]:ax.set_xlabel("Age index (0 = first paid month)")
+    if payment_numbers:
+        for ax in axes.flat:ax.set_xticklabels([1,7,13,19,24])
+        for ax in axes[1]:ax.set_xlabel("Monthly payment")
     for ax in axes[:,0]:ax.set_ylabel("Retained / original cell")
     _cohort_colorbar(fig,axes,cohorts,palette)
     done(fig,"channel-segment-retention",["cohort_age_summary.csv"],
@@ -317,6 +322,8 @@ def build_charts(output_dir: Path) -> dict:
             ax.set_title(f"{cohort[:7]}\nObserved renewals: {renewals}",loc="left",fontsize=9.5)
             ax.set_xlim(0,11);ax.set_ylim(0,1.05);ax.set_xticks([0,3,6,9,11]);ax.yaxis.set_major_formatter(PercentFormatter(1));ax.grid(alpha=.13)
             ax.set_xlabel("Age (0 = acquisition)",fontsize=8)
+            if payment_numbers:
+                ax.set_xticklabels([1,4,7,10,12]);ax.set_xlabel("Monthly payment",fontsize=8)
         axes[0].set_ylabel("Retained / original cohort")
         done(fig,"retention-forecast",["forecast_curve.csv","cohort_valuation.csv"],
              "Solid observed retention; dashed forecast continuation; 5th–95th posterior parameter bands. Newest cohort has no observed renewal decision.",{"cohorts":retention_cohorts,"observed_renewal_ages":[int(observed_ages[x])-1 for x in retention_cohorts]})
@@ -845,30 +852,36 @@ def _pdf_copyability(path: Path) -> dict:
     return {"extractor":"pypdf","commands":2,"source_filenames":len(SCHEMAS),"distinct_fields":len(fields),"status":"passed"}
 
 
-def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
+def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="A") -> dict:
     """Produce a decision-facing report and required technical/data appendices."""
     from .workflow import implementation_snapshot
+    if variant not in {"A", "B"}:raise ValueError("Report variant must be A or B")
     implementation = implementation_snapshot()
     output=Path(output_dir).resolve();directory=output/"report";directory.mkdir(parents=True,exist_ok=True)
     _json(output/"model_summary.json") # No silent placeholder forecast.
-    charts=build_charts(output)
+    charts=build_charts(output,payment_numbers=variant=="B")
     style=_validate_style()
     from .report_extensions import extension_context
     from .decision_report import decision_context
     ctx={**_context(output), **_appendix_context(output), **extension_context(output), **decision_context(output)}
+    if variant=="B":
+        from .report_b import prepare_version_b
+        ctx.update(prepare_version_b(output,ctx,charts))
     metrics_path=_write_executive_metrics(output,ctx)
     env=Environment(loader=FileSystemLoader(ROOT/"templates"),undefined=StrictUndefined,
                     variable_start_string=r"\VAR{",variable_end_string="}",autoescape=False)
     source=directory/"customer-economics-report.tex"
-    rendered=env.get_template("customer-economics-report.tex.j2").render(**ctx)
+    template_name="customer-economics-report-b.tex.j2" if variant=="B" else "customer-economics-report.tex.j2"
+    rendered=env.get_template(template_name).render(**ctx)
     exhibits=_caption_registry(rendered)
     source.write_text(rendered,encoding="utf-8",newline="\n")
     _write_json(directory/"exhibit_registry.json",{"exhibits":exhibits})
     shutil.copyfile(ROOT/"templates/labreport.sty",directory/"labreport.sty")
     shutil.copyfile(ROOT/"templates/longxiu-research-brief.sty",directory/"longxiu-research-brief.sty")
-    manifest={"version":3,"source_date_epoch":EPOCH,"report_source_sha256":_sha(source),"style_sha256":_sha(directory/"labreport.sty"),
+    if variant=="B":shutil.copyfile(ROOT/"templates/labreport-b.sty",directory/"labreport-b.sty")
+    manifest={"version":3,"variant":variant,"template_file":"templates/"+template_name,"source_date_epoch":EPOCH,"report_source_sha256":_sha(source),"style_sha256":_sha(directory/"labreport.sty"),
               "upstream_style_version":style["upstream_style_version"],"upstream_style_sha256":_sha(directory/"longxiu-research-brief.sty"),
-              "template_sha256":_sha(ROOT/"templates/customer-economics-report.tex.j2"),
+              "template_sha256":_sha(ROOT/"templates"/template_name),
               "display_formatter_sha256":_sha(ROOT/"cohort_lab/display.py"),
               "report_skill_sha256":_sha(ROOT/"skills/executive-report/SKILL.md"),
               "parameter_summary_sha256":_sha(output/"tables/parameter_summary.csv"),
@@ -882,6 +895,9 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
               "exhibit_registry_sha256":_sha(directory/"exhibit_registry.json"),
               "figure_count":sum(x["type"]=="figure" for x in exhibits),"table_count":sum(x["type"]=="table" for x in exhibits),
               "renewal_window_evidence":ctx["renewal_window_evidence"]}
+    if variant=="B":
+        manifest["variant_artifacts"]={name:_sha(directory/name) for name in ("incremental-planning.csv","version-b-evidence.json","exhibit-source-map.json","labreport-b.sty")}
+        manifest["main_pages"]=15
     for key in ("diagnostics_manifest_sha256", "postestimation_manifest_sha256", "decision_metrics_manifest_sha256"):
         if key in charts: manifest[key] = charts[key]
     manifest["learner_choices_sha256"]=_sha(output/"learner_choices.json") if (output/"learner_choices.json").exists() else None
@@ -889,6 +905,9 @@ def build_report(output_dir: Path, compile_pdf: bool=True) -> dict:
         manifest["build"]=_compile_native(source)
         from pypdf import PdfReader
         pdf=PdfReader(source.with_suffix(".pdf"))
+        if variant=="B":
+            appendix_pages=[i+1 for i,page in enumerate(pdf.pages) if i>1 and "TECHNICAL AND DATA APPENDIX" in " ".join((page.extract_text() or "").upper().split())]
+            if appendix_pages!=[16]:raise ValueError(f"Version B requires 15 pages before the appendix; found appendix starts {appendix_pages}")
         front_matter_pages=rendered.count(r"\ReportCover{")+rendered.count(r"\ReportContents")
         expected_pages=rendered.count(r"\PageTitle{")+rendered.count(r"\SectionDivider{")+front_matter_pages
         schema_prefix=rendered.split(r"\BeginSchemaFoldout",1)[0]
