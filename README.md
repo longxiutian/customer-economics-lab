@@ -1,90 +1,70 @@
 # Customer Economics Lab
 
-Current release: **1.7.0**, in the **2026 1.x.x series**. The 2027 edition will use 2.x.x. See [release numbering and historical mappings](docs/versioning.md).
+Use an AI coding agent to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the agent handles the code.
 
-**Are we moving in the right direction as a company?**
+## Students: copy and paste this into your AI harness
 
-[Read the executive report](examples/reference/report/customer-economics-report.pdf) · [Companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx) · [Stage-gated skill](SKILL.md)
+Open **Codex, Claude Code, or GitHub Copilot in agent mode** with the lab folder supplied for your class session. These tools need access to files and a local or cloud environment where they can run code. Then paste the entire prompt below:
 
-This framework starts with eight separate source-system CSVs and ends with an executive decision report and an auditable analytical handoff. The fictional business, Studio North, sells monthly creative-work memberships. Twenty-four acquisition cohorts make monthly renewal decisions; customers differ in their underlying propensity to churn. Managers can use the same staged workflow to brief their analytical teams.
+```text
+Guide me through the Studio North Customer Economics Lab as a student.
 
-In one AI-agent chat, students inspect the exports, classify each dataset's Universal Customer View fields, execute saved DuckDB SQL, compare cohorts and segments, examine randomized acquisition evidence, and forecast immature cohorts. The main NumPyro model uses heterogeneous-churn sBG retention and Gamma revenue. An adapted Orduz Bayesian neural network is a separate validation comparison. The actual report-formatting skill and source assets are bundled, along with Archify relationship diagrams and editable LaTeX/PDF output.
+Use the instructor-provided lab folder in this workspace. First check that it
+contains both SKILL.md and skills/student-teacher/SKILL.md. If the folder or
+either file is missing, stop and help me locate the guided student edition.
+Do not substitute an older release or generate the report immediately.
 
-![Report preview](examples/reference/report/preview.png)
+Read both skills. Start with a short introduction to Studio North, the
+management question, and our learning roadmap before setting up software.
+Help me complete the documented setup, then use student.py for the guided lab.
+I should not need to write code, install Git, or create a GitHub account.
 
-## Start in Codex
+At every checkpoint, show the actual intermediate tables, diagrams, or charts
+in this chat. Explain what they mean in plain language and invite questions.
+Then stop. Advance exactly one checkpoint only when my message is "next step".
+A question, an answer, or a revised judgment does not authorize advancement.
 
-Paste this request into a local Codex chat:
+Record my own judgments and preserve my place so we can resume later.
+Generate the final report only at the last checkpoint, after I have supplied
+my recommendation and explicitly said "next step".
+```
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.7.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+The guided student package will be distributed for your lab session. Extract that ZIP and open its folder in your agent before starting. Existing tagged releases are archived examples and may not contain the teaching skill. If you have only a browser chat without file and code execution tools, partner with a classmate who has a coding-agent setup.
 
-You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
+## What you will do
 
-Complete [setup](docs/setup.md) before the class. The core requirements are Python 3.12, the frozen `uv.lock` environment, Node 20+, the pinned browser renderer, and a supported LaTeX engine. DuckDB reads the CSVs locally; there is no database server or paid cloud account to configure.
+The lab connects the Universal Customer View and customer journey to SQL cohort construction, segmentation, acquisition incrementality, LTV forecasting, and a management recommendation. Across **19 checkpoints**, your agent shows the evidence as it is produced. The report comes last.
 
-## Guided commands
+You can ask questions or revise your interpretation at any checkpoint. Say **next step** when you are ready to move on. To resume another day, open the same lab folder and ask your agent to read the student-teacher skill and resume your saved position.
 
-Run commands from the extracted repository:
+## Before class
+
+Ask your agent to help you complete the [setup guide](docs/setup.md) using your class-session package. The workflow uses a locked Python environment, local SQL, diagram tools, and a PDF renderer. You do not need a database server, GPU, Git installation, or GitHub account.
+
+Useful background: [Studio North business brief](docs/business_brief.md) · [Data dictionary](docs/data_dictionary.md) · [Methods and sources](docs/sources.md).
+
+<details>
+<summary>Instructor and technical reference</summary>
+
+The guided edition bundles three skills: the root `SKILL.md` defines the analysis, `skills/student-teacher/SKILL.md` teaches it through explicit checkpoints, and `skills/executive-report/SKILL.md` specifies the final document. The atomic-step audit is in `docs/student-workflow.md` within that package.
+
+The agent runs the following commands from the guided edition's root. Students can use the natural-language prompt above.
 
 ```text
 uv sync --frozen
-uv run --frozen python lab.py start
-uv run --frozen python lab.py message "next"
-uv run --frozen python lab.py status
+uv run --frozen python student.py start
+uv run --frozen python student.py message "next step"
+uv run --frozen python student.py status
 ```
 
-`start` runs setup only. Each explicit `next` advances one stage. Questions and corrections do not advance. Progress, source hashes, and learner choices live in `outputs/guided/lab_state.json`, so another chat can resume the same folder.
+`start` opens the introduction only. The first `next step` checks readiness. Progress is saved under `outputs/student/` in `lesson_state.json`, `lab_state.json`, and `learner_choices.json`. Questions and choices never advance the lesson; revised judgments invalidate dependent results. Instructor batch mode is a separate, explicitly requested workflow.
 
-Save your own interpretation without advancing:
+The main model combines heterogeneous-churn shifted-Beta-Geometric retention with Gamma revenue. An adapted Orduz neural model is a separate validation comparison. The public analysis starts from frozen synthetic exports; private data-generation settings and future evaluation outcomes are not distributed. See the [model specification](docs/model-specification.md), [model review](docs/model-review.md), and [reproducibility guide](docs/reproducibility.md).
 
-```text
-uv run --frozen python lab.py choose provisional_verdict "Growth is improving, but the newest cohort is still immature."
-```
+The latest tagged release is **1.7.0**, an archived reference. The 2026 edition uses 1.x.x; see the [versioning policy](docs/versioning.md). Preserve historical releases and receipts. Validate archived artifacts against their matching source checkout, rather than assuming they were built by the current code.
 
-Changing a judgment invalidates dependent stage records and archives stale outputs. Modified frozen CSVs fail validation; the lab does not silently use them.
+Archived materials: [1.7.0 example report](examples/reference/report/customer-economics-report.pdf) · [Existing companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx). The companion deck's appendix/FAQ revision is still pending; use the materials supplied for your class session.
 
-After stage 3, ask a natural-language question about the data. Codex can write and execute a single read-only SQL query through the logged helper:
+The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses and provenance under `assets/` and `vendor/`.
 
-```text
-uv run --frozen python lab.py query --sql-file my-question.sql
-```
-
-For example, `SELECT cohort_month, n_acquired, cac FROM cohort_six_month_comparison ORDER BY cohort_month` examines comparable older cohorts. The helper saves the exact SQL, input hashes, full bounded result CSV, and receipt under `outputs/guided/queries/`. Questions never advance the guided stage. Writes, external file/network reads, and multiple statements are rejected; oversized results require a narrower query. A verified instructor batch output can be explored with `query --instructor` and the corresponding `--output` option.
-
-## The eight stages
-
-0. Check readiness and understand the company question.
-1. Inspect separate source files and draw the system map.
-2. Classify UCV fields and propose baseline customer segments.
-3. Build cohort views through saved DuckDB SQL.
-4. Compare cohort trajectories, segmentation, and company growth.
-5. Check acquisition incrementality with experiments.
-6. Forecast immature cohorts and examine LTV/payback.
-7. State a supported company verdict and compile the report.
-
-Use the [business brief](docs/business_brief.md), [data dictionary](docs/data_dictionary.md), and [sources](docs/sources.md) as references. The final report separates observed evidence, forecasts, assumptions, and the learner's recommendation.
-
-See [1.7 release changes](docs/v1.7-changes.md) for the acquisition-only holdout design and [CAC and LTV methodology](docs/cac-incrementality.md) for the course connection. The early report section lists channel results; the finale joins iCAC with contribution value before acquisition cost.
-
-## Instructor reproducibility
-
-The frozen observed data release is version **5.0**. Its manifest records every CSV's hash, definitions and observation cutoff. Data generation and the next twelve calendar months of evaluation outcomes belong to a separate instructor-only workflow outside this repository. The public analysis starts from the frozen exports; DuckDB SQL produces the analytical tables, and plotting and reporting consume those results. Reproducibility after data release does not require access to the private generator.
-
-Read [the reproducibility guide](docs/reproducibility.md) for the complete artifact contract, visual checks, companion provenance and ZIP handoff. Validate saved artifacts or rebuild the report twice from frozen fits:
-
-```text
-uv run --frozen python scripts/validate_artifacts.py --output examples/reference --companion
-uv run --frozen python scripts/verify_reproducibility.py --mode report --source examples/reference --output outputs/report-repro
-```
-
-To refit both models in two fresh processes, use `uv run --frozen python scripts/verify_reproducibility.py --mode full --output outputs/full-repro`. Run behavioral tests with `uv run --frozen python -m pytest`. A report replay is not a new inference run.
-
-Batch mode intentionally runs all computations and is not the student-chat workflow. Choose a fresh empty output folder for each run. Use `--no-pdf` before the command only when an editable TeX result is intentionally sufficient. A different model step budget or seed is recorded and invalidates dependent guided outputs. Changes to core code, SQL, templates, or the frozen environment fail closed in an existing guided session; restore the release or begin a new output folder.
-
-The default main-model budget gives four NUTS chains 1,000 warmup iterations and 1,000 retained draws each. The separate neural-network comparison uses 10,000 SVI steps. Read the [model specification](docs/model-specification.md), and [model review](docs/model-review.md) for assumptions, historical validation, and the limits of the uncertainty bands. The [bundled report skill](skills/executive-report/SKILL.md) specifies the executive narrative and required parameter, validation and data appendices.
-
-Use [the local Orduz reading](assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf), the eight UCV field tables, the introductory business experience map, and the knowledge-assets diagram as part of the workflow. The optional [model challenge](docs/model-challenge.md) forecasts the next twelve calendar months; future outcomes are not distributed.
-
-Use **uv** for all Python package management and execution. The baseline and neural comparison run on **CPU**; no GPU or CUDA installation is required.
-
-The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses. The archived Orduz source-notebook reading carries its own author license and provenance under `assets/articles/`; other sources are cited separately.
+</details>
