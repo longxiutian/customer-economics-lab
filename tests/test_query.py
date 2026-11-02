@@ -59,7 +59,7 @@ def test_query_does_not_advance_or_rewrite_guided_state(query_lab, monkeypatch):
     workflow = LabWorkflow(data, output, runner=lambda stage, *_: {"ready": True})
     workflow.start()
     for _ in range(3):
-        workflow.handle_message("next")
+        workflow.handle_message("next step")
     before = workflow.state_path.read_bytes()
     first = run_query(data, output, "SELECT cohort_month, cac FROM cohort_six_month_comparison ORDER BY cohort_month")
     second = run_query(data, output, "SELECT cohort_month, cac FROM cohort_six_month_comparison ORDER BY cohort_month")

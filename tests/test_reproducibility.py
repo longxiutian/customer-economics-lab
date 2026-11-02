@@ -12,7 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def test_instruction_script_and_vendor_edits_change_the_snapshot(tmp_path):
-    names = ["SKILL.md", "scripts/replay_report.py", "docs/cac-incrementality.md",
+    names = ["SKILL.md", "student.py", "cohort_lab/student.py", "skills/student-teacher/SKILL.md",
+             "scripts/replay_report.py", "docs/cac-incrementality.md",
              "skills/executive-report/references/style-system.md", "vendor/archify/renderers/example.mjs"]
     for name in names + ["outputs/guided/queries/question.sql"]:
         path = tmp_path / name

@@ -50,15 +50,15 @@ def test_explicit_next_advances_exactly_one_stage(data_dir, tmp_path, sentinel_r
     lab = LabWorkflow(data_dir, tmp_path / "out", runner=run)
     assert lab.start()["stage"] == 0
     assert calls == [0]
-    first = lab.handle_message("next")
+    first = lab.handle_message("next step")
     assert first["state"]["completed_stage"] == 1
     assert calls == [0, 1]
-    second = lab.handle_message(" NEXT ")
+    second = lab.handle_message(" NEXT STEP ")
     assert second["state"]["completed_stage"] == 2
     assert calls == [0, 1, 2]
 
 
-@pytest.mark.parametrize("message", ["Why is CAC lower?", "Change my conclusion", "next please", "go ahead", ""])
+@pytest.mark.parametrize("message", ["Why is CAC lower?", "Change my conclusion", "next", "next please", "next step please", "go ahead", ""])
 def test_questions_and_corrections_do_not_advance(data_dir, tmp_path, sentinel_runner, message):
     calls, run = sentinel_runner
     lab = LabWorkflow(data_dir, tmp_path / "out", runner=run)
@@ -74,12 +74,12 @@ def test_resume_new_instance_preserves_current_stage_and_choice(data_dir, tmp_pa
     output = tmp_path / "out"
     first = LabWorkflow(data_dir, output, runner=run)
     first.start()
-    first.handle_message("next")
+    first.handle_message("next step")
     first.set_choice("segmentation_rationale", "Compare intended use, then verify on older cohorts.")
     resumed = LabWorkflow(data_dir, output, runner=run)
     assert resumed.start()["state"]["completed_stage"] == 1
     assert calls == [0, 1]
-    response = resumed.handle_message("next")
+    response = resumed.handle_message("next step")
     assert response["stage"] == 2
     assert response["result"]["choices_seen"]["segmentation_rationale"].startswith("Compare intended use")
 
@@ -88,10 +88,10 @@ def test_input_tampering_invalidates_and_fails_closed(data_dir, tmp_path, sentin
     calls, run = sentinel_runner
     lab = LabWorkflow(data_dir, tmp_path / "out", runner=run)
     lab.start()
-    lab.handle_message("next")
+    lab.handle_message("next step")
     (data_dir / "transactions.csv").write_text("person_id,value\np1,999\n")
     with pytest.raises(InputIntegrityError, match="Modified frozen input"):
-        lab.handle_message("next")
+        lab.handle_message("next step")
     state = json.loads(lab.state_path.read_text())
     assert state["status"] == "invalidated"
     assert state["completed_stage"] == -1
@@ -118,7 +118,7 @@ def test_core_implementation_change_invalidates_saved_stages(data_dir, tmp_path,
     lab.start()
     monkeypatch.setattr("cohort_lab.workflow.implementation_snapshot", lambda: {"uv.lock": "changed-hash"})
     with pytest.raises(InputIntegrityError, match="implementation or frozen environment changed"):
-        lab.handle_message("next")
+        lab.handle_message("next step")
     state = json.loads(lab.state_path.read_text())
     assert state["completed_stage"] == -1
     assert state["status"] == "invalidated"
@@ -132,7 +132,7 @@ def test_changed_choice_invalidates_and_archives_downstream_evidence(data_dir, t
     lab.set_choice("final_verdict", "Mixed")
     lab.set_choice("recommended_action", "Review the next renewal cycle")
     for _ in range(7):
-        lab.handle_message("next")
+        lab.handle_message("next step")
     assert (output / "report" / "report.pdf").exists()
     revised = lab.set_choice("segmentation_rationale", "Revisit composition rather than assume within-group improvement.")
     assert revised["state"]["completed_stage"] == 2
@@ -141,7 +141,7 @@ def test_changed_choice_invalidates_and_archives_downstream_evidence(data_dir, t
     assert not (output / "report").exists()
     assert (output / "invalidated" / "revision-001" / "report" / "report.pdf").exists()
     assert calls == list(range(8))
-    assert lab.handle_message("next")["stage"] == 3
+    assert lab.handle_message("next step")["stage"] == 3
 
 
 def test_final_verdict_change_only_rebuilds_report(data_dir, tmp_path, sentinel_runner):
@@ -152,7 +152,7 @@ def test_final_verdict_change_only_rebuilds_report(data_dir, tmp_path, sentinel_
     lab.set_choice("final_verdict", "Mixed")
     lab.set_choice("recommended_action", "Review the next renewal cycle")
     for _ in range(7):
-        lab.handle_message("next")
+        lab.handle_message("next step")
     changed = lab.set_choice("final_verdict", "Mixed: observed acquisition improves, youngest LTV remains uncertain.")
     assert changed["state"]["completed_stage"] == 6
     assert (output / "model_summary.json").exists()
@@ -169,7 +169,7 @@ def test_model_configuration_change_invalidates_model_and_report(data_dir, tmp_p
     lab.set_choice("final_verdict", "Mixed")
     lab.set_choice("recommended_action", "Review the next renewal cycle")
     for _ in range(7):
-        lab.handle_message("next")
+        lab.handle_message("next step")
     resumed = LabWorkflow(data_dir, output, runner=run, steps=200)
     status = resumed.status()
     assert status["state"]["completed_stage"] == 5
@@ -189,7 +189,7 @@ def test_setup_failure_remains_at_setup_until_fixed(data_dir, tmp_path):
     assert lab.start()["advanced"] is False
     assert lab.status()["state"]["completed_stage"] == -1
     ready = True
-    assert lab.handle_message("next")["stage"] == 0
+    assert lab.handle_message("next step")["stage"] == 0
     assert calls == [0, 0]
 
 
@@ -198,15 +198,15 @@ def test_guided_report_requires_the_learners_actual_judgment(data_dir, tmp_path,
     lab = LabWorkflow(data_dir, tmp_path / "out", runner=run)
     lab.start()
     for _ in range(6):
-        lab.handle_message("next")
-    result = lab.handle_message("next")
+        lab.handle_message("next step")
+    result = lab.handle_message("next step")
     assert result["advanced"] is False
     assert result["state"]["completed_stage"] == 6
     assert set(result["missing_choices"]) == {"final_verdict", "recommended_action"}
     assert calls == list(range(7))
     lab.set_choice("final_verdict", "Too early to tell for the youngest cohorts")
     lab.set_choice("recommended_action", "Reassess after another observed renewal month")
-    assert lab.handle_message("next")["stage"] == 7
+    assert lab.handle_message("next step")["stage"] == 7
 
 
 def test_undeclared_extra_csv_is_rejected(data_dir):
@@ -273,7 +273,7 @@ def test_guided_state_works_from_source_zip_without_git(data_dir, tmp_path):
         "from pathlib import Path; from cohort_lab.workflow import LabWorkflow; "
         "w=LabWorkflow(Path('data'),Path('output'),runner=lambda stage,*args:{'ready':True}); "
         "w.start(); r=w.handle_message('Why?'); assert not r['advanced']; "
-        "assert w.handle_message('next')['stage']==1; print('zip-guided-ok')"
+        "assert w.handle_message('next step')['stage']==1; print('zip-guided-ok')"
     )
     result = subprocess.run([sys.executable, "-c", code], cwd=extracted, text=True, capture_output=True, check=True)
     assert result.stdout.strip() == "zip-guided-ok"

@@ -98,7 +98,7 @@ With the population and outcome fixed, reducing weighted within-cell variance in
 \operatorname{Var}(Y)=\sum_g w_g\operatorname{Var}(Y\mid g)
 +\sum_g w_g(\bar Y_g-\bar Y)^2,\qquad w_g=n_g/N.
 \]
-Population variances use the group-size divisor. The MBA 743 grouping exercise demonstrates this objective while holding customer values and cell count fixed (\SourceCite{course2026}{Tian, 2026}, Topic 1, slides 37--39).
+Population variances use the group-size divisor. The course grouping exercise demonstrates this objective while holding customer values and cell count fixed (\SourceCite{course2026}{Tian, 2026}, Topic 1, slides 37--39).
 \TableCaption{segmentation}{Four two-group strategies. Variance reductions are relative to the unsegmented outcome variance.}
 \VAR{segmentation_table}
 \VAR{segmentation_sentence}
@@ -285,7 +285,7 @@ The recorded Python environment is installed with \Code{uv sync --frozen}; comma
 \NewPage
 \PageTitle{E7 / THE SKILL-DRIVEN WORKFLOW}{How the skill drives\newline analysis and report generation}{Instructions, executable work and verification have distinct roles in one reproducible process.}
 \Section{The skills define the work}
-The root \Code{SKILL.md} sets the business question, data boundaries, analytical stages and review gates. The executive-report skill specifies the audience, narrative, evidence requirements and visual checks. The Version B contract places findings and decisions in the fifteen-page main report, with full methods and source detail here in the appendix.
+The root \Code{SKILL.md} sets the business question, data boundaries, analytical stages and review gates. The optional student-teacher skill presents intermediate evidence at nineteen learner-controlled checkpoints, with the report last. The executive-report skill specifies the audience, narrative, evidence requirements and visual checks. The Version B contract places findings and decisions in the fifteen-page main report, with full methods and source detail here in the appendix.
 
 The skills guide execution and judgment; they do not calculate the results. They direct the analyst to the versioned code, configuration, source assets and acceptance checks needed to produce the deliverable.
 
@@ -343,8 +343,8 @@ Orduz, J. C. (2024, January 8). \textit{Cohort Revenue Retention Analysis with F
 Larsen, K. (2019, May 14). \textit{You Don't Know Your Customer Acquisition Cost}. Noteworthy / The Journal Blog. \href{https://blog.usejournal.com/you-dont-know-your-customer-acquisition-cost-f7bf820f9d4a}{Original article}.
 \Evidence{The assigned course reading motivates the counterfactual background inflow and average versus marginal acquisition costs. The experimental reconciliation and uncertainty calculations here are the lab's implementation. The article is not redistributed.}
 \hypertarget{ref:course2026}{}
-\Section{MBA 743 teaching connections}
-Tian, L. (2026). \textit{MBA 743: Managing Customer Data}, Mod II. Kenan-Flagler Business School. Topic 1, Customer Journeys, slides 30--39; Topic 3, Acquisition Metrics, slides 6--10 and 23--34; Topic 4, Lifetime Value Metrics, slides 3, 30--31 and 35--42. Course slides and pre-lecture notes.
+\Section{Course teaching connections}
+Tian, L. (2026). \textit{Managing Customer Data}, Mod II. Kenan-Flagler Business School. Topic 1, Customer Journeys, slides 30--39; Topic 3, Acquisition Metrics, slides 6--10 and 23--34; Topic 4, Lifetime Value Metrics, slides 3, 30--31 and 35--42. Course slides and pre-lecture notes.
 \Evidence{Topic 1 compares partitions of the same customers; Topic 3 links holdouts to incremental acquisition and contribution; Topic 4 distinguishes value before and after CAC and discounted payback. Course materials remain in the course distribution.}
 \Section{Bundled reading and reproducible provenance}
 The GitHub \href{https://github.com/longxiutian/customer-economics-lab/tree/v1.7.0/assets/articles/orduz-2024-cohort-revenue-retention}{Orduz asset folder} contains the \href{https://github.com/longxiutian/customer-economics-lab/blob/v1.7.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf}{source-notebook PDF}, the original notebook, its MIT notice and a hash manifest pinned to the source commit. The archived notebook is a reading asset; it was not rerun to generate the Studio North results. The repository's \href{https://github.com/longxiutian/customer-economics-lab/blob/v1.7.0/docs/sources.md}{source guide} records additional instructional background.

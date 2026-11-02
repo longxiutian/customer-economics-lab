@@ -4,7 +4,7 @@ Current release: **1.7.0**, in the **2026 1.x.x series**. The 2027 edition will 
 
 **Are we moving in the right direction as a company?**
 
-[Read the executive report](examples/reference/report/customer-economics-report.pdf) · [Companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx) · [Stage-gated skill](SKILL.md)
+[Read the executive report](examples/reference/report/customer-economics-report.pdf) · [Companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx) · [Analytical skill](SKILL.md) · [Student teaching skill](skills/student-teacher/SKILL.md)
 
 This framework starts with eight separate source-system CSVs and ends with an executive decision report and an auditable analytical handoff. The fictional business, Studio North, sells monthly creative-work memberships. Twenty-four acquisition cohorts make monthly renewal decisions; customers differ in their underlying propensity to churn. Managers can use the same staged workflow to brief their analytical teams.
 
@@ -12,11 +12,11 @@ In one AI-agent chat, students inspect the exports, classify each dataset's Univ
 
 ![Report preview](examples/reference/report/preview.png)
 
-## Start in Codex
+## Start in Codex or Claude Code or Claude Code
 
 Paste this request into a local Codex chat:
 
-> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.7.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Run the framework one stage at a time. Stop after each stage and wait until I explicitly say “next.”
+> Download the public repository https://github.com/longxiutian/customer-economics-lab as a ZIP over HTTPS, preferably the v1.7.0 release. Do not install Git or ask me to create a GitHub account. Extract it into a new working folder, read SKILL.md, and help me complete setup. Read skills/student-teacher/SKILL.md and teach the framework one checkpoint at a time. Show intermediate evidence and stop until I explicitly say “next step.” Generate the report only at the final checkpoint.
 
 You can also use GitHub's **Code → Download ZIP**, extract it, and ask Codex to read `SKILL.md` in that folder. The repository does not need to be installed as a global skill. Its bundled supporting diagram package does not require Git either.
 
@@ -28,30 +28,34 @@ Run commands from the extracted repository:
 
 ```text
 uv sync --frozen
-uv run --frozen python lab.py start
-uv run --frozen python lab.py message "next"
-uv run --frozen python lab.py status
+uv run --frozen python student.py start
+uv run --frozen python student.py message "next step"
+uv run --frozen python student.py status
 ```
 
-`start` runs setup only. Each explicit `next` advances one stage. Questions and corrections do not advance. Progress, source hashes, and learner choices live in `outputs/guided/lab_state.json`, so another chat can resume the same folder.
+`start` introduces the assignment without running analysis. Each explicit `next step` advances one teaching checkpoint. Questions, answers and corrections do not advance. Progress lives in `outputs/student/lesson_state.json`, with computational evidence in `lab_state.json` and judgments in `learner_choices.json`, so another chat can resume the same folder.
 
 Save your own interpretation without advancing:
 
 ```text
-uv run --frozen python lab.py choose provisional_verdict "Growth is improving, but the newest cohort is still immature."
+uv run --frozen python student.py choose provisional_verdict "Growth is improving, but the newest cohort is still immature."
 ```
 
 Changing a judgment invalidates dependent stage records and archives stale outputs. Modified frozen CSVs fail validation; the lab does not silently use them.
 
-After stage 3, ask a natural-language question about the data. Codex can write and execute a single read-only SQL query through the logged helper:
+After teaching checkpoint 6 (computational stage 3), ask a natural-language question about the data. Codex can write and execute a single read-only SQL query through the logged helper:
 
 ```text
-uv run --frozen python lab.py query --sql-file my-question.sql
+uv run --frozen python lab.py --output outputs/student query --sql-file my-question.sql
 ```
 
-For example, `SELECT cohort_month, n_acquired, cac FROM cohort_six_month_comparison ORDER BY cohort_month` examines comparable older cohorts. The helper saves the exact SQL, input hashes, full bounded result CSV, and receipt under `outputs/guided/queries/`. Questions never advance the guided stage. Writes, external file/network reads, and multiple statements are rejected; oversized results require a narrower query. A verified instructor batch output can be explored with `query --instructor` and the corresponding `--output` option.
+For example, `SELECT cohort_month, n_acquired, cac FROM cohort_six_month_comparison ORDER BY cohort_month` examines comparable older cohorts. The helper saves the exact SQL, input hashes, full bounded result CSV, and receipt under `outputs/student/queries/`. Questions never advance the guided stage. Writes, external file/network reads, and multiple statements are rejected; oversized results require a narrower query. A verified instructor batch output can be explored with `query --instructor` and the corresponding `--output` option.
 
-## The eight stages
+## Nineteen teaching checkpoints over eight computational stages
+
+The [student-teacher skill](skills/student-teacher/SKILL.md) gives an opening, displays each intermediate output and waits for **next step**. The [atomicity audit](docs/student-workflow.md) maps its nineteen checkpoints to the eight reusable computations below. The student interface saves `lesson_state.json` under `outputs/student`; source checks and computations retain their own `lab_state.json`. Report compilation comes last.
+
+### Computational stages
 
 0. Check readiness and understand the company question.
 1. Inspect separate source files and draw the system map.

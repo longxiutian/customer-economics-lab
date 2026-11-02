@@ -35,12 +35,12 @@ Use uv for all Python dependency management and execution (`uv sync`, `uv run --
 ## Readiness
 
 ```text
-uv run --frozen python lab.py start
+uv run --frozen python student.py start
 ```
 
-Stage 0 verifies the data manifest, Python packages, Node, and renderer availability. It stops at setup if a required component is missing. Fix that component within the same stage and say `next` to retry setup; this does not skip to the source analysis.
+The opening checkpoint introduces the assignment. Say `next step` to run readiness, which verifies the data manifest, Python packages, Node, and renderer availability. It stops at setup if a required component is missing. Fix that component within the same stage and say `next step` to retry setup; this does not skip to the source analysis.
 
-For a source-only environment, `uv run --frozen python lab.py --no-pdf start` explicitly omits PDF compilation. The final output must then be described as editable TeX, not a successfully rendered PDF.
+For a source-only environment, `uv run --frozen python student.py --no-pdf start` explicitly omits PDF compilation. The final output must then be described as editable TeX, not a successfully rendered PDF.
 
 The full instructor smoke run should be completed on each supported classroom platform before teaching. Package detection alone does not establish that model fitting, fonts, and PDF compilation all work. Never describe a platform as tested merely because its dependencies are theoretically available.
 
@@ -49,7 +49,7 @@ The full instructor smoke run should be completed on each supported classroom pl
 Use a new output directory; preserve existing student work:
 
 ```text
-uv run --frozen python lab.py --output outputs/my-group start
+uv run --frozen python student.py --output outputs/my-group start
 ```
 
 Keep the same output option on subsequent commands. A resumed chat reads the saved state, choices, and input fingerprints. If frozen inputs were edited, restore the public release and use a new output folder; do not rewrite the manifest to make altered records pass.
