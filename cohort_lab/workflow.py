@@ -58,11 +58,11 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     """Fingerprint code, bundled dependencies and instructions, excluding outputs."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("skills/student-teacher", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
-    paths.extend(root / name for name in ("lab.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
+    paths.extend(root / name for name in ("lab.py", "student.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
     paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
     return {p.relative_to(root).as_posix(): _hash(p) for p in sorted(set(paths))}
@@ -310,7 +310,7 @@ class LabWorkflow:
                       "model_draws.npz", "posterior_draws.json"]
         if from_stage <= 3:
             # Everything produced after stage 2 belongs to the canonical build.
-            preserved = {"lab_state.json", "learner_choices.json", "invalidated", "diagrams", "stage2_customer_reasoning.json"}
+            preserved = {"lab_state.json", "lesson_state.json", "learner_choices.json", "invalidated", "diagrams", "stage2_customer_reasoning.json"}
             names = [p.name for p in self.output_dir.iterdir() if p.name not in preserved]
         if from_stage <= 2:
             names += ["stage2_customer_reasoning.json"]
@@ -372,7 +372,7 @@ class LabWorkflow:
         state.pop("error", None)
         self._save(state)
         return {"advanced": True, "stage": stage, "result": result, "state": state,
-                "message": "Lab complete." if state["status"] == "complete" else "Type next to continue."}
+                "message": "Lab complete." if state["status"] == "complete" else "Type next step to continue."}
 
     def start(self) -> dict:
         if self.state_path.exists():
@@ -389,12 +389,12 @@ class LabWorkflow:
         state = self._load()
         self._check_inputs(state)
         return {"advanced": False, "state": state, "next_stage": min(state["completed_stage"] + 1, len(STAGES)),
-                "message": "Resume the existing stage. Only an explicit next advances."}
+                "message": "Resume the existing stage. Only an explicit next step advances."}
 
     def handle_message(self, message: str) -> dict:
         state = self._load()
         self._check_inputs(state)
-        explicit_next = message.strip().casefold() == "next"
+        explicit_next = message.strip().casefold() == "next step"
         state["messages"].append({"stage": state["completed_stage"], "text": message, "explicit_next": explicit_next})
         self._save(state)
         if not explicit_next:
@@ -407,7 +407,7 @@ class LabWorkflow:
             missing = [key for key in ("final_verdict", "recommended_action") if not state["choices"].get(key, "").strip()]
             if missing:
                 return {"advanced": False, "state": state, "missing_choices": missing,
-                        "message": "Record the learner's final verdict and recommended action before compiling their report. Then type next."}
+                        "message": "Record the learner's final verdict and recommended action before compiling their report. Then type next step."}
         return self._run(state, upcoming)
 
     def set_choice(self, key: str, value: str) -> dict:
@@ -429,7 +429,7 @@ class LabWorkflow:
         _write_json(self.output_dir / "learner_choices.json", state["choices"])
         self._save(state)
         return {"advanced": False, "state": state, "changed": True,
-                "message": "Choice saved. Type next when ready to continue; downstream stage records may need rebuilding."}
+                "message": "Choice saved. Type next step when ready to continue; downstream stage records may need rebuilding."}
 
 
 def run_batch(data_dir: Path, output_dir: Path, *, seed: int = 20261116,

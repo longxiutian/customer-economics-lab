@@ -59,6 +59,9 @@ try {
       original.forEach((el, i) => {
         const computed = getComputedStyle(el);
         cloned[i].removeAttribute('style');
+        // The reader annotates this UI-only marker asynchronously. It does not
+        // affect the frozen appearance, but its timing changes serialized SVG.
+        cloned[i].removeAttribute('data-reader-legend-corner');
         for (const property of properties) cloned[i].style.setProperty(property, computed.getPropertyValue(property));
       });
       // Interactive legend hitboxes/badges are measured from screen coordinates

@@ -107,6 +107,7 @@ def test_native_assets_and_ucv_manifest_are_reproducible(sources,tmp_path):
         if stem != "business-journey": assert 'data-quality-profile="standard"' in svg
         assert '<script' not in svg
         assert 'data-legend-bridge-runtime' not in svg
+        assert 'data-reader-legend-corner' not in svg
     svg=(one/"diagrams/source-tables.svg").read_text(encoding="utf-8")
     assert "related_transaction_id" in svg and "campaign_metadata" in svg
     report_svg=(one/"diagrams/source-systems-report.svg").read_text(encoding="utf-8")
@@ -118,6 +119,7 @@ def test_native_assets_and_ucv_manifest_are_reproducible(sources,tmp_path):
     assert "Expected" in journey_svg and "rather than measured" in journey_svg
     for relative,digest in first["knowledge_asset_hashes"].items():
         assert hashlib.sha256((Path(__file__).resolve().parents[1]/relative).read_bytes()).hexdigest()==digest
+    assert 'skills/student-teacher/SKILL.md' in first['knowledge_asset_hashes']
 
 
 def test_knowledge_assets_distinguish_roles_without_distributing_private_generation():

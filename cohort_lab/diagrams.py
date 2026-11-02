@@ -196,7 +196,7 @@ def _knowledge_assets_candidate() -> dict:
     """Public knowledge/runtime assets; no private generator or holdout enters the map."""
     components = [
         {"id":"article","type":"external","label":"Orduz source notebook","sublabel":"Local PDF + MIT provenance","pos":[40,40],"size":[220,78],"sources":[{"path":"assets/articles/orduz-2024-cohort-revenue-retention/source.ipynb"}]},
-        {"id":"student","type":"frontend","label":"Analysis skill","sublabel":"One chat; explicit next stages","pos":[370,40],"size":[220,78],"sources":[{"path":"SKILL.md"}]},
+        {"id":"student","type":"frontend","label":"Analysis + teaching skills","sublabel":"Methods + learner checkpoints","pos":[370,40],"size":[220,78],"sources":[{"path":"SKILL.md"}]},
         {"id":"reportskill","type":"frontend","label":"Executive report skill","sublabel":"Narrative + style + appendices","pos":[700,40],"size":[220,78],"sources":[{"path":"skills/executive-report/SKILL.md"}]},
         {"id":"csv","type":"database","label":"Eight frozen CSVs","sublabel":"Schemas + UCV field tables","pos":[40,220],"size":[220,78],"sources":[{"path":"data/data_dictionary.json"},{"path":"cohort_lab/ucv.py"}]},
         {"id":"sql","type":"backend","label":"DuckDB + NumPy/pandas","sublabel":"Saved SQL + checked views","pos":[370,220],"size":[220,78],"sources":[{"path":"cohort_lab/analysis.py"},{"path":"sql/01_views.sql"}]},
@@ -218,7 +218,7 @@ def _knowledge_assets_candidate() -> dict:
     for component in components:
         component.pop("sources")
         component["pos"]=[40+(component["pos"][0]-40)/330*265,40+(component["pos"][1]-40)/180*135]
-    short_subtitles={"article":"Local PDF + MIT notice","student":"Human review gates","reportskill":"Style + report appendix",
+    short_subtitles={"article":"Local PDF + MIT notice","student":"Methods + learner checkpoints","reportskill":"Style + report appendix",
                      "csv":"Schemas + UCV fields","sql":"Saved SQL + checks","model":"Retention + revenue",
                      "render":"Figures + TeX source","output":"PDF, SQL, model, audit","uv":"Locked Python packages"}
     for component in components:
@@ -295,7 +295,7 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
             results[stem][suffix]=f"diagrams/{asset.name}"
     outputs=[folder/"ucv-tables.json",folder/"ucv-tables.md",folder/"source_inventory.json"]
     outputs.extend(folder/Path(info[field]).name for info in results.values() for field in ("json","html","svg","png") if field in info)
-    knowledge_paths=("SKILL.md","skills/executive-report/SKILL.md","assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf",
+    knowledge_paths=("SKILL.md","skills/student-teacher/SKILL.md","student.py","cohort_lab/student.py","skills/executive-report/SKILL.md","assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf",
                      "assets/articles/orduz-2024-cohort-revenue-retention/LICENSE.txt","cohort_lab/ucv.py","cohort_lab/analysis.py",
                      "cohort_lab/model.py","cohort_lab/benchmark.py","cohort_lab/diagrams.py","cohort_lab/business_journey.py","cohort_lab/report.py",
                      "vendor/archify/SKILL.md","templates/customer-economics-report.tex.j2","pyproject.toml","uv.lock")

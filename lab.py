@@ -22,7 +22,7 @@ def parser() -> argparse.ArgumentParser:
     sub = p.add_subparsers(dest="command", required=True)
     sub.add_parser("start", help="Run only setup stage 0, or resume an existing guided lab.")
     sub.add_parser("status", help="Read saved progress without advancing.")
-    message = sub.add_parser("message", help="Record the actual learner message. Only exactly 'next' advances one stage.")
+    message = sub.add_parser("message", help="Record the actual learner message. Only exactly 'next step' advances one stage.")
     message.add_argument("text")
     choice = sub.add_parser("choose", help="Save a learner judgment without advancing.")
     choice.add_argument("key")

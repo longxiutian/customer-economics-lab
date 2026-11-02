@@ -63,7 +63,7 @@ For a transparent attribution-style benchmark, credit every treated buyer to the
 \VAR{channel_cost_table}
 \VAR{channel_example}
 \Section{Why the correction matters}
-The distinction follows \SourceCite{larsen2019}{Larsen (2019)} and the acquisition cost-curve discussion in MBA 743 Topic 3, slides 6--10 (\SourceCite{course2026}{Tian, 2026}). Crediting background buyers to a campaign makes acquisition look cheaper than it is. The relevant cost for an expansion decision is the cost of generating additional customers.
+The distinction follows \SourceCite{larsen2019}{Larsen (2019)} and the acquisition cost-curve discussion in Managing Customer Data Topic 3, slides 6--10 (\SourceCite{course2026}{Tian, 2026}). Crediting background buyers to a campaign makes acquisition look cheaper than it is. The relevant cost for an expansion decision is the cost of generating additional customers.
 \Section{What is established at this point}
 The tests estimate iCAC at the recorded spending level and audience. Sampling uncertainty remains; Appendix A16 reports the acquisition-lift and iCAC intervals. These results do not yet rank investment opportunities: a customer acquired cheaply may also generate little contribution.
 \Boundary{The closing acquisition-decision section pairs these iCAC estimates with contribution LTV before CAC. That planning step states its assumption about the value of additional customers explicitly. No pilot contribution, retention or lifetime treatment effect is estimated.}
@@ -98,7 +98,7 @@ Higher revenue retention can coexist with customer losses when remaining members
 
 \PageTitle{05 / SEGMENTATION OBJECTIVE}{Similar within cells,\newline different across cells}{Compare candidate partitions on the same customers, outcome, horizon and number of cells.}
 \Section{The objective is a useful partition of heterogeneity}
-Choose a segmentation strategy that increases \textbf{within-cell homogeneity and across-cell heterogeneity} in a decision-relevant outcome. The MBA 743 grouping exercise holds willingness-to-pay values and cell counts fixed while changing who is grouped together (\SourceCite{course2026}{Tian, 2026}, Topic 1, slides 37--39). Here the outcome is six-receipt contribution per originally acquired customer.
+Choose a segmentation strategy that increases \textbf{within-cell homogeneity and across-cell heterogeneity} in a decision-relevant outcome. The course grouping exercise holds willingness-to-pay values and cell counts fixed while changing who is grouped together (\SourceCite{course2026}{Tian, 2026}, Topic 1, slides 37--39). Here the outcome is six-receipt contribution per originally acquired customer.
 \[
 \underbrace{\operatorname{Var}(Y)}_{\text{fixed total variation}}
 =\underbrace{\sum_g w_g\operatorname{Var}(Y\mid g)}_{\text{within-cell variation}}
@@ -466,8 +466,8 @@ Orduz, J. C. (2024, January 8). \textit{Cohort Revenue Retention Analysis with F
 Larsen, K. (2019, May 14). \textit{You Don't Know Your Customer Acquisition Cost}. Noteworthy / The Journal Blog. \href{https://blog.usejournal.com/you-dont-know-your-customer-acquisition-cost-f7bf820f9d4a}{Original article}.
 \Evidence{The assigned course reading motivates the counterfactual background inflow and average versus marginal acquisition costs. The experimental reconciliation and uncertainty calculations here are the lab's implementation. The article is not redistributed.}
 \hypertarget{ref:course2026}{}
-\Section{MBA 743 teaching connections}
-Tian, L. (2026). \textit{MBA 743: Managing Customer Data}, Mod II. Kenan-Flagler Business School. Topic 1, Customer Journeys, slides 30--39; Topic 3, Acquisition Metrics, slides 6--10 and 23--34; Topic 4, Lifetime Value Metrics, slides 3, 30--31 and 35--42. Course slides and pre-lecture notes.
+\Section{Course teaching connections}
+Tian, L. (2026). \textit{Managing Customer Data}, Mod II. Kenan-Flagler Business School. Topic 1, Customer Journeys, slides 30--39; Topic 3, Acquisition Metrics, slides 6--10 and 23--34; Topic 4, Lifetime Value Metrics, slides 3, 30--31 and 35--42. Course slides and pre-lecture notes.
 \Evidence{Topic 1 compares partitions of the same customers; Topic 3 links holdouts to incremental acquisition and contribution; Topic 4 distinguishes value before and after CAC and discounted payback. Course materials remain in the course distribution.}
 \Section{Bundled reading and reproducible provenance}
 The GitHub \href{https://github.com/longxiutian/customer-economics-lab/tree/v1.7.0/assets/articles/orduz-2024-cohort-revenue-retention}{Orduz asset folder} contains the \href{https://github.com/longxiutian/customer-economics-lab/blob/v1.7.0/assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf}{source-notebook PDF}, the original notebook, its MIT notice and a hash manifest pinned to the source commit. The archived notebook is a reading asset; it was not rerun to generate the Studio North results. The repository's \href{https://github.com/longxiutian/customer-economics-lab/blob/v1.7.0/docs/sources.md}{source guide} records additional instructional background.

@@ -2,6 +2,8 @@
 
 The main teaching narrative is how the report was created. Use Appendix E as the organizing source: datasets and UCV fields, source relationships, methodological assets, skills, executable analysis, document generation and verification. Business findings supply concrete examples of that process. The current revision is not constrained to twelve slides; allocate space for readability.
 
+Explain the three skill roles: the root skill owns the analytical contract; `skills/student-teacher/SKILL.md` teaches it through nineteen visible checkpoints and explicit **next step** gates; the executive-report skill specifies the final document. Show the saved lesson state and one intermediate artifact before the final report. Use `docs/student-workflow.md` for the audited map. This is the authoring contract for the revised deck; the existing 13-slide deck has not yet been rebuilt to this contract.
+
 End the deck with the following FAQ section. These are prompts students can copy after completing the skill, not claims about work already performed. Keep the model-research prompt as a research-and-evaluation request; do not imply the existing shifted-Beta-Geometric model has no unobserved heterogeneity. Distinguish that retention model from the complete revenue/contribution and acquisition-cost calculation used to obtain LTV.
 
 ## FAQ: What Else to Prompt after Running the Skill?
