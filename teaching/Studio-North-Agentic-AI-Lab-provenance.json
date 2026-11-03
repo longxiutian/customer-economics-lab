@@ -1,0 +1,396 @@
+{
+  "edition": "November 3, 2026 companion revision; analytical release numbering unchanged",
+  "dataset_version": "5.1",
+  "report_variant": "B",
+  "source_report_sha256": "9a55301476da022d4cbfe4c8bf70a3501f8b55f92d317a204f7470748f5690a7",
+  "slide_count": 33,
+  "faq_section_start": 26,
+  "faq_prompt_slides": [
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33
+  ],
+  "cohort_oriented_faq_slide": 29,
+  "native_table_count": 15,
+  "native_chart_count": 1,
+  "editable_diagrams": true,
+  "pptx_sha256": "b6ec366081dbfb1563aad52f9f34a143689cecb9b581491f8c9c972e90e27640",
+  "pdf_sha256": "1277430a809c073004df484de246159a6cd80366f0ceb2a6105836c91be73847",
+  "source_snapshot_sha256": "603cd3858ecff0644ed940b90ef3e407a86f2a17248e9977101b61063c678ac1",
+  "source_snapshot_file": "Studio-North-Companion-Authoring-20261103.zip",
+  "authoring_file_hashes": {
+    "AUTHORING.txt": "bb94d7209a33787c21771bb9b9e67e559c13dcc01a8985051fbf210d61674b24",
+    "build_deck.mjs": "9a190ebdb6fc91bdd42b60525b8ebf64aa6220721c179f1a8207a9da3e7b7ecf",
+    "finalize_deck.mjs": "10e99d04623d6f731892dfab0bf25dbb22ddacbf892a3f0970bd019fea69a480",
+    "render.ps1": "602ee23049bf10fa92439fb8a98d46bd0ce79c276f93675ca2cf273de82dd0a6",
+    "prepare_data.py": "fbb4825707f6516aa494a16087b5067c0f808aa8aa6e3d3a0ae291a5d002a29c",
+    "audit_deck.py": "d9c59e2a43ecb1b1a82be7950f71f3c2c654014419912a47f81307be82442362",
+    "source.pptx": "e9c78f4dbc1456b6f8487d528e0490b3ad72fc6040a45f762226435eb4dd1736",
+    "build/deck-data.json": "bafb5cd95bf94614e460f3b623d8cf625a931f80cb484d02c95ff2dcea1272c1",
+    "build/slide-ledger.json": "02538c05bc95271099a548cd34386495d170ba8d16aff40e171d4fefe895d761",
+    "build/content-audit.json": "8d4a5564acc38d0450ee92c2f23c0f47fb69ce6c8551f960cfea2f5091d85540",
+    "build/finalization-r3.json": "cd4f3daf6b2e36e61c2ae5cc3dabf0947b8a54e043165e523fd9faf6afa03dc8",
+    "build/final-pixel-comparison.json": "b5061894d2b620cd38137f419a73191d673c51c6056c6e4d781a3f4ce479e90a",
+    "build/qa-r3/render-receipt.json": "1a94e194f3e2e96eefc41cd9a47dd895b022417637ce1ffda8d4659ab28231e5"
+  },
+  "source_input_hashes": {
+    "data\\people.csv": "d65009952863c9e7a434d1ac51629bd7181c5ea8f776c0b9ec9b53d85e3d9826",
+    "data\\subscription_periods.csv": "f99a5d171330038a9b3291b5995b0e22cf5f7e4cb9fa94473482ae3c72b3cc7f",
+    "data\\transactions.csv": "302397ee13f7e6c806a59ab33a4567d372f6fbd86d07a22ccf1ffeda40bfc2fb",
+    "data\\product_events.csv": "007185d413810f602b14b0addf046c6603610482609ea9f858d989e1c76dc63a",
+    "data\\feedback.csv": "505c0c76028273363eefc13f70ca396b94b7601c910be65e7e2cb00693752568",
+    "data\\campaign_spend.csv": "a6110f1403dbe518ce5243c1392fd99fbfa101c66525f3371997055f304c0e8d",
+    "data\\acquisition_attribution.csv": "301da5f5b0b24e99a3dc5885fb1bd608b5b7a616126b33e4b4e223a168833758",
+    "data\\channel_holdouts.csv": "1233899b79e24005af9e1863bcb1b220b762534d536cdff432e5c184a164764b",
+    "outputs\\student-neutral-repro-final2-20261102\\run-a\\tables\\segmentation_objective.csv": "cfcd5233b088cd2a5dbba349da043581445737574c59799f790268652223959c",
+    "outputs\\student-neutral-repro-final2-20261102\\run-a\\tables\\channel_cac.csv": "d1b1ca4596495c9114a526aacadc9dd768b314be4f641653dbcb5ce4be227f31",
+    "outputs\\student-neutral-repro-final2-20261102\\run-a\\tables\\channel_value_decision.csv": "6f618692b54d48c604229faf1273c846a6b61b976c22977dfd7b8aaaea3551d3",
+    "outputs\\student-neutral-repro-final2-20261102\\run-a\\tables\\cohort_totals.csv": "d3db2cdc99e27e9f10a35d185609c6ed7dc59eba0a6b1f5f0157785ade567821",
+    "outputs\\student-neutral-repro-final2-20261102\\run-a\\tables\\cohort_six_month_comparison.csv": "623e0e6c08a37b2c514c95952bced74695be6e986c2eb419077dc35ccaa4091b"
+  },
+  "source_template_sha256": "e9c78f4dbc1456b6f8487d528e0490b3ad72fc6040a45f762226435eb4dd1736",
+  "source_report_recomputed": false,
+  "fresh_model_fit": false,
+  "runtime": {
+    "artifact_tool": "2.8.106",
+    "node": "24.22.1",
+    "presentation_utilities_bundle": "26.1026.10807",
+    "pdf_renderer": "Microsoft PowerPoint 16.0"
+  },
+  "verification": {
+    "status": "passed",
+    "slides": 33,
+    "native_tables": 15,
+    "native_charts": 1,
+    "chart_data_points_checked": 24,
+    "chart_numeric_presentation": "iCAC rounded to cents for the editable Excel snapshot; full precision retained in CSVs",
+    "full_faq_prompts_on_slide_and_in_notes": 7,
+    "new_cohort_view_faq_slide": 29,
+    "source_file_count_verified": 13,
+    "trace_retention": "126 / 179 = 70.4%",
+    "changed_render_slides": [
+      7,
+      16,
+      17,
+      20,
+      25
+    ],
+    "native_powerpoint_rendered": true,
+    "no_vertical_text_overflow_detected": true,
+    "pptx_sha256": "b6ec366081dbfb1563aad52f9f34a143689cecb9b581491f8c9c972e90e27640",
+    "pdf_sha256": "1277430a809c073004df484de246159a6cd80366f0ceb2a6105836c91be73847",
+    "source_report_sha256": "9a55301476da022d4cbfe4c8bf70a3501f8b55f92d317a204f7470748f5690a7",
+    "source_report_recomputed": false
+  },
+  "visual_review": "Every slide inspected at full size; revised slides re-inspected. All 33 final page images match the reviewed render; native PowerPoint detected no vertical text overflow. Package and layout validation have zero findings and zero warnings.",
+  "reproduction_scope": "Editable PPTX is the canonical companion source; native PowerPoint exports PDF. Exact authoring scripts and frozen content are preserved separately. Cross-platform or metadata-independent byte identity is not claimed.",
+  "chart_rounding": "Currency chart points rounded to cents for the editable Excel snapshot; full source precision retained in CSVs.",
+  "slides": [
+    {
+      "slide": 1,
+      "title": "Studio North: an agentic AI customer-data lab",
+      "kind": "case",
+      "sources": [
+        "docs/business_brief.md",
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 2,
+      "title": "How to read the slide colors",
+      "kind": "concept",
+      "sources": [
+        "Retained companion teaching style"
+      ]
+    },
+    {
+      "slide": 3,
+      "title": "The lab connects the course into one analysis",
+      "kind": "concept",
+      "sources": [
+        "docs/companion-slides.md",
+        "SKILL.md"
+      ]
+    },
+    {
+      "slide": 4,
+      "title": "The business question gives the workflow its purpose",
+      "kind": "case",
+      "sources": [
+        "docs/business_brief.md",
+        "data/data_manifest.json"
+      ]
+    },
+    {
+      "slide": 5,
+      "title": "The customer-history exports describe different events",
+      "kind": "case",
+      "sources": [
+        "data/data_manifest.json",
+        "docs/data_dictionary.md"
+      ]
+    },
+    {
+      "slide": 6,
+      "title": "Four more exports connect experience and acquisition",
+      "kind": "case",
+      "sources": [
+        "data/data_manifest.json",
+        "docs/data_dictionary.md"
+      ]
+    },
+    {
+      "slide": 7,
+      "title": "Keys connect records; row units determine valid joins",
+      "kind": "concept",
+      "sources": [
+        "docs/data_dictionary.md",
+        "sql/01_views.sql",
+        "diagrams/source-tables.html"
+      ]
+    },
+    {
+      "slide": 8,
+      "title": "The Universal Customer View classifies fields",
+      "kind": "case",
+      "sources": [
+        "diagrams/ucv-tables.json",
+        "docs/ucv-tables.md"
+      ]
+    },
+    {
+      "slide": 9,
+      "title": "The journey map connects customer goals to evidence",
+      "kind": "case",
+      "sources": [
+        "docs/business_brief.md",
+        "cohort_lab/diagrams.py",
+        "sql/02_friction.sql"
+      ]
+    },
+    {
+      "slide": 10,
+      "title": "The assets folder makes methodological sources inspectable",
+      "kind": "concept",
+      "sources": [
+        "docs/sources.md",
+        "assets/articles/orduz-2024-cohort-revenue-retention/provenance.json",
+        "assets/articles/larsen-2019-customer-acquisition-cost/README.md"
+      ]
+    },
+    {
+      "slide": 11,
+      "title": "Three skill files have distinct responsibilities",
+      "kind": "concept",
+      "sources": [
+        "SKILL.md",
+        "skills/student-teacher/SKILL.md",
+        "skills/executive-report/SKILL.md"
+      ]
+    },
+    {
+      "slide": 12,
+      "title": "Choose a teaching walkthrough or a straight-through run",
+      "kind": "concept",
+      "sources": [
+        "docs/student-workflow.md",
+        "cohort_lab/student.py",
+        "cohort_lab/workflow.py"
+      ]
+    },
+    {
+      "slide": 13,
+      "title": "Intermediate outputs make the analysis visible",
+      "kind": "case",
+      "sources": [
+        "docs/student-workflow.md",
+        "cohort_lab/student.py"
+      ]
+    },
+    {
+      "slide": 14,
+      "title": "SQL turns event records into a customer clock",
+      "kind": "concept",
+      "sources": [
+        "sql/01_views.sql",
+        "cohort_lab/analysis.py"
+      ]
+    },
+    {
+      "slide": 15,
+      "title": "One report cell can be traced to a saved table",
+      "kind": "evidence",
+      "sources": [
+        "tables/cohort_totals.csv",
+        "sql/01_views.sql"
+      ]
+    },
+    {
+      "slide": 16,
+      "title": "Segmentation seeks similarity within cells and differences across them",
+      "kind": "evidence",
+      "sources": [
+        "tables/segmentation_objective.csv",
+        "cohort_lab/decision_metrics.py"
+      ]
+    },
+    {
+      "slide": 17,
+      "title": "Monthly holdouts keep acquisition costs current",
+      "kind": "evidence",
+      "sources": [
+        "tables/channel_cac.csv",
+        "data/channel_holdouts.csv",
+        "docs/cac-incrementality.md"
+      ]
+    },
+    {
+      "slide": 18,
+      "title": "A holdout reconciles credited CAC with iCAC",
+      "kind": "evidence",
+      "sources": [
+        "tables/channel_cac_current.csv",
+        "docs/cac-incrementality.md",
+        "Kim Larsen (2019), You Don\u00e2\u20ac\u2122t Know Your Customer Acquisition Cost."
+      ]
+    },
+    {
+      "slide": 19,
+      "title": "The cohort model forecasts value from customer histories",
+      "kind": "concept",
+      "sources": [
+        "docs/model-specification.md",
+        "docs/orduz-benchmark.md",
+        "Fader and Hardie (2007; 2010)",
+        "Orduz (2024)"
+      ]
+    },
+    {
+      "slide": 20,
+      "title": "The finale joins current acquisition cost with cohort value",
+      "kind": "decision",
+      "sources": [
+        "tables/channel_value_decision.csv",
+        "report/incremental-planning.csv",
+        "report/version-b-evidence.json"
+      ]
+    },
+    {
+      "slide": 21,
+      "title": "A recommendation has an inspectable evidence chain",
+      "kind": "concept",
+      "sources": [
+        "sql/01_views.sql",
+        "cohort_lab/decision_metrics.py",
+        "cohort_lab/model.py",
+        "templates/customer-economics-report-b.tex.j2"
+      ]
+    },
+    {
+      "slide": 22,
+      "title": "Dependencies turn instructions into executable work",
+      "kind": "concept",
+      "sources": [
+        "pyproject.toml",
+        "uv.lock",
+        "tools/package-lock.json",
+        "docs/setup.md"
+      ]
+    },
+    {
+      "slide": 23,
+      "title": "Reproducibility preserves the work behind the PDF",
+      "kind": "concept",
+      "sources": [
+        "docs/reproducibility.md",
+        "scripts/validate_artifacts.py",
+        "scripts/verify_reproducibility.py"
+      ]
+    },
+    {
+      "slide": 24,
+      "title": "The appendix explains how the report was created",
+      "kind": "case",
+      "sources": [
+        "Studio-North-Version-B.pdf, SHA256 9a55301476da022d4cbfe4c8bf70a3501f8b55f92d317a204f7470748f5690a7",
+        "report/report_manifest.json"
+      ]
+    },
+    {
+      "slide": 25,
+      "title": "Reference List",
+      "kind": "concept",
+      "sources": [
+        "docs/sources.md"
+      ]
+    },
+    {
+      "slide": 26,
+      "title": "FAQ: What Else to Prompt after Running the Skill?",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 27,
+      "title": "FAQ 1: Describe the datasets through the UCV",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 28,
+      "title": "FAQ 2: Walk through the SQL cohort triangle",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 29,
+      "title": "FAQ 3: Compare four segments within each cohort",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 30,
+      "title": "FAQ 4: Research and test alternative LTV models",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 31,
+      "title": "FAQ 5: Find a more useful segmentation strategy",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 32,
+      "title": "FAQ 6: Identify what could change the recommendation",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    },
+    {
+      "slide": 33,
+      "title": "FAQ 7: Adapt the skill to another business",
+      "kind": "faq",
+      "sources": [
+        "docs/companion-slides.md"
+      ]
+    }
+  ]
+}
