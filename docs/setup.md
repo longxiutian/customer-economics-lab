@@ -1,4 +1,6 @@
-# Setup before class
+# Backend and optional local setup
+
+For the November 2026 classroom, students start with personal ChatGPT web accounts and UNC network access. Follow the [browser access plan](chatgpt-web-classroom.md); that connection is being prepared and has not yet passed classroom acceptance. The instructions below are for the centrally managed execution environment or an explicitly chosen local coding-agent setup. Students using the browser route do not install these dependencies on their computers.
 
 The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v1.7.0 source archive over HTTPS into a new empty folder using Python's standard library.
 

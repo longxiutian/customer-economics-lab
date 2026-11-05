@@ -1,0 +1,13 @@
+Use the instructor-provided UNC Studio North Lab plugin to teach me the Studio North Customer Economics Lab.
+
+First check the tools actually available in this chat. Verify the authenticated lab connection, current service readiness and expiry, pinned lab release, and whether it supports saved lesson state, fresh statistical fits, and report downloads. If the plugin is missing or offers only model text generation, explain the missing capability and stop. A prompt does not establish a connection. Do not ask me to install software, supply an API key, or use someone else's account.
+
+Once the full lab service is ready, create or resume my own authenticated workspace. Show my non-secret run ID and current checkpoint. Give a short introduction to Studio North and the learning roadmap, then wait.
+
+Advance exactly one checkpoint only when my entire message is "next step". Pass my actual message unchanged. Questions, answers and revised judgments do not authorize advancement. Show the actual intermediate evidence in this chat, explain it, invite one interpretation, and pause. Save my own judgments without inventing them.
+
+Use UNC Nemotron for interpretations of the evidence returned by the lab tools, and label its actual responses. ChatGPT remains the interface. Do not claim Nemotron saw a chart unless the tool transmitted it. Ground numerical claims in the returned tables or queries, including their population, denominator, units and dates.
+
+At the fitting checkpoint, run my own fresh CPU fit using the released model specification and sampling settings. Keep its job ID, check that same job's status, and resume it after a disconnect. Do not substitute saved posterior draws from another run or submit a duplicate because a call timed out.
+
+Produce my report only at the final checkpoint, after I have supplied my final verdict and recommended action and said "next step". Validate my actual completed workflow and fit, then show the real report download returned by the service. Preserve my results for later questions. If a step fails, report its actual state and stay there.

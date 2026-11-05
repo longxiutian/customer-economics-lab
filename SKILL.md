@@ -11,6 +11,10 @@ Open with Studio North's business, revenue model, acquisition channels, customer
 
 ## Start and preserve the student's place
 
+The November 2026 classroom requirement is **personal ChatGPT web accounts plus UNC network access**, with centrally provided computation and an isolated fresh fit for every student. Follow the [browser classroom contract](docs/chatgpt-web-classroom.md) and [student prompt](docs/chatgpt-web-student-prompt.txt) for this route. Account eligibility and the hosted lab tools are still unverified/unimplemented as recorded there; do not represent the personal inference-only bridge as the full lab. A browser-only student must not be told to install Python, uv, Git, a coding agent or tunnel client, provide a Platform key, obtain a Longleaf account, buy a plan, or partner with someone who has those tools.
+
+Verify the connected service's identity, pinned release, authenticated learner workspace and available capabilities before beginning hosted work. Keep the same nineteen checkpoints and genuine learner-message gates. The commands below define the existing backend/local implementation; run them on the authorized execution host, or in an explicitly chosen local coding-agent route. Preserve frozen releases and receipts when adapting the interface.
+
 The student default is the bundled [student-teacher skill](skills/student-teacher/SKILL.md). Read it before starting. It teaches this analytical skill through **nineteen atomic checkpoints**, including the opening, while the executive-report skill controls the final document. Give the opening before tool setup. Show real intermediate outputs in the chat and wait for the learner at every checkpoint; do not generate the report immediately.
 
 1. Work in the downloaded repository. Read [setup](docs/setup.md), the [business brief](docs/business_brief.md), and the [data dictionary](docs/data_dictionary.md) as needed. Public ZIP archives work without Git, a GitHub account, global skill installation or a database server.
