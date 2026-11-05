@@ -1,8 +1,36 @@
 # Customer Economics Lab
 
-Use an AI coding agent to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the agent handles the code.
+Use AI to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the connected computation environment handles the code.
 
-## Students: copy and paste this into your AI harness
+## November 2026 students: ChatGPT in your browser
+
+The classroom starting point is **your personal ChatGPT account and UNC network access**. The planned lab connection runs the software centrally, gives each student a separate workspace, and runs each student's own statistical fits. You are not expected to install Python, Git, a coding agent, or a tunnel client, buy a paid plan, or obtain an API key or Longleaf account.
+
+**Connection status: being prepared; not yet ready for class.** The instructor will provide the verified plugin link and sign-in instructions. Personal-account access, including Free accounts, must be tested before this route is released. The working local workflow in this repository and the personal model pilot do not yet constitute the hosted classroom service.
+
+After the instructor supplies the working connection, open a new ChatGPT conversation, select the lab plugin, and paste the [browser student prompt](docs/chatgpt-web-student-prompt.txt). It checks the actual connection before starting. A prompt alone cannot connect ChatGPT to UNC.
+
+```text
+Use the connected UNC Studio North Lab plugin to guide me through the lab.
+First verify the actual connection, pinned release, my authenticated workspace,
+and tools for saved lesson state, fresh fits and report downloads. If any are
+missing, explain what is missing and stop; do not simulate execution.
+
+Start or resume my own workspace. Introduce the assignment, show my current
+checkpoint, and wait. Advance one checkpoint only when my entire message is
+"next step". Questions and judgments do not advance the lesson. Show the actual
+intermediate outputs and invite my interpretation at every step.
+
+Use UNC Nemotron to interpret the returned evidence and label its responses.
+Run my own fresh CPU fit at the fitting checkpoint, preserving the released
+settings and the same job ID through retries. Save my actual judgments.
+Generate and validate my report only at the final checkpoint after my final
+verdict and action, then give me the real download returned by the service.
+```
+
+The [classroom access plan](docs/chatgpt-web-classroom.md) records the required connection, student isolation, fresh fits, and readiness checks. The local route below remains available for an explicitly chosen coding-agent setup.
+
+## Optional local route: copy and paste into your AI harness
 
 Open **Codex, Claude Code, or GitHub Copilot in agent mode** with the lab folder supplied for your class session. These tools need access to files and a local or cloud environment where they can run code. Then paste the entire prompt below:
 
@@ -29,17 +57,17 @@ Generate the final report only at the last checkpoint, after I have supplied
 my recommendation and explicitly said "next step".
 ```
 
-The guided student package will be distributed for your lab session. Extract that ZIP and open its folder in your agent before starting. Existing tagged releases are archived examples and may not contain the teaching skill. If you have only a browser chat without file and code execution tools, partner with a classmate who has a coding-agent setup.
+For this optional local route, extract the instructor-provided guided ZIP and open its folder in your agent before starting. Existing tagged releases are archived examples and may not contain the teaching skill. These local setup steps are not prerequisites for the planned browser classroom route.
 
 ## What you will do
 
 The lab connects the Universal Customer View and customer journey to SQL cohort construction, segmentation, acquisition incrementality, LTV forecasting, and a management recommendation. Across **19 checkpoints**, your agent shows the evidence as it is produced. The report comes last.
 
-You can ask questions or revise your interpretation at any checkpoint. Say **next step** when you are ready to move on. To resume another day, open the same lab folder and ask your agent to read the student-teacher skill and resume your saved position.
+You can ask questions or revise your interpretation at any checkpoint. Say **next step** when you are ready to move on. The browser service must resume your saved position through your authenticated account. For the optional local route, reopen the same lab folder and ask your agent to read the student-teacher skill and resume.
 
 ## Before class
 
-Ask your agent to help you complete the [setup guide](docs/setup.md) using your class-session package. The workflow uses a locked Python environment, local SQL, diagram tools, and a PDF renderer. You do not need a database server, GPU, Git installation, or GitHub account.
+For the browser route, complete the instructor's connection check when it is released. The [setup guide](docs/setup.md) is for the backend operator and students who explicitly choose local execution. The backend supplies the locked Python environment, SQL, diagram tools, and PDF renderer.
 
 Useful background: [Studio North business brief](docs/business_brief.md) · [Data dictionary](docs/data_dictionary.md) · [Methods and sources](docs/sources.md).
 

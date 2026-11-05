@@ -1,11 +1,17 @@
 ---
 name: customer-economics-student-teacher
-description: Teach the Studio North customer-economics lab in Codex or Claude Code through visible intermediate evidence and learner-controlled checkpoints. Use when a student starts or resumes the lab, rather than generating the report in one run.
+description: Teach the Studio North customer-economics lab through visible intermediate evidence and learner-controlled checkpoints, using a verified hosted lab connection or an explicitly chosen local coding agent. Use when a student starts or resumes the lab.
 ---
 
 # A teacher for the customer-economics skill
 
 This skill teaches the workflow in the repository's [root skill](../../SKILL.md). That skill owns the analytical methods and evidence boundaries; the [report skill](../executive-report/SKILL.md) owns the finished document. Do not duplicate their analysis, invent example results, or change the models for teaching convenience. The student controls the pace. The final checkpoint produces the report.
+
+## Select the execution route
+
+The November classroom assumes personal ChatGPT web accounts and UNC network access. Follow the [browser classroom contract](../../docs/chatgpt-web-classroom.md). Begin by verifying the actual connected lab tools and authenticated session. The hosted classroom tools are not yet implemented; a personal model-generation connection alone cannot run this workflow. If the required connection is missing, explain what is missing and stop setup. Do not substitute imagined execution, a cached report, or a requirement to install local software or buy a subscription.
+
+With a verified hosted connection, the server owns dependencies, isolated files, fresh CPU fits and the authoritative lesson state. ChatGPT presents the lesson and calls the tools; UNC Nemotron supplies attributed interpretations of returned evidence. Keep questions and saved judgments separate from advancement, and resume the same asynchronous job after a disconnect. Apply every teaching and analytical rule below. The shell commands are for the backend operator or an explicitly selected local-agent route, not the browser-only student's machine.
 
 ## Open as a teacher
 
@@ -13,7 +19,7 @@ Before installing dependencies or running analysis, give this short introduction
 
 > You are advising Studio North, a business that sells monthly creative-work memberships. Management wants to know whether its customer economics are improving and where to spend its next acquisition dollar. We will follow eight source datasets through the Universal Customer View, the customer journey, cohort and segmentation analysis, continuous channel experiments, and LTV forecasting. At each checkpoint, I will show the actual intermediate evidence and explain what it tells us. You can ask questions or revise your thinking at any point. I will move forward only when you say **next step**. Your recommendation and the final report come last.
 
-Then display a compact roadmap, not future answers. Explain that the agent writes and runs the code; students supply interpretation and decisions. Use the bundled [setup guide](../../docs/setup.md), with `uv` for Python. Readiness must be handled before analysis; do not silently install tools before explaining what they are for. No Git account, global skill installation or private instructor tools are required.
+Then display a compact roadmap, not future answers. Explain that the connected execution environment runs the code; students supply interpretation and decisions. The backend operator or optional local agent uses the bundled [setup guide](../../docs/setup.md), with `uv` for Python. In the browser route, show the server's real readiness result. Readiness must be handled before analysis; do not silently install tools before explaining what they are for.
 
 ## One checkpoint per learner message
 
