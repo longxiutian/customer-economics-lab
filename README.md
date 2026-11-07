@@ -6,7 +6,9 @@ Use AI to turn eight customer-data tables into a recommendation for Studio North
 
 The BlueChip pilot runs the guided lab through one browser link. No student installation is needed. BlueChip presents the lesson; an instructor-managed backend saves your own workspace, runs fresh CPU models, and obtains Nemotron interpretations.
 
-**November 7 pilot:** [Open Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602), sign in with your UNC BlueChip account, and click **Start my Studio North lab**. This debugging service ends at **5:15 p.m. Eastern on November 7, 2026**. Two complete instructor rehearsals passed, including fresh fits and report downloads. Another student's account access and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
+You can ask how the report is generated and where its data, skills, reference assets, DuckDB calculations and outputs live. The agent retrieves a verified description of the current deployment and explains server-side paths separately from your available downloads. The hosted API supports the released workflow and bounded SQL exploration; implementing alternative models or rewriting chart code remains an exercise for the optional coding-agent route.
+
+**November 7 pilot:** [Open Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602), sign in with your UNC BlueChip account, and click **Start my Studio North lab**. This debugging service ends at **5:15 p.m. Eastern on November 7, 2026**. Two API rehearsals and one browser rehearsal produced matching reports with fresh fits. The browser run required a checkpoint-display recovery; see the acceptance record for the remaining interface checks. The instructor confirms MBA and MSM BlueChip access; another student's end-to-end use of this agent and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
 
 In the configured BlueChip agent, paste:
 
