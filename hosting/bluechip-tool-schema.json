@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "action": {"type": "string", "enum": ["status", "start", "message", "choose", "query", "interpret", "job_status", "validate"]},
+    "request_id": {"type": "string", "description": "Unique UUID per genuine operation; reuse for retries."},
+    "expected_revision": {"type": "integer", "description": "Latest revision returned by status. Required for queued operations."},
+    "message": {"type": "string", "description": "The learner's actual message, verbatim. Only standalone next step advances."},
+    "key": {"type": "string", "enum": ["segmentation_rationale", "journey_hypothesis", "provisional_verdict", "final_verdict", "recommended_action"]},
+    "value": {"type": "string", "description": "Actual learner judgment quoted verbatim within message."},
+    "sql": {"type": "string", "description": "One bounded read-only SELECT, available after checkpoint 6."},
+    "job_id": {"type": "string", "description": "Existing job ID for job_status; never invent."}
+  },
+  "required": ["action"],
+  "additionalProperties": false
+}

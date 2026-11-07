@@ -36,28 +36,7 @@ def prepare_holdout_history(output: Path, charts: dict, plan: pd.DataFrame) -> t
         later = current[(current.channel == channel) & (current.primary_need == "build_skill")].iloc[0]
         trend.append(f"{label(later)} iCAC moved from {money(earlier.icac)} to {money(later.icac)}")
 
-    fig, ax = plt.subplots(figsize=(7.1, 2.45))
-    palette = {("search", "build_skill"): "#17656b", ("partner", "build_skill"): "#966726",
-               ("search", "save_time"): "#6889a9", ("partner", "save_time"): "#a76e83"}
-    for (channel, need), color in palette.items():
-        rows = history[(history.channel == channel) & (history.primary_need == need)].sort_values("test_month")
-        ax.plot(range(len(rows)), rows.icac, marker="o", markersize=3.5, linewidth=1.7,
-                color=color, linestyle="-" if need == "build_skill" else "--", label=label(rows.iloc[0]))
-    ax.set_xticks(range(len(months)), [pd.Timestamp(x).strftime("%b") for x in months])
-    ax.set_ylabel("Cost per additional buyer", fontsize=9)
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda value, pos: "$" + format(value, ".0f")))
-    ax.tick_params(labelsize=8)
-    ax.grid(axis="y", alpha=.16)
-    ax.legend(loc="lower center", bbox_to_anchor=(.5, 1.01), ncol=2, frameon=False, fontsize=8)
-    ax.spines[["top", "right"]].set_visible(False)
-    fig.subplots_adjust(left=.12, right=.98, bottom=.15, top=.76)
-    directory = output / "report" / "figures"
-    files = _save(fig, directory, "channel-icac-history")
-    display = history[["test_id", "test_month", "followup_end_at", "channel", "primary_need", "icac"]].to_dict("records")
-    charts["figures"]["channel-icac-history"] = {
-        "files": files, "sources": ["channel_cac.csv"], "display_values": display,
-        "notes": "Each point uses its own contemporaneous randomized control and complete 31-day window. Enrollment months are shown; no pooling or within-wave early stopping. Per-test intervals are in the appendix.",
-        "sha256": {name: _sha(directory / name) for name in files}}
+    add_holdout_chart(output, charts)
 
     def history_table(selected):
         rows = [[pd.Timestamp(r.test_month).strftime("%b"), label(r),
@@ -99,3 +78,38 @@ def prepare_holdout_history(output: Path, charts: dict, plan: pd.DataFrame) -> t
         "value_clock": "Current tests paired with the latest common operational cohort having six observed receipts. The July-cost comparison holds today's value benchmark fixed; it is not a reconstructed July decision.",
     }
     return context, evidence
+
+
+def add_holdout_chart(output: Path, charts: dict):
+    """Create the acquisition-only history before any LTV model is required."""
+    from .report import _table, _save, _sha
+    history = _table(output, "channel_cac.csv").sort_values(["test_month", "test_id"])
+    if len(history) != 24 or history.test_month.nunique() != 6:
+        raise ValueError("Expected all six monthly acquisition waves")
+    months = sorted(history.test_month.unique())
+    label = lambda r: r.channel.title() + " / " + r.primary_need.replace("_", " ")
+    directory = output / "report" / "figures"
+    directory.mkdir(parents=True, exist_ok=True)
+    charts["sources"]["channel_cac.csv"] = _sha(output / "tables/channel_cac.csv")
+    fig, ax = plt.subplots(figsize=(7.1, 2.45))
+    palette = {("search", "build_skill"): "#17656b", ("partner", "build_skill"): "#966726",
+               ("search", "save_time"): "#6889a9", ("partner", "save_time"): "#a76e83"}
+    for (channel, need), color in palette.items():
+        rows = history[(history.channel == channel) & (history.primary_need == need)].sort_values("test_month")
+        ax.plot(range(len(rows)), rows.icac, marker="o", markersize=3.5, linewidth=1.7,
+                color=color, linestyle="-" if need == "build_skill" else "--", label=label(rows.iloc[0]))
+    ax.set_xticks(range(len(months)), [pd.Timestamp(x).strftime("%b") for x in months])
+    ax.set_ylabel("Cost per additional buyer", fontsize=9)
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda value, pos: "$" + format(value, ".0f")))
+    ax.tick_params(labelsize=8)
+    ax.grid(axis="y", alpha=.16)
+    ax.legend(loc="lower center", bbox_to_anchor=(.5, 1.01), ncol=2, frameon=False, fontsize=8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.subplots_adjust(left=.12, right=.98, bottom=.15, top=.76)
+    directory = output / "report" / "figures"
+    files = _save(fig, directory, "channel-icac-history")
+    display = history[["test_id", "test_month", "followup_end_at", "channel", "primary_need", "icac"]].to_dict("records")
+    charts["figures"]["channel-icac-history"] = {
+        "files": files, "sources": ["channel_cac.csv"], "display_values": display,
+        "notes": "Each point uses its own contemporaneous randomized control and complete 31-day window. Enrollment months are shown; no pooling or within-wave early stopping. Per-test intervals are in the appendix.",
+        "sha256": {name: _sha(directory / name) for name in files}}

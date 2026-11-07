@@ -12,6 +12,7 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+from .process import run as run_process
 import duckdb
 from .data import SCHEMAS, PRIMARY_KEYS, GRAINS
 from .ucv import CATEGORY_DEFINITIONS, build_ucv_tables, ucv_markdown
@@ -274,7 +275,7 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
         source=folder/f"{stem}.json";dest=folder/f"{stem}.html";_write(source,candidate)
         kind=candidate["diagram_type"]
         renderer=vendor/"renderers"/kind/f"render-{kind}.mjs"
-        p=subprocess.run([node,str(renderer),str(source),str(dest)],cwd=folder,text=True,capture_output=True,timeout=120)
+        p=run_process([node,str(renderer),str(source),str(dest)],cwd=folder,text=True,capture_output=True,timeout=120)
         (folder/f"{stem}.render.log").write_text(p.stdout+p.stderr,encoding="utf-8")
         if p.returncode or not dest.exists():raise RuntimeError(f"Archify {kind} render failed: "+(p.stdout+p.stderr)[-3500:])
         results[stem]={"json":f"diagrams/{source.name}","html":f"diagrams/{dest.name}","sha256":_sha(dest),"renderer":"native Archify "+kind}
@@ -282,7 +283,7 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
     # an explicit failure; an old reference PNG is never silently substituted.
     static_stems=("source-systems","source-tables","source-tables-report","source-systems-report",
                   "knowledge-assets","business-journey")
-    p=subprocess.run([node,str(ROOT/"scripts/export_diagram_assets.mjs"),
+    p=run_process([node,str(ROOT/"scripts/export_diagram_assets.mjs"),
                       *[str(folder/f"{stem}.html") for stem in static_stems]],
                      cwd=ROOT,text=True,capture_output=True,timeout=120)
     (folder/"static-assets.render.log").write_text(p.stdout+p.stderr,encoding="utf-8")
