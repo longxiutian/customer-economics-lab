@@ -48,7 +48,7 @@ class Broker:
             time.sleep(min(2 ** attempt, 4))
 
 
-def interpreter(config):
+def interpreter(config, *, job=None):
     """A separate maintained interpreter process owns private model credentials."""
     command = config.get("interpreter_command")
     if not command:
@@ -61,6 +61,9 @@ def interpreter(config):
         evidence["artifacts"] = [{k: v for k, v in a.items() if k not in {"local_path", "url"}}
                                  for a in evidence.get("artifacts", [])]
         prompt = {"question": question, "evidence": evidence}
+        if config.get("telemetry") and job:
+            prompt["telemetry_context"] = {"job_id": job["id"], "run_id": job["run_id"],
+                                           "session_id": config["telemetry"]["session_id"]}
         encoded = json.dumps(prompt, ensure_ascii=False).encode()
         p = subprocess.run(command, input=encoded, capture_output=True, timeout=150,
                            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
@@ -79,13 +82,27 @@ def interpreter(config):
 
 def execute_one(config, job_path, result_path):
     job = json.loads(Path(job_path).read_text(encoding="utf-8"))
-    lesson = HostedLesson(Path(config["runtime"]), interpreter=interpreter(config))
+    lesson = HostedLesson(Path(config["runtime"]), interpreter=interpreter(config, job=job))
     try:
         result = lesson.execute(job)
         write_json(Path(result_path), {"result": result})
     except Exception as exc:
         write_json(Path(result_path), {"error": f"{type(exc).__name__}: {exc}"})
         return 1
+    finally:
+        if config.get("telemetry"):
+            # Receipts are durable before telemetry aggregation. A missing event can
+            # be backfilled without repeating the student's analysis or generation.
+            from hosting.telemetry import Telemetry
+            telemetry = config["telemetry"]
+            try:
+                receipt = Path(config["runtime"]) / "workspaces" / job["run_id"] / "receipts" / (job["id"] + ".json")
+                if receipt.is_file():
+                    Telemetry(telemetry["path"]).ingest_receipt(json.loads(receipt.read_text(encoding="utf-8")), session_id=telemetry["session_id"])
+                health = {"status": "recorded", "job_id": job["id"], "checked_at": time.time()}
+            except Exception as exc:
+                health = {"status": "backfill_required", "job_id": job["id"], "error_type": type(exc).__name__, "checked_at": time.time()}
+            write_json(Path(config["runtime"]) / "telemetry-health.json", health)
     return 0
 
 
