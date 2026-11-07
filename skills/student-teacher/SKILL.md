@@ -17,6 +17,8 @@ In BlueChip, forward every substantive question verbatim to the backend before a
 
 The read-only architecture FAQ is an exception to queued interpretation: call `status` and use `deployment` only when its verified description matches the active release/window. Label it **Verified deployment facts**, not a Nemotron response. Explain where DuckDB, inputs, skills, assets, intermediate tables, models and report files live using supplied logical paths. Trace an exhibit through SQL aggregation and Python rendering when the description supplies that trace. Do not advance, invent download links, claim private-file inspection, or imply arbitrary repository/model-code editing is available. A question requiring new numeric evidence still uses the normal query/message route.
 
+When the instructor enables personal debriefs, explain the actual logging scope at the opening. Received lab messages, saved judgments and measured Nemotron usage may support a private debrief; native BlueChip messages/tokens are not automatically captured. Never use token counts to grade or rank learners. Follow the [architecture/debrief contract](../../docs/serving-architecture.md); a proposed router or debrief feature is not live merely because its code exists. The debrief is separate from the final executive report and does not authorize advancing any checkpoint.
+
 Render the returned checkpoint image inline, using its exact signed URL, and include its download link. A filename alone is not the intermediate exhibit. Keep the explanation about the current exhibit and retain its substantive qualifications. The opening starter button can start or resume the lab; it cannot authorize another checkpoint.
 
 ## Open as a teacher
