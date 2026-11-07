@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "A personal debrief grounded in one student\u2019s lab evidence",
+    "locale": "en",
+    "output": "diagrams/debrief.html",
+    "visual_preset": "blueprint",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "3a109560dc064217bb662f4109e8265f7307497a",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "events",
+      "type": "database",
+      "label": "Recorded lab activity",
+      "sublabel": "Messages + tokens + results",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 63,
+          "end_line": 81,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "snapshot",
+      "type": "backend",
+      "label": "Codex: freeze evidence",
+      "sublabel": "One student, redacted packet",
+      "pos": [
+        405,
+        40
+      ],
+      "size": [
+        245,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 85,
+          "end_line": 89,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "opus",
+      "type": "cloud",
+      "label": "Opus 5.5 / high",
+      "sublabel": "Evidence-linked feedback",
+      "pos": [
+        820,
+        40
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 91,
+          "end_line": 102,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "type": "security",
+      "label": "Codex: validate",
+      "sublabel": "Check claims + citations",
+      "pos": [
+        820,
+        265
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 97,
+          "end_line": 102,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "report",
+      "type": "backend",
+      "label": "Personal debrief",
+      "sublabel": "Studio North + AI next steps",
+      "pos": [
+        405,
+        265
+      ],
+      "size": [
+        245,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 97,
+          "end_line": 107,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "student",
+      "type": "frontend",
+      "label": "Same student",
+      "sublabel": "Private delivery",
+      "pos": [
+        40,
+        265
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 104,
+          "end_line": 109,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "identity",
+      "type": "security",
+      "label": "Recipient registry",
+      "sublabel": "Separate protected mapping",
+      "pos": [
+        405,
+        455
+      ],
+      "size": [
+        245,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 104,
+          "end_line": 109,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "events",
+      "to": "snapshot",
+      "label": "Freeze"
+    },
+    {
+      "from": "snapshot",
+      "to": "opus",
+      "label": "Evidence"
+    },
+    {
+      "from": "opus",
+      "to": "review",
+      "label": "Draft"
+    },
+    {
+      "from": "review",
+      "to": "report",
+      "label": "Validated"
+    },
+    {
+      "from": "report",
+      "to": "student",
+      "label": "Deliver once"
+    },
+    {
+      "from": "identity",
+      "to": "report",
+      "label": "Recipient"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Observed activity",
+      "items": [
+        "The router measures Nemotron usage. Native BlueChip chat tokens and unforwarded turns are outside current coverage."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Useful next steps",
+      "items": [
+        "Feedback cites actual questions, saved judgments and outputs. It proposes both analytical extensions and better ways to work with AI."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Prototype status",
+      "items": [
+        "An instructor example has been generated. Classroom delivery and a real-student authentication check are still to be configured and verified."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.json",
+    "sha256": "3d920d4b9451ccfd130502328fece1d83c6f449d43dd519dfc5f8dd3846a16ff",
+    "bytes": 4419
+  },
+  "artifact": {
+    "path": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.html",
+    "sha256": "f59080f35d383d0d40d1850a1dad0e87e9ba45b333171337746bba596c64c3ef",
+    "bytes": 817355
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.finalize.json",
+    "summaryReceipt": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-07T22:25:51.425Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 9115,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

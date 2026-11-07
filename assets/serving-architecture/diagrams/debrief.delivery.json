@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c38631ef-159d-4458-82a8-104c909966b0",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\debrief.json",
+  "output": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\debrief.html",
+  "specification": {
+    "sha256": "b9b548b61fddcdd63e47e44a0f61998bad124ef9c57e1f2c152f316c0f09d2f6",
+    "bytes": 5067
+  },
+  "artifact": {
+    "sha256": "ba5be935beccd31777870f1184ca16026db302e86d4757668d519dc5a5095746",
+    "bytes": 820311
+  }
+}

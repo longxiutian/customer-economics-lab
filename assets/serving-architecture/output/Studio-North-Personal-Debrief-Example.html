@@ -1,0 +1,76 @@
+<!doctype html><html lang='en'><meta charset='utf-8'><title>Your Studio North lab debrief</title><style>body{font:16px/1.45 Arial,sans-serif;color:#1f2b36;max-width:850px;margin:40px auto;padding:0 30px}h1{font-size:38px;color:#13294b;margin:4px 0}h2{font-size:22px;color:#155b88;margin:27px 0 10px}h3{font-size:17px;margin-bottom:4px}.eyebrow{font-weight:bold;color:#4b9cd3;letter-spacing:1px}.intro{font-size:20px;color:#627488}.scope,.source,.ref{color:#627488;font-size:14px}blockquote{margin:10px 0 20px;padding:9px 18px;border-left:4px solid #4b9cd3;background:#e8f2f9}pre{font:13px/1.5 Arial;white-space:pre-wrap;overflow-wrap:anywhere}.appendix{border-top:1px solid #c7d8e6;margin-top:35px;padding-top:8px}@media print{body{margin:0;padding:0;font-size:10.5pt}h1{font-size:26pt}h2{font-size:15pt}blockquote{break-inside:avoid}.appendix{break-before:page}p{orphans:3;widows:3}pre{font-size:9pt}@page{size:letter;margin:0.65in}</style><body><p class='eyebrow'>INSTRUCTOR REHEARSAL EXAMPLE · STUDIO NORTH</p>
+<h1>Your lab debrief</h1><p class='intro'>Your analysis, your use of AI, and useful next questions.</p>
+<h2>What the lab recorded</h2>
+<p>25 lab requests · 5 saved judgments · 1 fresh statistical fit(s) · 19 checkpoints observed</p>
+<p><strong>Nemotron: 127,200 tokens</strong> across 20 recorded attempts. Known input: 115,639; known output: 11,561. Attempts with unknown usage: 0.</p>
+<p class='scope'>Input includes the system prompt and checkpoint evidence, as well as your question. Native BlueChip chat tokens are unavailable. These counts describe recorded activity; they are not a measure of learning.</p>
+<h2>Your recorded approach</h2>
+<p>This is an instructor rehearsal fixture. Four of the visible saved-judgment requests are explicitly labeled instructor acceptance-test text. The journey hypothesis request is labeled an instructor test. None of these saves shows a student&#x27;s own reasoning. <span class='ref'>[Evidence 3, 4, 5, 6, 7]</span></p>
+<p>At checkpoint 0, the received messages include a conceptual question distinguishing cohorts from segments. That distinction underpins matched-age comparison and cell-based segmentation later in the lab. <span class='ref'>[Evidence 2]</span></p>
+<p>A saved receipt records one fresh statistical fit at checkpoint 14. A manifest lists a completed report PDF. No SQL requests appear in these lab records. The model&#x27;s interpretation, which is not independently verified, says it could not confirm how the model outputs would be reproduced. <span class='ref'>[Evidence 1, 8, 9, 10]</span></p>
+<h2>Take Studio North further</h2>
+<p>Test the saved segmentation rationale with the hosted lab&#x27;s bounded read-only SQL. Check whether channel-by-need cells show low dispersion in economic outcomes within cells and clear differences across cells. Hold cohort age and complexity comparable. <span class='ref'>[Evidence 4, 1]</span></p>
+<blockquote>Using read-only SQL only, help me compare channel-by-need cells at one matched cohort age and comparable complexity. For each cell, show the count and the spread of contribution and first-renewal retention. Then help me judge whether outcomes are homogeneous within cells and different across cells. Do not treat homogeneity of the defining attributes as sufficient.</blockquote>
+<p>Frame the pilot recommendation as an acquisition-only channel holdout. Compare LTV before acquisition cost with LTV after current iCAC for each candidate cell. Trying a different statistical model or changing the fitting code requires a local/cloud coding harness with the repository; the hosted lab runs its prescribed fresh fit. <span class='ref'>[Evidence 7, 6, 8]</span></p>
+<blockquote>Help me design an acquisition-only channel holdout for the proposed pilot cells. Keep retention and revenue fitting separate. Lay out how I would report LTV before acquisition cost and LTV after current iCAC per cell. Distinguish analyses supported by this hosted lab from model or code changes that need the repository in a coding harness.</blockquote>
+<h2>Build your AI practice</h2>
+<p>The final interpretation credits the learner with controlling the process. Yet the saved verdicts were instructor-supplied text. Practice asking the model to separate claims backed by saved receipts from its own framing. <span class='ref'>[Evidence 10, 8, 9]</span></p>
+<blockquote>For your final summary, list each claim and tag it as one of three types: backed by a saved receipt or artifact, restated from my saved inputs, or your own interpretation. Note any claim about who authored a judgment that the records cannot confirm.</blockquote>
+<p>In a real run, write the hypothesis and segmentation rationale in your own words before saving. Then ask the AI to critique them rather than store dictated text. This makes the saved judgments reflect your reasoning. <span class='ref'>[Evidence 3, 4]</span></p>
+<blockquote>Here is my own draft journey hypothesis and segmentation rationale: [draft]. Critique it without rewriting it. Does it avoid causal claims from observational data? Does it define homogeneity by customer economic outcomes at comparable cohort age and complexity? What one question should I answer before saving?</blockquote>
+<section class='appendix'><h2>Evidence and coverage</h2><p>This report uses only the frozen records for this workspace. Missing records do not show what you did elsewhere.</p>
+<p><strong>lab api messages</strong>: Received tool messages; may be forwarded or reformulated by the interface model. Not a complete verbatim student transcript.</p>
+<p><strong>nemotron tokens</strong>: Provider-reported input/output for recorded attempts. Input includes system instructions and supplied evidence. Cache/reasoning subsets are not added again.</p>
+<p><strong>native bluechip messages and tokens</strong>: Not collected by this lab API. Unknown, not zero.</p>
+<p><strong>operator debrief tokens</strong>: Opus/Codex debrief-generation usage is recorded separately and is not student usage.</p>
+<h3>Evidence 1 · metrics</h3><p class='source'>deterministic telemetry aggregation</p><pre>{&quot;checkpoints_observed&quot;:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],&quot;fresh_fits&quot;:1,&quot;inference_outcomes&quot;:{&quot;completed&quot;:20},&quot;lab_requests&quot;:25,&quot;messages_received&quot;:24,&quot;native_bluechip_tokens&quot;:null,&quot;nemotron_attempts&quot;:20,&quot;nemotron_attempts_with_unknown_usage&quot;:0,&quot;nemotron_known_input_tokens&quot;:115639,&quot;nemotron_known_output_tokens&quot;:11561,&quot;nemotron_total_tokens&quot;:127200,&quot;saved_judgments&quot;:5,&quot;sql_requests&quot;:0}</pre>
+<h3>Evidence 2 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>What is the difference between a cohort and a segment? Please keep me at this checkpoint.</pre>
+<h3>Evidence 3 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>For this instructor test, save my journey_hypothesis as: Early engagement friction may be associated with first-renewal retention; this observational comparison does not establish causality. Keep me at checkpoint 1.</pre>
+<h3>Evidence 4 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>Instructor acceptance-test input, not a student judgment. Save this exact segmentation_rationale: &quot;Compare channel-by-need cells at the same cohort age and complexity, seeking lower within-cell dispersion and meaningful differences between cells.&quot; The homogeneity criterion concerns customer economic outcomes, not merely the attributes defining the cells. Keep me at this checkpoint.</pre>
+<h3>Evidence 5 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>Instructor acceptance-test input, not a student judgment. Save this exact provisional_verdict: &quot;Compare retention and contribution at matched cohort ages before judging company progress; keep acquisition spending distinct from contribution.&quot; Keep me at this checkpoint.</pre>
+<h3>Evidence 6 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>Instructor acceptance-test input, not a student judgment. Save this exact final_verdict: &quot;The matched-age evidence supports improving customer economics, while acquisition spending should remain conditional on current incremental costs and cash recovery.&quot; Keep me at checkpoint 17.</pre>
+<h3>Evidence 7 · prompt excerpt</h3><p class='source'>lab_api_received</p><pre>Check the existing save job. Once it is complete, save this instructor acceptance-test input (not a student judgment) as my exact recommended_action: &quot;Run a measured acquisition pilot in the cells supported by current iCAC and comparable contribution value, refresh monthly holdouts, and require Finance to set the cash-recovery limit before scaling.&quot; Stay at checkpoint 17.</pre>
+<h3>Evidence 8 · checkpoint</h3><p class='source'>saved CPU job receipt</p><pre>A fresh statistical fit completed at checkpoint 14.</pre>
+<h3>Evidence 9 · artifact</h3><p class='source'>saved artifact manifest</p><pre>The completed Studio North PDF is available in this workspace.</pre>
+<h3>Evidence 10 · model excerpt</h3><p class='source'>Nemotron interpretation; a model statement, not independently verified evidence</p><pre>This is the final checkpoint of the Studio North customer-data lab. You controlled the process and produced the report; I am only interpreting the supplied evidence.
+
+**Deliverables**
+- Editable source: `report/customer-economics-report.tex`
+- Compiled PDF: `report/customer-economics-report.pdf`
+- Supporting artifacts: `implementation_manifest.json`, `model_summary.json`, `model_manifest.json`, and `learner_choices.json`
+- The PDF compiled successfully.
+
+**Reproduction**
+Reproduce the report by compiling the supplied `.tex` source. The model manifest records input and output file hashes, settings, and library versions, but the checkpoint evidence does not include the build command or full environment needed to rerun the underlying analysis. I cannot confirm how to reproduce the model outputs from the supplied files alone.
+
+**Learner’s verdict and recommendation**
+- Matched-age evidence supports improving customer economics.
+- Acquisition spending should remain conditional on current incremental costs and cash recovery.
+- Early engagement friction may be associated with first-renewal retention, but this observational comparison does not establish causality.
+- Recommended action: run a measured acquisition pilot in cells supported by current iCAC and comparable contribution value, refresh monthly holdouts, and require Finance to set the cash-recovery limit before scaling.
+
+**Key distinctions**
+- Historical average CAC is not the same as iCAC; do not use average CAC for marginal acquisition decisions.
+- Keep acquisition holdouts separate from retention and revenue fitting.
+- Segmentation means within-cell homogeneity and across-cell heterogeneity at comparable complexity—compare channel-by-need cells at the same cohort age and complexity.
+
+**One implication**
+Because the journey hypothesis is observational, Studio North should not treat early engagement friction as a proven cause of first-renewal retention before scaling acquisition.
+
+**Interpretation check**
+Confirm with Finance whether the cash-recovery limit has been set and whether the pilot cells still match current iCAC and contribution evidence before any spend.</pre>
+<h3>Debrief generation</h3><pre>{
+  &quot;model&quot;: &quot;claude-opus-5-5&quot;,
+  &quot;effort&quot;: &quot;high&quot;,
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 3799,
+    &quot;output_tokens&quot;: 2799,
+    &quot;thinking_tokens&quot;: 913,
+    &quot;total_tokens&quot;: 6598
+  },
+  &quot;scope&quot;: &quot;Operator debrief generation, excluded from student usage&quot;,
+  &quot;fixture&quot;: &quot;Instructor rehearsal; not an actual student assessment&quot;,
+  &quot;validation&quot;: &quot;Evidence IDs and exact quotations validated; narrative checked by Codex against the snapshot&quot;,
+  &quot;codex_edit&quot;: &quot;Clarified that the hosted lab performs its prescribed fresh fit; alternative models or fitting-code changes need a coding harness. Original Opus response retained separately.&quot;
+}</pre>
+<p class='source'>Snapshot dc946ed7163c3c9b74afff49 · Rubric studio-north-personal-debrief/1. Tell the instructor if any recorded observation is incorrect.</p></section></body></html>

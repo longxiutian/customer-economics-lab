@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Four independent Nemotron replicas: classroom design",
+    "locale": "en",
+    "output": "diagrams/four-gpus.html",
+    "visual_preset": "blueprint",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "3a109560dc064217bb662f4109e8265f7307497a",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "requests",
+      "type": "frontend",
+      "label": "Student requests",
+      "sublabel": "Authenticated run IDs",
+      "pos": [
+        40,
+        205
+      ],
+      "size": [
+        180,
+        90
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "messagebus",
+      "label": "Fair inference router",
+      "sublabel": "Queue + health + usage",
+      "pos": [
+        360,
+        205
+      ],
+      "size": [
+        220,
+        90
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 38,
+          "end_line": 53,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "gpu1",
+      "type": "cloud",
+      "label": "GPU 1 / Nemotron",
+      "sublabel": "Same pinned model",
+      "pos": [
+        810,
+        35
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 33,
+          "end_line": 36,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "gpu2",
+      "type": "cloud",
+      "label": "GPU 2 / Nemotron",
+      "sublabel": "Same pinned model",
+      "pos": [
+        810,
+        160
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 33,
+          "end_line": 36,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "gpu3",
+      "type": "cloud",
+      "label": "GPU 3 / Nemotron",
+      "sublabel": "Same pinned model",
+      "pos": [
+        810,
+        285
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 33,
+          "end_line": 36,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "gpu4",
+      "type": "cloud",
+      "label": "GPU 4 / Nemotron",
+      "sublabel": "Same pinned model",
+      "pos": [
+        810,
+        410
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 33,
+          "end_line": 36,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "requests",
+      "to": "router",
+      "label": "Queue"
+    },
+    {
+      "from": "router",
+      "to": "gpu1",
+      "label": "Route 1"
+    },
+    {
+      "from": "router",
+      "to": "gpu2",
+      "label": "Route 2"
+    },
+    {
+      "from": "router",
+      "to": "gpu3",
+      "label": "Route 3"
+    },
+    {
+      "from": "router",
+      "to": "gpu4",
+      "label": "Route 4"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Independent copies",
+      "items": [
+        "Each GPU runs a complete model server. The router selects a healthy replica with available capacity."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Fair admission",
+      "items": [
+        "One active request per student, bounded queues and persistent attempt records. Unknown dispatch outcomes are held for reconciliation."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Capacity has two parts",
+      "items": [
+        "More GPUs serve more interpretations concurrently. Parallel CPU fits and report builds still need their own capacity and durable storage."
+      ]
+    }
+  ]
+}

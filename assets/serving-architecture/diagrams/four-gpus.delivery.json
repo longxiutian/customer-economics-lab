@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e6e7ecd4-f072-4ec8-bbeb-6a51c2519ffe",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.json",
+  "output": "C:\\Users\\longxiu\\Documents\\ChatGPT\\Teaching\\studio_north_architecture_20261107\\diagrams\\four-gpus.html",
+  "specification": {
+    "sha256": "3d920d4b9451ccfd130502328fece1d83c6f449d43dd519dfc5f8dd3846a16ff",
+    "bytes": 4419
+  },
+  "artifact": {
+    "sha256": "f59080f35d383d0d40d1850a1dad0e87e9ba45b333171337746bba596c64c3ef",
+    "bytes": 817355
+  }
+}

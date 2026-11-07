@@ -1,0 +1,70 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"text\": \"```json\\n{\\n  \\\"rubric_version\\\": \\\"studio-north-personal-debrief/1\\\",\\n  \\\"snapshot_id\\\": \\\"dc946ed7163c3c9b74afff49\\\",\\n  \\\"observations\\\": [\\n    {\\n      \\\"text\\\": \\\"This is an instructor rehearsal fixture. Four of the visible saved-judgment requests are explicitly labeled instructor acceptance-test text. The journey hypothesis request is labeled an instructor test. None of these saves shows a student's own reasoning.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:3\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:4\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:5\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:6\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:7\\\"\\n      ],\\n      \\\"quote\\\": \\\"Instructor acceptance-test input, not a student judgment.\\\"\\n    },\\n    {\\n      \\\"text\\\": \\\"At checkpoint 0, the received messages include a conceptual question distinguishing cohorts from segments. That distinction underpins matched-age comparison and cell-based segmentation later in the lab.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:2\\\"\\n      ],\\n      \\\"quote\\\": \\\"What is the difference between a cohort and a segment?\\\"\\n    },\\n    {\\n      \\\"text\\\": \\\"A saved receipt records one fresh statistical fit at checkpoint 14. A manifest lists a completed report PDF. No SQL requests appear in these lab records. The model's interpretation, which is not independently verified, says it could not confirm how the model outputs would be reproduced.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:1\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:8\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:9\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:10\\\"\\n      ],\\n      \\\"quote\\\": \\\"I cannot confirm how to reproduce the model outputs from the supplied files alone.\\\"\\n    }\\n  ],\\n  \\\"studio_north_next_steps\\\": [\\n    {\\n      \\\"text\\\": \\\"Test the saved segmentation rationale with the hosted lab's bounded read-only SQL. Check whether channel-by-need cells show low dispersion in economic outcomes within cells and clear differences across cells. Hold cohort age and complexity comparable.\\\",\\n      \\\"prompt\\\": \\\"Using read-only SQL only, help me compare channel-by-need cells at one matched cohort age and comparable complexity. For each cell, show the count and the spread of contribution and first-renewal retention. Then help me judge whether outcomes are homogeneous within cells and different across cells. Do not treat homogeneity of the defining attributes as sufficient.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:4\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:1\\\"\\n      ]\\n    },\\n    {\\n      \\\"text\\\": \\\"Frame the pilot recommendation as an acquisition-only channel holdout. Compare LTV before acquisition cost with LTV after current iCAC for each candidate cell. Any new model fit or comparison needs a local/cloud coding harness with the repository, not the hosted tool.\\\",\\n      \\\"prompt\\\": \\\"Help me design, but not run, an acquisition-only channel holdout for the proposed pilot cells. Keep retention and revenue fitting separate. Lay out how I would report LTV before acquisition cost and LTV after current iCAC per cell. Flag which steps need a local/cloud coding harness with the repository because they require new model fits.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:7\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:6\\\"\\n      ]\\n    }\\n  ],\\n  \\\"ai_learning_next_steps\\\": [\\n    {\\n      \\\"text\\\": \\\"The final interpretation credits the learner with controlling the process. Yet the saved verdicts were instructor-supplied text. Practice asking the model to separate claims backed by saved receipts from its own framing.\\\",\\n      \\\"prompt\\\": \\\"For your final summary, list each claim and tag it as one of three types: backed by a saved receipt or artifact, restated from my saved inputs, or your own interpretation. Note any claim about who authored a judgment that the records cannot confirm.\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:10\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:8\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:9\\\"\\n      ]\\n    },\\n    {\\n      \\\"text\\\": \\\"In a real run, write the hypothesis and segmentation rationale in your own words before saving. Then ask the AI to critique them rather than store dictated text. This makes the saved judgments reflect your reasoning.\\\",\\n      \\\"prompt\\\": \\\"Here is my own draft journey hypothesis and segmentation rationale: [draft]. Critique it without rewriting it. Does it avoid causal claims from observational data? Does it define homogeneity by customer economic outcomes at comparable cohort age and complexity? What one question should I answer before saving?\\\",\\n      \\\"evidence_ids\\\": [\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:3\\\",\\n        \\\"snap:dc946ed7163c3c9b74afff49/ev:4\\\"\\n      ]\\n    }\\n  ]\\n}\\n```\", \"requested_model\": \"claude-opus-5-5\", \"model\": \"claude-opus-5-5\", \"default_model\": \"claude-opus-5-5\", \"model_selection\": \"explicit\", \"stop_reason\": \"end_turn\", \"incomplete\": false, \"usage\": {\"input_tokens\": 3799, \"output_tokens\": 2799, \"cache_creation_input_tokens\": 0, \"cache_read_input_tokens\": 0, \"thinking_tokens\": 913, \"total_tokens\": 6598, \"mcp_calls\": 0, \"mcp_completed\": 0, \"mcp_failed\": 0, \"mcp_cancelled\": 0, \"provider_calls\": 0, \"provider_completed\": 0, \"provider_failed\": 0, \"provider_cancelled\": 0, \"usage_unreported_calls\": 0, \"provider_in_flight\": 0, \"mcp_in_flight\": 0, \"reserved_output_tokens\": 0}, \"provider_attempted\": true, \"effective_timeout_seconds\": 600, \"retryable\": false, \"app\": \"codex\", \"workload\": \"interactive\", \"error_code\": null, \"warning\": null, \"diagnostics\": {\"revision\": \"attempt-receipts-v1\", \"local_attempt_id\": \"4347fdf51d1144428184746d53046518\", \"dispatch_state\": \"dispatch_possible\", \"timings_seconds\": {\"admission_started\": 0.000111, \"last_activity\": 25.31317, \"admitted\": 0.000198, \"reservation_started\": 0.000206, \"reservation_committed\": 0.023393, \"sdk_entered\": 0.023492, \"connect_started\": 0.026949, \"connect_complete\": 0.210752, \"tls_complete\": 0.249887, \"send_headers_started\": 0.250192, \"send_body_complete\": 0.25219, \"response_headers\": 25.292656, \"provider_returned\": 25.295936, \"finalization_started\": 25.296132, \"finalization_finished\": 25.313161}, \"accounting_status\": \"committed\", \"timeout_kind\": null, \"retry_after_seconds\": null}}"
+    }
+  ],
+  "structuredContent": {
+    "text": "```json\n{\n  \"rubric_version\": \"studio-north-personal-debrief/1\",\n  \"snapshot_id\": \"dc946ed7163c3c9b74afff49\",\n  \"observations\": [\n    {\n      \"text\": \"This is an instructor rehearsal fixture. Four of the visible saved-judgment requests are explicitly labeled instructor acceptance-test text. The journey hypothesis request is labeled an instructor test. None of these saves shows a student's own reasoning.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:3\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:4\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:5\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:6\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:7\"\n      ],\n      \"quote\": \"Instructor acceptance-test input, not a student judgment.\"\n    },\n    {\n      \"text\": \"At checkpoint 0, the received messages include a conceptual question distinguishing cohorts from segments. That distinction underpins matched-age comparison and cell-based segmentation later in the lab.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:2\"\n      ],\n      \"quote\": \"What is the difference between a cohort and a segment?\"\n    },\n    {\n      \"text\": \"A saved receipt records one fresh statistical fit at checkpoint 14. A manifest lists a completed report PDF. No SQL requests appear in these lab records. The model's interpretation, which is not independently verified, says it could not confirm how the model outputs would be reproduced.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:1\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:8\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:9\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:10\"\n      ],\n      \"quote\": \"I cannot confirm how to reproduce the model outputs from the supplied files alone.\"\n    }\n  ],\n  \"studio_north_next_steps\": [\n    {\n      \"text\": \"Test the saved segmentation rationale with the hosted lab's bounded read-only SQL. Check whether channel-by-need cells show low dispersion in economic outcomes within cells and clear differences across cells. Hold cohort age and complexity comparable.\",\n      \"prompt\": \"Using read-only SQL only, help me compare channel-by-need cells at one matched cohort age and comparable complexity. For each cell, show the count and the spread of contribution and first-renewal retention. Then help me judge whether outcomes are homogeneous within cells and different across cells. Do not treat homogeneity of the defining attributes as sufficient.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:4\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:1\"\n      ]\n    },\n    {\n      \"text\": \"Frame the pilot recommendation as an acquisition-only channel holdout. Compare LTV before acquisition cost with LTV after current iCAC for each candidate cell. Any new model fit or comparison needs a local/cloud coding harness with the repository, not the hosted tool.\",\n      \"prompt\": \"Help me design, but not run, an acquisition-only channel holdout for the proposed pilot cells. Keep retention and revenue fitting separate. Lay out how I would report LTV before acquisition cost and LTV after current iCAC per cell. Flag which steps need a local/cloud coding harness with the repository because they require new model fits.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:7\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:6\"\n      ]\n    }\n  ],\n  \"ai_learning_next_steps\": [\n    {\n      \"text\": \"The final interpretation credits the learner with controlling the process. Yet the saved verdicts were instructor-supplied text. Practice asking the model to separate claims backed by saved receipts from its own framing.\",\n      \"prompt\": \"For your final summary, list each claim and tag it as one of three types: backed by a saved receipt or artifact, restated from my saved inputs, or your own interpretation. Note any claim about who authored a judgment that the records cannot confirm.\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:10\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:8\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:9\"\n      ]\n    },\n    {\n      \"text\": \"In a real run, write the hypothesis and segmentation rationale in your own words before saving. Then ask the AI to critique them rather than store dictated text. This makes the saved judgments reflect your reasoning.\",\n      \"prompt\": \"Here is my own draft journey hypothesis and segmentation rationale: [draft]. Critique it without rewriting it. Does it avoid causal claims from observational data? Does it define homogeneity by customer economic outcomes at comparable cohort age and complexity? What one question should I answer before saving?\",\n      \"evidence_ids\": [\n        \"snap:dc946ed7163c3c9b74afff49/ev:3\",\n        \"snap:dc946ed7163c3c9b74afff49/ev:4\"\n      ]\n    }\n  ]\n}\n```",
+    "requested_model": "claude-opus-5-5",
+    "model": "claude-opus-5-5",
+    "default_model": "claude-opus-5-5",
+    "model_selection": "explicit",
+    "stop_reason": "end_turn",
+    "incomplete": false,
+    "usage": {
+      "input_tokens": 3799,
+      "output_tokens": 2799,
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "thinking_tokens": 913,
+      "total_tokens": 6598,
+      "mcp_calls": 0,
+      "mcp_completed": 0,
+      "mcp_failed": 0,
+      "mcp_cancelled": 0,
+      "provider_calls": 0,
+      "provider_completed": 0,
+      "provider_failed": 0,
+      "provider_cancelled": 0,
+      "usage_unreported_calls": 0,
+      "provider_in_flight": 0,
+      "mcp_in_flight": 0,
+      "reserved_output_tokens": 0
+    },
+    "provider_attempted": true,
+    "effective_timeout_seconds": 600,
+    "retryable": false,
+    "app": "codex",
+    "workload": "interactive",
+    "error_code": null,
+    "warning": null,
+    "diagnostics": {
+      "revision": "attempt-receipts-v1",
+      "local_attempt_id": "4347fdf51d1144428184746d53046518",
+      "dispatch_state": "dispatch_possible",
+      "timings_seconds": {
+        "admission_started": 0.000111,
+        "last_activity": 25.31317,
+        "admitted": 0.000198,
+        "reservation_started": 0.000206,
+        "reservation_committed": 0.023393,
+        "sdk_entered": 0.023492,
+        "connect_started": 0.026949,
+        "connect_complete": 0.210752,
+        "tls_complete": 0.249887,
+        "send_headers_started": 0.250192,
+        "send_body_complete": 0.25219,
+        "response_headers": 25.292656,
+        "provider_returned": 25.295936,
+        "finalization_started": 25.296132,
+        "finalization_finished": 25.313161
+      },
+      "accounting_status": "committed",
+      "timeout_kind": null,
+      "retry_after_seconds": null
+    }
+  },
+  "isError": false
+}

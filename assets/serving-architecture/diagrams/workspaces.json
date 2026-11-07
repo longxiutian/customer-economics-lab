@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Shared source release, separate student workspaces",
+    "locale": "en",
+    "output": "diagrams/workspaces.html",
+    "visual_preset": "blueprint",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "3a109560dc064217bb662f4109e8265f7307497a",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "a",
+      "type": "frontend",
+      "label": "Student A",
+      "sublabel": "BlueChip login A",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        155,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "b",
+      "type": "frontend",
+      "label": "Student B",
+      "sublabel": "BlueChip login B",
+      "pos": [
+        40,
+        190
+      ],
+      "size": [
+        155,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "c",
+      "type": "frontend",
+      "label": "Student C",
+      "sublabel": "BlueChip login C",
+      "pos": [
+        40,
+        340
+      ],
+      "size": [
+        155,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "wa",
+      "type": "database",
+      "label": "Workspace A",
+      "sublabel": "A: choices, fits, PDF",
+      "pos": [
+        365,
+        40
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "wb",
+      "type": "database",
+      "label": "Workspace B",
+      "sublabel": "B: choices, fits, PDF",
+      "pos": [
+        365,
+        190
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "wc",
+      "type": "database",
+      "label": "Workspace C",
+      "sublabel": "C: choices, fits, PDF",
+      "pos": [
+        365,
+        340
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "type": "backend",
+      "label": "Shared release",
+      "sublabel": "8 CSVs + skills + code",
+      "pos": [
+        835,
+        190
+      ],
+      "size": [
+        225,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "a",
+      "to": "wa",
+      "label": "Broker binds A"
+    },
+    {
+      "from": "b",
+      "to": "wb",
+      "label": "Broker binds B"
+    },
+    {
+      "from": "c",
+      "to": "wc",
+      "label": "Broker binds C"
+    },
+    {
+      "from": "release",
+      "to": "wa",
+      "label": "Read only"
+    },
+    {
+      "from": "release",
+      "to": "wb",
+      "label": "Read only"
+    },
+    {
+      "from": "release",
+      "to": "wc",
+      "label": "Read only"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Identity is authoritative",
+      "items": [
+        "The broker binds the signed-in student to a private run. A model-generated name cannot select another workspace."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Progress persists",
+      "items": [
+        "Choices, intermediate outputs and reports survive between questions. A new chat resumes the same run."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "GPU assignment can change",
+      "items": [
+        "Workspaces are outside GPU memory. Switching the serving replica does not reset the student\u2019s analysis."
+      ]
+    }
+  ]
+}

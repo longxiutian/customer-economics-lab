@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "title": "Studio North serving architecture",
+  "repository": "https://github.com/longxiutian/customer-economics-lab",
+  "implementation_commit": "3a109560dc064217bb662f4109e8265f7307497a",
+  "implementation_base": "aa32de4a33bd4c026ce38b30677ddb2b0ba8ca71",
+  "publication_status": "Local commits and saved Spaces presentation; no Git push or service deployment",
+  "presentation": {
+    "page_id": "page_4e018199c74c8191a445023b5b536679",
+    "artifact_ref": "artifact_external_ca7b8f3a-bb9e-43ea-926e-de231205af62",
+    "state_version": 7,
+    "slides": 11
+  },
+  "archify_version": "3.2.0",
+  "python_for_pdf": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "reportlab_version": "4.4.9",
+  "pdf_font_requirement": "Arial regular and bold",
+  "snapshot_id": "dc946ed7163c3c9b74afff49",
+  "fixture": "Instructor rehearsal",
+  "privacy": "Explicit file list excludes private ledger, run/session mapping, live config and credentials.",
+  "unrelated_dirty_file_excluded": "docs/companion-slides.md",
+  "files": {
+    ".gitattributes": {
+      "sha256": "0eb75ff4a456860f765101212928674a259640385392b3b65c04f1788eef5807",
+      "bytes": 259
+    },
+    "README.md": {
+      "sha256": "25a78e2520f68609823cc05aef70717567fea4848b477f61871b18cc903a966b",
+      "bytes": 6395
+    },
+    "index.html": {
+      "sha256": "b48d526ab219ec07cbb855e6814ddfa4ecd109248f87716fa672de0ffe77f3f8",
+      "bytes": 2552
+    },
+    "slides.mjs": {
+      "sha256": "d5aee185549c8b34698be10729260e9763ad3a937bfc73d4cd7232fdafdda3e5",
+      "bytes": 17749
+    },
+    "source_paths.py": {
+      "sha256": "602ab851127361ee5dba1d5ab3ddbc18524b04fc08e2241a5f6f0e4db5592aa3",
+      "bytes": 601
+    },
+    "build_diagrams.py": {
+      "sha256": "c01b37b991227fa66cc6d784dc865b304b79476efbaa9880ded0e60a45c6befe",
+      "bytes": 7010
+    },
+    "finalize_diagrams.py": {
+      "sha256": "71b19f02c78e540fb29a477338dab9e7c4dd0080f765c1190f3d69115782639f",
+      "bytes": 1409
+    },
+    "finish_debrief.py": {
+      "sha256": "8754acfef1bca1dcf74041cf2fee40ce59d1c9f981949310baf8e52fb0bbdc90",
+      "bytes": 3227
+    },
+    "render_debrief_pdf.py": {
+      "sha256": "53776f7012bcf6bc5153ea6d09e41c00725f34221615bfe0f1ec9fc1c39d194a",
+      "bytes": 5046
+    },
+    "package_sources.py": {
+      "sha256": "abf1800c90e865d4d99299eb68094e9e30190d530809c9d8fd59a4b9dd39e258",
+      "bytes": 4047
+    },
+    "source-change.patch": {
+      "sha256": "59e1624890e06b1e6d8b8a0739d66fe27371be8c1dd132f17029b946761eb3ef",
+      "bytes": 79372
+    },
+    "source-snapshot.bundle": {
+      "sha256": "ef577be5ca01dec9d38c1f95971b8a40bf7483471bdab7c86f98acd82ef5ede8",
+      "bytes": 27060
+    },
+    "assets/reference-cover-0.jpeg": {
+      "sha256": "e3341573a35a921f12eea1aa227790e94c76305b59985c8238f43f29a102cda5",
+      "bytes": 892930
+    },
+    "assets/reference-cover-1.png": {
+      "sha256": "f5e96128bac27c6d0a338a2e76786479cb68e0264b7f9b5818de44018ee466be",
+      "bytes": 18513
+    },
+    "debrief-example/evidence-packet.json": {
+      "sha256": "3a6f6d9eaa0a0744c932e81adcee4825e5a17e6c0b85a4b5b0c8e48c1bd9adab",
+      "bytes": 7722
+    },
+    "debrief-example/opus-request.txt": {
+      "sha256": "f514c75eea71c85dc864e08d89e6eb24a147fbdb60841dccd04375546d99accf",
+      "bytes": 9762
+    },
+    "debrief-example/validated-response.json": {
+      "sha256": "f24538bd6b5dac93cfd464ca3a310a2623dfd964290a04adf3a295eb55a7d221",
+      "bytes": 4978
+    },
+    "reviews/architecture-request.txt": {
+      "sha256": "9d1765161f90bc99015385f684b7e7a06e84a295b56b9c36e16d69941697425c",
+      "bytes": 4606
+    },
+    "reviews/architecture-response.json": {
+      "sha256": "1a8b61f19b0ec638503c03ae44122034c176b6e2f6ae5f6b5d20cdb18c2552fc",
+      "bytes": 25918
+    },
+    "reviews/debrief-response.json": {
+      "sha256": "2cdc57bb9a1435175d3ed2182ea45983f431fd183fae9d4c32c3a6ecd153160c",
+      "bytes": 13937
+    },
+    "reviews/debrief-validation.json": {
+      "sha256": "3a7c0b0b267f52eeb0d10cd3f0452808fa0a801fb77d30e758eaaa852f8737f1",
+      "bytes": 705
+    },
+    "reviews/adjudication.md": {
+      "sha256": "501d367b784912788a95733e63071a563d8c8b1718a39a6b511b5b6a148ebe6f",
+      "bytes": 2662
+    },
+    "reviews/qa.json": {
+      "sha256": "adb2a137334c67dc5325d0536b55782d68c5d916e1de2b8fba0ff4d3e8c1a4ad",
+      "bytes": 1558
+    },
+    "output/Studio-North-Personal-Debrief-Example.pdf": {
+      "sha256": "2fe5bac018aa7b081db3d7d64ab6ff87426e9ad0950ebd73546c5c70e59c7576",
+      "bytes": 77687
+    },
+    "output/Studio-North-Personal-Debrief-Example.html": {
+      "sha256": "7757acce35dbb989cc7662647b97245d85760f60d72fb81561ccc0833ea6d0d5",
+      "bytes": 12529
+    },
+    "diagrams/overview.browser-check.json": {
+      "sha256": "1e1bc5dd4e7e5cc424b29f6826ac473d624dfe7d5fc218d44fdb30fb82007595",
+      "bytes": 21456
+    },
+    "diagrams/overview.delivery.json": {
+      "sha256": "1b14dbdfd255c180b431aaff172f2fb24a4df18ef350ce269d636322c6183cee",
+      "bytes": 651
+    },
+    "diagrams/overview.finalize-summary.json": {
+      "sha256": "04b52d3fb5c65d1cc49bbdca8470bbcc05575f4067f6fd9377d24424e6802f92",
+      "bytes": 1694
+    },
+    "diagrams/overview.finalize.json": {
+      "sha256": "dd1cf392437585757eb079215c57ff2fd0ea718cf898e54c601ae338a402bbb4",
+      "bytes": 36164
+    },
+    "diagrams/overview.html": {
+      "sha256": "f7c775d4e3842263c1845e095bb6ab2789845b36521bbe142e48340ed7ed38d2",
+      "bytes": 819071
+    },
+    "diagrams/overview.json": {
+      "sha256": "e89f906794b8bad4ab80b1a99ff5579c7722dbb7d87821871165cd549e7d1e6f",
+      "bytes": 4478
+    },
+    "diagrams/four-gpus.browser-check.json": {
+      "sha256": "1e7b1c57e114c4e230c79754f54838bf6911f485a915e24f8efef3dc888a3ab3",
+      "bytes": 21425
+    },
+    "diagrams/four-gpus.delivery.json": {
+      "sha256": "221e65fc5ea7b542aff05f92ee20c22a75ee5d0c2a23af994b9e9c1df5e262ef",
+      "bytes": 653
+    },
+    "diagrams/four-gpus.finalize-summary.json": {
+      "sha256": "b35735e30b319e246914a2db9984ba7a710e5145c65b48ebe7aca45fda083ac7",
+      "bytes": 1699
+    },
+    "diagrams/four-gpus.finalize.json": {
+      "sha256": "c3396a26c103ff7e1dcb091cc003415581e4a291beb014864282ab2ac738b14c",
+      "bytes": 36145
+    },
+    "diagrams/four-gpus.html": {
+      "sha256": "f59080f35d383d0d40d1850a1dad0e87e9ba45b333171337746bba596c64c3ef",
+      "bytes": 817355
+    },
+    "diagrams/four-gpus.json": {
+      "sha256": "3d920d4b9451ccfd130502328fece1d83c6f449d43dd519dfc5f8dd3846a16ff",
+      "bytes": 4419
+    },
+    "diagrams/workspaces.browser-check.json": {
+      "sha256": "93685d31965b2b28a19ba5c8a60de9aec84af3eafcef312af4b8e225ec5a2c97",
+      "bytes": 21397
+    },
+    "diagrams/workspaces.delivery.json": {
+      "sha256": "18f8b5ce98db7e42568df31d4cba3365948b518fd38523ed997a4622262d397a",
+      "bytes": 655
+    },
+    "diagrams/workspaces.finalize-summary.json": {
+      "sha256": "0e8360bd0d0cc8d63017391aebacd4ed299f24347d72aa4e8994a57de066e268",
+      "bytes": 1704
+    },
+    "diagrams/workspaces.finalize.json": {
+      "sha256": "293b74c79c47058b7b5e705b08130cc42b115140ae286a5c9ed8aa9ec504d361",
+      "bytes": 36117
+    },
+    "diagrams/workspaces.html": {
+      "sha256": "067e16c835c232b8e2ecf723dfce31945500390af76fe4ff1a406d8cd4556b5c",
+      "bytes": 819473
+    },
+    "diagrams/workspaces.json": {
+      "sha256": "76ec1fd00b6616426005c1d727cf522c9fb880038c066e33e347b02fe47b55b7",
+      "bytes": 4868
+    },
+    "diagrams/debrief.browser-check.json": {
+      "sha256": "8ba1277318bf90e03fdaca1f52b232b18d13c4ea94d41edbfb61f23482dc1cea",
+      "bytes": 21436
+    },
+    "diagrams/debrief.delivery.json": {
+      "sha256": "cbf325fb1a1342063c56ddc6c0dbdc977a30a24e22ec5e4d72a9a01d4dbdc316",
+      "bytes": 649
+    },
+    "diagrams/debrief.finalize-summary.json": {
+      "sha256": "dd710f2afc78a6b3a7a3ffb2aafae02a63df059e255fbeb3be62d185552c201f",
+      "bytes": 1689
+    },
+    "diagrams/debrief.finalize.json": {
+      "sha256": "a23ec3c882806123d7126ec3ba023ccb07cf353c8c21433728b9ad8cac27ca31",
+      "bytes": 36134
+    },
+    "diagrams/debrief.html": {
+      "sha256": "ba5be935beccd31777870f1184ca16026db302e86d4757668d519dc5a5095746",
+      "bytes": 820311
+    },
+    "diagrams/debrief.json": {
+      "sha256": "b9b548b61fddcdd63e47e44a0f61998bad124ef9c57e1f2c152f316c0f09d2f6",
+      "bytes": 5067
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "dc946ed7163c3c9b74afff49",
+  "validated": true,
+  "model": "claude-opus-5-5",
+  "effort": "high",
+  "usage": {
+    "input_tokens": 3799,
+    "output_tokens": 2799,
+    "thinking_tokens": 913,
+    "total_tokens": 6598
+  },
+  "scope": "Operator debrief generation, excluded from student usage",
+  "fixture": "Instructor rehearsal; not an actual student assessment",
+  "validation": "Evidence IDs and exact quotations validated; narrative checked by Codex against the snapshot",
+  "codex_edit": "Clarified that the hosted lab performs its prescribed fresh fit; alternative models or fitting-code changes need a coding harness. Original Opus response retained separately."
+}

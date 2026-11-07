@@ -144,3 +144,7 @@ it. Keep raw records in operator-controlled storage with a course retention poli
 - Router, telemetry and debrief sources listed above; tests use synthetic identities.
 - Serving design: [vLLM parallelism](https://docs.vllm.ai/en/latest/serving/parallelism_scaling/)
   and [MoE data-parallel deployment](https://docs.vllm.ai/en/latest/serving/data_parallel_deployment/).
+- Teaching materials: `assets/serving-architecture/index.html` links the four
+  Archify diagrams and reviewed instructor debrief. That folder also preserves
+  native slide-generation callbacks, redacted evidence, original Opus responses,
+  the explicit Codex correction, validation receipts and reproduction instructions.

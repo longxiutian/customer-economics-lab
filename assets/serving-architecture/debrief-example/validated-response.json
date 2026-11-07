@@ -1,0 +1,72 @@
+{
+  "rubric_version": "studio-north-personal-debrief/1",
+  "snapshot_id": "dc946ed7163c3c9b74afff49",
+  "observations": [
+    {
+      "text": "This is an instructor rehearsal fixture. Four of the visible saved-judgment requests are explicitly labeled instructor acceptance-test text. The journey hypothesis request is labeled an instructor test. None of these saves shows a student's own reasoning.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:3",
+        "snap:dc946ed7163c3c9b74afff49/ev:4",
+        "snap:dc946ed7163c3c9b74afff49/ev:5",
+        "snap:dc946ed7163c3c9b74afff49/ev:6",
+        "snap:dc946ed7163c3c9b74afff49/ev:7"
+      ],
+      "quote": "Instructor acceptance-test input, not a student judgment."
+    },
+    {
+      "text": "At checkpoint 0, the received messages include a conceptual question distinguishing cohorts from segments. That distinction underpins matched-age comparison and cell-based segmentation later in the lab.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:2"
+      ],
+      "quote": "What is the difference between a cohort and a segment?"
+    },
+    {
+      "text": "A saved receipt records one fresh statistical fit at checkpoint 14. A manifest lists a completed report PDF. No SQL requests appear in these lab records. The model's interpretation, which is not independently verified, says it could not confirm how the model outputs would be reproduced.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:1",
+        "snap:dc946ed7163c3c9b74afff49/ev:8",
+        "snap:dc946ed7163c3c9b74afff49/ev:9",
+        "snap:dc946ed7163c3c9b74afff49/ev:10"
+      ],
+      "quote": "I cannot confirm how to reproduce the model outputs from the supplied files alone."
+    }
+  ],
+  "studio_north_next_steps": [
+    {
+      "text": "Test the saved segmentation rationale with the hosted lab's bounded read-only SQL. Check whether channel-by-need cells show low dispersion in economic outcomes within cells and clear differences across cells. Hold cohort age and complexity comparable.",
+      "prompt": "Using read-only SQL only, help me compare channel-by-need cells at one matched cohort age and comparable complexity. For each cell, show the count and the spread of contribution and first-renewal retention. Then help me judge whether outcomes are homogeneous within cells and different across cells. Do not treat homogeneity of the defining attributes as sufficient.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:4",
+        "snap:dc946ed7163c3c9b74afff49/ev:1"
+      ]
+    },
+    {
+      "text": "Frame the pilot recommendation as an acquisition-only channel holdout. Compare LTV before acquisition cost with LTV after current iCAC for each candidate cell. Trying a different statistical model or changing the fitting code requires a local/cloud coding harness with the repository; the hosted lab runs its prescribed fresh fit.",
+      "prompt": "Help me design an acquisition-only channel holdout for the proposed pilot cells. Keep retention and revenue fitting separate. Lay out how I would report LTV before acquisition cost and LTV after current iCAC per cell. Distinguish analyses supported by this hosted lab from model or code changes that need the repository in a coding harness.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:7",
+        "snap:dc946ed7163c3c9b74afff49/ev:6",
+        "snap:dc946ed7163c3c9b74afff49/ev:8"
+      ]
+    }
+  ],
+  "ai_learning_next_steps": [
+    {
+      "text": "The final interpretation credits the learner with controlling the process. Yet the saved verdicts were instructor-supplied text. Practice asking the model to separate claims backed by saved receipts from its own framing.",
+      "prompt": "For your final summary, list each claim and tag it as one of three types: backed by a saved receipt or artifact, restated from my saved inputs, or your own interpretation. Note any claim about who authored a judgment that the records cannot confirm.",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:10",
+        "snap:dc946ed7163c3c9b74afff49/ev:8",
+        "snap:dc946ed7163c3c9b74afff49/ev:9"
+      ]
+    },
+    {
+      "text": "In a real run, write the hypothesis and segmentation rationale in your own words before saving. Then ask the AI to critique them rather than store dictated text. This makes the saved judgments reflect your reasoning.",
+      "prompt": "Here is my own draft journey hypothesis and segmentation rationale: [draft]. Critique it without rewriting it. Does it avoid causal claims from observational data? Does it define homogeneity by customer economic outcomes at comparable cohort age and complexity? What one question should I answer before saving?",
+      "evidence_ids": [
+        "snap:dc946ed7163c3c9b74afff49/ev:3",
+        "snap:dc946ed7163c3c9b74afff49/ev:4"
+      ]
+    }
+  ]
+}
