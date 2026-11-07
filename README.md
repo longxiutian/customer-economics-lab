@@ -2,7 +2,21 @@
 
 Use AI to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the connected computation environment handles the code.
 
-## November 2026 students: ChatGPT in your browser
+## Browser scenario: BlueChip
+
+The BlueChip pilot runs the guided lab through one browser link. No student installation is needed. BlueChip presents the lesson; an instructor-managed backend saves your own workspace, runs fresh CPU models, and obtains Nemotron interpretations.
+
+**November 7 pilot:** [Open Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602), sign in with your UNC BlueChip account, and click **Start my Studio North lab**. This debugging service ends at **5:15 p.m. Eastern on November 7, 2026**. Two complete instructor rehearsals passed, including fresh fits and report downloads. Another student's account access and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
+
+In the configured BlueChip agent, paste:
+
+```text
+Start or resume my Studio North lab. Check the real service and my saved
+workspace. Introduce the current checkpoint, show its evidence, and wait.
+Advance one checkpoint only when my whole message is "next step".
+```
+
+## Alternative browser scenario: personal ChatGPT
 
 The classroom starting point is **your personal ChatGPT account and UNC network access**. The planned lab connection runs the software centrally, gives each student a separate workspace, and runs each student's own statistical fits. You are not expected to install Python, Git, a coding agent, or a tunnel client, buy a paid plan, or obtain an API key or Longleaf account.
 

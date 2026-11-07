@@ -1,5 +1,7 @@
 # Studio North classroom access from personal ChatGPT accounts
 
+**November 7 update:** BlueChip is an additional instructor-selected scenario; see [its backend and acceptance contract](bluechip-classroom.md). The personal ChatGPT distribution plan below remains separate.
+
 Status on November 5, 2026: **deployment plan; the classroom connection is not implemented or accepted**. Longxiu confirmed that students will use personal ChatGPT accounts. Their subscription tiers and custom-plugin permissions are unknown. The classroom must work from ChatGPT web and the UNC network, without student-installed software, Platform keys, Longleaf accounts, or an assumed paid subscription.
 
 The recommended design is one instructor-managed, authenticated lab plugin backed by a stable HTTPS MCP gateway. The gateway connects to private UNC model serving and a separate CPU execution service. Each authenticated student receives an isolated workspace and fresh statistical fits. Public plugin distribution and access from representative personal accounts must be demonstrated before this becomes the classroom route.

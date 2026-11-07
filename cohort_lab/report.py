@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+from .process import run as run_process
 import tempfile
 import re
 from datetime import datetime, timezone
@@ -365,6 +366,11 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
     if (output/"model_manifest.json").exists():
         add_strategy_chart(output, read, done)
         manifest["postestimation_manifest_sha256"] = _sha(output/"postestimation_manifest.json")
+    from .holdout_report import add_holdout_chart
+    add_holdout_chart(output, manifest)
+    if (output/"model_manifest.json").exists():
+        from .report_b import prepare_incremental_cash_chart
+        prepare_incremental_cash_chart(output, manifest)
     _write_json(output/"report"/"chart_manifest.json",manifest)
     return manifest
 
@@ -788,7 +794,7 @@ def _compile_native(source: Path, engine: str | None=None) -> dict:
     engine=engine or os.environ.get("COHORT_TEX_ENGINE")
     local=engine or ("tectonic" if shutil.which("tectonic") else "pdflatex" if shutil.which("pdflatex") else None)
     if os.name=="nt" and not local and shutil.which("wsl"):
-        probe=subprocess.run(["wsl","--exec","sh","-c","command -v pdflatex && kpsewhich sourcesans.sty"],capture_output=True,timeout=20)
+        probe=run_process(["wsl","--exec","sh","-c","command -v pdflatex && kpsewhich sourcesans.sty"],capture_output=True,timeout=20)
         if probe.returncode:raise RuntimeError("No native TeX engine found, and WSL lacks pdflatex/Source Sans. Install a supported TeX engine; editable .tex is preserved.")
         linux_source=subprocess.check_output(["wsl","--exec","wslpath","-a",source.parent.as_posix()],text=True).strip()
         figure_bytes=b"".join(p.name.encode("utf-8")+p.read_bytes() for p in sorted((source.parent/"figures").glob("*")) if p.is_file())
@@ -808,14 +814,14 @@ def _compile_native(source: Path, engine: str | None=None) -> dict:
                 "pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error customer-economics-report.tex > compile-1.txt || { tail -60 compile-1.txt; exit 1; }\n"
                 "pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error customer-economics-report.tex > compile-2.txt\n"
                 f"cp customer-economics-report.pdf customer-economics-report.log {__import__('shlex').quote(linux_source)}/\n")
-        p=subprocess.run(["wsl","--exec","bash","-s"],input=script.encode("utf-8"),capture_output=True,env=env,timeout=180)
+        p=run_process(["wsl","--exec","bash","-s"],input=script.encode("utf-8"),capture_output=True,env=env,timeout=180)
         if p.returncode:raise RuntimeError("WSL TeX compilation failed: "+p.stdout.decode("utf-8",errors="replace")[-2500:]+p.stderr.decode("utf-8",errors="replace")[-1500:])
         used="WSL pdflatex"
     else:
         if not local:raise RuntimeError("Install a TeX engine (tectonic or pdflatex) or set COHORT_TEX_ENGINE; editable .tex is preserved.")
         args=[local,"--keep-logs","--outdir",str(source.parent),str(source)] if "tectonic" in Path(local).name else [local,"-no-shell-escape","-interaction=nonstopmode","-halt-on-error",source.name]
         for _ in range(1 if "tectonic" in Path(local).name else 2):
-            p=subprocess.run(args,cwd=source.parent,env=env,capture_output=True,text=True,timeout=180)
+            p=run_process(args,cwd=source.parent,env=env,capture_output=True,text=True,timeout=180)
             if p.returncode:raise RuntimeError("TeX compilation failed: "+p.stdout[-2000:]+p.stderr[-1000:])
         used=Path(local).name
     log=source.with_suffix(".log").read_text(encoding="utf-8",errors="replace") if source.with_suffix(".log").exists() else ""

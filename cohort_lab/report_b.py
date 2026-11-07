@@ -120,45 +120,7 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
     source_table = (r"{\fontsize{8}{10}\selectfont\begin{tabularx}{\linewidth}{@{}p{.22\linewidth}Y@{}}\toprule "
                     + r"\textbf{Main exhibit} & \textbf{Saved source}\\\midrule "
                     + "\n".join(source_rows) + r"\bottomrule\end{tabularx}}")
-    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.4), sharex=True, sharey=True,
-                             gridspec_kw={"hspace": .44, "wspace": .19})
-    path_data = frames["segment_forecast_curves.csv"]
-    display_paths = []
-    for ax, row in zip(axes.flat, plan.itertuples()):
-        path = path_data[(path_data.cohort_month == row.cohort_month) & (path_data.channel == row.channel)
-                         & (path_data.primary_need == row.primary_need)].sort_values("age_month")
-        x = path.age_month.to_numpy(int) + 1
-        y = path.cash_after_cac_mean.to_numpy(float) + row.historical_cac
-        observed = path.observed.astype(str).str.lower().isin(["true", "1"]).to_numpy()
-        ax.plot(x[observed], y[observed], "o-", color=COLORS["teal"], lw=1.8, ms=3)
-        start = max(0, int(observed.sum()) - 1)
-        ax.plot(x[start:], y[start:], "--", color=COLORS["teal"], lw=1.8)
-        ax.axhline(row.historical_cac, color=COLORS["muted"], lw=1, ls=":")
-        ax.axhline(row.icac, color=COLORS["orange"], lw=1.3, ls="-.")
-        ax.axvline(x[observed][-1], color=COLORS["muted"], alpha=.35, lw=.7)
-        ax.set_title(label(row), loc="left", fontsize=10)
-        ax.text(.03, .96, "iCAC recovery: " + receipt(row.planning_payback_receipt)
-                + (" payments" if pd.notna(row.planning_payback_receipt) else ""),
-                transform=ax.transAxes, va="top", fontsize=8, color=COLORS["ink"])
-        ax.set_xlim(1, 12); ax.set_xticks([1, 3, 6, 9, 12])
-        ax.set_ylim(0, max(350, float(plan.icac.max()) * 1.12))
-        ax.yaxis.set_major_formatter(FuncFormatter(lambda value, pos: "$" + format(value, ".0f")))
-        ax.grid(alpha=.12)
-        display_paths.append({"test_id": row.test_id, "payments": x.tolist(), "cumulative_contribution": y.tolist(),
-                              "historical_cac": float(row.historical_cac), "icac": float(row.icac)})
-    for ax in axes[1]: ax.set_xlabel("Monthly payment")
-    for ax in axes[:, 0]: ax.set_ylabel("Contribution / customer")
-    fig.legend(handles=[
-        Line2D([0], [0], color=COLORS["teal"], label="Contribution: solid observed / dashed forecast"),
-        Line2D([0], [0], color=COLORS["muted"], ls=":", label="Historical average CAC"),
-        Line2D([0], [0], color=COLORS["orange"], ls="-.", label="Latest completed test: iCAC")],
-        loc="upper center", bbox_to_anchor=(.5, 1.045), ncol=2, frameon=False, fontsize=8)
-    figure_files = _save(fig, directory / "figures", "incremental-cash-paths")
-    charts["figures"]["incremental-cash-paths"] = {
-        "files": figure_files, "sources": names[:3],
-        "notes": "Mean contribution compared with historical CAC and latest completed iCAC; incremental recovery conditional on path transfer.",
-        "display_values": display_paths,
-        "sha256": {name: _sha(directory / "figures" / name) for name in figure_files}}
+    prepare_incremental_cash_chart(output, charts, plan=plan)
     _write_json(directory / "chart_manifest.json", charts)
     _write_json(directory / "version-b-evidence.json", {
         "variant": "B", "main_pages": 15, "model_refit": False, "sources": sources,
@@ -249,3 +211,60 @@ def prepare_version_b(output: Path, context: dict, charts: dict) -> dict:
         "when every treated buyer receives campaign credit.")
     summary.update(holdout_context)
     return summary
+
+
+def prepare_incremental_cash_chart(output: Path, charts: dict, *, plan=None):
+    """Expose the acquisition/value exhibit at checkpoint 16, before the PDF."""
+    from .report import _table, _save, _sha, COLORS
+    directory = output / "report"
+    (directory / "figures").mkdir(parents=True, exist_ok=True)
+    names = ["channel_value_decision.csv", "strategic_segment_breakout.csv", "segment_forecast_curves.csv"]
+    frames = {name: _table(output, name) for name in names}
+    charts["sources"].update({name: _sha(output / "tables" / name) for name in names})
+    if plan is None:
+        plan = incremental_planning(frames[names[0]], frames[names[1]], frames[names[2]])
+    if len(plan) != 4 or plan.cohort_month.nunique() != 1:
+        raise ValueError("Expected four acquisition cells and one maturity-selected cohort")
+    plan.to_csv(directory / "incremental-planning.csv", index=False, float_format="%.10f", lineterminator="\n")
+    label = lambda r: str(r.channel).title() + " / " + str(r.primary_need).replace("_", " ")
+    receipt = lambda x: "Beyond 12" if pd.isna(x) else str(int(x))
+    fig, axes = plt.subplots(2, 2, figsize=(7.1, 4.4), sharex=True, sharey=True,
+                             gridspec_kw={"hspace": .44, "wspace": .19})
+    path_data = frames["segment_forecast_curves.csv"]
+    display_paths = []
+    for ax, row in zip(axes.flat, plan.itertuples()):
+        path = path_data[(path_data.cohort_month == row.cohort_month) & (path_data.channel == row.channel)
+                         & (path_data.primary_need == row.primary_need)].sort_values("age_month")
+        x = path.age_month.to_numpy(int) + 1
+        y = path.cash_after_cac_mean.to_numpy(float) + row.historical_cac
+        observed = path.observed.astype(str).str.lower().isin(["true", "1"]).to_numpy()
+        ax.plot(x[observed], y[observed], "o-", color=COLORS["teal"], lw=1.8, ms=3)
+        start = max(0, int(observed.sum()) - 1)
+        ax.plot(x[start:], y[start:], "--", color=COLORS["teal"], lw=1.8)
+        ax.axhline(row.historical_cac, color=COLORS["muted"], lw=1, ls=":")
+        ax.axhline(row.icac, color=COLORS["orange"], lw=1.3, ls="-.")
+        ax.axvline(x[observed][-1], color=COLORS["muted"], alpha=.35, lw=.7)
+        ax.set_title(label(row), loc="left", fontsize=10)
+        ax.text(.03, .96, "iCAC recovery: " + receipt(row.planning_payback_receipt)
+                + (" payments" if pd.notna(row.planning_payback_receipt) else ""),
+                transform=ax.transAxes, va="top", fontsize=8, color=COLORS["ink"])
+        ax.set_xlim(1, 12); ax.set_xticks([1, 3, 6, 9, 12])
+        ax.set_ylim(0, max(350, float(plan.icac.max()) * 1.12))
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda value, pos: "$" + format(value, ".0f")))
+        ax.grid(alpha=.12)
+        display_paths.append({"test_id": row.test_id, "payments": x.tolist(), "cumulative_contribution": y.tolist(),
+                              "historical_cac": float(row.historical_cac), "icac": float(row.icac)})
+    for ax in axes[1]: ax.set_xlabel("Monthly payment")
+    for ax in axes[:, 0]: ax.set_ylabel("Contribution / customer")
+    fig.legend(handles=[
+        Line2D([0], [0], color=COLORS["teal"], label="Contribution: solid observed / dashed forecast"),
+        Line2D([0], [0], color=COLORS["muted"], ls=":", label="Historical average CAC"),
+        Line2D([0], [0], color=COLORS["orange"], ls="-.", label="Latest completed test: iCAC")],
+        loc="upper center", bbox_to_anchor=(.5, 1.045), ncol=2, frameon=False, fontsize=8)
+    figure_files = _save(fig, directory / "figures", "incremental-cash-paths")
+    charts["figures"]["incremental-cash-paths"] = {
+        "files": figure_files, "sources": names[:3],
+        "notes": "Mean contribution compared with historical CAC and latest completed iCAC; incremental recovery conditional on path transfer.",
+        "display_values": display_paths,
+        "sha256": {name: _sha(directory / "figures" / name) for name in figure_files}}
+    return plan

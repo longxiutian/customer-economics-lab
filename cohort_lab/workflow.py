@@ -12,6 +12,7 @@ import json
 import os
 import shutil
 import subprocess
+from .process import run as run_process
 import sys
 from pathlib import Path
 from typing import Callable
@@ -65,6 +66,7 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     paths.extend(root / name for name in ("lab.py", "student.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
     paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
+    paths.extend(p for p in (root/'hosting').glob('*') if p.suffix in {'.py', '.json', '.txt'} and p.is_file())
     return {p.relative_to(root).as_posix(): _hash(p) for p in sorted(set(paths))}
 
 
@@ -123,7 +125,7 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
         # Python packages does not establish that the CPU runtime loads.
         environment = os.environ.copy()
         environment.update(JAX_PLATFORMS="cpu", JAX_ENABLE_X64="true", CUDA_VISIBLE_DEVICES="-1")
-        probe = subprocess.run([sys.executable, "-c",
+        probe = run_process([sys.executable, "-c",
             "import jax,json; print(json.dumps({'backend':jax.default_backend(),'x64':bool(jax.config.x64_enabled)}))"],
             env=environment,text=True,capture_output=True,timeout=30)
         if probe.returncode == 0:
@@ -132,7 +134,7 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
     node = shutil.which("node")
     node_version = None
     if node:
-        result = subprocess.run([node, "--version"], text=True, capture_output=True, check=False, timeout=10)
+        result = run_process([node, "--version"], text=True, capture_output=True, check=False, timeout=10)
         if result.returncode == 0:
             node_version = result.stdout.strip()
     try:
@@ -141,14 +143,14 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
         node_ready = False
     diagram_ready = False
     if node_ready:
-        probe = subprocess.run([node, str(Path(__file__).resolve().parents[1]/'scripts/export_diagram_assets.mjs'), '--check'],
+        probe = run_process([node, str(Path(__file__).resolve().parents[1]/'scripts/export_diagram_assets.mjs'), '--check'],
                                text=True, capture_output=True, check=False, timeout=30)
         diagram_ready = probe.returncode == 0
     python_ready = sys.version_info[:2] == (3, 12)
     requested_tex = os.environ.get("COHORT_TEX_ENGINE")
     tex_engine = (shutil.which(requested_tex) or (requested_tex if Path(requested_tex).is_file() else None)) if requested_tex else (shutil.which("tectonic") or shutil.which("pdflatex"))
     if not tex_engine and not requested_tex and sys.platform == "win32" and shutil.which("wsl"):
-        probe = subprocess.run([shutil.which("wsl"), "--exec", "sh", "-lc", "command -v pdflatex"],
+        probe = run_process([shutil.which("wsl"), "--exec", "sh", "-lc", "command -v pdflatex"],
                                text=True, capture_output=True, check=False, timeout=20)
         if probe.returncode == 0 and probe.stdout.strip():
             tex_engine = "WSL pdflatex"
