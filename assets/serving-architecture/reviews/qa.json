@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-07",
+  "presentation": {
+    "page_id": "page_4e018199c74c8191a445023b5b536679",
+    "state_version": 7,
+    "slides": 11,
+    "rendered_and_reviewed_individually": [1,2,3,4,5,6,7,8,9,10,11],
+    "repairs": "Moved connector labels, cleared diagonal labels, simplified the telemetry lead. Re-rendered and inspected changed slides.",
+    "native_editable_diagrams": true
+  },
+  "example_pdf": {
+    "pages": 2,
+    "reviewed_pages": [1,2],
+    "repairs": "Separated prompt borders from adjacent text; clarified hosted fresh fits versus alternative model/code work. Re-rendered and reviewed both pages."
+  },
+  "archify": {
+    "version": "3.2.0",
+    "gates": ["validate","deliver","check","browser-check"],
+    "passing_diagrams": ["overview","four-gpus","workspaces","debrief"],
+    "manual_canvas_review": "four-gpus, 1440x900 light; equivalent source nodes to finalized portable copy",
+    "all_other_canvas_visual_review_claimed": false
+  },
+  "prototype_tests": {
+    "command": "python -m pytest tests/test_lab_telemetry.py tests/test_hosted.py -q",
+    "passed": 17,
+    "seconds": 10.46,
+    "source_commit": "3a109560dc064217bb662f4109e8265f7307497a"
+  },
+  "skills": {
+    "root_SKILL_md": "quick_validate passed",
+    "student_teacher_SKILL_md": "quick_validate passed with Python UTF-8 mode"
+  },
+  "limits": [
+    "No four-GPU live load test",
+    "No real student recipient delivery",
+    "No native BlueChip full-transcript/token export",
+    "No new or extended GPU allocation or change to frozen rehearsal release"
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Studio North: browser, analysis and interpretation",
+    "locale": "en",
+    "output": "diagrams/overview.html",
+    "visual_preset": "blueprint",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "3a109560dc064217bb662f4109e8265f7307497a",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "student",
+      "type": "frontend",
+      "label": "Student browser",
+      "sublabel": "No local installation",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        150,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 11,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "bluechip",
+      "type": "frontend",
+      "label": "BlueChip",
+      "sublabel": "Sign-in + chat interface",
+      "pos": [
+        280,
+        40
+      ],
+      "size": [
+        160,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "broker",
+      "type": "security",
+      "label": "Lab broker",
+      "sublabel": "Owns jobs + progress",
+      "pos": [
+        540,
+        40
+      ],
+      "size": [
+        190,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 16,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "type": "backend",
+      "label": "CPU analysis worker",
+      "sublabel": "SQL, models, charts, PDF",
+      "pos": [
+        870,
+        40
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "nemotron",
+      "type": "cloud",
+      "label": "Longleaf / Nemotron",
+      "sublabel": "Explains computed evidence",
+      "pos": [
+        540,
+        260
+      ],
+      "size": [
+        190,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 24,
+          "end_line": 29,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    },
+    {
+      "id": "files",
+      "type": "database",
+      "label": "Student workspace",
+      "sublabel": "Choices + tables + report",
+      "pos": [
+        870,
+        260
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 29,
+          "label": "Versioned architecture contract"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "student",
+      "to": "bluechip",
+      "label": "Sign in"
+    },
+    {
+      "from": "bluechip",
+      "to": "broker",
+      "label": "Lab API"
+    },
+    {
+      "from": "broker",
+      "to": "cpu",
+      "label": "Queued job"
+    },
+    {
+      "from": "cpu",
+      "to": "files",
+      "label": "Save outputs"
+    },
+    {
+      "from": "cpu",
+      "to": "nemotron",
+      "label": "Evidence"
+    },
+    {
+      "from": "nemotron",
+      "to": "cpu",
+      "label": "Explanation"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "One browser link",
+      "items": [
+        "BlueChip handles sign-in and the lesson interface. The interface model is distinct from Nemotron."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Computed evidence",
+      "items": [
+        "Eight frozen CSVs feed DuckDB and CPU statistical fits. Python, Archify and TeX create the report."
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Verified rehearsal",
+      "items": [
+        "One GPU and one serial CPU worker were verified. Four-GPU classroom serving is a separate proposed deployment."
+      ]
+    }
+  ]
+}

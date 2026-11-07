@@ -1,0 +1,9 @@
+# Preserve reviewed/generated payload bytes and their recorded SHA-256 values.
+*.json -text -whitespace
+*.html -text -whitespace linguist-generated=true
+*.txt -text -whitespace
+*.patch -text -whitespace
+*.bundle binary
+*.pdf binary
+*.png binary
+*.jpeg binary

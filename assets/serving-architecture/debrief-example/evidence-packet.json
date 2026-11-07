@@ -1,0 +1,122 @@
+{
+  "snapshot_id": "dc946ed7163c3c9b74afff49",
+  "fixture": true,
+  "metrics": {
+    "lab_requests": 25,
+    "messages_received": 24,
+    "saved_judgments": 5,
+    "sql_requests": 0,
+    "checkpoints_observed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "fresh_fits": 1,
+    "nemotron_attempts": 20,
+    "nemotron_known_input_tokens": 115639,
+    "nemotron_known_output_tokens": 11561,
+    "nemotron_attempts_with_unknown_usage": 0,
+    "nemotron_total_tokens": 127200,
+    "native_bluechip_tokens": null,
+    "inference_outcomes": {
+      "completed": 20
+    }
+  },
+  "coverage": {
+    "lab_api_messages": "Received tool messages; may be forwarded or reformulated by the interface model. Not a complete verbatim student transcript.",
+    "nemotron_tokens": "Provider-reported input/output for recorded attempts. Input includes system instructions and supplied evidence. Cache/reasoning subsets are not added again.",
+    "native_bluechip_messages_and_tokens": "Not collected by this lab API. Unknown, not zero.",
+    "operator_debrief_tokens": "Opus/Codex debrief-generation usage is recorded separately and is not student usage."
+  },
+  "evidence": [
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:1",
+      "kind": "metrics",
+      "text": "{\"checkpoints_observed\":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],\"fresh_fits\":1,\"inference_outcomes\":{\"completed\":20},\"lab_requests\":25,\"messages_received\":24,\"native_bluechip_tokens\":null,\"nemotron_attempts\":20,\"nemotron_attempts_with_unknown_usage\":0,\"nemotron_known_input_tokens\":115639,\"nemotron_known_output_tokens\":11561,\"nemotron_total_tokens\":127200,\"saved_judgments\":5,\"sql_requests\":0}",
+      "source": "deterministic telemetry aggregation"
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:2",
+      "kind": "prompt_excerpt",
+      "text": "What is the difference between a cohort and a segment? Please keep me at this checkpoint.",
+      "source": "lab_api_received",
+      "action": "message",
+      "checkpoint": 0
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:3",
+      "kind": "prompt_excerpt",
+      "text": "For this instructor test, save my journey_hypothesis as: Early engagement friction may be associated with first-renewal retention; this observational comparison does not establish causality. Keep me at checkpoint 1.",
+      "source": "lab_api_received",
+      "action": "choose",
+      "checkpoint": 1
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:4",
+      "kind": "prompt_excerpt",
+      "text": "Instructor acceptance-test input, not a student judgment. Save this exact segmentation_rationale: \"Compare channel-by-need cells at the same cohort age and complexity, seeking lower within-cell dispersion and meaningful differences between cells.\" The homogeneity criterion concerns customer economic outcomes, not merely the attributes defining the cells. Keep me at this checkpoint.",
+      "source": "lab_api_received",
+      "action": "choose",
+      "checkpoint": 5
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:5",
+      "kind": "prompt_excerpt",
+      "text": "Instructor acceptance-test input, not a student judgment. Save this exact provisional_verdict: \"Compare retention and contribution at matched cohort ages before judging company progress; keep acquisition spending distinct from contribution.\" Keep me at this checkpoint.",
+      "source": "lab_api_received",
+      "action": "choose",
+      "checkpoint": 11
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:6",
+      "kind": "prompt_excerpt",
+      "text": "Instructor acceptance-test input, not a student judgment. Save this exact final_verdict: \"The matched-age evidence supports improving customer economics, while acquisition spending should remain conditional on current incremental costs and cash recovery.\" Keep me at checkpoint 17.",
+      "source": "lab_api_received",
+      "action": "choose",
+      "checkpoint": 17
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:7",
+      "kind": "prompt_excerpt",
+      "text": "Check the existing save job. Once it is complete, save this instructor acceptance-test input (not a student judgment) as my exact recommended_action: \"Run a measured acquisition pilot in the cells supported by current iCAC and comparable contribution value, refresh monthly holdouts, and require Finance to set the cash-recovery limit before scaling.\" Stay at checkpoint 17.",
+      "source": "lab_api_received",
+      "action": "choose",
+      "checkpoint": 17
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:8",
+      "kind": "checkpoint",
+      "text": "A fresh statistical fit completed at checkpoint 14.",
+      "source": "saved CPU job receipt"
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:9",
+      "kind": "artifact",
+      "text": "The completed Studio North PDF is available in this workspace.",
+      "source": "saved artifact manifest",
+      "artifact_sha256": "ff3b5bdacc3f799ccf5dc2ee43545edcd32a0cf2b58ad66e462043204c88abf7"
+    },
+    {
+      "id": "snap:dc946ed7163c3c9b74afff49/ev:10",
+      "kind": "model_excerpt",
+      "text": "This is the final checkpoint of the Studio North customer-data lab. You controlled the process and produced the report; I am only interpreting the supplied evidence.\n\n**Deliverables**\n- Editable source: `report/customer-economics-report.tex`\n- Compiled PDF: `report/customer-economics-report.pdf`\n- Supporting artifacts: `implementation_manifest.json`, `model_summary.json`, `model_manifest.json`, and `learner_choices.json`\n- The PDF compiled successfully.\n\n**Reproduction**\nReproduce the report by compiling the supplied `.tex` source. The model manifest records input and output file hashes, settings, and library versions, but the checkpoint evidence does not include the build command or full environment needed to rerun the underlying analysis. I cannot confirm how to reproduce the model outputs from the supplied files alone.\n\n**Learner’s verdict and recommendation**\n- Matched-age evidence supports improving customer economics.\n- Acquisition spending should remain conditional on current incremental costs and cash recovery.\n- Early engagement friction may be associated with first-renewal retention, but this observational comparison does not establish causality.\n- Recommended action: run a measured acquisition pilot in cells supported by current iCAC and comparable contribution value, refresh monthly holdouts, and require Finance to set the cash-recovery limit before scaling.\n\n**Key distinctions**\n- Historical average CAC is not the same as iCAC; do not use average CAC for marginal acquisition decisions.\n- Keep acquisition holdouts separate from retention and revenue fitting.\n- Segmentation means within-cell homogeneity and across-cell heterogeneity at comparable complexity—compare channel-by-need cells at the same cohort age and complexity.\n\n**One implication**\nBecause the journey hypothesis is observational, Studio North should not treat early engagement friction as a proven cause of first-renewal retention before scaling acquisition.\n\n**Interpretation check**\nConfirm with Finance whether the cash-recovery limit has been set and whether the pilot cells still match current iCAC and contribution evidence before any spend.",
+      "source": "Nemotron interpretation; a model statement, not independently verified evidence"
+    }
+  ]
+}
