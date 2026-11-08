@@ -24,25 +24,9 @@ The B templates are `templates/customer-economics-report-b.tex.j2` and `template
 
 ## Reproduce
 
-From the repository root, install the locked environment:
+Use the locked setup and complete the guided `student.py` workflow to generate the current B report. The final report appears only at checkpoint 18 after the learner's recommendation and explicit “next step.” The current student distribution does not include an automatic batch or report-replay launcher.
 
-~~~text
-uv sync --frozen
-~~~
-
-Use a fresh output directory for a single B replay:
-
-~~~text
-uv run --frozen python scripts/replay_report.py --source examples/reference --output outputs/version-b --variant B --instructor
-~~~
-
-For two independent report rebuilds, integrity checks and byte comparison:
-
-~~~text
-uv run --frozen python scripts/verify_reproducibility.py --mode report --source examples/reference --output outputs/version-b-repro --variant B
-~~~
-
-Both commands reuse verified fitted outputs; neither is a model refit. Current guided, batch and replay builds default to B. The full-refit verifier can also build B; it is not necessary for this acquisition-only data extension. A must be reproduced from its original source and data, not today’s expanded testing history. The standard dependencies and Windows/WSL TeX workflow are documented in the main reproducibility guide; no private helper script is required.
+The instructor retains a separate once-through orchestration skill for release work. Its replay mode reuses verified fitted outputs; a full-inference mode fits them again. Receipts distinguish those operations. Students can validate or compare already completed runs using the public [reproducibility guide](reproducibility.md). No private analysis implementation is needed for the guided report. Reproducing A requires its preserved source and original data.
 
 ## Acceptance
 

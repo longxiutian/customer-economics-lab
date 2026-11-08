@@ -1,23 +1,16 @@
 #!/usr/bin/env python3
-"""Compare two fresh full-inference runs or two report replays with frozen fits.
-
-Instructor/release use only. Byte equality is scoped to the same environment;
-neither mode proves cross-platform identity or constitutes visual review.
-"""
+"""Validate and compare two completed runs without advancing a lesson."""
 from __future__ import annotations
 
 import argparse
-import contextlib
 import json
 import platform
-import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from scripts.validate_artifacts import read, sha, validate
-from cohort_lab.workflow import implementation_snapshot
+from scripts.validate_artifacts import sha, validate
 
 REQUIRED_ROOT_FILES = (
     "implementation_manifest.json", "analysis_input_manifest.json", "analysis_manifest.json",
@@ -47,21 +40,6 @@ def compared_files(run: Path, pdf: bool) -> list[str]:
     return sorted(names)
 
 
-def command_for(run: Path, *, mode: str, source: Path, steps: int, pdf: bool, variant: str="B") -> list[str]:
-    if variant != "B":
-        raise ValueError("Version A is archived; use its preserved release to reproduce it")
-    if mode == "report":
-        command = [sys.executable, str(ROOT / "scripts/replay_report.py"), "--source", str(source), "--output", str(run)]
-        command.extend(["--variant",variant])
-        if not pdf:
-            command.append("--no-pdf")
-        return command + ["--instructor"]
-    command = [sys.executable, str(ROOT / "lab.py"), "--output", str(run), "--steps", str(steps)]
-    if not pdf:
-        command.append("--no-pdf")
-    return command + ["batch", "--instructor"]
-
-
 def compare_runs(runs: list[Path], *, pdf: bool) -> dict:
     validations = [validate(run, pdf=pdf) for run in runs]
     files, other = [compared_files(run, pdf) for run in runs]
@@ -75,66 +53,24 @@ def compare_runs(runs: list[Path], *, pdf: bool) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("full", "report"), default="full")
-    parser.add_argument("--variant", choices=("B",), default="B",help="Current report; A remains archived with its original inputs")
-    parser.add_argument("--source", type=Path, help="Verified fitted output for report mode; default examples/reference")
-    parser.add_argument("--output", type=Path, default=ROOT / "outputs/reproducibility")
-    parser.add_argument("--steps", type=int, help="Full-inference mode only; default 3000")
+    parser.add_argument("--run-a", type=Path, required=True)
+    parser.add_argument("--run-b", type=Path, required=True)
+    parser.add_argument("--receipt", type=Path, required=True, help="New JSON receipt; existing files are preserved")
     parser.add_argument("--no-pdf", action="store_true")
-    parser.add_argument("--parallel", action="store_true", help="Run the two isolated processes concurrently")
     args = parser.parse_args()
-    if args.mode == "full" and args.source is not None:
-        parser.error("--source is only used in report mode")
-    if args.mode == "report" and args.steps is not None:
-        parser.error("Report mode reuses fitted outputs; --steps would imply a refit")
-    steps = 3000 if args.steps is None else args.steps
-    if steps < 3000:
-        parser.error("--steps must be at least 3000")
-    source = (args.source or ROOT / "examples/reference").resolve()
-    parent = args.output.resolve()
-    if parent.exists() and any(parent.iterdir()):
-        parser.error("Use a new empty reproducibility directory; prior receipts are preserved")
-    snapshot = implementation_snapshot()
-    parent.mkdir(parents=True, exist_ok=True)
-    runs = [parent / "run-a", parent / "run-b"]
-    def command(run):
-        return command_for(run, mode=args.mode, source=source, steps=steps, pdf=not args.no_pdf,variant=args.variant)
-    if args.parallel:
-        with contextlib.ExitStack() as stack:
-            jobs = []
-            for run in runs:
-                log = stack.enter_context((parent / (run.name + ".log")).open("w", encoding="utf-8"))
-                jobs.append((run, subprocess.Popen(command(run), cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)))
-            failures = []
-            for run, process in jobs:
-                if process.wait():
-                    failures.append(run.name)
-                else:
-                    print(f"{run.name} completed", flush=True)
-            if failures:
-                raise SystemExit(f"{failures} failed; inspect logs. No reproducibility claim made.")
-    else:
-        for run in runs:
-            with (parent / (run.name + ".log")).open("w", encoding="utf-8") as log:
-                completed = subprocess.run(command(run), cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
-            if completed.returncode:
-                raise SystemExit(f"{run.name} failed; inspect its log. No reproducibility claim made.")
-            print(f"{run.name} completed", flush=True)
-    if snapshot != implementation_snapshot():
-        raise ValueError("Implementation changed during verification; no reproducibility claim made")
-    receipt = {"schema_version": 2, "mode": args.mode, "report_variant":args.variant,"model_refit": args.mode == "full",
-               "scope": "Two fresh processes on the same host, frozen data, source and locked environment. " +
-                        ("Observed analysis, decision metrics, diagnostics, post-estimation, diagrams and report rebuilt; fitted baseline and neural outputs preserved." if args.mode == "report" else "Both models refitted; observed analysis, forecasts, challenge predictions, diagrams and report rebuilt."),
-               "python": platform.python_version(), "platform": platform.platform(),
-               "parallel_processes": args.parallel, "seed": 20261116 if args.mode == "full" else None,
-               "steps": steps if args.mode == "full" else None, "uv_lock_sha256": sha(ROOT / "uv.lock"),
-               "implementation_manifest_sha256": sha(runs[0] / "implementation_manifest.json"),
-               "frozen_data_manifest_sha256": sha(ROOT / "data/data_manifest.json"),
-               **compare_runs(runs, pdf=not args.no_pdf)}
-    if args.mode == "report":
-        receipt["preserved_fitted_artifacts"] = read(runs[0] / "report_replay.json")["preserved_fitted_artifacts"]
-    (parent / "reproducibility.json").write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({k: receipt[k] for k in ("status", "mode", "model_refit", "compared_files", "mismatches")}, indent=2))
+    runs = [args.run_a.resolve(), args.run_b.resolve()]
+    if runs[0] == runs[1]:
+        parser.error("Use two distinct completed runs")
+    if args.receipt.exists():
+        parser.error("Preserve the existing receipt and choose a new path")
+    receipt = {"schema_version":3, "mode":"compare_completed_runs", "model_refit":False,
+               "scope":"Integrity validation and byte comparison only. No analysis, fitting, report generation or lesson advancement was performed. Consult each run's receipts for its creation and environment.",
+               "verifier_python":platform.python_version(), "verifier_platform":platform.platform(),
+               "runs":[str(run) for run in runs], **compare_runs(runs,pdf=not args.no_pdf)}
+    args.receipt.parent.mkdir(parents=True,exist_ok=True)
+    with args.receipt.open('x',encoding='utf-8') as stream:
+        stream.write(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+    print(json.dumps({k:receipt[k] for k in ('status','mode','model_refit','compared_files','mismatches')},indent=2))
     if receipt["mismatches"]:
         raise SystemExit(1)
 

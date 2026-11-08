@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from cohort_lab.workflow import LabWorkflow, WorkflowError, run_batch, verify_frozen_inputs
+from cohort_lab.workflow import LabWorkflow, WorkflowError, verify_frozen_inputs
 
 ROOT = Path(__file__).resolve().parent
 
@@ -37,8 +37,6 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("challenge-baseline", help="Forecast the next twelve calendar months using an existing verified fit.")
     submission = sub.add_parser("validate-submission", help="Check future prediction format against observed-only keys; no hidden labels are read.")
     submission.add_argument("--csv", type=Path, required=True)
-    batch = sub.add_parser("batch", help="Explicit instructor reproducibility run; not for guided learner sessions.")
-    batch.add_argument("--instructor", action="store_true", required=True)
     return p
 
 
@@ -68,8 +66,6 @@ def main(argv=None) -> int:
             verify_frozen_inputs(args.data)
             from cohort_lab.data import validate_data
             result = validate_data(args.data)
-        elif args.command == "batch":
-            result = run_batch(args.data, args.output, seed=args.seed, steps=args.steps, compile_pdf=not args.no_pdf)
         elif args.command == "challenge-template":
             from cohort_lab.challenge import write_template
             result = {"advanced": False, **write_template(args.output)}

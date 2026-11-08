@@ -1,6 +1,6 @@
 # Optional challenge: improve the future customer-economics forecast
 
-The current baseline uses **hierarchical shifted-Beta-Geometric retention plus Gamma revenue**, estimated in NumPyro on CPU. Investigate another model and explain whether its assumptions and historical validation make it a better forecasting candidate. This is an optional modeling extension; no grading weight or live leaderboard is established here.
+The current baseline uses **hierarchical shifted-Beta-Geometric retention plus Gamma revenue**, estimated in NumPyro on CPU. Investigate another model and explain whether its assumptions and historical validation make it a better forecasting candidate. The team with the best private-holdout performance earns **one bonus point**. The instructor handles ties and submission timing; no live leaderboard is promised.
 
 ## What is being predicted
 
@@ -12,7 +12,36 @@ This is **remaining value over the next twelve calendar months**, not the report
 
 The archived [design commitment](../assets/challenge/design-commitment.json) and [sealed-answer commitment](../assets/challenge/answer-commitment.json) remain unchanged for provenance. They predate dataset 5.0 and do not certify an answer file for its revised customer population. They contain no outcomes or random keys.
 
-Before scoring this edition, the instructor must prepare and seal an answer file for exactly the 5,703 people in the released `data/people.csv`. Preserve the already realized future outcomes for those people; do not redraw outcomes or change them in response to forecasts. Filter person-level future records before aggregating to the current prediction grid, and verify its `n_acquired` and `origin_retained` exposures. Filtering an older aggregate answer file by cell keys is insufficient. This release rebuilds the public grid and forecasts but has not read, rebuilt or validated the private future answer key. Forecast creation and format validation are available; future scoring requires that instructor-side reconciliation.
+The instructor has now reconciled and sealed an answer file for exactly the **5,703 released customers**: 96 acquisition/channel/need cells and **1,152 future rows**. The already realized person-level records were restricted to these customers before canonical SQL aggregation. All six customer-history tables and every historical aggregate match the sealed observed records. No future outcomes were redrawn and no forecasts were read or scored during reconciliation. The [current public commitment](../challenge/answer-commitment.json) binds this derived edition; the answer file, salt and source records remain private.
+
+## Team repository and prediction interface
+
+After completing the guided lab, ask your agent to use [the challenge skill](../skills/model-challenge/SKILL.md). It can create a separate team project with:
+
+```text
+uv run --frozen python scripts/create_challenge_repository.py --destination ../studio-north-team-model
+```
+
+The project contains a runnable example, `pyproject.toml`, `uv.lock`, a public prediction grid, and the [machine-readable contract](../challenge/submission-contract.json). The constant-hazard example demonstrates the interface; it is separate from the official hierarchical sBG + Gamma reference.
+
+Expose this function in `main.py`:
+
+```python
+def predict(tables: dict[str, pandas.DataFrame],
+            prediction_grid: pandas.DataFrame, *, seed: int) -> pandas.DataFrame:
+    ...
+```
+
+`tables` has eight keys matching the released CSV filenames without `.csv`. Columns match the released schemas; dates are ISO strings, numbers are numeric, and nullable blanks are missing. The function receives only history available through December 31, 2025, plus the grid's future keys and observed exposures. The private future CSVs are evaluation targets and are never passed to submitted code.
+
+In the separate team folder, the standard execution is:
+
+```text
+uv sync --frozen
+uv run --frozen python main.py --data-dir /path/to/released/data --prediction-grid prediction_grid.csv --output outputs/predictions.csv --seed 20261116
+```
+
+The common budget is **60 minutes, four CPU cores and 16 GiB memory**, using Python 3.12 with no GPU or runtime network. Dependency preparation is separate; fitting and prediction both count toward the budget. Fit from the supplied data rather than requiring precomputed fitted files. Save deterministic predictions with the declared seed. Submit a **public GitHub repository URL and full commit SHA**, including the entry point, locked dependencies, contract, model explanation and chronological validation. The instructor records runtime and hashes, validates the output, then scores it in a separate process. Invalid or incomplete submissions receive a failure reason rather than a partial-grid accuracy score.
 
 ## Reproducible baseline and submission
 

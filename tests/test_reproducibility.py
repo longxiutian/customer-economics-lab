@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 from pathlib import Path
 
@@ -13,7 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_instruction_script_and_vendor_edits_change_the_snapshot(tmp_path):
     names = ["SKILL.md", "student.py", "cohort_lab/student.py", "skills/student-teacher/SKILL.md",
-             "scripts/replay_report.py", "docs/cac-incrementality.md",
+             "scripts/create_challenge_repository.py", "docs/cac-incrementality.md",
+             "skills/model-challenge/SKILL.md", "challenge/submission-contract.json", "challenge/template/main.py",
              "skills/executive-report/references/style-system.md", "vendor/archify/renderers/example.mjs"]
     for name in names + ["outputs/guided/queries/question.sql"]:
         path = tmp_path / name
@@ -44,22 +46,30 @@ def test_inventory_includes_new_manifests_and_sql_but_not_visual_qa(tmp_path):
         verifier.compared_files(tmp_path, False)
 
 
-def test_report_mode_uses_replay_without_model_step_arguments(tmp_path):
-    command = verifier.command_for(tmp_path / "out", mode="report", source=tmp_path / "fit", steps=9000, pdf=False)
-    assert Path(command[1]).name == "replay_report.py"
-    assert command[command.index("--source") + 1] == str(tmp_path / "fit")
-    assert "--no-pdf" in command and "--steps" not in command and "batch" not in command
-    full = verifier.command_for(tmp_path / "out", mode="full", source=tmp_path / "fit", steps=4000, pdf=True)
-    assert Path(full[1]).name == "lab.py" and full[-2:] == ["batch", "--instructor"]
-    assert full[full.index("--steps") + 1] == "4000" and "--source" not in full
+def test_verifier_cannot_generate_report_or_refit(monkeypatch):
+    monkeypatch.setattr('sys.argv',['verify_reproducibility.py','--mode','full'])
+    with pytest.raises(SystemExit):
+        verifier.main()
+    assert not hasattr(verifier,'command_for')
 
 
 @pytest.fixture(scope="module")
 def verified_reference(tmp_path_factory):
+    reference=Path(os.environ.get('COHORT_TEST_REFERENCE',ROOT/'examples/reference'))
+    if not os.environ.get('COHORT_TEST_REFERENCE') and json.loads((reference/'implementation_manifest.json').read_text())!=implementation_snapshot():
+        pytest.skip('Archived A belongs to its historical source; set COHORT_TEST_REFERENCE to a completed current report for artifact-mutation integration tests')
     output = tmp_path_factory.mktemp("reference") / "run"
-    shutil.copytree(ROOT / "examples/reference", output)
-    assert validate(output, companion=True)["status"] == "pass"
+    shutil.copytree(reference, output)
+    assert validate(output)["status"] == "pass"
     return output
+
+
+def test_archived_report_cannot_be_relabelled_as_current():
+    archived=ROOT/'examples/reference'
+    if json.loads((archived/'implementation_manifest.json').read_text())==implementation_snapshot():
+        pytest.skip('This checkout matches the historical reference')
+    with pytest.raises(ValueError,match='Implementation, instructions or locked environment changed'):
+        validate(archived)
 
 
 @pytest.mark.parametrize("relative", [

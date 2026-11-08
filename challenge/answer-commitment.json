@@ -1,0 +1,20 @@
+{
+  "cells": 96,
+  "commitment_scheme": "SHA256(truth.csv bytes || 32-byte private salt)",
+  "commitment_sha256": "7be339a2ab8b03550cc0a595fd6043a03f37c5d7bba6767f7b2601729758a950",
+  "created_utc": "2026-11-08T05:59:28.429282+00:00",
+  "customers": 5703,
+  "edition": "studio-north-dataset-5.1-derived-1",
+  "forecasts_scored": false,
+  "future_months": 12,
+  "future_window": [
+    "2026-01-01",
+    "2026-12-01"
+  ],
+  "observed_history_reconciliation": "All fields in all six customer-history tables and every historical aggregate match.",
+  "prediction_grid_sha256": "c3d4d1e0122bda89737e694783898642e9f2d58361dd984dbb8523fc3c6e75a2",
+  "predictions_read": false,
+  "provenance": "Restricted already sealed person-level future records to the released customer population before canonical SQL aggregation. No outcomes were redrawn.",
+  "public_data_manifest_sha256": "557d88a88b0806e1e266a48c1b8f638e46d6eaa356447031b5c1fc132ecf1e43",
+  "rows": 1152
+}

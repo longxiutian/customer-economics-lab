@@ -1,0 +1,57 @@
+{
+  "status": "passed_with_explicit_remaining_integration_scope",
+  "date": "2026-11-08",
+  "scope": "Guided student distribution and optional forecast submission contract. Does not certify the separate live BlueChip classroom capacity rehearsal.",
+  "tested_source_tree": "ab19b109e7d9d6c07ffc02c4cc1e9bd5f9fbe6fb",
+  "implementation_manifest_sha256": "81c6b1cfb19b4343a9eadd97f18b70f8540006fe6e00a89d0bc65a0fc2ea7199",
+  "public_data_manifest_sha256": "557d88a88b0806e1e266a48c1b8f638e46d6eaa356447031b5c1fc132ecf1e43",
+  "contract_sha256": "51decfd14193528e406943095c1b8382c4507fdf022435316b685867e5206145",
+  "tests": {
+    "passed": 75,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 153.14,
+    "files": [
+      "test_submission_scaffold.py",
+      "test_challenge.py",
+      "test_workflow.py",
+      "test_reproducibility.py",
+      "test_student_workflow.py"
+    ],
+    "current_report_used_for_artifact_mutation_checks": true
+  },
+  "standalone_example": {
+    "fresh_uv_environment": true,
+    "repeat_runs": 2,
+    "identical_prediction_bytes": true,
+    "prediction_sha256": "a15e29e38f37b72ef19262e515b9dacba2e97b66230e881c6ef53cd7e4e68713",
+    "rows": 1152,
+    "official_sbg_reference": false
+  },
+  "report": {
+    "compiled": true,
+    "pages": 45,
+    "model_refit": false,
+    "preserved_baseline_and_neural_fits": true,
+    "pdf_sha256": "9a55301476da022d4cbfe4c8bf70a3501f8b55f92d317a204f7470748f5690a7",
+    "visual_inspection": "All 45 rendered pages reviewed on contact sheets; executive-summary page reviewed at full size. It contains the instructor default recommendation, not a learner judgment."
+  },
+  "private_evaluation": {
+    "sealed_population_reconciled": true,
+    "customers": 5703,
+    "future_grid_rows": 1152,
+    "original_outcomes_redrawn": false,
+    "reference_scored_after_contract_freeze": true,
+    "outcomes_in_public_repository": false,
+    "private_boundary_tests_passed": 5,
+    "actual_container_execution_verified": false,
+    "remaining": "Verify the pinned-image runtime on an isolated container host before accepting team submissions."
+  },
+  "student_entrypoint": {
+    "guided_default": true,
+    "public_batch_launcher_removed": true,
+    "public_replay_launcher_removed": true,
+    "private_instructor_orchestration_preserved": true,
+    "historical_tags_unchanged": true
+  }
+}

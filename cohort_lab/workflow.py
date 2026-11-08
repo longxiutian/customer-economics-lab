@@ -59,14 +59,16 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     """Fingerprint code, bundled dependencies and instructions, excluding outputs."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("skills/student-teacher", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("skills/student-teacher", "*"), ("skills/model-challenge", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
-    paths.extend(root / name for name in ("lab.py", "student.py", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
+    paths.extend(root / name for name in ("lab.py", "student.py", "README.md", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
     paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
     paths.extend(p for p in (root/'hosting').glob('*') if p.suffix in {'.py', '.json', '.txt'} and p.is_file())
+    for folder in ('challenge','challenge/template'):
+        paths.extend(p for p in (root/folder).glob('*') if p.is_file())
     return {p.relative_to(root).as_posix(): _hash(p) for p in sorted(set(paths))}
 
 
@@ -78,7 +80,7 @@ def _write_json(path: Path, value: object) -> None:
 
 
 def verify_frozen_inputs(data_dir: Path) -> dict:
-    """Check every released CSV before any guided or batch calculation."""
+    """Check every released CSV before calculation."""
     data_dir = Path(data_dir)
     manifest_path = data_dir / "data_manifest.json"
     if not manifest_path.is_file():
@@ -432,17 +434,3 @@ class LabWorkflow:
         self._save(state)
         return {"advanced": False, "state": state, "changed": True,
                 "message": "Choice saved. Type next step when ready to continue; downstream stage records may need rebuilding."}
-
-
-def run_batch(data_dir: Path, output_dir: Path, *, seed: int = 20261116,
-              steps: int = 3000, compile_pdf: bool = True) -> dict:
-    """Explicit instructor reproducibility mode, never the guided-chat default."""
-    output_dir = Path(output_dir)
-    if output_dir.exists() and any(output_dir.iterdir()):
-        raise WorkflowError("Use a fresh empty output directory for an instructor batch run.")
-    verify_frozen_inputs(Path(data_dir))
-    results = {}
-    for stage in (1, 3, 4, 5, 6, 7):
-        results[str(stage)] = execute_stage(stage, Path(data_dir), Path(output_dir), {},
-                                            seed=seed, steps=steps, compile_pdf=compile_pdf)
-    return results

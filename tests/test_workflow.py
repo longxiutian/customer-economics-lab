@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from cohort_lab.workflow import DATA_FILES, DATASET_VERSION, InputIntegrityError, LabWorkflow, WorkflowError, run_batch, verify_frozen_inputs
+from cohort_lab.workflow import DATA_FILES, DATASET_VERSION, InputIntegrityError, LabWorkflow, WorkflowError, verify_frozen_inputs
 from scripts.bootstrap import archive_url, install_archive
 
 
@@ -215,14 +215,13 @@ def test_undeclared_extra_csv_is_rejected(data_dir):
         verify_frozen_inputs(data_dir)
 
 
-def test_instructor_batch_does_not_overwrite_student_output(data_dir, tmp_path):
-    output = tmp_path / "student-work"
-    output.mkdir()
-    choices = output / "learner_choices.json"
-    choices.write_text('{"final_verdict":"my interpretation"}')
-    with pytest.raises(WorkflowError, match="fresh empty"):
-        run_batch(data_dir, output)
-    assert json.loads(choices.read_text())["final_verdict"] == "my interpretation"
+def test_student_distribution_has_no_automatic_batch_route():
+    from lab import parser
+    from cohort_lab import workflow
+    with pytest.raises(SystemExit):
+        parser().parse_args(['batch','--instructor'])
+    assert not hasattr(workflow,'run_batch')
+    assert not (Path(__file__).resolve().parents[1]/'scripts/replay_report.py').exists()
 
 
 def _archive(tmp_path, extras=None):
@@ -264,7 +263,7 @@ def test_guided_state_works_from_source_zip_without_git(data_dir, tmp_path):
     root = Path(__file__).resolve().parents[1]
     archive_path = tmp_path / "source.zip"
     with zipfile.ZipFile(archive_path, "w") as archive:
-        for name in ("SKILL.md", "lab.py", "pyproject.toml", "cohort_lab/__init__.py", "cohort_lab/workflow.py"):
+        for name in ("SKILL.md", "lab.py", "pyproject.toml", "cohort_lab/__init__.py", "cohort_lab/workflow.py", "cohort_lab/process.py"):
             archive.write(root / name, "lab-v1/" + name)
         for item in data_dir.iterdir():
             archive.write(item, "lab-v1/data/" + item.name)

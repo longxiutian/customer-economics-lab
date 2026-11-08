@@ -119,7 +119,7 @@ Useful background: [Studio North business brief](docs/business_brief.md) · [Dat
 <details>
 <summary>Instructor and technical reference</summary>
 
-The guided edition bundles three skills: the root `SKILL.md` defines the analysis, `skills/student-teacher/SKILL.md` teaches it through explicit checkpoints, and `skills/executive-report/SKILL.md` specifies the final document. The atomic-step audit is in `docs/student-workflow.md` within that package.
+The guided edition uses three core skills: the root `SKILL.md` defines the analysis, `skills/student-teacher/SKILL.md` teaches it through explicit checkpoints, and `skills/executive-report/SKILL.md` specifies the final document. The atomic-step audit is in `docs/student-workflow.md`. A separate deferred challenge skill is loaded only for an explicitly requested modeling extension after the lesson.
 
 The agent runs the following commands from the guided edition's root. Students can use the natural-language prompt above.
 
@@ -130,7 +130,7 @@ uv run --frozen python student.py message "next step"
 uv run --frozen python student.py status
 ```
 
-`start` opens the introduction only. The first `next step` checks readiness. Progress is saved under `outputs/student/` in `lesson_state.json`, `lab_state.json`, and `learner_choices.json`. Questions and choices never advance the lesson; revised judgments invalidate dependent results. Instructor batch mode is a separate, explicitly requested workflow.
+`start` opens the introduction only. The first `next step` checks readiness. Progress is saved under `outputs/student/` in `lesson_state.json`, `lab_state.json`, and `learner_choices.json`. Questions and choices never advance the lesson; revised judgments invalidate dependent results. Once-through instructor orchestration is outside the current student distribution.
 
 The main model combines heterogeneous-churn shifted-Beta-Geometric retention with Gamma revenue. An adapted Orduz neural model is a separate validation comparison. The public analysis starts from frozen synthetic exports; private data-generation settings and future evaluation outcomes are not distributed. See the [model specification](docs/model-specification.md), [model review](docs/model-review.md), and [reproducibility guide](docs/reproducibility.md).
 
