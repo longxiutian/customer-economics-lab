@@ -1,44 +1,30 @@
 # Reproduce the lab and preserve its decisions
 
-Run every command below from the extracted repository with the frozen environment in [setup](setup.md). No Git, private skill, private helper, course PDF, data generator or future outcome is needed. Keep new output directories separate from `examples/reference` and learner work.
+Use the locked environment in [setup](setup.md). The current student distribution starts with `student.py` and preserves one explicit “next step” per checkpoint. Once-through instructor orchestration is held separately; all atomic analysis, model and report implementations remain public. Historical public tags are preserved.
 
-## Three different verification claims
+## Validate and compare completed work
 
-**Validate a current report without further recomputation** (after the single replay below):
-
-```text
-uv run --frozen python scripts/validate_artifacts.py --output outputs/report-replay
-```
-
-This validates frozen raw inputs, SQL-derived outputs, both fitted models and their matched validation cells, journey diagnostics, segmentation/CAC metrics, posterior post-estimation, diagrams, figures, editable report source, styles, PDF and source bindings. The implementation manifest includes Python and Node scripts, all three skills and their references, linked documentation, vendored Archify files and dependency locks. `examples/reference` is archived A: use it as the source of verified fitted outputs, not as a current-source report-validation target. Its preserved teaching companion also belongs to that archived analysis; `--companion` requires the matching historical checkout and bound tables. This report revision does not update the slide deck. Integrity does not establish numerical correctness or visual quality on its own.
-
-**Rebuild the report twice without fitting either model:**
+After completing the guided lab, validate its artifacts without advancing or refitting:
 
 ```text
-uv run --frozen python scripts/verify_reproducibility.py --mode report --source examples/reference --output outputs/report-repro
+uv run --frozen python scripts/validate_artifacts.py --output outputs/student
 ```
 
-Each fresh Python process validates and copies only the baseline and neural manifests and their declared fitted outputs. It rebuilds observed DuckDB ETL, diagnostics, decision metrics, posterior post-estimation, diagrams, figures, editable TeX and PDF. It verifies the resulting evidence chain, then compares every canonical artifact. Replay preserves the current dataset's eight frozen CSVs, posterior draws and fitted outputs. `report_replay.json` records the reused hashes; `reproducibility.json` explicitly records `model_refit: false`. This mode does not recreate the optional twelve-calendar-month challenge predictions or learner choices. It builds the current analyst report.
+This checks frozen inputs, SQL outputs, fitted models, diagnostics, decisions, figures, editable report sources, PDF and provenance. Integrity does not by itself establish numerical correctness or visual quality. `examples/reference` is archived A; validate its bound artifacts with its historical checkout rather than treating it as a current-source run. The separately maintained teaching deck has its own provenance.
 
-For a single report replay, use:
+To compare two already completed runs:
 
 ```text
-uv run --frozen python scripts/replay_report.py --source examples/reference --output outputs/report-replay --instructor
+uv run --frozen python scripts/verify_reproducibility.py --run-a outputs/run-a --run-b outputs/run-b --receipt outputs/comparison.json
 ```
 
-**Refit and rebuild everything twice:**
+The verifier validates each evidence chain and compares canonical artifacts. It does not run a fit, rebuild a report or advance either lesson. Read the original runs' receipts to distinguish fresh inference from reuse of saved fits and to identify their source, environment and seed. Byte equality applies to the compared files and environments; it does not prove universal cross-platform identity. Use a new receipt path so earlier evidence is preserved.
 
-```text
-uv run --frozen python scripts/verify_reproducibility.py --mode full --output outputs/full-repro
-```
-
-This is the expensive instructor check: each process runs both models, the observed analysis, validation, challenge predictions and the report. The main model uses CPU float64, seed 20261116, four sequential NUTS chains and the released budget; the separate neural benchmark has its own saved settings. See [model specification](model-specification.md) and [Orduz benchmark](orduz-benchmark.md). `--mode full` remains the default for backward compatibility. `--steps` is accepted only for this mode and must be at least 3000. `--parallel` runs the two isolated processes concurrently if memory permits. Neither command is a replacement for the student's explicit `next step` gates.
-
-Add `--no-pdf` to either verifier or the single replay only when editable TeX is sufficient. The receipt then excludes the final report PDF. Figure PDFs and diagrams still require their ordinary dependencies. Use `validate_artifacts.py --no-pdf` for that result; never describe it as a compiled report.
+Add `--no-pdf` only when both runs intentionally produced editable TeX without a compiled report. This excludes the report PDF from comparison; it is not a claim that a PDF was generated. Existing archived reproduction receipts remain evidence for the exact releases and modes they identify.
 
 ## What is compared and preserved
 
-For the fifteen-page executive report, use [the Version B contract and commands](report-version-b.md). Current builds default to B; the explicit `--variant B` remains supported. Frozen A and the original B comparison are preserved. The current continuous-testing revision extends acquisition inputs in dataset 5.1, with new calculation/source-map manifests, while retaining the operating data and verified fits. It is not a model refit or a published semantic release.
+For the fifteen-page executive report, use [the Version B contract](report-version-b.md). Current builds default to B; the current templates produce B. Frozen A and the original B comparison are preserved. The current continuous-testing revision extends acquisition inputs in dataset 5.1, with new calculation/source-map manifests, while retaining the operating data and verified fits. It is not a model refit or a published semantic release.
 
 The verifier includes all numerical tables, saved SQL, analysis/input/model/benchmark/diagnostics/decision-metrics/post-estimation/implementation manifests, summaries and posterior draws; diagram JSON, HTML, SVG, PNG, UCV Markdown and inspection SQL; report TeX, style files, manifests, registry, evidence tables, figures and optional PDF; and challenge or replay receipts where that mode produces them. It validates the manifests before comparison, so two identically stale outputs do not pass. Logs, learner state, ad hoc query receipts, previews and page renders are separate evidence, not canonical output comparisons.
 
@@ -79,4 +65,4 @@ Use the [course-year versioning policy](versioning.md): the current release is 1
 
 Before release, run the affected behavioral tests (`uv run --frozen python -m pytest ...`) and the applicable verification mode. Re-run broader model tests or fresh inference when model/source/settings changes warrant them; a skill or layout correction alone does not call for new simulation data. Verify frozen assets and record which tests actually ran.
 
-Distribute the final source, locks, all three skills and linked notes, assets/licenses, editable report/PPTX sources, canonical reference artifacts and scoped validation receipts together. Preserve prior release tags. After publication, download that exact tagged ZIP over HTTPS, extract it into a new folder without `.git`, and run `uv sync --frozen` (select an existing Python 3.12 with `--python` if needed), then the saved-artifact validation command above. Install the locked Node/browser and TeX dependencies when exercising a new replay there. Compare the downloaded report/companion/reading to their recorded hashes. Record source-ZIP verification separately from computation and visual review. The publisher's private boundary audit is an additional release check; public users never need its private inputs.
+Distribute the final source, locks, the guided skills, deferred challenge skill and linked notes, assets/licenses, editable report/PPTX sources, canonical reference artifacts and scoped validation receipts together. Preserve prior release tags. After publication, download that exact tagged ZIP over HTTPS, extract it into a new folder without `.git`, and run `uv sync --frozen` (select an existing Python 3.12 with `--python` if needed), then the saved-artifact validation command above. Install the locked Node/browser and TeX dependencies when exercising a new replay there. Compare the downloaded report/companion/reading to their recorded hashes. Record source-ZIP verification separately from computation and visual review. The publisher's private boundary audit is an additional release check; public users never need its private inputs.

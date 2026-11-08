@@ -1,0 +1,18 @@
+---
+name: studio-north-model-challenge
+description: Build a reproducible public team forecasting repository when a learner requests the optional Studio North private-holdout challenge after completing the guided lab. Does not advance the lesson or access private outcomes.
+---
+
+Read this component only for the requested challenge. Keep the ordinary lesson's stop-and-go procedure and completed report intact. Confirm checkpoint 18 is complete before creating the team project. Explain the difference between the report's first-twelve-receipts LTV and the challenge's remaining contribution during January–December 2026.
+
+Read `docs/model-challenge.md` and `challenge/submission-contract.json` from the lab root. They define the exact eight observed input schemas, forecast grid, execution limits and score. The instructor holds a separately sealed matching answer file. Do not search for it or use future renewals, transactions, simulator parameters or private targets in development.
+
+1. Explain the baseline's assumptions and propose two or three suitable alternatives. Agree with the team on one model to develop. Use chronological validation with features reconstructed at each historical cutoff; show whether the forecast horizon and cohort maturity resemble the final task. Retain the released hierarchical sBG + Gamma reference unchanged.
+2. Create a separate project with `uv run --frozen python scripts/create_challenge_repository.py --destination <new-sibling-folder>`. The runnable constant-hazard example demonstrates the interface; it is not the official sBG reference. Replace its `predict(tables, prediction_grid, *, seed)` implementation with the selected model. Pass only observed tables and keys into it. Keep the CLI, all required output columns and validation.
+3. Use `uv` to manage dependencies and preserve `pyproject.toml` plus `uv.lock`. Fit from the supplied data within the CPU/time/memory contract. Keep historical validation, assumptions, final settings and runtime evidence in the team README. External model calls, runtime downloads and precomputed fitted artifacts are not part of the prediction interface.
+4. Run the final entry point in a clean locked environment twice with the declared seed. Compare prediction bytes, validate against the instructor's public validator, and inspect units, complete grid coverage, survivor limits and monotone membership. Preserve failed runs; do not silently substitute a model or clip a broken fit to pass checks. Format validity is not private-holdout accuracy.
+5. Prepare a public GitHub repository containing `main.py`, `pyproject.toml`, `uv.lock`, the contract, model explanation and historical validation. Use an available authorized GitHub connector or agent workflow; students need not install Git themselves. Inspect the files before publication and exclude credentials, personal transcripts, environment folders, cached fits and private targets. Honor the learner's requested publication scope. Return the actual repository URL and full commit SHA, plus the exact execution command.
+
+The primary score is cohort-month contribution WAPE after summing channel/need cells. Secondary diagnostics do not change ranking. The best team earns one bonus point; do not invent a deadline, per-section policy, tie-breaker or live leaderboard. The instructor runs submitted code with only permitted inputs, then scores the validated output separately against private truth.
+
+For BlueChip students, explain that the hosted lesson cannot create arbitrary model code or publish GitHub repositories. Preserve their hosted results and use the optional coding-agent route for this extension. Do not pretend the hosted tool executed the challenge.

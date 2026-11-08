@@ -26,12 +26,6 @@ The bands describe uncertainty in the unobserved expected remainder, with realiz
 
 The companion retains twelve slides and all numerical exhibits. Handoff guidance and notes now match the report order, journey diagnostics and strategic breakout. Native charts and their original embedded workbooks are preserved.
 
-For a report replay without refitting, use a fresh output folder:
-
-```text
-uv run --frozen python scripts/replay_report.py --source examples/reference --output outputs/report-replay --instructor
-```
-
-This independently rebuilds observed SQL, diagnostics, post-estimation paths, diagrams and the PDF, validating reused fitted inputs. It is distinct from the full inference reproducibility command in the README. Exact release checks and scope are recorded in `validation/`. The guided student workflow still advances only after an explicit “next.”
+This is a historical revision record. Its report replay independently rebuilt observed SQL, diagnostics, post-estimation paths, diagrams and the PDF while preserving validated fitted inputs. Exact release checks are recorded in `validation/`. Current students use the guided workflow; once-through release orchestration is now instructor-held. See the current [reproducibility guide](reproducibility.md) for validation and comparison of completed work.
 
 The cover identifies Kenan-Flagler Business School, MBA 743: Managing Customer Data, Mod II 2026. The opening section is "Studio North and the customer journey." Author-year citations link adapted methods to a references page, including the licensed Orduz notebook in `assets/` and its exact role in the revenue model and separate neural comparison.

@@ -1,0 +1,177 @@
+{
+  "contract_version": "studio-north-forecast/1.0",
+  "dataset_version": "5.1",
+  "data_manifest_sha256": "557d88a88b0806e1e266a48c1b8f638e46d6eaa356447031b5c1fc132ecf1e43",
+  "prediction_grid_sha256": "c3d4d1e0122bda89737e694783898642e9f2d58361dd984dbb8523fc3c6e75a2",
+  "observed_cutoff_exclusive": "2026-01-01T00:00:00Z",
+  "future_calendar_months": [
+    "2026-01-01",
+    "2026-12-01"
+  ],
+  "rows": 1152,
+  "acquisition_cohorts": 24,
+  "channel_need_cells": 96,
+  "cohort_month_score_points": 288,
+  "function": "predict(tables: dict[str, pandas.DataFrame], prediction_grid: pandas.DataFrame, *, seed: int) -> pandas.DataFrame",
+  "input_tables": {
+    "people": {
+      "person_id": "VARCHAR",
+      "record_created_at": "TIMESTAMP",
+      "attributes_recorded_at": "TIMESTAMP",
+      "age_band": "VARCHAR",
+      "household_type": "VARCHAR",
+      "primary_need": "VARCHAR",
+      "region": "VARCHAR"
+    },
+    "subscription_periods": {
+      "period_id": "VARCHAR",
+      "subscription_id": "VARCHAR",
+      "person_id": "VARCHAR",
+      "period_start": "DATE",
+      "period_end": "DATE",
+      "renewal_due_at": "TIMESTAMP",
+      "renewal_outcome": "VARCHAR",
+      "cancellation_effective_at": "TIMESTAMP",
+      "plan_tier": "VARCHAR"
+    },
+    "transactions": {
+      "transaction_id": "VARCHAR",
+      "person_id": "VARCHAR",
+      "period_id": "VARCHAR",
+      "occurred_at": "TIMESTAMP",
+      "transaction_type": "VARCHAR",
+      "related_transaction_id": "VARCHAR",
+      "order_id": "VARCHAR",
+      "charge_type": "VARCHAR",
+      "quantity": "INTEGER",
+      "unit_price": "DECIMAL(12,2)",
+      "gross_amount": "DECIMAL(12,2)",
+      "discount_amount": "DECIMAL(12,2)",
+      "refund_amount": "DECIMAL(12,2)",
+      "variable_cost": "DECIMAL(12,2)"
+    },
+    "product_events": {
+      "event_id": "VARCHAR",
+      "person_id": "VARCHAR",
+      "occurred_at": "TIMESTAMP",
+      "event_type": "VARCHAR",
+      "platform": "VARCHAR"
+    },
+    "feedback": {
+      "response_id": "VARCHAR",
+      "person_id": "VARCHAR",
+      "submitted_at": "TIMESTAMP",
+      "journey_stage": "VARCHAR",
+      "ease_rating": "INTEGER",
+      "value_rating": "INTEGER",
+      "main_difficulty": "VARCHAR"
+    },
+    "campaign_spend": {
+      "campaign_id": "VARCHAR",
+      "spend_date": "DATE",
+      "channel": "VARCHAR",
+      "target_need": "VARCHAR",
+      "media_spend": "DECIMAL(12,2)",
+      "other_acquisition_spend": "DECIMAL(12,2)"
+    },
+    "acquisition_attribution": {
+      "person_id": "VARCHAR",
+      "first_paid_transaction_id": "VARCHAR",
+      "credited_campaign_id": "VARCHAR",
+      "source_type": "VARCHAR",
+      "attribution_rule": "VARCHAR",
+      "credited_at": "TIMESTAMP"
+    },
+    "channel_holdouts": {
+      "test_id": "VARCHAR",
+      "channel": "VARCHAR",
+      "primary_need": "VARCHAR",
+      "assigned_at": "TIMESTAMP",
+      "followup_end_at": "TIMESTAMP",
+      "arm": "VARCHAR",
+      "n_assigned": "INTEGER",
+      "n_buyers": "INTEGER",
+      "media_spend": "DECIMAL(12,2)",
+      "other_acquisition_spend": "DECIMAL(12,2)"
+    }
+  },
+  "input_values": {
+    "VARCHAR": "pandas string",
+    "DATE": "ISO date string",
+    "TIMESTAMP": "ISO UTC timestamp string",
+    "INTEGER": "pandas nullable integer",
+    "DECIMAL": "float64 dollars; source values have cent precision",
+    "nullable": "missing, never an invented zero"
+  },
+  "grid_columns": [
+    "cohort_month",
+    "channel",
+    "primary_need",
+    "calendar_month",
+    "age_month",
+    "n_acquired",
+    "origin_retained"
+  ],
+  "prediction_columns": {
+    "predicted_retained": "Expected active members; fractional counts allowed",
+    "predicted_net_revenue": "Expected monthly cash net revenue in USD",
+    "predicted_contribution": "Expected monthly cash contribution in USD, before acquisition spending and fixed costs"
+  },
+  "output_rules": [
+    "Exactly one row per published grid row, no extras or omissions",
+    "Preserve all keys and observed exposures",
+    "Finite, nonnegative expected counts and amounts",
+    "Expected retained count never increases within a cell or exceeds origin_retained",
+    "Zero expected retained count implies zero expected receipts",
+    "Expected contribution cannot exceed expected net revenue"
+  ],
+  "execution": {
+    "entrypoint": "main.py",
+    "python": "3.12",
+    "dependencies": [
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "seed": 20261116,
+    "cpu_cores": 4,
+    "memory_gib": 16,
+    "prediction_timeout_seconds": 3600,
+    "gpu": false,
+    "runtime_network": false,
+    "dependency_installation_before_timing": true,
+    "training_included_in_prediction_budget": true,
+    "precomputed_fitted_artifacts": false,
+    "run_command": "uv run --frozen python main.py --data-dir INPUTS --prediction-grid GRID --output OUTPUT --seed 20261116"
+  },
+  "scoring": {
+    "primary": "cohort-month contribution WAPE",
+    "aggregation_keys": [
+      "cohort_month",
+      "calendar_month"
+    ],
+    "aggregation_before_absolute_error": true,
+    "formula": "sum(abs(sum_cells(predicted_contribution)-sum_cells(actual_contribution))) / sum(abs(sum_cells(actual_contribution)))",
+    "lower_is_better": true,
+    "secondary": [
+      "retention cell WAPE",
+      "signed portfolio contribution bias"
+    ],
+    "secondary_changes_ranking": false,
+    "award": "Best team receives one bonus point; instructor resolves ties and timing",
+    "failure_policy": "Invalid or incomplete predictions receive no accuracy score, with a recorded reason"
+  },
+  "information_boundary": "Submitted code receives only observed CSVs and the public forecast grid. Future transactions, renewals and targets remain in a separate scoring process. Historical validation must recreate information available at each earlier origin.",
+  "submission": {
+    "repository": "Public team GitHub repository",
+    "pin": "Full commit SHA",
+    "required_files": [
+      "main.py",
+      "pyproject.toml",
+      "uv.lock",
+      "README.md",
+      "submission-contract.json"
+    ],
+    "explanation": "Model assumptions, historical validation, selected settings, runtime and reproducibility evidence"
+  },
+  "official_reference": "Released hierarchical shifted-Beta-Geometric retention plus Gamma revenue; public reference predictions are separate from the constant-hazard scaffold."
+}
