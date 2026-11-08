@@ -9,9 +9,11 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
+import tempfile
 from .process import run as run_process
 import duckdb
 from .data import SCHEMAS, PRIMARY_KEYS, GRAINS
@@ -38,6 +40,41 @@ def _sha(path):
 
 def _write(path, obj):
     Path(path).write_text(json.dumps(obj, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
+
+
+def _render_archify_html(node, renderer, source, destination, log):
+    """Publish through native scratch, then close and copy into durable storage.
+
+    Archify verifies link counts while holding file descriptors. NFS can retain
+    an unlinked open name until close, so its publication protocol needs native
+    scratch even when the learner's durable output directory is on NFS.
+    """
+    scratch_parent = os.environ.get("STUDIO_NORTH_JOB_RUNTIME")
+    with tempfile.TemporaryDirectory(prefix="studio-north-archify-", dir=scratch_parent) as scratch:
+        staged = Path(scratch) / destination.name
+        process = run_process([node, str(renderer), str(source), str(staged)],
+                              cwd=scratch, text=True, capture_output=True, timeout=120)
+        log.write_text(process.stdout + process.stderr, encoding="utf-8")
+        if process.returncode or not staged.is_file():
+            raise RuntimeError("Archify render failed: " + (process.stdout + process.stderr)[-3500:])
+        # Close the copy before replacement. Never hard-link across filesystems
+        # or relax the vendor's publication checks. A failed render leaves the
+        # prior durable artifact unchanged.
+        transfer = None
+        try:
+            with tempfile.NamedTemporaryFile(prefix="." + destination.name + ".", suffix=".tmp",
+                                             dir=destination.parent, delete=False) as handle:
+                transfer = Path(handle.name)
+                with staged.open("rb") as incoming:
+                    shutil.copyfileobj(incoming, handle)
+                handle.flush()
+                os.fsync(handle.fileno())
+            if _sha(transfer) != _sha(staged):
+                raise RuntimeError("Archify durable copy differs from the rendered artifact")
+            transfer.replace(destination)
+        finally:
+            if transfer is not None:
+                transfer.unlink(missing_ok=True)
 
 
 def _sql_path(path):
@@ -275,9 +312,7 @@ def build_diagrams(data_dir: Path, output_dir: Path) -> dict:
         source=folder/f"{stem}.json";dest=folder/f"{stem}.html";_write(source,candidate)
         kind=candidate["diagram_type"]
         renderer=vendor/"renderers"/kind/f"render-{kind}.mjs"
-        p=run_process([node,str(renderer),str(source),str(dest)],cwd=folder,text=True,capture_output=True,timeout=120)
-        (folder/f"{stem}.render.log").write_text(p.stdout+p.stderr,encoding="utf-8")
-        if p.returncode or not dest.exists():raise RuntimeError(f"Archify {kind} render failed: "+(p.stdout+p.stderr)[-3500:])
+        _render_archify_html(node,renderer,source,dest,folder/f"{stem}.render.log")
         results[stem]={"json":f"diagrams/{source.name}","html":f"diagrams/{dest.name}","sha256":_sha(dest),"renderer":"native Archify "+kind}
     # The report includes the real native overview. Missing browser support is
     # an explicit failure; an old reference PNG is never silently substituted.

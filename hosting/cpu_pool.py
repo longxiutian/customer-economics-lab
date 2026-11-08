@@ -377,7 +377,7 @@ def check_local_runtime(path):
         raise ValueError("Node-local runtime must be private to the allocation owner")
 
 
-def runtime_preflight(destination):
+def runtime_preflight(destination, durable_directory=None):
     """Executed in a bounded helper subprocess on the assigned compute node."""
     from cohort_lab.workflow import _readiness
     from cohort_lab.hosted import release_manifest
@@ -411,7 +411,13 @@ Last page: \pageref{LastPage}.\end{document}
     pdf = (doc / "fixture.pdf").read_bytes()
     if not pdf.startswith(b"%PDF-") or len(pdf) < 1000:
         raise RuntimeError("TeX did not produce a PDF")
+    from cohort_lab.diagrams import build_diagrams
+    diagrams = Path(durable_directory) if durable_directory is not None else destination / "diagram-preflight"
+    build_diagrams(ROOT / "data", diagrams)
+    diagram_manifest = diagrams / "diagrams" / "diagram_manifest.json"
     result.update(tex_fixture_passed=True, tex_fixture_sha256=hashlib.sha256(pdf).hexdigest(),
+                  diagram_fixture_passed=True, diagram_fixture_directory=str(diagrams),
+                  diagram_fixture_manifest_sha256=hashlib.sha256(diagram_manifest.read_bytes()).hexdigest(),
                   release_hash=release_manifest()["release_hash"], observed_epoch=time.time())
     write_json(destination / "runtime-readiness.json", result)
 
@@ -471,7 +477,9 @@ def run(config_path):
         write_json(plan.runtime / "operator-backups" / plan.parent_job_id / (stamp + ".json"), identity | {"observed_epoch": time.time(), "databases": records})
     try:
         health(False, phase="runtime_preflight")
-        probe = owner.spawn([sys.executable, "-m", "hosting.cpu_pool", "--runtime-preflight", str(plan.jobtmp)],
+        durable_probe = plan.runtime / "operator-preflight" / plan.parent_job_id
+        probe = owner.spawn([sys.executable, "-m", "hosting.cpu_pool", "--runtime-preflight", str(plan.jobtmp),
+                             "--durable-preflight", str(durable_probe)],
                             name="runtime-preflight", cpus=plan.helper_cpus, environment=clean_env)
         until = min(time.time() + 120, plan.deadline - 30)
         while probe["process"].poll() is None and not stopping and time.time() < until:
@@ -479,7 +487,7 @@ def run(config_path):
         if stopping or probe["process"].poll() != 0:
             raise RuntimeError("Bounded runtime preflight did not pass")
         readiness = json.loads((plan.jobtmp / "runtime-readiness.json").read_text())
-        if not readiness.get("ready") or not readiness.get("tex_fixture_passed") or readiness.get("release_hash") != config["release_hash"]:
+        if not readiness.get("ready") or not readiness.get("tex_fixture_passed") or not readiness.get("diagram_fixture_passed") or readiness.get("diagram_fixture_directory") != str(durable_probe) or readiness.get("release_hash") != config["release_hash"]:
             raise RuntimeError("Runtime readiness is not bound to the frozen release")
         write_json(plan.runtime / "operator-receipts" / plan.parent_job_id / "runtime-readiness.json", identity | readiness)
         daemon = owner.spawn([sys.executable, "-m", "hosting.nemotron_router", "--config", str(plan.router_path), "--serve"],
@@ -565,9 +573,10 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--config", type=Path)
     group.add_argument("--runtime-preflight", type=Path)
+    parser.add_argument("--durable-preflight", type=Path)
     args = parser.parse_args()
     if args.runtime_preflight:
-        runtime_preflight(args.runtime_preflight)
+        runtime_preflight(args.runtime_preflight, args.durable_preflight)
         return 0
     return run(args.config)
 
