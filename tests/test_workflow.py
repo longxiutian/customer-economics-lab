@@ -227,7 +227,9 @@ def test_student_distribution_has_no_automatic_batch_route():
 def _archive(tmp_path, extras=None):
     path = tmp_path / "lab.zip"
     with zipfile.ZipFile(path, "w") as archive:
-        for name, content in {"SKILL.md": "skill", "lab.py": "pass", "pyproject.toml": "[project]", **(extras or {})}.items():
+        for name, content in {"SKILL.md": "skill", "skills/student-teacher/SKILL.md": "teacher",
+                              "student.py": "pass", "cohort_lab/student.py": "pass",
+                              "lab.py": "pass", "pyproject.toml": "[project]", **(extras or {})}.items():
             archive.writestr("lab-v1/" + name, content)
     return path
 
@@ -239,7 +241,7 @@ def test_archive_download_install_requires_no_git(tmp_path, monkeypatch):
     destination = install_archive(_archive(tmp_path), tmp_path / "extracted")
     assert (destination / "SKILL.md").is_file()
     assert not (destination / ".git").exists()
-    assert archive_url() == "https://github.com/longxiutian/customer-economics-lab/archive/v1.7.0.zip"
+    assert archive_url("a" * 40) == "https://github.com/longxiutian/customer-economics-lab/archive/" + "a" * 40 + ".zip"
 
 
 def test_archive_rejects_traversal_before_extracting(tmp_path):
@@ -263,7 +265,8 @@ def test_guided_state_works_from_source_zip_without_git(data_dir, tmp_path):
     root = Path(__file__).resolve().parents[1]
     archive_path = tmp_path / "source.zip"
     with zipfile.ZipFile(archive_path, "w") as archive:
-        for name in ("SKILL.md", "lab.py", "pyproject.toml", "cohort_lab/__init__.py", "cohort_lab/workflow.py", "cohort_lab/process.py"):
+        for name in ("SKILL.md", "skills/student-teacher/SKILL.md", "student.py", "cohort_lab/student.py",
+                     "lab.py", "pyproject.toml", "cohort_lab/__init__.py", "cohort_lab/workflow.py", "cohort_lab/process.py"):
             archive.write(root / name, "lab-v1/" + name)
         for item in data_dir.iterdir():
             archive.write(item, "lab-v1/data/" + item.name)

@@ -2,6 +2,8 @@
 
 Use AI to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the connected computation environment handles the code.
 
+**The student edition is interactive only.** Your AI shows the evidence and waits at every checkpoint. It advances one step when you say **next step**, and produces the report after your own final recommendation.
+
 ## Choose the route supplied for your session
 
 All three scenarios use the same guided skill and end with an executive report **and your personal learning debrief**. The instructor will confirm which routes are available for class.
@@ -134,11 +136,9 @@ uv run --frozen python student.py status
 
 The main model combines heterogeneous-churn shifted-Beta-Geometric retention with Gamma revenue. An adapted Orduz neural model is a separate validation comparison. The public analysis starts from frozen synthetic exports; private data-generation settings and future evaluation outcomes are not distributed. See the [model specification](docs/model-specification.md), [model review](docs/model-review.md), and [reproducibility guide](docs/reproducibility.md).
 
-The latest tagged release is **1.7.0**, an archived reference. The 2026 edition uses 1.x.x; see the [versioning policy](docs/versioning.md). Preserve historical releases and receipts. Validate archived artifacts against their matching source checkout, rather than assuming they were built by the current code.
+Use the guided edition retrieved by the prompt above, pinned to its recorded commit. Earlier release downloads containing the batch shortcut are hidden from the student release list. Historical tags and receipts remain for provenance; see the [versioning policy](docs/versioning.md).
 
 Current companion slides: [PDF](teaching/Studio-North-Agentic-AI-Lab.pdf) / [PowerPoint](teaching/Studio-North-Agentic-AI-Lab.pptx). This 33-slide edition explains how the report was made and ends with seven reusable FAQ prompts. See [the slide brief and provenance](docs/companion-slides.md).
-
-Archived materials: [1.7.0 example report](examples/reference/report/customer-economics-report.pdf) · [1.7.0 companion slides: PDF](teaching/customer-economics-lab.pdf) / [PowerPoint](teaching/customer-economics-lab.pptx). Use the current materials supplied for your class session.
 
 The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses and provenance under `assets/` and `vendor/`.
 

@@ -71,7 +71,7 @@ def test_zip_bootstrap_never_invokes_git(tmp_path, monkeypatch):
     monkeypatch.setattr(subprocess, "Popen", forbidden)
     archive = tmp_path / "release.zip"
     with zipfile.ZipFile(archive, "w") as z:
-        for name in ("SKILL.md", "lab.py", "pyproject.toml"):
+        for name in ("SKILL.md", "skills/student-teacher/SKILL.md", "student.py", "cohort_lab/student.py", "lab.py", "pyproject.toml"):
             z.write(ROOT / name, "customer-economics-lab-v1/" + name)
     result = install_archive(archive, tmp_path / "downloaded")
     assert (result / "SKILL.md").read_bytes() == (ROOT / "SKILL.md").read_bytes()
