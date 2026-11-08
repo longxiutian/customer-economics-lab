@@ -2,13 +2,25 @@
 
 Use AI to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the connected computation environment handles the code.
 
-## Browser scenario: BlueChip
+## Choose the route supplied for your session
+
+All three scenarios use the same guided skill and end with an executive report **and your personal learning debrief**. The instructor will confirm which routes are available for class.
+
+| Scenario | Where you work | Model access |
+| --- | --- | --- |
+| [Personal coding agent](#personal-coding-agent-copy-and-paste-into-your-ai-harness) | Codex, Claude Code, or VS Code with an agent and a local/cloud lab folder | Your supported plan or API account |
+| University-funded MCP — **TBD** | A coding agent connected to a proposed UNC model service | Funding, sign-in and free-client suitability still need confirmation |
+| [BlueChip + Longleaf](#browser-scenario-bluechip--longleaf) | BlueChip in your browser; the backend runs the lab | Instructor-provisioned Nemotron service during the announced window |
+
+An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
+
+## Browser scenario: BlueChip + Longleaf
 
 The BlueChip pilot runs the guided lab through one browser link. No student installation is needed. BlueChip presents the lesson; an instructor-managed backend saves your own workspace, runs fresh CPU models, and obtains Nemotron interpretations.
 
 You can ask how the report is generated and where its data, skills, reference assets, DuckDB calculations and outputs live. The agent retrieves a verified description of the current deployment and explains server-side paths separately from your available downloads. The hosted API supports the released workflow and bounded SQL exploration; implementing alternative models or rewriting chart code remains an exercise for the optional coding-agent route.
 
-**November 7 pilot:** [Open Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602), sign in with your UNC BlueChip account, and click **Start my Studio North lab**. This debugging service ends at **5:15 p.m. Eastern on November 7, 2026**. Two API rehearsals and one browser rehearsal produced matching reports with fresh fits. The browser run required a checkpoint-display recovery; see the acceptance record for the remaining interface checks. The instructor confirms MBA and MSM BlueChip access; another student's end-to-end use of this agent and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
+**November 7 pilot has ended.** The rehearsal used [Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602): sign in with your UNC BlueChip account, then click **Start my Studio North lab**. Its debugging window ended at **5:15 p.m. Eastern on November 7, 2026**. Use this route only after the instructor announces an active service window. Two API rehearsals and one browser rehearsal produced matching reports with fresh fits. The browser run required a checkpoint-display recovery; see the acceptance record for the remaining interface checks. The instructor confirms MBA and MSM BlueChip access; another student's end-to-end use of this agent and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
 
 In the configured BlueChip agent, paste:
 
@@ -18,7 +30,8 @@ workspace. Introduce the current checkpoint, show its evidence, and wait.
 Advance one checkpoint only when my whole message is "next step".
 ```
 
-## Alternative browser scenario: personal ChatGPT
+<details>
+<summary>Earlier connection experiment: personal browser ChatGPT (not released)</summary>
 
 The classroom starting point is **your personal ChatGPT account and UNC network access**. The planned lab connection runs the software centrally, gives each student a separate workspace, and runs each student's own statistical fits. You are not expected to install Python, Git, a coding agent, or a tunnel client, buy a paid plan, or obtain an API key or Longleaf account.
 
@@ -44,9 +57,11 @@ Generate and validate my report only at the final checkpoint after my final
 verdict and action, then give me the real download returned by the service.
 ```
 
-The [classroom access plan](docs/chatgpt-web-classroom.md) records the required connection, student isolation, fresh fits, and readiness checks. The local route below remains available for an explicitly chosen coding-agent setup.
+The [classroom access plan](docs/chatgpt-web-classroom.md) records the required connection, student isolation, fresh fits, and readiness checks. This earlier browser-plugin plan is distinct from the proposed university-funded coding-agent MCP route.
 
-## Optional local route: copy and paste into your AI harness
+</details>
+
+## Personal coding agent: copy and paste into your AI harness
 
 Open **Codex, Claude Code, or GitHub Copilot in agent mode** with the lab folder supplied for your class session. These tools need access to files and a local or cloud environment where they can run code. Then paste the entire prompt below:
 
@@ -71,6 +86,12 @@ A question, an answer, or a revised judgment does not authorize advancement.
 Record my own judgments and preserve my place so we can resume later.
 Generate the final report only at the last checkpoint, after I have supplied
 my recommendation and explicitly said "next step".
+
+Follow docs/personal-debrief.md from the opening. Keep my actual questions,
+visible replies, judgments and output references. Record available model-usage
+receipts; otherwise label an estimate of recorded text and leave full usage
+unknown. At the end, give me the executive report AND a personal learning debrief
+with evidence-linked Studio North and AI-practice next prompts.
 ```
 
 For this optional local route, extract the instructor-provided guided ZIP and open its folder in your agent before starting. Existing tagged releases are archived examples and may not contain the teaching skill. These local setup steps are not prerequisites for the planned browser classroom route.
