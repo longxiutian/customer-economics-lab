@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -204,6 +205,20 @@ class StudentWorkflow:
                     entry.update(preview=rows, row_count=count)
             files.append(entry)
         packet = {"files": files}
+        if step >= 6:
+            manifest_path = self.core.data_dir / "data_manifest.json"
+            manifest_bytes = manifest_path.read_bytes()
+            manifest = json.loads(manifest_bytes)
+            packet["data_context"] = {
+                "source": "data/data_manifest.json",
+                "source_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+                "dataset_version": manifest["dataset_version"],
+                "observed_cutoff_exclusive": manifest["data_as_of"],
+                "timezone": manifest["timezone"],
+                "currency": manifest["currency"],
+                "cohort_definition": manifest["definitions"]["cohort"],
+                "observation_definition": manifest["definitions"]["time"],
+            }
         if step == 1:
             packet["readiness"] = json.loads(self.core.state_path.read_text(encoding="utf-8"))["stages"]["0"]["result"]
         if step == 6:

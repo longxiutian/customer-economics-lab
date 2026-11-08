@@ -229,6 +229,9 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
         done(fig,name,["cohort_totals.csv","cohort_cash_economics.csv"],
              "All 24 joining cohorts, full observed age range; the upper-right missing region is unobserved rather than zero.",
              {**triangle_values, "metric": "retained_share" if mode == "rate" else "cash_after_acquisition_per_original_customer",
+              "definition": ("Retained members at this cohort age divided by the original acquired cohort; the denominator does not shrink."
+                  if mode == "rate" else
+                  "Cumulative cash contribution through this cohort age per original acquired customer, minus historical average CAC. Age zero includes the joining month's contribution; its balance is not simply negative CAC. This accounting measure does not subtract experimental iCAC."),
               "unit": "fraction" if mode == "rate" else "USD", "values_by_cohort_then_age": matrix_values(matrix)})
 
     palette,colors=_cohort_palette(cohorts)
