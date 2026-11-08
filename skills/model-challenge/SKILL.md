@@ -5,6 +5,8 @@ description: Build a reproducible public team forecasting repository when a lear
 
 Read this component only for the requested challenge. Keep the ordinary lesson's stop-and-go procedure and completed report intact. Confirm checkpoint 18 is complete before creating the team project. Explain the difference between the report's first-twelve-receipts LTV and the challenge's remaining contribution during January–December 2026.
 
+Use December 2026 as the common calendar endpoint. Since all cohorts are observed through December 2025, each has twelve future months, at different cohort ages. Younger cohorts have less observed history and a larger forecast share of their trajectory's months; do not claim that they have more future periods in this calendar-window challenge.
+
 Read `docs/model-challenge.md` and `challenge/submission-contract.json` from the lab root. They define the exact eight observed input schemas, forecast grid, execution limits and score. The instructor holds a separately sealed matching answer file. Do not search for it or use future renewals, transactions, simulator parameters or private targets in development.
 
 1. Explain the baseline's assumptions and propose two or three suitable alternatives. Agree with the team on one model to develop. Use chronological validation with features reconstructed at each historical cutoff; show whether the forecast horizon and cohort maturity resemble the final task. Retain the released hierarchical sBG + Gamma reference unchanged.

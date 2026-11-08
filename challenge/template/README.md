@@ -11,6 +11,8 @@ uv run --frozen python main.py --data-dir /path/to/released/data --prediction-gr
 
 The eight observed input tables stop on December 31, 2025. Private future outcomes are never model inputs. Each dictionary key is a CSV filename without `.csv`; dates are ISO strings, numeric fields are numeric, and empty nullable fields are missing. The supplied grid contains only keys and observed exposures. Preserve every row and add expected retained members, net revenue and contribution in dollars. Contribution is before acquisition cost.
 
+Forecast every cohort through December 2026: twelve future calendar months per cohort/segment, or 1,152 rows in total. Cohort ages differ across rows. Younger cohorts have a larger forecast share of their observed-plus-future trajectory, but still twelve future months. This challenge does not stop every cohort at the same customer age.
+
 Keep `pyproject.toml` and `uv.lock` together. Add dependencies with `uv add`, then verify a clean `uv sync --frozen`. The evaluation environment uses Python 3.12, four CPU cores, 16 GiB memory, no GPU or runtime network, and a 60-minute prediction limit. Fit from the supplied observed tables within that budget; do not require locally cached artifacts or external services. Use the seed for stochastic operations. Dependencies may be installed during environment preparation.
 
 Keep code, model explanation and historical validation in the public team GitHub repository. Do not publish credentials, personal chat transcripts or private outcomes. Submit its URL and full commit SHA; the instructor evaluates that exact commit. The authoritative schema, score and limits are in `submission-contract.json`.
