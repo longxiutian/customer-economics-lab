@@ -219,6 +219,15 @@ class StudentWorkflow:
                 "cohort_definition": manifest["definitions"]["cohort"],
                 "observation_definition": manifest["definitions"]["time"],
             }
+        if step in (9, 10):
+            summary_bytes = (self.output / "analysis_summary.json").read_bytes()
+            summary = json.loads(summary_bytes)
+            scope_key = "segmentation_scope" if step == 9 else "friction_scope"
+            packet["analysis_context"] = {
+                "source": "analysis_summary.json",
+                "source_sha256": hashlib.sha256(summary_bytes).hexdigest(),
+                "scope": summary[scope_key],
+            }
         if step == 1:
             packet["readiness"] = json.loads(self.core.state_path.read_text(encoding="utf-8"))["stages"]["0"]["result"]
         if step == 6:
