@@ -6,8 +6,10 @@ whose account supplies model access.
 
 ## 1. Your own coding agent
 
-Open the released repository in Codex, Claude Code, or VS Code with an enabled AI
-agent/harness. Paste the student prompt. The agent reads the skills and executes
+Paste the repository's student prompt into Codex, Claude Code, or VS Code with an enabled AI
+agent/harness. The agent retrieves the specified release, or resolves main once to an exact
+commit and records it; it preserves an existing lab when resuming. No manual Git or ZIP
+download is needed. The agent reads the skills and executes
 the locked analytical code in its local or cloud workspace. Model access comes
 from the account or credentials configured for that harness. VS Code is an editor;
 its selected agent and provider determine model access.
