@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BlueChip and Longleaf: shared service, personal lab",
+    "locale": "en",
+    "output": "diagrams/bluechip.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "Your browser",
+      "sublabel": "UNC BlueChip sign-in",
+      "pos": [
+        30,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "broker",
+      "type": "security",
+      "label": "Lab coordinator",
+      "sublabel": "Owns jobs + progress",
+      "pos": [
+        365,
+        30
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 22
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "type": "backend",
+      "label": "CPU analysis worker",
+      "sublabel": "DuckDB, fits, charts, PDF",
+      "pos": [
+        720,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "type": "cloud",
+      "label": "Longleaf / Nemotron",
+      "sublabel": "Explains the evidence",
+      "pos": [
+        365,
+        225
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 24,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "work",
+      "type": "database",
+      "label": "Your saved workspace",
+      "sublabel": "Choices, results, report",
+      "pos": [
+        720,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 29
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "browser",
+      "to": "broker",
+      "label": "Lab tools"
+    },
+    {
+      "from": "broker",
+      "to": "cpu",
+      "label": "Run step"
+    },
+    {
+      "from": "cpu",
+      "to": "gpu",
+      "label": "Evidence"
+    },
+    {
+      "from": "gpu",
+      "to": "cpu",
+      "label": "Interpretation"
+    },
+    {
+      "from": "cpu",
+      "to": "work",
+      "label": "Save"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "BlueChip provides the student interface and sign-in. Its interface model is distinct from Nemotron.",
+        "CPU software computes the analysis; Nemotron interprets the returned evidence. Saved work is outside GPU memory.",
+        "One-GPU rehearsal verified. Classroom provisioning and another student's complete sign-in test remain to be completed."
+      ]
+    }
+  ]
+}

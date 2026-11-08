@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Four independent Nemotron servers behind one router",
+    "locale": "en",
+    "output": "diagrams/four-gpus.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "questions",
+      "type": "frontend",
+      "label": "Student requests",
+      "sublabel": "One shared entry point",
+      "pos": [
+        30,
+        130
+      ],
+      "size": [
+        210,
+        100
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "router",
+      "type": "messagebus",
+      "label": "Inference router",
+      "sublabel": "Queue, health, usage",
+      "pos": [
+        365,
+        110
+      ],
+      "size": [
+        240,
+        140
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 31,
+          "end_line": 53
+        }
+      ]
+    },
+    {
+      "id": "gpu1",
+      "type": "cloud",
+      "label": "GPU 1 / Nemotron",
+      "sublabel": "Same complete model",
+      "pos": [
+        795,
+        15
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 31,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "gpu2",
+      "type": "cloud",
+      "label": "GPU 2 / Nemotron",
+      "sublabel": "Same complete model",
+      "pos": [
+        795,
+        105
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 31,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "gpu3",
+      "type": "cloud",
+      "label": "GPU 3 / Nemotron",
+      "sublabel": "Same complete model",
+      "pos": [
+        795,
+        195
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 31,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "gpu4",
+      "type": "cloud",
+      "label": "GPU 4 / Nemotron",
+      "sublabel": "Same complete model",
+      "pos": [
+        795,
+        285
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 31,
+          "end_line": 36
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "questions",
+      "to": "router",
+      "label": "Queue"
+    },
+    {
+      "from": "router",
+      "to": "gpu1",
+      "label": "Route 1"
+    },
+    {
+      "from": "router",
+      "to": "gpu2",
+      "label": "Route 2"
+    },
+    {
+      "from": "router",
+      "to": "gpu3",
+      "label": "Route 3"
+    },
+    {
+      "from": "router",
+      "to": "gpu4",
+      "label": "Route 4"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "Classroom design: four complete, independent model servers, each on one matching 96 GB GPU; not a model partitioned over four cards.",
+        "The router admits requests fairly, skips unhealthy or expired replicas and records actual attempts and usage.",
+        "GPU capacity scales interpretations; CPU fits and PDF compilation require separate capacity. Four live replicas are not claimed."
+      ]
+    }
+  ]
+}

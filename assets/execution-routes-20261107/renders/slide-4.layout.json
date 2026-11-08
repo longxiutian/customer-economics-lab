@@ -1,0 +1,10 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/lteogr","index":3,"layout":{"id":"ly/zy5o7yhk","name":"Blank"},"backgroundColor":"rgba(255,255,255,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/54buhcji","kind":"shape","position":{"left":0,"top":0,"width":1280,"height":7},"geometry":"rect","fillColor":"#269B87","lineWidth":0},
+{"id":"sh/qt0nehw7","kind":"textbox","name":"STUDIO NORTH / WAYS TO RUN THE LAB","position":{"left":64,"top":35,"width":850,"height":25},"text":"STUDIO NORTH / WAYS TO RUN THE LAB","style":{"fontSize":11.51,"typeface":"Arial","color":"#627488","bold":true,"alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/re9onmds","kind":"textbox","name":"CASE APPLICATION","position":{"left":880,"top":35,"width":336,"height":25},"text":"CASE APPLICATION","style":{"fontSize":13,"typeface":"Arial","color":"#126A5C","bold":true,"alignment":"right"},"geometry":"rect","lineWidth":0},
+{"id":"sh/sfi5grex","kind":"textbox","name":"UNC-funded model access is a scenario to test","position":{"left":64,"top":86,"width":1152,"height":76},"text":"UNC-funded model access is a scenario to test","style":{"fontSize":34,"typeface":"Arial","color":"#126A5C","bold":true,"alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/dgb6pwvi","kind":"textbox","name":"TBD: a university model service could supply additional reasoning","position":{"left":76,"top":166,"width":1128,"height":52},"text":"TBD: a university model service could supply additional reasoning through MCP.","style":{"fontSize":22,"typeface":"Arial","color":"#627488","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/ehkni1w3","kind":"textbox","name":"4","position":{"left":1180,"top":680,"width":36,"height":20},"text":"4","style":{"fontSize":11,"typeface":"Arial","color":"#627488","alignment":"right"},"geometry":"rect","lineWidth":0},
+{"id":"im/wzm5cjqx","kind":"image","position":{"left":56,"top":225,"width":1168,"height":438},"fit":"contain"}
+]}

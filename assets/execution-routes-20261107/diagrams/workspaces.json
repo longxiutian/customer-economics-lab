@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "A shared release feeds separate student workspaces",
+    "locale": "en",
+    "output": "diagrams/workspaces.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "student0",
+      "type": "frontend",
+      "label": "Student A",
+      "sublabel": "Authenticated login",
+      "pos": [
+        30,
+        25
+      ],
+      "size": [
+        200,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "student1",
+      "type": "frontend",
+      "label": "Student B",
+      "sublabel": "Authenticated login",
+      "pos": [
+        30,
+        160
+      ],
+      "size": [
+        200,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "student2",
+      "type": "frontend",
+      "label": "Student C",
+      "sublabel": "Authenticated login",
+      "pos": [
+        30,
+        295
+      ],
+      "size": [
+        200,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 9,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "workspace0",
+      "type": "database",
+      "label": "Workspace A",
+      "sublabel": "Choices, fits, report",
+      "pos": [
+        365,
+        25
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "workspace1",
+      "type": "database",
+      "label": "Workspace B",
+      "sublabel": "Choices, fits, report",
+      "pos": [
+        365,
+        160
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "workspace2",
+      "type": "database",
+      "label": "Workspace C",
+      "sublabel": "Choices, fits, report",
+      "pos": [
+        365,
+        295
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 13,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "type": "backend",
+      "label": "Shared source release",
+      "sublabel": "8 CSVs + skills + code",
+      "pos": [
+        795,
+        160
+      ],
+      "size": [
+        240,
+        100
+      ],
+      "sources": [
+        {
+          "path": "docs/serving-architecture.md",
+          "line": 18,
+          "end_line": 22
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "student0",
+      "to": "workspace0",
+      "label": "Own run"
+    },
+    {
+      "from": "student1",
+      "to": "workspace1",
+      "label": "Own run"
+    },
+    {
+      "from": "student2",
+      "to": "workspace2",
+      "label": "Own run"
+    },
+    {
+      "from": "release",
+      "to": "workspace0",
+      "label": "Read only"
+    },
+    {
+      "from": "release",
+      "to": "workspace1",
+      "label": "Read only"
+    },
+    {
+      "from": "release",
+      "to": "workspace2",
+      "label": "Read only"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "The login-bound broker enforces ownership; a name typed into a prompt cannot select another student's workspace.",
+        "The source release is read-only and reusable. Each run writes its own choices, checkpoints, model outputs and reports.",
+        "The next GPU can change without resetting a student's work. Student identities shown here are illustrative."
+      ]
+    }
+  ]
+}
