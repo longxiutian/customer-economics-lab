@@ -23,7 +23,7 @@ def evidence(tmp_path_factory):
 
 
 def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkeypatch):
-    _,output=evidence
+    data,output=evidence
     saved={}
     actual_save=report._save
     def capture(fig,directory,name):
@@ -46,6 +46,14 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
     # The newest cohort has age0 history, not twelve zeros or twelve forecasts.
     assert saved["retention"][-1,0]==1
     assert saved["retention"].mask[-1,1:].all()
+    from cohort_lab.student import StudentWorkflow
+    sql_evidence = StudentWorkflow(data, output)._evidence(6)
+    context = sql_evidence['data_context']
+    source_manifest = json.loads((data / 'data_manifest.json').read_text())
+    assert context['observed_cutoff_exclusive'] == source_manifest['data_as_of']
+    assert context['source_sha256'] == hashlib.sha256((data / 'data_manifest.json').read_bytes()).hexdigest()
+    assert context['timezone'] == source_manifest['timezone']
+    assert context['currency'] == source_manifest['currency']
     # The hosted interpreter receives the same cells as the displayed figures,
     # including missing future ages, rather than only axes and filenames.
     for name, key in [("cohort-retention-triangle", "retention"), ("cohort-cash-triangle", "cash")]:
