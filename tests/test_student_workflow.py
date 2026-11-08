@@ -79,8 +79,10 @@ def test_resume_and_choice_do_not_advance(setup):
 
 
 def test_report_is_last_and_requires_real_judgments(setup):
+    from cohort_lab.debrief import initialize
     lab = lesson(setup)
     lab.start()
+    initialize(setup[1], route="personal", harness="Codex")
     for step in range(1, len(LESSONS) - 1):
         assert lab.handle_message("next step")["step"] == step
         assert 7 not in setup[2]
@@ -91,7 +93,10 @@ def test_report_is_last_and_requires_real_judgments(setup):
     lab.set_choice("final_verdict", "Customer economics are improving")
     lab.set_choice("recommended_action", "Expand search/build-skill while retaining holdouts")
     assert lab.status()["step"] == 17
-    assert lab.handle_message("next step")["step"] == 18
+    completed = lab.handle_message("next step")
+    assert completed["step"] == 18
+    assert completed["personal_debrief"]["snapshot_id"]
+    assert (setup[1] / "debrief/latest.json").exists()
     assert setup[2] == list(range(8))
     assert (setup[1] / "report/customer-economics-report.pdf").exists()
     assert not lab.handle_message("next step")["advanced"]

@@ -26,7 +26,9 @@ an action, quote, finding, model fit, grade, comparison with classmates, or pers
 More tokens, more prompts or less elapsed time do not establish better learning. Missing
 events do not establish inactivity. Do not repeat token counts in prose; the renderer adds
 the measured metrics. State observations narrowly in terms of the visible lab records.
-Do not imply all BlueChip conversation or native-interface token usage was captured.
+Respect the route and usage coverage in the packet. Never imply all native chat activity
+was captured. Keep measured provider counters, estimates of recorded text, and unknown
+full-session usage distinct. Estimates are not invoices or subscription-quota measures.
 Use no names, email addresses, identifying paths, recipient information or URLs.
 
 Return JSON only, with exactly these keys:
@@ -42,9 +44,10 @@ Only recommend, never claim to have performed, a new model comparison or new cha
 Studio North recommendations should respect acquisition-only channel holdout experiments,
 LTV before versus after acquisition cost, and segmentation seeking outcome homogeneity
 within cells and heterogeneity across cells at comparable complexity and cohort age.
-The guided browser lab currently allows bounded read-only SQL, but arbitrary Python edits
-and new model fits require a local/cloud coding harness with the repository. Label that
-requirement when proposing work beyond the hosted tool's capabilities.
+The hosted browser lab runs its prescribed fresh statistical fit and bounded read-only SQL.
+Alternative models or fitting-code changes require a local/cloud coding harness with the
+repository. A personal or university-funded coding-agent route already has that harness;
+use the packet's actual route when suggesting extensions. Never invent service access.
 """
 
 

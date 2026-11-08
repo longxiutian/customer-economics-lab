@@ -123,6 +123,11 @@ class StudentWorkflow:
                   "message": "Lab complete. Questions do not restart it." if step == len(LESSONS) - 1 else "Type next step to continue."}
         if error:
             packet["error"] = error
+        if step == len(LESSONS) - 1:
+            debrief = self.output / "debrief/latest.json"
+            if debrief.is_file():
+                packet["personal_debrief"] = json.loads(debrief.read_text(encoding="utf-8"))
+                packet["debrief_instruction"] = "Review and personalize this separate learning debrief using its frozen evidence, then deliver it with the executive report."
         return packet
 
     def start(self):
@@ -159,6 +164,12 @@ class StudentWorkflow:
         state["results"][str(upcoming)] = result
         state["completed_step"] = upcoming
         self._save(state)
+        if upcoming == len(LESSONS) - 1 and (self.output / "usage/session.json").is_file():
+            from .debrief import prepare
+            try:
+                prepare(self.output)
+            except (OSError, ValueError) as exc:
+                return self._packet(state, advanced=True, error={"personal_debrief": str(exc), "executive_report_preserved": True})
         return self._packet(state, advanced=True)
 
     def set_choice(self, key, value):
