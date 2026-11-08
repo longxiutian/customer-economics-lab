@@ -77,3 +77,42 @@ def test_nemotron_failure_preserves_actual_checkpoint(adapter):
     packet = adapter.execute(job(run, "start", -1))["packet"]
     assert packet["step"] == 0
     assert packet["interpretation"]["status"] == "unavailable"
+
+
+def test_journey_interpretation_has_the_authored_content_not_only_an_image(tmp_path):
+    from cohort_lab.business_journey import build_business_journey, STAGES
+    output = tmp_path / 'workspace'
+    build_business_journey(output / 'diagrams')
+    (output / 'diagrams/business-journey.png').write_bytes(b'fixture image')
+    lesson = StudentWorkflow(hosted.ROOT / 'data', output)
+    evidence = lesson._evidence(2)
+    packet = hosted.HostedLesson(tmp_path).evidence_packet({'step': 2, 'result': evidence}, output)
+    artifact = next(a for a in packet['artifacts'] if a['name'] == 'diagrams/business-journey.json')
+    journey = json.loads(artifact['text'])
+    assert journey['evidence'] == 'conceptual'
+    assert [row['stage'] for row in journey['stages']] == [row[0] for row in STAGES]
+    assert journey['stages'][3]['potential_friction'] == 'Setup takes too long'
+    assert len(json.dumps(packet)) < 65000
+
+
+def test_large_model_summary_keeps_convergence_and_holdout_evidence(tmp_path):
+    import hashlib
+    output = tmp_path / 'workspace'
+    output.mkdir()
+    diagnostic = {'max_r_hat': 1.002, 'min_ess': 820, 'divergences': 0,
+                  'parameter_summary': [{'name': 'parameter_' + str(i), 'mean': i / 100} for i in range(1000)]}
+    summary = {'model': 'fixture sBG + Gamma', 'diagnostic': diagnostic,
+               'backtest': {'retention_mae': 0.04, 'diagnostic': diagnostic}}
+    path = output / 'model_summary.json'
+    path.write_text(json.dumps(summary), encoding='utf-8')
+    assert path.stat().st_size > 32000
+    packet = hosted.HostedLesson(tmp_path).evidence_packet({'step': 14, 'result': {'files': [{'path': str(path)}]}}, output)
+    artifact = packet['artifacts'][0]
+    extracted = artifact['computed_evidence']['summary']
+    assert extracted['diagnostic']['max_r_hat'] == 1.002
+    assert extracted['diagnostic']['divergences'] == 0
+    assert extracted['backtest']['retention_mae'] == 0.04
+    assert extracted['backtest']['diagnostic']['min_ess'] == 820
+    assert 'parameter_summary' not in json.dumps(extracted)
+    assert artifact['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
+    assert len(json.dumps(packet)) < 65000

@@ -35,7 +35,8 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
         return actual_save(fig,directory,name)
     monkeypatch.setattr(report,"_save",capture)
     manifest=report.build_charts(output)
-    assert len(manifest["figures"])==8
+    assert {"cohort-triangles", "cohort-retention-triangle", "cohort-cash-triangle",
+            "channel-segment-retention", "company-economics", "channel-icac-history"} <= set(manifest["figures"])
     assert "experiment-effects" not in manifest["figures"]
     assert manifest["figures"]["cohort-triangles"]["display_values"]["age_months"]==list(range(24))
     assert len(manifest["figures"]["cohort-triangles"]["display_values"]["cohorts"])==24
@@ -45,6 +46,24 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
     # The newest cohort has age0 history, not twelve zeros or twelve forecasts.
     assert saved["retention"][-1,0]==1
     assert saved["retention"].mask[-1,1:].all()
+    # The hosted interpreter receives the same cells as the displayed figures,
+    # including missing future ages, rather than only axes and filenames.
+    for name, key in [("cohort-retention-triangle", "retention"), ("cohort-cash-triangle", "cash")]:
+        values = manifest["figures"][name]["display_values"]
+        actual = np.array(values["values_by_cohort_then_age"], dtype=float)
+        np.testing.assert_allclose(actual, saved[key].filled(np.nan), equal_nan=True)
+        assert values["values_by_cohort_then_age"][-1][1] is None
+        from cohort_lab.hosted import HostedLesson
+        packet = HostedLesson(output.parent).evidence_packet(
+            {"step": 7, "result": {"files": [{"path": str(output / 'report/figures' / (name + '.png'))}]}}, output)
+        assert packet['artifacts'][0]['computed_evidence']['display_values'] == values
+        assert len(json.dumps(packet)) < 65000
+    company = manifest['figures']['company-economics']['display_values']
+    source_company = pd.read_csv(output / 'tables/company_totals.csv').sort_values('calendar_month')
+    actual_company = pd.DataFrame(company['rows'], columns=company['columns'])
+    np.testing.assert_allclose(actual_company.contribution, source_company.contribution)
+    np.testing.assert_allclose(actual_company.acquisition_spend, source_company.acquisition_spend)
+    assert list(actual_company.calendar_month) == list(source_company.calendar_month)
     cohorts=manifest["figures"]["cohort-triangles"]["display_values"]["cohorts"]
     cash=pd.read_csv(output/"tables/cohort_cash_economics.csv")
     for row,cohort in enumerate(cohorts):

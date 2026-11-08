@@ -212,6 +212,9 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
     cash_display["display_per_person"] = cash_display["balance_per_customer"] if "balance_per_customer" in cash_display else cash_display[cash_field] / cash_display[n_field]
     bal = cash_display.assign(cohort_month=cash_display.cohort_month.astype(str)).pivot(index="cohort_month", columns="age_month", values="display_per_person").reindex(index=cohorts, columns=ages)
     triangle_values={"cohorts":cohorts,"age_months":ages,"unobserved_cells":int(rate.isna().sum().sum()),"test_months":[]}
+    def matrix_values(matrix):
+        # Exact plotted cells, including null future ages; no alternate aggregation.
+        return [[None if pd.isna(value) else float(value) for value in row] for row in matrix.to_numpy()]
     fig,axes=plt.subplots(2,1,figsize=(10.5,13),gridspec_kw={"hspace":.23})
     for ax,matrix,title,mode in [(axes[0],rate,"Contractual retention · % of original cohort","rate"),
                                 (axes[1],bal,"Observed cash after acquisition · $ per acquired person","cash")]:
@@ -224,7 +227,9 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
         fig,ax=plt.subplots(figsize=(7.1,6.3))
         _triangle(ax,matrix,title,mode,ages,cohorts,[],payment_numbers=payment_numbers)
         done(fig,name,["cohort_totals.csv","cohort_cash_economics.csv"],
-             "All 24 joining cohorts, full observed age range; the upper-right missing region is unobserved rather than zero.",triangle_values)
+             "All 24 joining cohorts, full observed age range; the upper-right missing region is unobserved rather than zero.",
+             {**triangle_values, "metric": "retained_share" if mode == "rate" else "cash_after_acquisition_per_original_customer",
+              "unit": "fraction" if mode == "rate" else "USD", "values_by_cohort_then_age": matrix_values(matrix)})
 
     palette,colors=_cohort_palette(cohorts)
     fig, axes = plt.subplots(1,2,figsize=(7.1,4.4),gridspec_kw={"wspace":.32})
@@ -283,7 +288,10 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
     ax.bar(x,totals.contribution,color=COLORS["teal"],width=.74,label="Contribution before acquisition")
     ax.plot(x,totals.acquisition_spend,color=COLORS["orange"],lw=1.8,label="Tracked acquisition spend")
     _months(ax,list(totals.calendar_month));ax.yaxis.set_major_formatter(FuncFormatter(_currency));ax.legend(frameon=False,fontsize=8,ncol=2,loc="upper left");ax.grid(axis="y",alpha=.12)
-    done(fig,"company-economics",["company_totals.csv"],"Calendar-period contribution and acquisition costs; neither is company profit.")
+    done(fig,"company-economics",["company_totals.csv"],"Calendar-period contribution and acquisition costs; neither is company profit.",
+         {"columns": ["calendar_month", "contribution", "acquisition_spend"],
+          "rows": json.loads(totals[["calendar_month", "contribution", "acquisition_spend"]].to_json(orient="values")),
+          "coverage": "Every plotted calendar month; dollar totals, not per-customer values."})
 
     if (output/"model_summary.json").exists():
         _validate_model_outputs(output)
@@ -337,7 +345,10 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
             boundary=float(d.loc[observed,"age_month"].max()) if observed.any() else 0
             ax.axvspan(boundary+.05,float(d.age_month.max())+.1,color=COLORS["gold"],alpha=.08);ax.axvline(boundary+.05,color=COLORS["gold"],lw=.8)
         ax.set_title(f"Newest cohort: {newest[:7]} · observed history and predicted remainder",loc="left",fontsize=10);ax.set_xlabel("Age index (0 = first paid month)");ax.set_ylabel("Cohort contribution ($)");ax.yaxis.set_major_formatter(FuncFormatter(_currency));ax.grid(axis="y",alpha=.12);ax.set_ylim(bottom=0)
-        done(fig,"forecast-detail",["forecast_curve.csv"],"Solid points are observed; dashed continuation and shaded intervals are predictions. Values retain the model output units.")
+        done(fig,"forecast-detail",["forecast_curve.csv"],"Solid points are observed; dashed continuation and shaded intervals are predictions. Values retain the model output units.",
+             {"cohort_month": newest, "columns": ["age_month", "observed", "contribution_mean", "contribution_p05", "contribution_p95"],
+              "rows": json.loads(d[["age_month", "observed", "contribution_mean", "contribution_p05", "contribution_p95"]].to_json(orient="values")),
+              "coverage": "Every plotted age of the newest cohort; contribution in cohort dollars."})
         fit=read("model_fit_checks.csv",("cohort_month","channel","primary_need","age_month","n_acquired","n_retained","fitted_retained_one_step"))
         latest_six=sorted(fit.loc[fit.age_month>0,"cohort_month"].astype(str).unique())
         fig,axes=plt.subplots(2,2,figsize=(7.1,4.6),sharex=True,sharey=True,gridspec_kw={"hspace":.4,"wspace":.22})

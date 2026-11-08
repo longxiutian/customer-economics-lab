@@ -38,7 +38,10 @@ def add_journey_chart(output, read, done):
     axes[1, 0].legend(loc="lower left", frameon=False, fontsize=7)
     done(fig, "journey-cohort-diagnostics", ["friction_cohort_summary.csv"],
          "All 24 acquisition cohorts within each need; operational paid customers. Features in [0,27 days). First-renewal and age5 outcomes are separate; future outcomes stay missing. Channels are pooled here; adjusted contrasts retain channel and year.",
-         {"cohorts": sorted(f.cohort_month.unique()), "needs": ["save_time", "build_skill"], "future_outcomes_imputed": False})
+         {"cohorts": sorted(f.cohort_month.unique()), "needs": ["save_time", "build_skill"], "future_outcomes_imputed": False,
+          "columns": ["cohort_month", "primary_need", "n_acquired", "n_no_completion", "n_no_core_action", "n_respondents", "retained_share_age1", "retained_share_age5"],
+          "rows": json.loads(f[["cohort_month", "primary_need", "n_acquired", "n_no_completion", "n_no_core_action", "n_respondents", "retained_share_age1", "retained_share_age5"]].to_json(orient="values")),
+          "coverage": "All plotted cohorts and needs. Completion and core-use shares are one minus the corresponding noncompletion count divided by n_acquired; survey response is n_respondents/n_acquired. Null future retention remains unobserved."})
 
 
 def add_strategy_chart(output, read, done):

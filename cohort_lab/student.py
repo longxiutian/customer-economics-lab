@@ -29,7 +29,7 @@ LESSONS = (
            "Show each readiness result. Resolve a failed check before moving on."),
     Lesson("Understand the customer journey", 1,
            "Read the broad customer journey and identify where membership value or friction could arise.",
-           "Which point in this journey could affect renewal? A journey hypothesis is not yet evidence.", ("diagrams/business-journey.png",)),
+           "Which point in this journey could affect renewal? A journey hypothesis is not yet evidence.", ("diagrams/business-journey.png", "diagrams/business-journey.json")),
     Lesson("Inspect the eight source tables", 1,
            "Identify each source owner, row unit, key and relationship before joining records.",
            "Why could joining transaction and activity rows directly multiply revenue?", ("diagrams/source_inventory.json", "diagrams/source-tables.png")),
