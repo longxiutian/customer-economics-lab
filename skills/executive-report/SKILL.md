@@ -1,11 +1,11 @@
 ---
 name: customer-economics-executive-report
-description: Produce and verify the lab's decision-facing executive report with its bundled Source Sans, forest-green and ochre LaTeX system, derived numerical claims, model explanation and technical appendices.
+description: Format and verify the final executive report at checkpoint 18 of the guided Studio North student lab, after the learner's verdict, action and explicit next-step message. Supporting report specification, not a standalone lab entrypoint.
 ---
 
 # Executive customer-economics report
 
-Use this supporting skill at the reporting stage of the repository's main `SKILL.md`. It is self-contained: the student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
+Use this supporting skill only when the guided state machine reaches reporting checkpoint 18 after the learner has supplied the final verdict, recommended action and explicit **next step**. If invoked earlier, return to the [main guided skill](../../SKILL.md) and resume the student's current checkpoint. Do not run earlier stages or create judgments to satisfy this gate. The student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
 
 ## Read and preserve the visual system
 
@@ -17,7 +17,7 @@ Use this supporting skill at the reporting stage of the repository's main `SKILL
 
 ## Write for an executive who will hand the work to a team
 
-For current **Version B**, apply [the B contract](../../docs/report-version-b.md): fifteen physical pages before the appendix, including cover and contents; no main-section separators; a named acquisition recommendation in the summary; plain-language model explanation before forecasts; full methods and source detail in the appendix. These placement rules override the A-specific requirements below. Preserve frozen A and the original B comparison. This revision extends only acquisition history to six waves in dataset 5.1; the operating files and fitted models stay unchanged. Keep the semantic release at 1.7.0 pending publication; identify this as the continuous-testing B revision. Use a fresh B replay, never overwrite `examples/reference`.
+For current **Version B**, apply [the B contract](../../docs/report-version-b.md): fifteen physical pages before the appendix, including cover and contents; no main-section separators; a named acquisition recommendation in the summary; plain-language model explanation before forecasts; full methods and source detail in the appendix. These placement rules override the A-specific requirements below. Preserve frozen A and the original B comparison. This revision extends only acquisition history to six waves in dataset 5.1; the operating files and fitted models stay unchanged. Keep the semantic release at 1.7.0 pending publication; identify this as the continuous-testing B revision. Generate B at the final guided checkpoint in the student's output folder; never overwrite `examples/reference`.
 
 Keep the value basis, acquisition-cost basis and payment count consistent through B. State the incremental-buyer value-transfer assumption once in the recommendation and precisely in the finale. Distinguish historical-CAC recovery from pilot-iCAC recovery using the same contribution path. Put filenames and full caveats in the exhibit source map or relevant appendix. Retain decision-changing uncertainty, including forecast share, iCAC intervals and Finance's unstated funding limit. In the appendix, explain how the root/report skills, configuration, executable analysis and manifests jointly generate and verify the report.
 

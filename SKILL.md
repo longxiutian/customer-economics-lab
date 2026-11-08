@@ -1,9 +1,11 @@
 ---
 name: customer-economics-lab
-description: Build an auditable executive customer-economics assessment from separate CSV source systems through DuckDB ETL, cohort analytics, acquisition evidence, retention forecasts, and decisions. Use as a staged single-chat framework that managers can hand to their teams.
+description: Guide students through the Studio North customer-economics lab with nineteen learner-controlled checkpoints, visible intermediate evidence, and a final executive report and personal debrief. Start or resume the lesson; never generate the whole report without student interaction.
 ---
 
 # Customer Economics Lab
+
+**This is the guided student edition.** Read [the student-teacher skill](skills/student-teacher/SKILL.md) before setup or analysis. Open or resume the student's current checkpoint, show its actual evidence, and stop. Only the student's standalone **next step** authorizes one further checkpoint. A request to start the lab or produce its report does not authorize running through the lesson. Save the student's own judgments; generate the report only at the final checkpoint after their verdict, action and explicit advancement. This public skill has no unattended or batch mode.
 
 The decision throughout this framework is **Are we moving in the right direction as a company?** Compare successive first-paid acquisition cohorts on retention, contribution, CAC, LTV, and payback. Use segments and channels to explain the trajectory, then connect cohorts to the company in calendar time. The deliverable is an executive assessment and an auditable analytical handoff for the team. Learning happens through inspecting that real workflow; the report must not read like a worksheet or lesson plan.
 
@@ -47,7 +49,7 @@ Hosted workers may invoke the resolved Python executable of an environment alrea
 
 Run Archify's native HTML publication in local temporary storage. The hosted pool supplies its verified node-local `STUDIO_NORTH_JOB_RUNTIME`; ordinary coding-agent runs use the operating system's temporary directory. Copy closed render bytes into the durable workspace, verify their hashes, and replace the destination only after a successful render. Keep the vendored renderer's hard-link checks intact. Deployment acceptance must render the actual diagram set into the intended durable filesystem, beyond checking installed packages.
 
-The student default is the bundled [student-teacher skill](skills/student-teacher/SKILL.md). Read it before starting. It teaches this analytical skill through **nineteen atomic checkpoints**, including the opening, while the executive-report skill controls the final document. Give the opening before tool setup. Show real intermediate outputs in the chat and wait for the learner at every checkpoint; do not generate the report immediately.
+The bundled [student-teacher skill](skills/student-teacher/SKILL.md) is the required student route. It teaches this analytical skill through **nineteen atomic checkpoints**, including the opening, while the executive-report skill controls the final document. Give the opening before tool setup. Show real intermediate outputs in the chat and wait for the learner at every checkpoint; do not generate the report immediately.
 
 1. Work in the downloaded repository. Read [setup](docs/setup.md), the [business brief](docs/business_brief.md), and the [data dictionary](docs/data_dictionary.md) as needed. Public ZIP archives work without Git, a GitHub account, global skill installation or a database server.
 2. Use **uv for every Python environment, dependency and execution step**: Python 3.12, `uv sync --frozen`, and `uv run --frozen python ...`. Do not use pip, Conda or global packages. An explicitly requested new package belongs in a separate experiment copy with a saved lock. The released JAX/NumPyro models run on **CPU with float64 and sequential chains; no GPU or CUDA is needed**. Node 20+, `npm ci --prefix tools`, and `npx --prefix tools playwright install chromium` provide the bundled diagrams. A LaTeX engine is required for PDF output. Read the bundled [executive-report skill](skills/executive-report/SKILL.md) before drafting; private instructor skills are not runtime dependencies.

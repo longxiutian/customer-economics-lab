@@ -2,7 +2,9 @@
 
 For the November 2026 classroom, students start with personal ChatGPT web accounts and UNC network access. Follow the [browser access plan](chatgpt-web-classroom.md); that connection is being prepared and has not yet passed classroom acceptance. The instructions below are for the centrally managed execution environment or an explicitly chosen local coding-agent setup. Students using the browser route do not install these dependencies on their computers.
 
-The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` downloads the v1.7.0 source archive over HTTPS into a new empty folder using Python's standard library.
+The public source ZIP is sufficient. Git, a GitHub account, and a SQL database server are not prerequisites. The script `scripts/bootstrap.py` resolves the instructor's `--ref` (or current `main`) to one full commit SHA and downloads that exact archive into a new empty folder. It rejects archives missing the guided teaching skill or student entrypoint, then records the revision, source URL and archive hash in `source_checkout.json`. It never falls back to an older release.
+
+No visible terminal windows: the helper uses Python's standard library inside the existing AI harness and launches no external commands or terminal application. It downloads the guided source only; it does not install dependencies or run the lesson. Read both skills and introduce Studio North before setup, then use `student.py` and the learner's explicit checkpoint messages.
 
 ## Python environment
 
