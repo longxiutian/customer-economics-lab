@@ -58,7 +58,8 @@ def test_download_pins_source_and_records_archive_without_processes(tmp_path, mo
         calls.append(request.full_url)
         assert timeout in (30, 90)
         if request.full_url.endswith('/commits/main'):
-            return Response(json.dumps({'sha': commit}).encode(), request.full_url)
+            assert request.get_header('Accept') == 'application/vnd.github.sha'
+            return Response(commit.encode() + b'\n', request.full_url)
         assert request.full_url == bootstrap.archive_url(commit)
         return Response(body, 'https://codeload.github.com/' + bootstrap.PUBLIC_REPOSITORY + '/zip/' + commit)
 
@@ -99,7 +100,7 @@ def test_invalid_revision_response_never_downloads_an_archive(tmp_path, monkeypa
 
     def invalid(request, *, timeout):
         calls.append(request.full_url)
-        return Response(b'{"sha":"main"}', request.full_url)
+        return Response(b'main', request.full_url)
 
     monkeypatch.setattr(bootstrap.urllib.request, 'urlopen', invalid)
     with pytest.raises(ValueError, match='full commit SHA'):

@@ -35,17 +35,18 @@ def resolve_ref(ref: str = DEFAULT_REF) -> str:
     if re.fullmatch(r"[0-9a-fA-F]{40}", ref):
         return ref.lower()
     url = f"https://api.github.com/repos/{PUBLIC_REPOSITORY}/commits/{urllib.parse.quote(ref, safe='')}"
+    # Request the SHA alone: a full commit response can include megabytes of diffs.
     request = urllib.request.Request(url, headers={"User-Agent": "customer-economics-lab-bootstrap/2.0",
-                                                 "Accept": "application/vnd.github+json"})
+                                                 "Accept": "application/vnd.github.sha"})
     with urllib.request.urlopen(request, timeout=30) as response:
         final = urllib.parse.urlparse(response.geturl())
         if final.scheme != "https" or final.hostname != "api.github.com":
             raise ValueError("Revision lookup redirected outside the GitHub API.")
-        body = response.read(1024 * 1024 + 1)
-        if len(body) > 1024 * 1024:
+        body = response.read(129)
+        if len(body) > 128:
             raise ValueError("Revision response exceeds the permitted size.")
-    commit = json.loads(body).get("sha")
-    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-fA-F]{40}", commit):
+    commit = body.decode("ascii").strip()
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", commit):
         raise ValueError("GitHub did not return a full commit SHA; no archive was installed.")
     return commit.lower()
 
