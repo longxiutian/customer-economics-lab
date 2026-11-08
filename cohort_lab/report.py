@@ -231,7 +231,7 @@ def build_charts(output_dir: Path, *, payment_numbers=False) -> dict:
              {**triangle_values, "metric": "retained_share" if mode == "rate" else "cash_after_acquisition_per_original_customer",
               "definition": ("Retained members at this cohort age divided by the original acquired cohort; the denominator does not shrink."
                   if mode == "rate" else
-                  "Cumulative cash contribution through this cohort age per original acquired customer, minus historical average CAC. Age zero includes the joining month's contribution; its balance is not simply negative CAC. This accounting measure does not subtract experimental iCAC."),
+                  "Cumulative cash contribution through this cohort age per original acquired customer, minus historical average CAC. Age zero includes the joining month's contribution; its balance is not simply negative CAC. Within a cohort, the gap between cumulative contribution per customer and this balance stays equal to historical average CAC at every age. At break-even the balance is zero; the two measures do not converge. This accounting measure does not subtract experimental iCAC."),
               "unit": "fraction" if mode == "rate" else "USD", "values_by_cohort_then_age": matrix_values(matrix)})
 
     palette,colors=_cohort_palette(cohorts)
