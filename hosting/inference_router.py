@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from contextlib import contextmanager
 import sqlite3
+import socket
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -20,7 +21,8 @@ from hosting.telemetry import canonical, normalize_usage, sha
 
 class FairRouter:
     def __init__(self, database, telemetry, replicas, *, config_hash, expires_at,
-                 max_queue=128, max_per_student=4, health_ttl=30, request_deadline=150, drain_margin=15, clock=time.time):
+                 max_queue=128, max_per_student=4, health_ttl=30, request_deadline=150, drain_margin=15,
+                 max_queue_wait=1800, session_id=None, clock=time.time):
         self.database, self.telemetry = Path(database), telemetry
         self.database.parent.mkdir(parents=True, exist_ok=True)
         self.replicas = {r["id"]: dict(r) for r in replicas}
@@ -31,6 +33,7 @@ class FairRouter:
         self.config_hash, self.expires_at = config_hash, expires_at
         self.max_queue, self.max_per_student, self.health_ttl, self.clock = max_queue, max_per_student, health_ttl, clock
         self.request_deadline, self.drain_margin = request_deadline, drain_margin
+        self.max_queue_wait, self.last_export_error = max_queue_wait, None
         self.health = {}
         with self.connect() as db:
             db.executescript("""
@@ -45,7 +48,20 @@ class FairRouter:
                 CREATE TABLE IF NOT EXISTS fairness(run_id TEXT PRIMARY KEY, last_seq INTEGER NOT NULL);
                 CREATE TABLE IF NOT EXISTS meta(key TEXT PRIMARY KEY,value INTEGER NOT NULL);
                 INSERT OR IGNORE INTO meta VALUES('dispatch_sequence',0);
+                CREATE TABLE IF NOT EXISTS exported(attempt_id TEXT, state TEXT, PRIMARY KEY(attempt_id,state));
+                CREATE TABLE IF NOT EXISTS identity(key TEXT PRIMARY KEY,value TEXT NOT NULL);
+                CREATE INDEX IF NOT EXISTS request_state ON requests(state,run_id,seq);
+                CREATE INDEX IF NOT EXISTS attempt_state ON attempts(replica_id,state);
             """)
+            db.execute('BEGIN IMMEDIATE')
+            expected={'host':socket.gethostname(),'config_hash':config_hash,'expires_at':str(float(expires_at))}
+            sessions=[r[0] for r in db.execute('SELECT DISTINCT session_id FROM requests')]
+            if len(sessions)>1:raise ValueError('Legacy mixed-session queue requires operator reconciliation')
+            if session_id or sessions:expected['session_id']=session_id or sessions[0]
+            for key,value in expected.items():
+                old=db.execute('SELECT value FROM identity WHERE key=?',(key,)).fetchone()
+                if old and old[0]!=value:raise ValueError('Router '+key+' changed; use a fresh, host-local session queue')
+                db.execute('INSERT OR IGNORE INTO identity VALUES(?,?)',(key,value))
 
     @contextmanager
     def connect(self):
@@ -67,16 +83,21 @@ class FairRouter:
     def submit(self, *, request_id, run_id, session_id, payload):
         """IDs must come from a trusted broker job, never from the student text."""
         stamp = self.clock()
-        if stamp + self.request_deadline + self.drain_margin >= self.expires_at:
-            raise ValueError("The serving window has ended")
+        if len(canonical(payload).encode()) > 100000:
+            raise ValueError("Interpretation payload is too large")
         digest = sha({"run_id": run_id, "session_id": session_id, "payload": payload})
         with self.connect() as db:
             db.execute("BEGIN IMMEDIATE")
+            bound=db.execute("SELECT value FROM identity WHERE key='session_id'").fetchone()
+            if bound and bound[0]!=session_id:raise ValueError('Foreign router session')
+            db.execute("INSERT OR IGNORE INTO identity VALUES('session_id',?)",(session_id,))
             prior = db.execute("SELECT * FROM requests WHERE id=?", (request_id,)).fetchone()
             if prior:
                 if prior["digest"] != digest:
                     raise ValueError("Conflicting request replay")
-                return dict(prior)
+                return self._snapshot(db, prior, stamp)
+            if stamp + self.request_deadline + self.drain_margin >= min(self.expires_at, payload.get('_deadline', self.expires_at)):
+                raise ValueError("The serving window has ended")
             if db.execute("SELECT count(*) FROM requests WHERE state='queued'").fetchone()[0] >= self.max_queue:
                 raise ValueError("Inference queue is full")
             if db.execute("SELECT count(*) FROM requests WHERE run_id=? AND state IN ('queued','dispatched','ambiguous')", (run_id,)).fetchone()[0] >= self.max_per_student:
@@ -86,15 +107,43 @@ class FairRouter:
         return self.poll(request_id, run_id=run_id)
 
     def poll(self, request_id, *, run_id):
+        self.expire_queued()
         with self.connect() as db:
+            db.execute("BEGIN")
             row = db.execute("SELECT * FROM requests WHERE id=? AND run_id=?", (request_id, run_id)).fetchone()
-        if row is None:
-            raise KeyError("Request not found in this workspace")
+            if row is None:
+                raise KeyError("Request not found in this workspace")
+            return self._snapshot(db, row, self.clock())
+
+    def _snapshot(self, db, row, stamp):
+        # Rank only each eligible student's head request, exactly as claim does.
+        # A second request behind the same student's work has no honest rank yet.
+        eligible = db.execute("""SELECT r.id FROM requests r LEFT JOIN fairness f ON f.run_id=r.run_id
+            WHERE r.state='queued' AND NOT EXISTS(SELECT 1 FROM requests a WHERE a.run_id=r.run_id
+                AND a.state IN ('dispatched','ambiguous'))
+            AND NOT EXISTS(SELECT 1 FROM requests q WHERE q.run_id=r.run_id AND q.state='queued' AND q.seq<r.seq)
+            ORDER BY COALESCE(f.last_seq,-1),r.seq""").fetchall()
+        ids = [r[0] for r in eligible]
+        position = ids.index(row['id']) + 1 if row['id'] in ids else None
+        active = db.execute("SELECT count(*) FROM attempts WHERE state IN ('dispatched','ambiguous')").fetchone()[0]
         result = dict(row)
         result["result"] = json.loads(result["result"]) if result["result"] else None
+        result["progress"] = {"queue_kind": "nemotron", "state": row["state"], "as_of": stamp,
+            "position": position, "eligible_waiting": len(ids), "active": active,
+            "blocked_by_previous_request": row["state"] == "queued" and position is None,
+            "wait_seconds": max(0, stamp-row["arrived"]), "expires_at": self.expires_at,
+            "position_scope": "Eligible students waiting for model admission; a current snapshot, not an ETA."}
         return result
 
+    def expire_queued(self):
+        stamp = self.clock()
+        with self.connect() as db:
+            db.execute("UPDATE requests SET state='expired',result=? WHERE state='queued' AND (? >= MIN(?,COALESCE(json_extract(payload,'$._deadline'),?)) OR arrived+?<=?)",
+                (canonical({"outcome": "expired", "reason": "Serving window draining or queue wait limit reached; no model call dispatched."}),
+                 stamp+self.request_deadline+self.drain_margin, self.expires_at, self.expires_at, self.max_queue_wait, stamp))
+
     def claim(self):
+        self.expire_queued()
         stamp = self.clock()
         if stamp + self.request_deadline + self.drain_margin >= self.expires_at:
             return None
@@ -150,12 +199,20 @@ class FairRouter:
                 raise ValueError("Terminal attempt cannot be overwritten; reconcile explicitly")
             db.execute("UPDATE attempts SET state=?,ended=?,result=? WHERE id=?", (outcome, stamp, canonical(result), row["id"]))
             db.execute("UPDATE requests SET state=?,result=? WHERE id=?", (outcome, canonical(result), row["request_id"]))
-        self.export_attempts()
+        self.try_export()
+
+    def try_export(self):
+        # A telemetry outage cannot undo a durable provider completion.
+        try:
+            self.export_attempts()
+            self.last_export_error = None
+        except Exception as exc:
+            self.last_export_error = type(exc).__name__
 
     def export_attempts(self):
         """Durable outbox replay repairs a crash between DB commit and ledger append."""
         with self.connect() as db:
-            rows = db.execute("SELECT a.*,r.run_id,r.session_id,r.arrived FROM attempts a JOIN requests r ON r.id=a.request_id WHERE a.state!='dispatched' ORDER BY a.dispatched,a.id").fetchall()
+            rows = db.execute("SELECT a.*,r.run_id,r.session_id,r.arrived FROM attempts a JOIN requests r ON r.id=a.request_id WHERE a.state!='dispatched' AND NOT EXISTS(SELECT 1 FROM exported e WHERE e.attempt_id=a.id AND e.state=a.state) ORDER BY a.dispatched,a.id").fetchall()
         for row in rows:
             result = json.loads(row["result"] or "{}")
             response = result.get("response") or {}
@@ -167,6 +224,8 @@ class FairRouter:
                 "queue_seconds": row["dispatched"] - row["arrived"],
                 "inference_seconds": row["ended"] - row["dispatched"],
                 "usage": result.get("usage", normalize_usage(None)), "source": "router_provider_attempt"})
+            with self.connect() as db:
+                db.execute("INSERT OR IGNORE INTO exported VALUES(?,?)", (row["id"], row["state"]))
 
     def recover_after_exclusive_restart(self):
         """Operator must first confirm the previous router is stopped. Never replay."""
@@ -174,7 +233,7 @@ class FairRouter:
             db.execute("BEGIN IMMEDIATE")
             db.execute("UPDATE attempts SET state='ambiguous',ended=? WHERE state='dispatched'", (self.clock(),))
             db.execute("UPDATE requests SET state='ambiguous' WHERE state='dispatched'")
-        self.export_attempts()
+        self.try_export()
 
     def reconcile(self, attempt_id, *, outcome, response, reason):
         """Private operator action after confirming the original generation ended."""
@@ -190,7 +249,7 @@ class FairRouter:
                       "usage": normalize_usage(response.get("usage"))}
             db.execute("UPDATE attempts SET state=?,ended=?,result=? WHERE id=?", (state, self.clock(), canonical(result), attempt_id))
             db.execute("UPDATE requests SET state=?,result=? WHERE id=?", (state, canonical(result), row["request_id"]))
-        self.export_attempts()
+        self.try_export()
 
     def dispatch_available(self, executor, invoke):
         """Dispatch into one owner-controlled pool; invoke must have a hard deadline."""
@@ -199,13 +258,15 @@ class FairRouter:
             def run(ticket=ticket):
                 try:
                     result = invoke(self.replicas[ticket["replica_id"]], ticket)
-                    # Adapter verifies model/revision/config and normal completion.
-                    if result.get("status") != "completed":
-                        self.finish(ticket, outcome="failed", response=result)
-                    else:
-                        self.finish(ticket, outcome="completed", response=result)
                 except Exception as exc:
                     # Exception text may contain URLs or credentials; keep only its type.
                     self.finish(ticket, outcome="ambiguous", response={"error_type": type(exc).__name__})
-            futures.append(executor.submit(run))
+                else:
+                    self.finish(ticket, outcome="completed" if result.get("status") == "completed" else "failed", response=result)
+            try:
+                futures.append(executor.submit(run))
+            except RuntimeError:
+                # Executor rejected the callable: it was never sent upstream.
+                self.finish(ticket, outcome="failed", response={"error_type": "ExecutorRejectedBeforeInvocation"})
+                break
         return futures

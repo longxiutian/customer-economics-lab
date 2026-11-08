@@ -10,8 +10,10 @@ import csv
 import hashlib
 import json
 import mimetypes
+import os
 import re
 import time
+import uuid
 from pathlib import Path
 
 from .student import StudentWorkflow
@@ -27,10 +29,29 @@ def digest(value):
 
 
 def write_json(path, value):
+    path=io_path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(".tmp")
+    temporary = path.with_name('.write-'+uuid.uuid4().hex+'.tmp')
     temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    try:
+        for attempt in range(3):
+            try:
+                temporary.replace(path)
+                break
+            except PermissionError:
+                if attempt==2:raise
+                time.sleep(0.03*(attempt+1))
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def io_path(path):
+    """Native file I/O accepts long private Windows paths without changing exports."""
+    path=Path(path)
+    if os.name=='nt' and not str(path).startswith('\\\\?\\'):
+        value=str(path.resolve())
+        return Path('\\\\?\\UNC\\'+value[2:] if value.startswith('\\\\') else '\\\\?\\'+value)
+    return path
 
 
 def release_manifest():
@@ -42,9 +63,17 @@ def release_manifest():
 
 
 class HostedLesson:
-    def __init__(self, runtime: Path, *, lesson_factory=StudentWorkflow, interpreter=None):
+    def __init__(self, runtime: Path, *, lesson_factory=StudentWorkflow, interpreter=None, progress=None, debriefer=None):
         self.runtime = Path(runtime).resolve()
         self.lesson_factory, self.interpreter = lesson_factory, interpreter
+        def notify(phase):
+            try:
+                if progress:progress(phase)
+            except Exception:
+                # Display-only progress cannot invalidate completed analysis.
+                pass
+        self.progress = notify
+        self.debriefer = debriefer
 
     def locations(self, run_id):
         if not isinstance(run_id, str) or not IDENTIFIER.fullmatch(run_id):
@@ -92,6 +121,7 @@ class HostedLesson:
             lesson = self.lesson_factory(ROOT / "data", output, seed=20261116, steps=3000, compile_pdf=True)
             try:
                 payload, action = job["payload"], job["payload"]["action"]
+                self.progress('analysis' if job.get('lane')=='analysis' else 'interactive')
                 before = lesson.status()["step"] if lesson.path.exists() else -1
                 if before != job["checkpoint"]:
                     raise WorkflowError("Saved checkpoint differs from the queued request; no transition was attempted.")
@@ -116,9 +146,22 @@ class HostedLesson:
                 elif action == "validate":
                     packet = lesson.status()
                     packet["validation"] = self.validate(output, receipts, packet)
+                elif action == 'debrief':
+                    packet = lesson.status()
+                    if before!=18 or not self.validate(output,receipts,packet)['report_complete']:
+                        raise WorkflowError('Complete and validate the report before requesting a debrief.')
+                    self.progress('debrief')
+                    try:
+                        packet['personal_debrief']=self.debriefer(output,receipts,job) if self.debriefer else {'status':'pending','reason':'Instructor reviewer unavailable'}
+                    except Exception as exc:
+                        packet['personal_debrief']={'status':'pending_operator_review','error_type':type(exc).__name__,
+                            'reason':'Your report is saved. The personal review needs an instructor check; no calculation was repeated.'}
                 else:
                     raise WorkflowError("Unknown lab operation.")
                 # Publish only artifacts from this checkpoint's allowlisted evidence.
+                if packet['step']==18 and 'personal_debrief' not in packet:
+                    from hosting.hosted_debrief import completed
+                    packet['personal_debrief']=completed(output)
                 packet = self.evidence_packet(packet, output)
                 receipt["calculation_finished_at"] = time.time()
                 receipt["step_after"] = packet["step"]
@@ -128,6 +171,7 @@ class HostedLesson:
                 # CPU progress survives an unavailable model. Never label fallback prose Nemotron.
                 if self.interpreter and action in {"start", "message", "interpret"}:
                     try:
+                        self.progress('nemotron')
                         packet["interpretation"] = self.interpreter(packet, payload.get("message", "Introduce this checkpoint."))
                     except Exception as exc:
                         packet["interpretation"] = {"status": "unavailable", "error_type": type(exc).__name__,
@@ -176,7 +220,7 @@ class HostedLesson:
                 raise WorkflowError("An artifact is outside the current workspace or released lesson sources.")
             if path.is_relative_to(output / "invalidated"):
                 raise WorkflowError("An invalidated artifact cannot be published.")
-            if path.suffix.lower() not in {".png", ".pdf", ".csv", ".json", ".md", ".tex", ".sql"}:
+            if path.suffix.lower() not in {".png", ".pdf", ".csv", ".json", ".md", ".tex", ".sql", '.html'}:
                 return None
             known.add(path)
             data = path.read_bytes()
@@ -236,6 +280,9 @@ class HostedLesson:
         if packet["step"] == 18:
             for name in ("report/customer-economics-report.pdf", "report/customer-economics-report.tex", "implementation_manifest.json", "model_summary.json", "model_manifest.json", "learner_choices.json"):
                 register(output / name)
+            if packet.get('personal_debrief',{}).get('status')=='completed':
+                for name in ('personal-debrief/personal-debrief.html','personal-debrief/personal-debrief.pdf'):
+                    register(output/name)
         packet["artifacts"] = artifacts
         return packet
 
@@ -260,5 +307,8 @@ class HostedLesson:
             reader = PdfReader(pdf)
             pages = len(reader.pages)
             checks["readable_pdf"] = pages >= 15 and "Studio North" in (reader.pages[0].extract_text() or "")
-        return {"workflow_complete": all(checks.values()), "checks": checks, "pdf_pages": pages,
+        report_complete=all(checks.values())
+        from hosting.hosted_debrief import completed
+        checks['personal_debrief']=packet.get('personal_debrief',{}).get('status')=='completed' and completed(output)['status']=='completed'
+        return {"workflow_complete": all(checks.values()), 'report_complete':report_complete, "checks": checks, "pdf_pages": pages,
                 "fit_job_ids": [f["job_id"] for f in fits], "visual_review": "not performed by this automated receipt"}

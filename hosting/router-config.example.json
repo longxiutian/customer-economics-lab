@@ -7,7 +7,11 @@
   "telemetry_path": "PRIVATE_LOCAL_DIRECTORY/events.sqlite",
   "request_deadline": 150,
   "drain_margin": 15,
-  "client_wait_seconds": 125,
+  "client_wait_seconds": 1800,
+  "client_progress_root": "PRIVATE_WORKER_RUNTIME/progress",
+  "max_queue": 128,
+  "max_per_student": 4,
+  "max_queue_wait": 1800,
   "replicas": [
     {"id":"gpu-1","capacity":1,"job_id":"allocated-job-id","revision":"da5b2650a835292c678994a1fa3fb653250fb508","manifest_hash":"full-checkpoint-and-tokenizer-manifest-sha256","model_alias":"studio-north-nemotron35-debug","base_url":"http://127.0.0.1:REPLACE_PORT","api_key_env":"STUDIO_NORTH_GPU1_TOKEN","health_path":"PRIVATE_LOCAL_DIRECTORY/gpu1-health.json"},
     {"id":"gpu-2","capacity":1,"job_id":"allocated-job-id","revision":"da5b2650a835292c678994a1fa3fb653250fb508","manifest_hash":"full-checkpoint-and-tokenizer-manifest-sha256","model_alias":"studio-north-nemotron35-debug","base_url":"http://127.0.0.1:REPLACE_PORT","api_key_env":"STUDIO_NORTH_GPU2_TOKEN","health_path":"PRIVATE_LOCAL_DIRECTORY/gpu2-health.json"},
