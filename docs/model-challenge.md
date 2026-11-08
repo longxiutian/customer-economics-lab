@@ -6,6 +6,16 @@ The current baseline uses **hierarchical shifted-Beta-Geometric retention plus G
 
 The observed files end on December 31, 2025. Forecast **January through December 2026 for the same 24 acquisition cohorts**. There are no new 2026 acquisition cohorts in this challenge. Each row is an existing acquisition month × channel × stated need × future calendar month.
 
+December 2026 is a common **calendar endpoint**, not a common customer age. Every cohort has twelve future months because every cohort's observed history ends in December 2025. Younger cohorts have a greater forecast share of their trajectory's months, rather than more forecast months:
+
+| Acquisition cohort | Observed months through December 2025 | Months to forecast | Forecast cohort ages |
+|---|---:|---:|---|
+| January 2024 | 24 | 12 | 24–35 |
+| January 2025 | 12 | 12 | 12–23 |
+| December 2025 | 1 | 12 | 1–12 |
+
+Age zero is the acquisition month. The observed cohort-age view is triangular; extending every cohort to the same calendar endpoint adds twelve future observations per segment to each cohort's trajectory, at different ages. A common cohort-age endpoint would instead give younger cohorts more remaining months, but that is a different evaluation target. Forecast share of months is not the same as forecast share of dollar value.
+
 Predict expected retained members, net revenue, and contribution in each future month. Fractional expected member counts are appropriate. Contribution deducts refunds and nonmarketing variable costs. Do not subtract CAC again: acquisition costs occurred before this future window.
 
 This is **remaining value over the next twelve calendar months**, not the report's contribution LTV over each cohort's first twelve monthly receipts. An older cohort can have completed its first twelve receipts and still produce valuable revenue in 2026. The oldest cohort requires predictions at ages 24–35, beyond the largest observed age of 23. Explain that extrapolation and the assumptions supporting it.
