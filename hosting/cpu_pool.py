@@ -422,9 +422,10 @@ Last page: \pageref{LastPage}.\end{document}
     write_json(destination / "runtime-readiness.json", result)
 
 
-def model_ready(plan, now):
+def model_ready(plan, now=None):
     try:
         value = json.loads((plan.jobtmp / "model-status.json").read_text())
+        now = time.time() if now is None else now
         return (value.get("ready") is True and value.get("ready_replicas") == 4
                 and value.get("admission_capacity") == 8
                 and 0 <= now - value.get("last_checked_at", 0) < 20
@@ -493,9 +494,9 @@ def run(config_path):
         daemon = owner.spawn([sys.executable, "-m", "hosting.nemotron_router", "--config", str(plan.router_path), "--serve"],
                              name="nemotron-router", cpus=plan.helper_cpus, environment=router_env)
         until = min(time.time() + 60, plan.deadline - 30)
-        while not stopping and time.time() < until and daemon["process"].poll() is None and not model_ready(plan, time.time()):
+        while not stopping and time.time() < until and daemon["process"].poll() is None and not model_ready(plan):
             owner.observe(); time.sleep(0.25)
-        if stopping or daemon["process"].poll() is not None or not model_ready(plan, time.time()):
+        if stopping or daemon["process"].poll() is not None or not model_ready(plan):
             raise RuntimeError("Router has no fresh four-replica health attestation")
         workers = []
         for lane, count in (("analysis", len(plan.analysis_cpus)), ("interactive", config.get("interactive_workers", 8))):
@@ -520,7 +521,7 @@ def run(config_path):
             for record in alive:
                 try:
                     value = json.loads((plan.runtime / (record["name"] + "-health.json")).read_text())
-                    fresh = 0 <= now - value.get("heartbeat", 0) < 45 and value.get("release_hash") == config["release_hash"]
+                    fresh = 0 <= time.time() - value.get("heartbeat", 0) < 45 and value.get("release_hash") == config["release_hash"]
                     registered += bool(fresh)
                     job = value.get("job_id")
                     if fresh and record["lane"] == "analysis" and job:
@@ -530,7 +531,7 @@ def run(config_path):
                 except (OSError, ValueError):
                     pass
             capacity = inventory['remaining_analysis_slots'] > 0 and inventory['remaining_interactive_slots'] > 0
-            health(capacity and registered == len(alive) and model_ready(plan, now), phase="running",
+            health(capacity and registered == len(alive) and model_ready(plan), phase="running",
                    registered_workers=registered, **inventory)
             write_json(plan.runtime / "operator-receipts" / plan.parent_job_id / "analysis-memory-samples.json", identity | {
                 "observed_epoch": now, "sampling_seconds": 3, "method": "sum of Linux process-tree RSS; shared pages may be counted more than once",
