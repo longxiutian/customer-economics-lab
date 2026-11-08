@@ -63,15 +63,23 @@ The [classroom access plan](docs/chatgpt-web-classroom.md) records the required 
 
 ## Personal coding agent: copy and paste into your AI harness
 
-Open **Codex, Claude Code, or GitHub Copilot in agent mode** with the lab folder supplied for your class session. These tools need access to files and a local or cloud environment where they can run code. Then paste the entire prompt below:
+Open **Codex, Claude Code, or GitHub Copilot in agent mode** in a local or cloud workspace where it can retrieve files and run code. Paste the entire prompt below; the agent retrieves the lab for you. You do not need to manually download a ZIP, install Git, or create a GitHub account.
 
 ```text
 Guide me through the Studio North Customer Economics Lab as a student.
 
-Use the instructor-provided lab folder in this workspace. First check that it
-contains both SKILL.md and skills/student-teacher/SKILL.md. If the folder or
-either file is missing, stop and help me locate the guided student edition.
-Do not substitute an older release or generate the report immediately.
+Use https://github.com/longxiutian/customer-economics-lab . If this workspace
+already contains my lab, preserve it and resume its recorded release. Otherwise,
+retrieve the instructor-specified release into a new lab folder. If no release
+was specified, resolve the current main branch once to its full commit SHA,
+download that exact revision, and save the SHA and source URL in the workspace.
+Use the public repository archive if Git is unavailable; do not ask me to
+manually download files, install Git, or create a GitHub account.
+
+Check that the retrieved folder contains SKILL.md and
+skills/student-teacher/SKILL.md. If retrieval, execution access or either skill
+is unavailable, explain what is missing and stop. Do not substitute an older
+release, overwrite an existing lab, or generate the report immediately.
 
 Read both skills. Start with a short introduction to Studio North, the
 management question, and our learning roadmap before setting up software.
@@ -94,7 +102,7 @@ unknown. At the end, give me the executive report AND a personal learning debrie
 with evidence-linked Studio North and AI-practice next prompts.
 ```
 
-For this optional local route, extract the instructor-provided guided ZIP and open its folder in your agent before starting. Existing tagged releases are archived examples and may not contain the teaching skill. These local setup steps are not prerequisites for the planned browser classroom route.
+The agent retrieves and records one exact revision before setup. If the instructor supplied a guided ZIP or an existing lab folder, it can use that edition instead. Older tagged releases may not contain the teaching skill, so the agent checks before proceeding. This coding-agent setup is separate from the BlueChip browser route.
 
 ## What you will do
 
