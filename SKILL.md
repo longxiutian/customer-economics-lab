@@ -27,6 +27,8 @@ For the three delivery scenarios, read [execution paths](docs/execution-paths.md
 
 For four-GPU serving and hosted identity/delivery, read [the serving contract](docs/serving-architecture.md). Four independent replicas share inference work; durable student workspaces stay separate. The router remains a local prototype until a fresh deployment is verified. Never infer learning quality from token volume or present a rehearsal as a student's work.
 
+Return hosted checkpoint, packet, revision and job states from one database snapshot. If a reply pairs a completed job with its preceding checkpoint, reconcile through authenticated status before proceeding; do not replay the computation. Include completion-during-read regression checks in broker acceptance.
+
 Show returned checkpoint images inline with their exact signed URLs and provide download links. Keep each explanation focused on its exhibit; preserve substantive uncertainty without repeating unrelated methodological reminders. A starter button may send the opening request, but it must resume an existing workspace rather than reset it.
 
 Hosted workers may invoke the resolved Python executable of an environment already prepared with `uv sync --frozen`. Record its versions and lock hash, keep it unchanged during the session, and install nothing in response to a student request. This is the hosted-worker exception to the local command convention below. Readiness describes the instructor backend; students install nothing, and CPU statistical fitting remains separate from Blackwell-hosted Nemotron inference.
