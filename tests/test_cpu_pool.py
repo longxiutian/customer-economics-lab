@@ -164,6 +164,22 @@ class PoolContractTests(unittest.TestCase):
             value['admission_capacity']=1;pool.write_json(Path(d)/'model-status.json',value)
             self.assertFalse(pool.model_ready(plan,1000))
 
+    def test_readiness_samples_clock_after_status_publication(self):
+        plan=plan_for()
+        clock=[1000.0]
+        value={'ready':True,'ready_replicas':4,'admission_capacity':8,
+               'last_checked_at':1000.010,'expires_at':4000}
+        def read_status():
+            # The producer publishes after the supervisor started this pass.
+            clock[0]=1000.020
+            return json.dumps(value)
+        with patch.object(Path,'read_text',side_effect=read_status), \
+             patch.object(pool.time,'time',side_effect=lambda:clock[0]):
+            self.assertTrue(pool.model_ready(plan))
+            self.assertFalse(pool.model_ready(plan,1000.0))
+            value['last_checked_at']=1000.021
+            self.assertFalse(pool.model_ready(plan))
+
     def test_local_filesystem_rejects_network_storage(self):
         with patch.object(pool.subprocess,'run',return_value=subprocess.CompletedProcess([],0,'nfs4\n','')):
             with self.assertRaises(ValueError):pool.check_local_runtime(Path('/tmp'))
