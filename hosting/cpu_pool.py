@@ -140,8 +140,10 @@ def validate(config, environment, router, *, now, affinity, topology):
         raise ValueError("Runtime paths must be canonical without symlink aliases")
     if not str(runtime).startswith("/hickory/"):
         raise ValueError("Durable worker outputs must be on Hickory")
-    deadline = min(finite_deadline(environment.get("STUDIO_NORTH_JOB_END"), now),
-                   finite_deadline(router.get("expires_at"), now))
+    supervisor_end = finite_deadline(environment.get("STUDIO_NORTH_JOB_END"), now)
+    deadline = finite_deadline(router.get("expires_at"), now)
+    if deadline > supervisor_end - 30:
+        raise ValueError("Work expiry must leave at least 30 seconds for owned cleanup")
     if router.get("session_id") != config["session_id"]:
         raise ValueError("Router session mismatch")
     for key, name in (("queue_path", "router.sqlite"), ("telemetry_path", "telemetry.sqlite"),
@@ -499,7 +501,7 @@ def run(config_path):
                 record["lane"] = lane
                 workers.append(record)
         reason = "running"
-        while not stopping and time.time() < plan.deadline - 30:
+        while not stopping and time.time() < plan.deadline:
             now = time.time(); owner.observe()
             if daemon["process"].poll() is not None:
                 raise RuntimeError("The shared router stopped; interpretation requires operator recovery")
@@ -530,7 +532,7 @@ def run(config_path):
                     write_json(plan.runtime / "operator-receipts" / plan.parent_job_id / "backup-error.json", identity | {
                         "observed_epoch": now, "error_type": type(exc).__name__})
                     last_backup = now
-            time.sleep(min(3, max(0, plan.deadline - 30 - time.time())))
+            time.sleep(min(3, max(0, plan.deadline - time.time())))
         reason = "signal" if stopping else "deadline"
         return 0
     except BaseException as exc:

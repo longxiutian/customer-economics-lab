@@ -40,6 +40,10 @@ def plan_for(config=None, environment=None, router=None, **kwargs):
 class PoolContractTests(unittest.TestCase):
     def test_deadline_is_shared_minimum(self):
         self.assertEqual(plan_for().deadline, 4000)
+        a,b,c=contract();c['expires_at']=4971
+        with self.assertRaises(ValueError):plan_for(a,b,c)
+        c['expires_at']=4970
+        self.assertEqual(plan_for(a,b,c).deadline,4970)
         for bad in ("nan", "inf", 900, 19121):
             a,b,c=contract(); b["STUDIO_NORTH_JOB_END"]=bad
             with self.subTest(bad=bad), self.assertRaises(ValueError):plan_for(a,b,c)

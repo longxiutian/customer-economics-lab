@@ -10,6 +10,8 @@ Use separate interactive, analysis and debrief worker lanes. Only checkpoint tra
 
 ## Admission and student progress
 
+All student jobs, workers and the router share the same work expiry, at least 30 seconds before the controller's shutdown deadline. The prepared controller ends 120 seconds before the Slurm limit. The router closes new admission 165 seconds before work expiry but retains transport for already dispatched work. Pool cleanup begins at work expiry; it does not subtract that cleanup reserve twice. These deadlines are recorded from the actual allocation before activating the broker.
+
 The broker accepts at most its configured queue capacity, keeps one active job per authenticated owner, and binds an idempotency key to its original payload. A claim retry returns the same worker's unsettled job. Concurrent admission and claims use conditional SQL and uniqueness constraints. Broker order uses the insertion row sequence, not wall-clock timestamps. Expired unstarted jobs are marked explicitly; uncertain dispatched jobs are never blindly repeated. A late result from its original worker can settle an interrupted job because that job is never reassigned.
 
 CPU queue position is a current FIFO rank within the requested lane. The model router ranks eligible students by its least-recently-served rule, with FIFO within a student's work. Requests blocked behind that same student's unsettled work have no rank. Model snapshots preserve their original timestamp through the worker heartbeat; stale progress is visibly labeled. A model queue rank can increase when fairness admits a newly active student.
