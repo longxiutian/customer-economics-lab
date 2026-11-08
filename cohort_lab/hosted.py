@@ -231,6 +231,16 @@ class HostedLesson:
                      "local_path": str(path)}
             if path.suffix in {".md", ".sql"} and len(data) < 65000:
                 entry["text"] = data.decode("utf-8")
+            elif path.name == "model_summary.json":
+                def without_parameter_rows(value):
+                    if isinstance(value, dict):
+                        return {k: without_parameter_rows(v) for k, v in value.items() if k != "parameter_summary"}
+                    if isinstance(value, list):
+                        return [without_parameter_rows(v) for v in value]
+                    return value
+                entry["computed_evidence"] = {
+                    "scope": "Model settings and aggregate convergence/holdout diagnostics. Per-parameter rows remain in the downloadable source JSON.",
+                    "summary": without_parameter_rows(json.loads(data))}
             elif path.suffix == ".json" and len(data) < 32000:
                 entry["text"] = data.decode("utf-8")
             if path.suffix == ".png" and (output / "report/chart_manifest.json").is_file():
