@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "University-funded MCP: proposed scenario, TBD",
+    "locale": "en",
+    "output": "diagrams/university-mcp.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Student coding agent",
+      "sublabel": "Free-client suitability TBD",
+      "pos": [
+        365,
+        30
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 18,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "native",
+      "type": "cloud",
+      "label": "Client model access",
+      "sublabel": "Own plan / client limits",
+      "pos": [
+        720,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 27,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "workspace",
+      "type": "database",
+      "label": "Your lab workspace",
+      "sublabel": "Code + data + outputs",
+      "pos": [
+        30,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 20,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "id": "mcp",
+      "type": "security",
+      "label": "UNC MCP gateway",
+      "sublabel": "Sign-in + quotas: TBD",
+      "pos": [
+        365,
+        225
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 18,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "funded",
+      "type": "cloud",
+      "label": "UNC-funded model",
+      "sublabel": "University usage receipts",
+      "pos": [
+        720,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 20,
+          "end_line": 25
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "client",
+      "to": "native",
+      "label": "Native calls"
+    },
+    {
+      "from": "client",
+      "to": "workspace",
+      "label": "Execute"
+    },
+    {
+      "from": "client",
+      "to": "mcp",
+      "label": "Tool call"
+    },
+    {
+      "from": "mcp",
+      "to": "funded",
+      "label": "Funded calls"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "This is a scenario for investigation with UNC IT, not a released connection or funding commitment.",
+        "MCP supplies tools and services. It does not automatically pay for or replace the coding client's native model.",
+        "Native-client usage and university model usage remain separate streams in the same personal debrief."
+      ]
+    }
+  ]
+}

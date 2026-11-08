@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Personal coding agent: the lab runs in your workspace",
+    "locale": "en",
+    "output": "diagrams/personal.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "learner",
+      "type": "frontend",
+      "label": "Your questions",
+      "sublabel": "Ask, judge, next step",
+      "pos": [
+        30,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "frontend",
+      "label": "Your coding agent",
+      "sublabel": "Codex / Claude / VS Code",
+      "pos": [
+        365,
+        30
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "provider",
+      "type": "cloud",
+      "label": "Your model access",
+      "sublabel": "Plan or API account",
+      "pos": [
+        720,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "files",
+      "type": "database",
+      "label": "Released lab files",
+      "sublabel": "8 CSVs + skills + assets",
+      "pos": [
+        30,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "compute",
+      "type": "backend",
+      "label": "Workspace execution",
+      "sublabel": "SQL, CPU fits, report",
+      "pos": [
+        365,
+        225
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/execution-paths.md",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "outputs",
+      "type": "database",
+      "label": "Your saved outputs",
+      "sublabel": "Report + personal debrief",
+      "pos": [
+        720,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 1,
+          "end_line": 18
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "learner",
+      "to": "agent",
+      "label": "Ask"
+    },
+    {
+      "from": "agent",
+      "to": "provider",
+      "label": "Model calls"
+    },
+    {
+      "from": "agent",
+      "to": "compute",
+      "label": "Run"
+    },
+    {
+      "from": "files",
+      "to": "compute",
+      "label": "Inputs"
+    },
+    {
+      "from": "compute",
+      "to": "outputs",
+      "label": "Save"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "The selected coding agent coordinates the tools. A local or cloud workspace executes the released code.",
+        "VS Code requires an enabled agent and model access; the editor alone does not run the lab.",
+        "Your own judgments and the executed evidence feed both the management report and a personal learning debrief."
+      ]
+    }
+  ]
+}

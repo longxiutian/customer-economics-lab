@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Every route ends with a personal learning debrief",
+    "locale": "en",
+    "output": "diagrams/debrief.html",
+    "visual_preset": "editorial",
+    "animation": "none",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "frontend": {
+          "label": "Interface"
+        },
+        "backend": {
+          "label": "Computation"
+        },
+        "database": {
+          "label": "Saved work"
+        },
+        "cloud": {
+          "label": "Models"
+        },
+        "security": {
+          "label": "Access"
+        },
+        "messagebus": {
+          "label": "Routing"
+        }
+      }
+    },
+    "repository": {
+      "url": "https://github.com/longxiutian/customer-economics-lab.git",
+      "revision": "ff9c9d727ce298d16b91ba698aa99a0b6b1d2c51",
+      "link_mode": "local-only"
+    }
+  },
+  "components": [
+    {
+      "id": "records",
+      "type": "database",
+      "label": "Your lab record",
+      "sublabel": "Questions + judgments",
+      "pos": [
+        30,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 23,
+          "end_line": 55
+        }
+      ]
+    },
+    {
+      "id": "packet",
+      "type": "backend",
+      "label": "Evidence snapshot",
+      "sublabel": "Outputs + usage coverage",
+      "pos": [
+        365,
+        30
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 57,
+          "end_line": 117
+        }
+      ]
+    },
+    {
+      "id": "agent",
+      "type": "cloud",
+      "label": "Agent reviews evidence",
+      "sublabel": "Current agent / Opus",
+      "pos": [
+        720,
+        30
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 9,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "student",
+      "type": "frontend",
+      "label": "Same student",
+      "sublabel": "Local file / private link",
+      "pos": [
+        30,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 117,
+          "end_line": 123
+        }
+      ]
+    },
+    {
+      "id": "debrief",
+      "type": "database",
+      "label": "Personal debrief",
+      "sublabel": "Studio North + AI prompts",
+      "pos": [
+        365,
+        225
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 1,
+          "end_line": 18
+        }
+      ]
+    },
+    {
+      "id": "check",
+      "type": "security",
+      "label": "Validate and review",
+      "sublabel": "Claims + source evidence",
+      "pos": [
+        720,
+        225
+      ],
+      "size": [
+        220,
+        80
+      ],
+      "sources": [
+        {
+          "path": "docs/personal-debrief.md",
+          "line": 97,
+          "end_line": 123
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "records",
+      "to": "packet",
+      "label": "Freeze"
+    },
+    {
+      "from": "packet",
+      "to": "agent",
+      "label": "Evidence"
+    },
+    {
+      "from": "agent",
+      "to": "check",
+      "label": "Draft"
+    },
+    {
+      "from": "check",
+      "to": "debrief",
+      "label": "Review"
+    },
+    {
+      "from": "debrief",
+      "to": "student",
+      "label": "Deliver"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "How to read this diagram",
+      "items": [
+        "The requirement lives in the GitHub skills, so personal, university-funded and hosted routes share the same outcome.",
+        "The current authorized agent can prepare feedback. Instructor-orchestrated Opus 5.5 high can refine the same evidence when available.",
+        "Measured counters, recorded-text estimates and unavailable usage remain distinct. Central collection or delivery requires a configured authenticated path."
+      ]
+    }
+  ]
+}

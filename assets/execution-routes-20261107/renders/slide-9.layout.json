@@ -1,0 +1,10 @@
+{"schema":"openai.presentation.layout/v5","unit":"px","slide":{"id":"sl/pc71o2","index":8,"layout":{"id":"ly/zy5o7yhk","name":"Blank"},"backgroundColor":"rgba(255,255,255,1)","position":{"left":0,"top":0,"width":1280,"height":720}},
+"elements":[
+{"id":"sh/0b294bm9","kind":"shape","position":{"left":0,"top":0,"width":1280,"height":7},"geometry":"rect","fillColor":"#269B87","lineWidth":0},
+{"id":"sh/b6t876ls","kind":"textbox","name":"STUDIO NORTH / WAYS TO RUN THE LAB","position":{"left":64,"top":35,"width":850,"height":25},"text":"STUDIO NORTH / WAYS TO RUN THE LAB","style":{"fontSize":11.51,"typeface":"Arial","color":"#627488","bold":true,"alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/qlk7y147","kind":"textbox","name":"CASE APPLICATION","position":{"left":880,"top":35,"width":336,"height":25},"text":"CASE APPLICATION","style":{"fontSize":13,"typeface":"Arial","color":"#126A5C","bold":true,"alignment":"right"},"geometry":"rect","lineWidth":0},
+{"id":"sh/d8bq9g3y","kind":"textbox","name":"Every route ends with a report and a personal debrief","position":{"left":64,"top":86,"width":1152,"height":76},"text":"Every route ends with a report and a personal debrief","style":{"fontSize":34,"typeface":"Arial","color":"#126A5C","bold":true,"alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/c72p0bmd","kind":"textbox","name":"Your questions and judgments guide next steps for Studio North an","position":{"left":76,"top":166,"width":1128,"height":52},"text":"Your questions and judgments guide next steps for Studio North and your AI practice.","style":{"fontSize":22,"typeface":"Arial","color":"#627488","alignment":"left"},"geometry":"rect","lineWidth":0},
+{"id":"sh/v2d8jalc","kind":"textbox","name":"9","position":{"left":1180,"top":680,"width":36,"height":20},"text":"9","style":{"fontSize":11,"typeface":"Arial","color":"#627488","alignment":"right"},"geometry":"rect","lineWidth":0},
+{"id":"im/7q1cvudo","kind":"image","position":{"left":56,"top":225,"width":1168,"height":438},"fit":"contain"}
+]}
