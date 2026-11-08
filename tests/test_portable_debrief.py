@@ -96,3 +96,14 @@ def test_feedback_packet_does_not_export_accounting_identifiers(tmp_path):
     packet=snapshot(root)
     assert packet["metrics"]["usage_streams"][0]["stream_id"] == "stream-1"
     assert "student@example.edu" not in json.dumps(packet)
+
+
+def test_debrief_text_cannot_become_its_own_lab_evidence(tmp_path):
+    root=workspace(tmp_path)
+    record(root,{"event_id":"lab-answer","kind":"text","role":"assistant","scope":"lab","text":"Compare outcomes at the same cohort age."})
+    before=snapshot(root)
+    record(root,{"event_id":"feedback","kind":"text","role":"assistant","scope":"debrief","text":"My generated feedback should not become study evidence."})
+    after=snapshot(root)
+    excerpts=[e["text"] for e in after["evidence"] if e["kind"]=="model_excerpt"]
+    assert excerpts == ["Compare outcomes at the same cohort age."]
+    assert after["metrics"]["recorded_text_estimate"] == before["metrics"]["recorded_text_estimate"]

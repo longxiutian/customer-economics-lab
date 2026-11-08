@@ -192,7 +192,7 @@ def snapshot(output, *, private_terms=()):
         add("saved_judgment", f"{key}: {value}", "learner_choices.json")
     for name, digest in files.items():
         add("artifact", f"Saved artifact {name}; SHA-256 {digest}", "workspace file hash")
-    for e in [e for e in events if e["kind"] == "text" and e["payload"]["role"] == "assistant"][-2:]:
+    for e in [e for e in events if e["kind"] == "text" and e["payload"]["role"] == "assistant" and e["payload"]["scope"] == "lab"][-2:]:
         add("model_excerpt", e["payload"]["text"][:2200], "recorded visible assistant reply; not independently verified")
     return {"schema_version": 2, "snapshot_id": sid, "fixture": False,
             "metrics": metrics, "coverage": coverage, "evidence": evidence}
