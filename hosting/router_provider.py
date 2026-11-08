@@ -3,6 +3,7 @@
 Run by nemotron_router, never exposed as a student tool. Registry/tunnel endpoints
 and model-manifest attestations are maintained by the authorized Longleaf owner.
 """
+import hashlib
 import json
 import os
 import sys
@@ -19,11 +20,11 @@ def prepare(spec, ticket):
         raise ValueError("Provider transport must use TLS or an operator-owned loopback tunnel")
     token = os.environ[spec["api_key_env"]]
     payload = ticket["payload"]
-    evidence = json.dumps(payload["evidence"], ensure_ascii=False)
+    from hosting.nemotron_interpret import SYSTEM_PROMPT, encode_evidence
+    evidence = encode_evidence(payload["evidence"])
     question = str(payload.get("question", "Explain this checkpoint."))
     if len(evidence) > 65000 or len(question) > 12000:
         raise ValueError("Interpretation exceeds the bounded evidence budget")
-    from hosting.nemotron_interpret import SYSTEM_PROMPT
     body = {"model": spec["model_alias"], "messages": [{"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": "CURRENT CHECKPOINT EVIDENCE:\n" + evidence + "\nLEARNER MESSAGE:\n" + question}],
         "max_tokens": 1800, "temperature": 0.2, "stream": False,
@@ -75,6 +76,8 @@ def generate(spec, ticket):
             "usage": response.get("usage"), "revision": spec["revision"], "replica_id": spec["id"],
             "manifest_hash": spec["manifest_hash"], "router_attempt_id": ticket["attempt_id"],
             "preflight_prompt_tokens":counted['count'],
+            "provider_prompt_sha256": hashlib.sha256(json.dumps(body['messages'], ensure_ascii=False,
+                sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
             "started_at": started, "finished_at": time.time(), "latency_kind": "nonstreaming_response_elapsed"}
 
 
