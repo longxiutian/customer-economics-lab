@@ -35,6 +35,39 @@ def test_missing_key_never_opens_transport(monkeypatch):
     assert provider.generate(spec,ticket)['status']=='not_sent'
 
 
+def test_invalid_matrix_never_opens_transport(monkeypatch):
+    spec, ticket = fixture(monkeypatch)
+    ticket['payload']['evidence'] = {'cohorts': ['2025-12-01'], 'age_months': [0, 1],
+                                     'values_by_cohort_then_age': [[1]]}
+    monkeypatch.setattr(provider, 'urlopen', lambda *a, **kw: pytest.fail('must not call network'))
+    assert provider.generate(spec, ticket)['status'] == 'not_sent'
+
+
+def test_tokenizer_and_generator_receive_the_same_labeled_evidence(monkeypatch):
+    import hashlib
+    spec, ticket = fixture(monkeypatch)
+    ticket['payload']['evidence'] = {'cohorts': ['2025-12-01'], 'age_months': [0, 1],
+                                     'values_by_cohort_then_age': [[1, None]]}
+    messages = []
+    def request(req, **kwargs):
+        body = json.loads(req.data)
+        messages.append(body['messages'])
+        if req.full_url.endswith('/tokenize'):
+            return io.BytesIO(b'{"count":50,"max_model_len":32768}')
+        return io.BytesIO(json.dumps({'model': 'fixture', 'id': 'original-response',
+            'choices': [{'finish_reason': 'stop', 'message': {'content': 'Fixture explanation'}}],
+            'usage': {'prompt_tokens': 50, 'completion_tokens': 3, 'total_tokens': 53}}).encode())
+    monkeypatch.setattr(provider, 'urlopen', request)
+    result = provider.generate(spec, ticket)
+    assert result['status'] == 'completed' and len(messages) == 2
+    assert messages[0] == messages[1]
+    assert 'values_by_cohort_month_and_age_month' in messages[0][1]['content']
+    assert '"2025-12-01": {"0": 1, "1": null}' in messages[0][1]['content']
+    expected = hashlib.sha256(json.dumps(messages[0], ensure_ascii=False,
+        sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    assert result['provider_prompt_sha256'] == expected
+
+
 def test_http_rejection_is_settled_without_retry(monkeypatch):
     spec,ticket=fixture(monkeypatch);calls=[]
     def request(req,**kw):
