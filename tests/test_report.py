@@ -54,6 +54,18 @@ def test_charts_preserve_age_zero_missing_future_and_money_units(evidence,monkey
     assert context['source_sha256'] == hashlib.sha256((data / 'data_manifest.json').read_bytes()).hexdigest()
     assert context['timezone'] == source_manifest['timezone']
     assert context['currency'] == source_manifest['currency']
+    # Keep the actual outcome and observation window in the isolated model packet.
+    # Otherwise correct variance tables can be interpreted without their target.
+    from cohort_lab.hosted import HostedLesson
+    analysis_bytes = (output / 'analysis_summary.json').read_bytes()
+    analysis_summary = json.loads(analysis_bytes)
+    for step, scope_key in [(9, 'segmentation_scope'), (10, 'friction_scope')]:
+        isolated = HostedLesson(output.parent).evidence_packet(
+            {'step': step, 'result': StudentWorkflow(data, output)._evidence(step)}, output)
+        scope = isolated['result']['analysis_context']
+        assert scope['scope'] == analysis_summary[scope_key]
+        assert scope['source_sha256'] == hashlib.sha256(analysis_bytes).hexdigest()
+        assert len(json.dumps(isolated)) < 65000
     # The hosted interpreter receives the same cells as the displayed figures,
     # including missing future ages, rather than only axes and filenames.
     for name, key in [("cohort-retention-triangle", "retention"), ("cohort-cash-triangle", "cash")]:
