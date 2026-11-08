@@ -240,6 +240,12 @@ class HostedLesson:
                     return value
                 entry["computed_evidence"] = {
                     "scope": "Model settings and aggregate convergence/holdout diagnostics. Per-parameter rows remain in the downloadable source JSON.",
+                    "scope_by_summary_key": {
+                        "diagnostic": "Final fit using all released observed history through the manifest cutoff.",
+                        "backtest": "Separate retention/revenue validation fit. Its training_last_calendar_month and diagnostic belong to that validation origin, not the final fit.",
+                        "valuation_backtest": "Separate valuation validation fit at its own training_last_calendar_month. Its diagnostic belongs to that origin.",
+                    },
+                    "payback_count_definitions": "Within valuation_backtest, n_payback_already_observed counts recovery before the origin; n_payback_after_origin counts recovery requiring a forecast. n_both_recovered is the comparison count for payback error, not total recovered cohorts. Preserve these named counts separately.",
                     "summary": without_parameter_rows(json.loads(data))}
             elif path.suffix == ".json" and len(data) < 32000:
                 entry["text"] = data.decode("utf-8")

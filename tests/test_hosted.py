@@ -102,7 +102,10 @@ def test_large_model_summary_keeps_convergence_and_holdout_evidence(tmp_path):
     diagnostic = {'max_r_hat': 1.002, 'min_ess': 820, 'divergences': 0,
                   'parameter_summary': [{'name': 'parameter_' + str(i), 'mean': i / 100} for i in range(1000)]}
     summary = {'model': 'fixture sBG + Gamma', 'diagnostic': diagnostic,
-               'backtest': {'retention_mae': 0.04, 'diagnostic': diagnostic}}
+               'backtest': {'retention_mae': 0.04, 'diagnostic': {**diagnostic, 'min_ess': 930}},
+               'valuation_backtest': {'diagnostic': {**diagnostic, 'min_ess': 710},
+                                      'n_forecast_cohorts': 11, 'n_payback_already_observed': 7,
+                                      'n_payback_after_origin': 4, 'n_both_recovered': 4}}
     path = output / 'model_summary.json'
     path.write_text(json.dumps(summary), encoding='utf-8')
     assert path.stat().st_size > 32000
@@ -112,7 +115,12 @@ def test_large_model_summary_keeps_convergence_and_holdout_evidence(tmp_path):
     assert extracted['diagnostic']['max_r_hat'] == 1.002
     assert extracted['diagnostic']['divergences'] == 0
     assert extracted['backtest']['retention_mae'] == 0.04
-    assert extracted['backtest']['diagnostic']['min_ess'] == 820
+    assert extracted['diagnostic']['min_ess'] == 820
+    assert extracted['backtest']['diagnostic']['min_ess'] == 930
+    assert extracted['valuation_backtest']['diagnostic']['min_ess'] == 710
+    assert extracted['valuation_backtest']['n_payback_already_observed'] == 7
+    assert extracted['valuation_backtest']['n_both_recovered'] == 4
+    assert set(artifact['computed_evidence']['scope_by_summary_key']) == {'diagnostic', 'backtest', 'valuation_backtest'}
     assert 'parameter_summary' not in json.dumps(extracted)
     assert artifact['sha256'] == hashlib.sha256(path.read_bytes()).hexdigest()
     assert len(json.dumps(packet)) < 65000
