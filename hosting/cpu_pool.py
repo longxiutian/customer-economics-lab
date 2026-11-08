@@ -118,16 +118,18 @@ def validate(config, environment, router, *, now, affinity, topology):
         raise ValueError("Missing restricted broker worker credential")
     if not isinstance(config.get("broker_url"), str) or not config["broker_url"].startswith("https://"):
         raise ValueError("Broker URL must use HTTPS")
-    counts = (config.get("analysis_workers", 45), config.get("interactive_workers", 8))
+    counts = (config.get("analysis_workers", 21), config.get("interactive_workers", 8))
     if any(type(n) is not int for n in counts) or not 1 <= counts[0] <= 45 or not 1 <= counts[1] <= 8:
         raise ValueError("Worker counts exceed the reviewed pool bounds")
-    analysis = cpu_list(environment.get("STUDIO_NORTH_ANALYSIS_CPUS"), 45)
+    # One distinct physical core per analysis worker; learner count is independent.
+    analysis = cpu_list(environment.get("STUDIO_NORTH_ANALYSIS_CPUS"), counts[0])
     helpers = cpu_list(environment.get("STUDIO_NORTH_HELPER_CPUS"), 3)
     all_cpus = analysis + helpers
-    if len(set(all_cpus)) != 48 or not set(all_cpus) <= set(affinity):
+    required_cores = counts[0] + len(helpers)
+    if len(set(all_cpus)) != required_cores or not set(all_cpus) <= set(affinity):
         raise ValueError("CPU slots overlap or escape Slurm affinity")
-    if any(cpu not in topology for cpu in all_cpus) or len({topology[cpu] for cpu in all_cpus}) != 48:
-        raise ValueError("The 48 slots must be distinct physical cores")
+    if any(cpu not in topology for cpu in all_cpus) or len({topology[cpu] for cpu in all_cpus}) != required_cores:
+        raise ValueError(f"The {required_cores} slots must be distinct physical cores")
     parent = environment.get("STUDIO_NORTH_PARENT_JOB_ID", "")
     if not re.fullmatch(r"[1-9]\d*", parent):
         raise ValueError("Missing Slurm parent identity")
@@ -457,7 +459,7 @@ def run(config_path):
     reason, last_backup = "startup", 0.0
     def health(ready, **extra):
         write_json(plan.jobtmp / "pool-health.json", identity | {"ready": ready, "observed_epoch": time.time(),
-            "expires_at": plan.deadline, "analysis_slots": config.get("analysis_workers", 45),
+            "expires_at": plan.deadline, "analysis_slots": len(plan.analysis_cpus),
             "interactive_slots": config.get("interactive_workers", 8), **extra})
     def backup():
         stamp = str(time.time_ns())
@@ -488,7 +490,7 @@ def run(config_path):
         if stopping or daemon["process"].poll() is not None or not model_ready(plan, time.time()):
             raise RuntimeError("Router has no fresh four-replica health attestation")
         workers = []
-        for lane, count in (("analysis", config.get("analysis_workers", 45)), ("interactive", config.get("interactive_workers", 8))):
+        for lane, count in (("analysis", len(plan.analysis_cpus)), ("interactive", config.get("interactive_workers", 8))):
             for i in range(1, count + 1):
                 if stopping or time.time() >= plan.deadline - 30:
                     raise RuntimeError("Pool startup was interrupted")

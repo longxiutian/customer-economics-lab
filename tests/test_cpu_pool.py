@@ -14,14 +14,15 @@ from unittest.mock import patch
 from hosting import cpu_pool as pool
 
 
-def contract():
+def contract(analysis_workers=45):
     config = {"broker_url": "https://example.invalid", "worker_key": "fixture-only",
               "session_id": "session_12345", "store_id": "analysis_12345", "release_hash": "a"*64,
-              "source_release_sha256": "b"*64, "runtime": "/hickory/fixture/store"}
+              "source_release_sha256": "b"*64, "runtime": "/hickory/fixture/store",
+              "analysis_workers": analysis_workers}
     environment = {"STUDIO_NORTH_RELEASE_SHA256": "b"*64, "STUDIO_NORTH_PARENT_JOB_ID": "12345",
         "STUDIO_NORTH_JOB_RUNTIME": "/tmp/fixture-pool", "STUDIO_NORTH_JOB_END": "5000",
-        "STUDIO_NORTH_ANALYSIS_CPUS": ",".join(map(str, range(45))),
-        "STUDIO_NORTH_HELPER_CPUS": "45,46,47"}
+        "STUDIO_NORTH_ANALYSIS_CPUS": ",".join(map(str, range(analysis_workers))),
+        "STUDIO_NORTH_HELPER_CPUS": ",".join(map(str, range(analysis_workers, analysis_workers+3)))}
     router = {"session_id": config["session_id"], "expires_at": 4000,
         "queue_path": "/tmp/fixture-pool/router.sqlite", "telemetry_path": "/tmp/fixture-pool/telemetry.sqlite",
         "client_progress_root": "/tmp/fixture-pool/progress", "status_path": "/tmp/fixture-pool/model-status.json",
@@ -38,6 +39,31 @@ def plan_for(config=None, environment=None, router=None, **kwargs):
 
 
 class PoolContractTests(unittest.TestCase):
+    def test_twenty_four_core_default_and_explicit_legacy_layout(self):
+        a,b,c=contract(21)
+        for explicit in (True,False):
+            cfg=dict(a)
+            if not explicit:cfg.pop('analysis_workers')
+            plan=plan_for(cfg,b,c,affinity=set(range(24)),topology={i:(0,i) for i in range(24)})
+            self.assertEqual(plan.analysis_cpus,tuple(range(21)))
+            self.assertEqual(plan.helper_cpus,(21,22,23))
+            self.assertEqual(pool.worker_config(plan,'analysis',21)['worker_id'],'session_12345-analysis-021')
+        # The previous 48-core deployment remains representable explicitly.
+        self.assertEqual(len(plan_for().analysis_cpus),45)
+
+    def test_reduced_layout_rejects_oversubscription_overlap_and_smt_aliases(self):
+        a,b,c=contract(21)
+        topology={i:(0,i) for i in range(24)}
+        with self.assertRaises(ValueError):
+            plan_for(dict(a,analysis_workers=22),b,c,affinity=set(range(24)),topology=topology)
+        with self.assertRaises(ValueError):
+            plan_for(a,b,c,affinity=set(range(23)),topology=topology)
+        with self.assertRaises(ValueError):
+            plan_for(a,dict(b,STUDIO_NORTH_HELPER_CPUS='0,22,23'),c,affinity=set(range(24)),topology=topology)
+        topology[23]=topology[0]
+        with self.assertRaises(ValueError):
+            plan_for(a,b,c,affinity=set(range(24)),topology=topology)
+
     def test_deadline_is_shared_minimum(self):
         self.assertEqual(plan_for().deadline, 4000)
         a,b,c=contract();c['expires_at']=4971
@@ -58,7 +84,7 @@ class PoolContractTests(unittest.TestCase):
         with self.assertRaises(ValueError):plan_for(a,b,c)
 
     def test_worker_count_bounds(self):
-        for key,value in [('analysis_workers',46),('analysis_workers',0),('interactive_workers',9),('interactive_workers',True)]:
+        for key,value in [('analysis_workers',46),('analysis_workers',0),('analysis_workers',True),('interactive_workers',9),('interactive_workers',True)]:
             a,b,c=contract();a[key]=value
             with self.subTest(key=key,value=value),self.assertRaises(ValueError):plan_for(a,b,c)
 
