@@ -161,7 +161,9 @@ def validate_cover(path: Path) -> dict:
     text = " ".join((PdfReader(path).pages[0].extract_text() or "").split())
     if re.search(r"\b(?:MBA|MSM|MQM|KFM)\s*[-:]?\s*\d{3}\w?\b", text, re.I):
         raise ValueError("Course-specific cover label; regenerate from the current neutral templates")
-    for line in ("Kenan-Flagler Business School", "Managing Customer Data", "Mod II 2026"):
+    if any(old in text for old in ("Kenan-Flagler Business School", "Managing Customer Data", "Mod II 2026")):
+        raise ValueError("Stale cover credit; use Professor Longxiu Tian / Fall 2026")
+    for line in ("Professor Longxiu Tian", "Fall 2026"):
         if line not in text:
             raise ValueError(f"Missing neutral report cover credit: {line}")
     return {"status": "passed", "course_neutral": True}
