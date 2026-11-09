@@ -9,6 +9,8 @@ Use this supporting skill only when the guided state machine reaches reporting c
 
 ## Read and preserve the visual system
 
+Use the shared `build_report` path, which adds an invisible PDF footer with one random report-run ID and validates the final course-neutral cover. Preserve the workspace's `report_identity.json` on rebuild; never replace it with a student's name or email. The PDF marker uses text rendering mode 3, so it is extractable but does not print or change the visible layout. No registry, registration or callback is required. Do not describe it as authenticated completion or tamper-proof student identity. Follow [the identifier and reproduction contract](../../docs/report-identifiers.md); a manual TeX compile alone does not add the footer. Keep reference previews separate from a learner's generated output.
+
 - Read `skills/executive-report/references/style-system.md`.
 - `templates/longxiu-research-brief.sty` is the vendored visual source of truth. Preserve it unchanged unless the user explicitly requests a style-system revision.
 - `templates/labreport.sty` supplies report-specific semantic wrappers. Typography, colors, geometry and callouts belong here, not in content-generating Python or repeated TeX literals.

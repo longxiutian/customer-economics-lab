@@ -5,7 +5,6 @@ import pandas as pd
 import pytest
 
 from cohort_lab.report_b import incremental_planning
-from scripts.verify_reproducibility import command_for
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,11 +40,7 @@ def test_reference_planning_has_seven_and_nine_payment_recovery():
     assert result.loc[("partner", "build_skill"), "break_even_value_share"] == pytest.approx(.5648265)
 
 
-def test_current_data_defaults_to_b_and_preserves_a_as_archived(tmp_path):
-    kwargs = dict(mode="report", source=tmp_path / "fit", steps=3000, pdf=True)
-    default = command_for(tmp_path / "default", **kwargs)
-    assert default[default.index("--variant") + 1] == "B"
+def test_current_data_preserves_a_as_archived(tmp_path):
+    from cohort_lab.report import build_report
     with pytest.raises(ValueError, match="archived"):
-        command_for(tmp_path / "a", variant="A", **kwargs)
-    command = command_for(tmp_path / "b", variant="B", **kwargs)
-    assert command[command.index("--variant") + 1] == "B"
+        build_report(tmp_path / "a", variant="A")

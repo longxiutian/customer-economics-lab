@@ -9,6 +9,7 @@ outputs/
 outputs-v2-audit/
 tools/node_modules/
 lab_state.json
+report_identity.json
 source_checkout.json
 *.aux
 *.toc
