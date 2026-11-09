@@ -875,11 +875,13 @@ def _pdf_copyability(path: Path) -> dict:
 def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="B") -> dict:
     """Produce a decision-facing report and required technical/data appendices."""
     from .workflow import implementation_snapshot
+    from .report_identity import load_identity, stamp_pdf, validate_cover
     if variant not in {"A", "B"}:raise ValueError("Report variant must be A or B")
     if variant == "A":
         raise ValueError("Version A is archived with dataset 5.0. Use its preserved release to reproduce A; current data require Version B.")
     implementation = implementation_snapshot()
     output=Path(output_dir).resolve();directory=output/"report";directory.mkdir(parents=True,exist_ok=True)
+    identity=load_identity(output, create=True)
     _json(output/"model_summary.json") # No silent placeholder forecast.
     charts=build_charts(output,payment_numbers=variant=="B")
     style=_validate_style()
@@ -901,7 +903,8 @@ def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="B") 
     shutil.copyfile(ROOT/"templates/labreport.sty",directory/"labreport.sty")
     shutil.copyfile(ROOT/"templates/longxiu-research-brief.sty",directory/"longxiu-research-brief.sty")
     if variant=="B":shutil.copyfile(ROOT/"templates/labreport-b.sty",directory/"labreport-b.sty")
-    manifest={"version":3,"variant":variant,"template_file":"templates/"+template_name,"source_date_epoch":EPOCH,"report_source_sha256":_sha(source),"style_sha256":_sha(directory/"labreport.sty"),
+    manifest={"version":4,"variant":variant,"template_file":"templates/"+template_name,"source_date_epoch":EPOCH,"report_source_sha256":_sha(source),"style_sha256":_sha(directory/"labreport.sty"),
+              "report_identity":identity,"report_identity_sha256":_sha(output/"report_identity.json"),
               "upstream_style_version":style["upstream_style_version"],"upstream_style_sha256":_sha(directory/"longxiu-research-brief.sty"),
               "template_sha256":_sha(ROOT/"templates"/template_name),
               "display_formatter_sha256":_sha(ROOT/"cohort_lab/display.py"),
@@ -925,6 +928,9 @@ def build_report(output_dir: Path, compile_pdf: bool=True, *, variant: str="B") 
     manifest["learner_choices_sha256"]=_sha(output/"learner_choices.json") if (output/"learner_choices.json").exists() else None
     if compile_pdf:
         manifest["build"]=_compile_native(source)
+        manifest["cover_validation"]=validate_cover(source.with_suffix(".pdf"))
+        manifest["invisible_footer"]=stamp_pdf(source.with_suffix(".pdf"),identity["report_id"])
+        manifest["build"]["pdf_sha256"]=_sha(source.with_suffix(".pdf"))
         from pypdf import PdfReader
         pdf=PdfReader(source.with_suffix(".pdf"))
         if variant=="B":

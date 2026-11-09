@@ -1,6 +1,6 @@
 # Version B comparison
 
-Version B began as an editorial comparison against the frozen 1.7.0 report, called Version A. This revision expands acquisition evidence to six monthly waves while preserving the original comparison. It does not replace that release or change the 2026 semantic version. A remains at `examples/reference/report/customer-economics-report.pdf` with SHA-256 `af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b`. Verify the exact hash in the comparison receipt; do not regenerate A to create the comparison.
+Version B began as an editorial comparison against the frozen 1.7.0 report, called Version A. This revision expands acquisition evidence to six monthly waves while preserving the original comparison. It does not replace that release or change the 2026 semantic version. The original A PDF has SHA-256 `af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b` and remains recoverable from repository commit `c224bb3f57ba0a12877f3a3b1a7f7ae4658bea9f`. On November 9 the instructor requested removing the course code from all distributed covers. The bundled `examples/reference/report/customer-economics-report.pdf` is now a cover-corrected preview; `presentation_correction.json` binds its original and corrected artifacts. Historical comparison receipts still refer to the original PDF, not this presentation correction. Never deliver that preview as a student's generated report.
 
 ## The executive contract
 
@@ -30,7 +30,7 @@ The instructor retains a separate once-through orchestration skill for release w
 
 ## Acceptance
 
-- A's PDF remains byte-identical; it is a frozen historical artifact, not a claim that its old implementation manifest matches the revised source.
+- The original A comparison remains frozen in its historical commit. The distributed A preview has only the documented cover-label correction; its historical analytical implementation manifest is not a current-source completion receipt.
 - B has 15 pre-appendix pages, a correctly sized schema foldout, resolved citations/references, and no overfull content.
 - All six completed waves appear upfront as a cost history and in full in the appendix. The recommendation and cash recovery use latest completed tests; company economics and management action account for the separate recurring research budget.
 - Figures, tables and narrative quantities trace to saved results; iCAC recovery and first-year surplus use the correct cost and value bases.

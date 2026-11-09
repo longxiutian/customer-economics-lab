@@ -78,6 +78,11 @@ def validate(output: Path, *, pdf: bool = True, companion: bool = False) -> dict
         check(output / (name + ".json"), charts[name + "_sha256"])
 
     report = read(output / "report/report_manifest.json")
+    from cohort_lab.report_identity import load_identity, inspect_pdf, content_sha256, validate_cover
+    if report.get("version", 0) >= 4:
+        check(output / "report_identity.json", report["report_identity_sha256"])
+        if load_identity(output) != report["report_identity"]:
+            raise ValueError("Report identity differs from its saved workspace")
     bindings = {
         "implementation_manifest": "implementation_manifest.json",
         "report_source": "report/customer-economics-report.tex",
@@ -109,6 +114,12 @@ def validate(output: Path, *, pdf: bool = True, companion: bool = False) -> dict
             raise ValueError("A successfully compiled PDF without overfull boxes is required")
         check(output / "report/customer-economics-report.pdf", report["build"]["pdf_sha256"])
         _pdf_copyability(output / "report/customer-economics-report.pdf")
+        validate_cover(output / "report/customer-economics-report.pdf")
+        if report.get("version", 0) >= 4:
+            marked = output / "report/customer-economics-report.pdf"
+            footer = {**inspect_pdf(marked), "content_sha256": content_sha256(marked)}
+            if footer != report["invisible_footer"] or footer["report_id"] != report["report_identity"]["report_id"]:
+                raise ValueError("Invisible PDF footer differs from its manifest")
     if companion:
         provenance = read(ROOT / "teaching/companion-provenance.json")
         for extension in ("pdf", "pptx"):

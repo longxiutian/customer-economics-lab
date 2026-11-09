@@ -1,0 +1,59 @@
+{
+  "change": "Invisible local report IDs and course-neutral distributed covers",
+  "date": "2026-11-09",
+  "execution_scope": {
+    "bluechip_live_deployment": false,
+    "fresh_student_fit_in_automatic_harness": false,
+    "full_report_rebuild_from_saved_fits": true,
+    "model_refit": false
+  },
+  "identifier_module_sha256": "a3d5e6dbb37dd86914f6caf728f1c4266fc2b911415818ba2ca30b0e9896be8c",
+  "registry": false,
+  "report_generator": "cohort_lab/report.py",
+  "reproduction": "Complete the normal workflow for a fresh report; preserve report_identity.json on rebuild. Use scripts/report_ids.py to read PDF IDs. Historical reference-cover correction is bound in examples/reference/report/presentation_correction.json.",
+  "student_identity_authentication": false,
+  "verification": {
+    "automatic_branch_tests": {
+      "passed": 19
+    },
+    "completed_current_report_integration_tests": {
+      "passed": 10,
+      "skipped": 0
+    },
+    "cover_validation": {
+      "course_neutral": true,
+      "status": "passed"
+    },
+    "final_identity_tests": {
+      "passed": 10
+    },
+    "full_report_artifact_validation": "passed after regenerating diagrams and report from saved verified fits",
+    "native_tex_engine": "WSL pdflatex",
+    "overfull_boxes": 0,
+    "report_and_workflow_suite": {
+      "passed": 48,
+      "skip_reason": "Historical reference fixture; completed-current-report integration tests are recorded separately.",
+      "skipped": 6
+    },
+    "skills": "Main, automatic and executive-report skill frontmatter validators passed",
+    "visual": {
+      "invisible_footer": {
+        "after_sha256": "fc2fce31b2df5fa4f1849130a4e53e2dccb806502f879588ac82db900215f8aa",
+        "before_sha256": "9a55301476da022d4cbfe4c8bf70a3501f8b55f92d317a204f7470748f5690a7",
+        "changed_pages": [],
+        "pages": 45,
+        "render_dpi": 110
+      },
+      "reference_cover": {
+        "after_sha256": "eeebec148220ec117e67cb167267963489b7b5cd26f6174b2402a17c58e43221",
+        "before_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+        "changed_pages": [
+          1
+        ],
+        "pages": 50,
+        "render_dpi": 110
+      }
+    }
+  },
+  "version": 1
+}

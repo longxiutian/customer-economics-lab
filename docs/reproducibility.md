@@ -20,6 +20,8 @@ uv run --frozen python scripts/verify_reproducibility.py --run-a outputs/run-a -
 
 The verifier validates each evidence chain and compares canonical artifacts. It does not run a fit, rebuild a report or advance either lesson. Read the original runs' receipts to distinguish fresh inference from reuse of saved fits and to identify their source, environment and seed. Byte equality applies to the compared files and environments; it does not prove universal cross-platform identity. Use a new receipt path so earlier evidence is preserved.
 
+New reports include an [invisible local run ID](report-identifiers.md). Preserve `report_identity.json` for an exact same-run rebuild. Different runs intentionally have different identifiers; add `--ignore-report-identity` to compare their validated content with only the identifier layer and its manifest fields normalized. The comparison receipt records this mode explicitly; all other differences remain failures.
+
 Add `--no-pdf` only when both runs intentionally produced editable TeX without a compiled report. This excludes the report PDF from comparison; it is not a claim that a PDF was generated. Existing archived reproduction receipts remain evidence for the exact releases and modes they identify.
 
 ## What is compared and preserved

@@ -4,11 +4,15 @@
   "build": {
     "engine": "WSL pdflatex",
     "overfull_boxes": 0,
-    "pdf_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+    "pdf_sha256": "eeebec148220ec117e67cb167267963489b7b5cd26f6174b2402a17c58e43221",
     "source_date_epoch": 1794787200
   },
   "chart_manifest_sha256": "73704f05341008673d84e52f788a812372413e7090a13499b0c62453e676878d",
   "compiled": true,
+  "cover_validation": {
+    "course_neutral": true,
+    "status": "passed"
+  },
   "decision_metrics_manifest_sha256": "3b9d863a1c8a9798f0aa938e0aa4e30181a68e1b13efc047f2686081a3285c72",
   "diagnostics_manifest_sha256": "440b909edec70f680fda38fdd8c9bef889fff795e6752c6dd84453a4fdcda8f7",
   "diagram_manifest_sha256": "10e6ed099037889ed58cd7b5c77fc32fdb75c94560552141725ffef0220818ab",
@@ -31,6 +35,7 @@
     "status": "passed"
   },
   "postestimation_manifest_sha256": "3e0bae12c8e79fa1be771c48575735535a4de86606ed589b18b14edabf6bbf6a",
+  "presentation_correction_sha256": "1b741f27a12829e572addd43832b582824d8420b02e418b06101d4c8fb789ff3",
   "renewal_window_evidence": {
     "age_month": 5,
     "earlier": {
@@ -188,7 +193,7 @@
   "report_skill_sha256": "a786977d01248083b1b07695897ffd3502ff4f53a4d86d3cd88bfd934c380feb",
   "report_source_sha256": "9d542db5351072b56bf9a8af15147429db9d4445fdbc620b888a17496f1cb5a9",
   "source_date_epoch": 1794787200,
-  "style_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb",
+  "style_sha256": "36d2a19014fbaf11034d6cdfa00622e926cc821ce098eb5b5687af59b844d6a0",
   "table_count": 31,
   "tables": {
     "cohort_age_summary.csv": "afaa789edbc418e387bef6eb58f650d83da6b9f9c6217f4e95ffd0b0b1d65be6",

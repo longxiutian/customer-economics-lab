@@ -1,0 +1,28 @@
+{
+  "change": "Replace MBA 743: Managing Customer Data with Managing Customer Data in the ReportCover macro.",
+  "date": "2026-11-09",
+  "model_refit": false,
+  "original_artifacts": {
+    "pdf_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+    "report_manifest_sha256": "643b1cdeda4f33bed33f44657ebbb1e2546e731ef56f9f9142f8344ec354aa1c",
+    "style_sha256": "7bb7622007914b126349eb1f8d1bd834daf1636809b896d360a930a290c98fdb"
+  },
+  "original_commit": "c224bb3f57ba0a12877f3a3b1a7f7ae4658bea9f",
+  "renderer": "PyMuPDF 2.1, 110 dpi; all 50 pages compared; only page 1 changed",
+  "reproduction": "Use the original report TeX, figures and styles; make the one label replacement in labreport.sty; compile twice with native pdflatex, SOURCE_DATE_EPOCH=1794787200, FORCE_SOURCE_DATE=1 and TZ=UTC.",
+  "scope": "Course-neutral cover correction to the archived A preview; no analysis or model was rerun. The historical analytical implementation manifest remains unchanged.",
+  "updated_artifacts": {
+    "pdf_sha256": "eeebec148220ec117e67cb167267963489b7b5cd26f6174b2402a17c58e43221",
+    "style_sha256": "36d2a19014fbaf11034d6cdfa00622e926cc821ce098eb5b5687af59b844d6a0"
+  },
+  "version": 1,
+  "visual_validation": {
+    "after_sha256": "eeebec148220ec117e67cb167267963489b7b5cd26f6174b2402a17c58e43221",
+    "before_sha256": "af7736315146fa3951007291c98d5d8054f2c3f362fdf7579089379d3e0dbd8b",
+    "changed_pages": [
+      1
+    ],
+    "pages": 50,
+    "render_dpi": 110
+  }
+}
