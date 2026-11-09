@@ -1,0 +1,92 @@
+{
+  "artifact_validation": {
+    "companion_integrity_verified": false,
+    "implementation_files": 313,
+    "pdf_verified": true,
+    "scope": "Current-source and saved-artifact integrity; not a new fit, independent numerical reanalysis or visual review.",
+    "status": "pass"
+  },
+  "cover_credit": [
+    "Professor Longxiu Tian",
+    "Fall 2026"
+  ],
+  "cover_validation_module_sha256": "3397c30f2e190ad1e31f48c4f311ceecd3f9457ad06c2ef235cb95525ebffd6b",
+  "current_running_footer": "Professor Longxiu Tian | Fall 2026",
+  "date": "2026-11-09",
+  "model_refit": false,
+  "native_tex_engine": "WSL pdflatex",
+  "publication_scope": "Guided and automatic-trial source branches and the bundled reference preview; existing hosted allocations are not redeployed.",
+  "report_id_preserved": "SN-F6C0231B2E544167848198F2838E9E27",
+  "saved_fit_report_rebuild": true,
+  "scope": "Two-line cover credit and removal of school/module wording from the current report running footer",
+  "tests": {
+    "automatic_trial_and_identity_checks_passed": 16,
+    "main_identity_checks_passed": 10
+  },
+  "version": 1,
+  "visual_validation": {
+    "current_cover": {
+      "after_sha256": "73f1701cb61007ddd344864b5ef7338a6f87e8c9a22bce7e59af37bebd72f2df",
+      "before_sha256": "fc2fce31b2df5fa4f1849130a4e53e2dccb806502f879588ac82db900215f8aa",
+      "changed_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "noncover_changes": "Only the bottom 100 pixels at 110 dpi (running footer)",
+      "pages": 45,
+      "render_dpi": 110
+    },
+    "reference_cover": {
+      "after_sha256": "693d21a751dbaed4b93cb7b97b2f4845b9dbab26c7638140a385bad6c00e7ca7",
+      "before_sha256": "eeebec148220ec117e67cb167267963489b7b5cd26f6174b2402a17c58e43221",
+      "changed_pages": [
+        1
+      ],
+      "pages": 50,
+      "render_dpi": 110
+    }
+  }
+}

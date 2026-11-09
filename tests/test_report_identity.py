@@ -11,14 +11,17 @@ from scripts.report_ids import summarize
 from scripts.verify_reproducibility import comparison_hash
 
 
-def fixture_pdf(path, course="Managing Customer Data", value="Same analysis"):
+def fixture_pdf(path, course=None, value="Same analysis"):
     canvas = Canvas(str(path), invariant=True)
     for size in [(612, 792), (1190.551, 841.89)]:
         canvas.setPageSize(size)
         canvas.setFillColorRGB(.15, .2, .3)
         canvas.rect(0, 0, *size, fill=1, stroke=0)
         canvas.setFillColorRGB(1, 1, 1)
-        for i, line in enumerate(["Kenan-Flagler Business School", course, "Mod II 2026", value]):
+        lines = ["Professor Longxiu Tian", "Fall 2026", value]
+        if course is not None:
+            lines.append(course)
+        for i, line in enumerate(lines):
             canvas.drawString(50, 700 - i * 22, line)
         canvas.showPage()
     canvas.save()
