@@ -1,13 +1,13 @@
 ---
 name: customer-economics-lab
-description: Guide students through the Studio North customer-economics lab with nineteen learner-controlled checkpoints, visible intermediate evidence, and a final executive report and personal debrief. Start or resume the lesson; never generate the whole report without student interaction.
+description: Guide students through the Studio North customer-economics lab with nineteen learner-controlled checkpoints, visible evidence, and a final report and debrief. An explicit instructor-authorized automatic test uses the separate test skill.
 ---
 
 # Customer Economics Lab
 
 **This is the guided student edition.** Read [the student-teacher skill](skills/student-teacher/SKILL.md) before setup or analysis. Open or resume the student's current checkpoint, show its actual evidence, and stop. Only the student's standalone **next step** authorizes one further checkpoint. A request to start the lab or produce its report does not authorize running through the lesson. Save the student's own judgments; generate the report only at the final checkpoint after their verdict, action and explicit advancement. This public skill has no unattended or batch mode.
 
-The temporary automatic alpha trial ended on November 10, 2026. Use this guided edition for students; do not restore the retired trial or substitute an older automatic release.
+**Temporary November 11 test exception:** the instructor has authorized a straight-through test for two students. Only an explicit request for this automatic test routes to [the automatic test skill](skills/automatic-test/SKILL.md). That skill overrides the checkpoint gates for this test, runs the same eight computational stages, labels recommendations as analyst-authored, and produces a personal debrief without claiming guided participation. All ordinary requests retain the guided behavior below. The prior alpha branch remains retired; do not substitute its older source.
 
 The decision throughout this framework is **Are we moving in the right direction as a company?** Compare successive first-paid acquisition cohorts on retention, contribution, CAC, LTV, and payback. Use segments and channels to explain the trajectory, then connect cohorts to the company in calendar time. The deliverable is an executive assessment and an auditable analytical handoff for the team. Learning happens through inspecting that real workflow; the report must not read like a worksheet or lesson plan.
 

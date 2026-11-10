@@ -39,6 +39,25 @@ def plan_for(config=None, environment=None, router=None, **kwargs):
 
 
 class PoolContractTests(unittest.TestCase):
+    def test_one_gpu_two_student_profile_and_worker_permission(self):
+        a,b,c=contract(2)
+        a.update(required_replicas=1, interactive_workers=1, automatic_test_until=4000)
+        c.update(minimum_ready_replicas=1, replicas=[{'capacity':2}])
+        plan=plan_for(a,b,c,affinity=set(range(5)),topology={i:(0,i) for i in range(5)})
+        self.assertEqual(pool.worker_config(plan,'analysis',1)['automatic_test_until'],4000)
+        from dataclasses import replace
+        with tempfile.TemporaryDirectory() as d:
+            plan=replace(plan,jobtmp=Path(d))
+            value={'ready':True,'ready_replicas':1,'admission_capacity':2,'last_checked_at':999,'expires_at':4000}
+            pool.write_json(Path(d)/'model-status.json',value)
+            self.assertTrue(pool.model_ready(plan,1000))
+            value['ready_replicas']=4;pool.write_json(Path(d)/'model-status.json',value)
+            self.assertFalse(pool.model_ready(plan,1000))
+        for change in ({'required_replicas':4},{'required_replicas':True},{'automatic_test_until':4001}):
+            with self.assertRaises(ValueError):plan_for(dict(a,**change),b,c)
+        with self.assertRaises(ValueError):plan_for(a,b,dict(c,minimum_ready_replicas=4))
+        with self.assertRaises(ValueError):plan_for(a,b,dict(c,replicas=[{'capacity':8}]))
+
     def test_twenty_four_core_default_and_explicit_legacy_layout(self):
         a,b,c=contract(21)
         for explicit in (True,False):

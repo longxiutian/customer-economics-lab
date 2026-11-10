@@ -63,7 +63,8 @@ def release_manifest():
 
 
 class HostedLesson:
-    def __init__(self, runtime: Path, *, lesson_factory=StudentWorkflow, interpreter=None, progress=None, debriefer=None):
+    def __init__(self, runtime: Path, *, lesson_factory=StudentWorkflow, interpreter=None, progress=None, debriefer=None,
+                 automatic_test_until=0):
         self.runtime = Path(runtime).resolve()
         self.lesson_factory, self.interpreter = lesson_factory, interpreter
         def notify(phase):
@@ -74,6 +75,7 @@ class HostedLesson:
                 pass
         self.progress = notify
         self.debriefer = debriefer
+        self.automatic_test_until = float(automatic_test_until)
 
     def locations(self, run_id):
         if not isinstance(run_id, str) or not IDENTIFIER.fullmatch(run_id):
@@ -118,15 +120,29 @@ class HostedLesson:
                        "release_hash": manifest["release_hash"], "started_at": time.time(), "status": "started",
                        "payload": job["payload"], "expected_step": job["checkpoint"]}
             write_json(receipt_path, receipt)
-            lesson = self.lesson_factory(ROOT / "data", output, seed=20261116, steps=3000, compile_pdf=True)
             try:
                 payload, action = job["payload"], job["payload"]["action"]
+                from .automatic import AutomaticTest, MODE, START_MESSAGE
+                automatic = payload.get('mode') == MODE or (output / 'automatic_run.json').exists()
+                if payload.get('mode') not in (None, MODE):
+                    raise WorkflowError('Unknown execution mode.')
+                if automatic:
+                    if not (output / 'automatic_run.json').exists():
+                        if action != 'start' or job['checkpoint'] != -1 or (output / 'lesson_state.json').exists():
+                            raise WorkflowError('Start an automatic test in a fresh workspace; guided progress is preserved.')
+                        if time.time() >= self.automatic_test_until:
+                            raise WorkflowError('The instructor has not enabled this automatic test window.')
+                        if payload.get('message', '').strip() != START_MESSAGE:
+                            raise WorkflowError('The automatic test requires the explicit student test request.')
+                    lesson = AutomaticTest(ROOT / 'data', output, progress=self.progress)
+                else:
+                    lesson = self.lesson_factory(ROOT / "data", output, seed=20261116, steps=3000, compile_pdf=True)
                 self.progress('analysis' if job.get('lane')=='analysis' else 'interactive')
                 before = lesson.status()["step"] if lesson.path.exists() else -1
                 if before != job["checkpoint"]:
                     raise WorkflowError("Saved checkpoint differs from the queued request; no transition was attempted.")
                 if action == "start":
-                    packet = lesson.start()
+                    packet = lesson.start(self._text(payload, 'message')) if automatic else lesson.start()
                 elif action == "message":
                     packet = lesson.handle_message(self._text(payload, "message"))
                 elif action == "choose":
@@ -165,9 +181,14 @@ class HostedLesson:
                 packet = self.evidence_packet(packet, output)
                 receipt["calculation_finished_at"] = time.time()
                 receipt["step_after"] = packet["step"]
-                receipt["fresh_fit"] = before == 13 and packet["step"] == 14 and packet.get("advanced") is True
+                receipt["fresh_fit"] = (before == 13 and packet["step"] == 14 and packet.get("advanced") is True) or (automatic and action == 'start' and before == -1)
                 if receipt["fresh_fit"]:
                     receipt["model_outputs"] = self.model_hashes(output)
+                    if automatic:
+                        # A durable calculation receipt precedes interpretation and delivery.
+                        # It is not a completed transport receipt and cannot authorize replay.
+                        write_json(base / 'automatic-fit.json', {k: receipt[k] for k in
+                            ('job_id', 'release_hash', 'request_hash', 'model_outputs', 'calculation_finished_at')})
                 # CPU progress survives an unavailable model. Never label fallback prose Nemotron.
                 if self.interpreter and action in {"start", "message", "interpret"}:
                     try:
@@ -310,6 +331,13 @@ class HostedLesson:
                 fits.append(item)
         current_models = self.model_hashes(output)
         fits = [f for f in fits if f.get("model_outputs") == current_models and current_models]
+        automatic = packet.get('mode') == 'automatic-test'
+        if automatic:
+            path = output.parent / 'automatic-fit.json'
+            if path.is_file():
+                saved = json.loads(path.read_text(encoding='utf-8'))
+                if saved.get('model_outputs') == current_models and current_models and saved['release_hash'] == release_manifest()['release_hash']:
+                    fits = [saved]
         choices = packet.get("choices", {})
         pdf = output / "report/customer-economics-report.pdf"
         checks = {"all_checkpoints": packet["step"] == 18,
@@ -317,6 +345,11 @@ class HostedLesson:
                   "learner_action": bool(choices.get("recommended_action", "").strip()),
                   "fresh_fit_receipt": bool(fits), "pdf_exists": pdf.is_file(),
                   "editable_source": (output / "report/customer-economics-report.tex").is_file()}
+        if automatic:
+            for key in ('all_checkpoints', 'learner_verdict', 'learner_action'):
+                checks.pop(key)
+            checks['automatic_stages_complete'] = packet.get('completed_stages') == list(range(8))
+            checks['analyst_recommendation_disclosed'] = packet.get('recommendation_author') == 'analyst' and packet.get('guided_participation') is False
         pages = None
         if pdf.is_file():
             from pypdf import PdfReader

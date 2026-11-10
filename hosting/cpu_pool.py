@@ -153,10 +153,16 @@ def validate(config, environment, router, *, now, affinity, topology):
         if router.get(key) != str(jobtmp / name):
             raise ValueError("Router IPC paths must match the node-local worker paths")
     replicas = router.get("replicas", [])
-    if len(replicas) != 4 or any(r.get("capacity") != 2 for r in replicas):
-        raise ValueError("Expected four reviewed replicas with two admissions each")
-    if router.get("minimum_ready_replicas", 1) != 4:
-        raise ValueError("All four replicas are required for this rehearsal")
+    required = config.get('required_replicas', 4)
+    if type(required) is not int or required not in (1, 4):
+        raise ValueError('Only the reviewed one- or four-replica profiles are supported')
+    if len(replicas) != required or any(r.get("capacity") != 2 for r in replicas):
+        raise ValueError("Expected the configured reviewed replica count with two admissions each")
+    if router.get("minimum_ready_replicas", 1) != required:
+        raise ValueError("All configured replicas are required for this test")
+    automatic_until = float(config.get('automatic_test_until', 0))
+    if not math.isfinite(automatic_until) or automatic_until < 0 or automatic_until > deadline:
+        raise ValueError('Automatic test permission cannot outlast the service window')
     return Plan(config, Path(jobtmp), Path(runtime), Path(jobtmp / "router-runtime.json"), router,
                 analysis, helpers, deadline, parent)
 
@@ -167,6 +173,7 @@ def worker_config(plan, lane, index):
         "sites_service_token": cfg.get("sites_service_token", ""), "runtime": str(plan.runtime),
         "worker_id": f"{cfg['session_id']}-{lane}-{index:03d}", "lane": lane,
         "expires_at": plan.deadline, "debrief_enabled": False,
+        "automatic_test_until": cfg.get('automatic_test_until', 0),
         "telemetry": {"path": str(plan.jobtmp / "telemetry.sqlite"), "session_id": cfg["session_id"]},
         "progress_root": str(plan.jobtmp / "progress"),
         "model_status_path": str(plan.jobtmp / "model-status.json"),
@@ -426,8 +433,9 @@ def model_ready(plan, now=None):
     try:
         value = json.loads((plan.jobtmp / "model-status.json").read_text())
         now = time.time() if now is None else now
-        return (value.get("ready") is True and value.get("ready_replicas") == 4
-                and value.get("admission_capacity") == 8
+        required = plan.config.get('required_replicas', 4)
+        return (value.get("ready") is True and value.get("ready_replicas") == required
+                and value.get("admission_capacity") == 2 * required
                 and 0 <= now - value.get("last_checked_at", 0) < 20
                 and value.get("expires_at", 0) >= plan.deadline)
     except (OSError, ValueError):

@@ -29,6 +29,9 @@ the measured metrics. State observations narrowly in terms of the visible lab re
 Respect the route and usage coverage in the packet. Never imply all native chat activity
 was captured. Keep measured provider counters, estimates of recorded text, and unknown
 full-session usage distinct. Estimates are not invoices or subscription-quota measures.
+For an automatic test, the analyst generated the recommendation. No guided checkpoint
+participation or independent student judgment is established. Frame the feedback as a
+review of their actual request and completed artifacts, with suggested next exploration.
 Use no names, email addresses, identifying paths, recipient information or URLs.
 
 Return JSON only, with exactly these keys:
@@ -94,6 +97,11 @@ def freeze(ledger, *, run_id, session_id, path, private_terms=(), fixture=False)
         "native_bluechip_messages_and_tokens": "Not collected by this lab API. Unknown, not zero.",
         "operator_debrief_tokens": "Opus/Codex debrief-generation usage is recorded separately and is not student usage.",
     }
+    automatic = any(e['payload'].get('execution_mode') == 'automatic-test' for e in requests)
+    metrics['execution_mode'] = 'automatic-test' if automatic else 'guided'
+    if automatic:
+        metrics['checkpoints_observed'] = []
+        coverage['execution_mode'] = 'Explicit automatic test. Eight computational stages ran without guided checkpoints; the recommendation is analyst-authored. Student learning or independent judgment is not established by report completion.'
     evidence = []
     def add(kind, text, source, **fields):
         evidence.append({"id": f"snap:{sid}/ev:{len(evidence)+1}", "kind": kind,

@@ -134,6 +134,7 @@ def execute_one(config, job_path, result_path):
                    {'queue_kind':phase,'state':'running','as_of':time.time(),'source':'worker'})
     from hosting.hosted_debrief import create as create_debrief
     lesson = HostedLesson(Path(config["runtime"]), interpreter=interpreter(config, job=job),progress=progress,
+                          automatic_test_until=min(float(config.get('automatic_test_until', 0)), float(config['expires_at'])),
                           debriefer=lambda output,receipts,request:create_debrief(config,output,receipts,request))
     try:
         if job['payload']['action']=='debrief' and job.get('source_packet'):

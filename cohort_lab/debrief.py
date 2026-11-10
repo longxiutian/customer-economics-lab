@@ -33,7 +33,7 @@ def initialize(output, *, route, harness):
     output = Path(output).resolve()
     if route not in ROUTES or not isinstance(harness, str) or not harness.strip():
         raise ValueError("Choose personal, university_mcp or longleaf and name the actual harness.")
-    if not (output / "lesson_state.json").is_file() and not (output / "lab_state.json").is_file():
+    if not any((output / name).is_file() for name in ("lesson_state.json", "lab_state.json", "automatic_run.json")):
         raise ValueError("Start the lesson first, then initialize logging in that same output folder.")
     path = output / "usage/session.json"
     if path.exists():
@@ -152,8 +152,15 @@ def snapshot(output, *, private_terms=()):
     s = session(output)
     events = Telemetry(output / "usage/events.sqlite").events(s["run_id"], s["session_id"])
     lesson = read(output / "lesson_state.json", {})
+    automatic = read(output / "automatic_run.json", {})
+    if lesson and automatic:
+        raise ValueError("Keep the automatic trial in a separate workspace from a guided lesson.")
+    if automatic and automatic.get("mode") != "automatic-trial":
+        raise ValueError("Unrecognized automatic-run record.")
     choices = read(output / "learner_choices.json", {})
-    prompts = lesson.get("messages", [])
+    if automatic and choices:
+        raise ValueError("Automatic trial outputs must not contain synthesized learner judgments.")
+    prompts = (automatic or lesson).get("messages", [])
     texts = [p["text"] for p in prompts]
     texts += [e["payload"]["text"] for e in events if e["kind"] == "text" and e["payload"]["scope"] == "lab"]
     files = {}
@@ -163,6 +170,8 @@ def snapshot(output, *, private_terms=()):
             import hashlib
             files[name] = hashlib.sha256(p.read_bytes()).hexdigest()
     lesson_identity = {k: lesson.get(k) for k in ("completed_step", "messages", "inputs", "implementation", "invalidations")}
+    if automatic:
+        lesson_identity = {k: automatic.get(k) for k in ("mode", "status", "messages", "inputs", "implementation", "completed_stages")}
     sid = sha({"session": s, "events": [e["digest"] for e in events], "lesson": lesson_identity,
                "choices": choices, "artifacts": files})[:24]
     streams = usage_summary(events)
@@ -175,11 +184,17 @@ def snapshot(output, *, private_terms=()):
                "saved_judgments": len(choices), "checkpoint": lesson.get("completed_step"),
                "usage_streams": streams, "recorded_text_estimate": visible_estimate(texts),
                "full_session_inference_tokens": None}
+    if automatic:
+        metrics["execution_mode"] = "automatic-trial"
+        metrics["completed_analytical_stages"] = automatic.get("completed_stages", [])
     coverage = {"usage": "Measured receipt streams and estimated recorded text are separate. Never add them or convert a subscription percentage into tokens.",
                 "questions": "Actual learner messages saved by the guided lesson; assistant/tool text only when the harness recorded it.",
                 "route": "The personal/university MCP route can edit a local/cloud checkout. The hosted Longleaf route exposes its verified server tools only.",
                 "privacy": "This packet excludes private run/session IDs. It is local by default; no class-wide export or delivery occurs.",
                 "debrief_usage": "Feedback-generation usage is a separate scope and may arrive after this snapshot."}
+    if automatic:
+        coverage["questions"] = "Actual starting request from automatic_run.json; visible assistant/tool text only when recorded. No checkpoint interaction was requested or simulated."
+        coverage["recommendation"] = "The report contains an analyst recommendation. This automatic run does not establish the student's own reasoning or learning."
     evidence = []
     def add(kind, text, source):
         evidence.append({"id": f"snap:{sid}/ev:{len(evidence)+1}", "kind": kind,
@@ -187,7 +202,7 @@ def snapshot(output, *, private_terms=()):
     add("metrics", canonical(metrics), "saved lab state and explicitly recorded usage")
     for p in prompts:
         if not p.get("explicit_next_step"):
-            add("prompt_excerpt", p["text"][:2500], "learner message in lesson_state.json")
+            add("prompt_excerpt", p["text"][:2500], "actual request in automatic_run.json" if automatic else "learner message in lesson_state.json")
     for key, value in choices.items():
         add("saved_judgment", f"{key}: {value}", "learner_choices.json")
     for name, digest in files.items():
@@ -225,7 +240,8 @@ def render_portable(packet, response, *, path, provenance=None):
     m = packet["metrics"]
     parts = ["<h1>Your Studio North lab debrief</h1>", f"<p>{esc(m['harness'])} · {esc(m['route'])}</p>",
              "<h2>Your recorded AI activity</h2>",
-             f"<p>{m['lab_requests']} learner messages · {m['saved_judgments']} saved judgments · checkpoint {m['checkpoint']}</p>"]
+             f"<p>{m['lab_requests']} learner messages · {m['saved_judgments']} saved judgments · " +
+             ("automatic trial; no teaching checkpoints" if m.get('execution_mode') == 'automatic-trial' else f"checkpoint {m['checkpoint']}") + "</p>"]
     if not m["usage_streams"]:
         parts.append("<p>Provider-measured token usage: unavailable in this record.</p>")
     for row in m["usage_streams"]:
