@@ -33,3 +33,15 @@ The instructor ended the temporary automatic alpha trial on November 10, 2026 af
 `lesson_state.json` records position, messages, evidence references and invalidations. `lab_state.json` retains the eight-stage computational record. The snapshot includes the three core skills, the deferred challenge skill and its contract/template, and both CLI entry points, so a report can identify the teaching and computational instructions used. Frozen inputs and completed results are not silently relabeled after source changes.
 
 Behavioral checks are in `tests/test_student_workflow.py` and the existing computational workflow tests. They cover exact consent, one-step advancement, questions, resume, failure/retry, revisions, final judgment and the absence of a report before the final checkpoint. CLI smoke checks and rendered report QA supplement these tests; they do not establish that every coding-agent interface or operating system has been exercised.
+
+## November 11 automatic test exception
+
+The instructor reauthorized a limited straight-through test on November 10,
+after retiring the previous alpha branch. `skills/automatic-test/SKILL.md` and
+`scripts/run_automatic.py` use the current source and eight canonical stages.
+They do not call `student.py` with invented consent or produce learner choices.
+In BlueChip, an explicit test request and operator-enabled expiry are required;
+ordinary starts retain all nineteen guided gates. Delivery position 18 on an
+automatic packet is an API report position, not a record of guided participation.
+The separate debrief describes actual prompts and usage, and the analyst-authored
+recommendation. Existing guided tests still enforce genuine learner gates.

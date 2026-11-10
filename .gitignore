@@ -19,3 +19,4 @@ source_checkout.json
 *.fdb_latexmk
 .DS_Store
 
+automatic-request.txt

@@ -93,6 +93,7 @@ class Telemetry:
                     payload={"request_id": job, "action": payload["action"],
                              "message": payload.get("message"), "sql": payload.get("sql"),
                              "choice_key": payload.get("key"), "choice_value": payload.get("value"),
+                             "execution_mode": payload.get("mode", "guided"),
                              "source": "lab_api_received", "verbatim_platform_transcript": False,
                              "checkpoint_before": receipt.get("expected_step")})
         if receipt["status"] == "started":
@@ -104,6 +105,7 @@ class Telemetry:
                     payload={"request_id": job, "outcome": receipt["status"],
                              "step": receipt.get("step_after", packet.get("step")),
                              "fresh_fit": receipt.get("fresh_fit", False),
+                             "execution_mode": packet.get("mode", "guided"),
                              "calculation_seconds": max(0, receipt.get("calculation_finished_at", receipt["finished_at"]) - receipt["started_at"]),
                              "validated": packet.get("validation", {}).get("valid"),
                              "artifacts": [{"name": a["name"], "sha256": a["sha256"]} for a in packet.get("artifacts", [])]})

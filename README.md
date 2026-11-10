@@ -18,6 +18,15 @@ An MCP connection supplies tools and services; it does not automatically fund th
 
 ## Browser scenario: BlueChip + Longleaf
 
+**November 11 two-student automatic test:** the instructor is arranging a
+9:30 a.m.–12:30 p.m. Eastern window. Once live readiness is confirmed, use
+the [same BlueChip link](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602)
+and paste `Run the Studio North automatic test and generate my report and personal debrief.`
+This explicit test runs through all computations and queues the debrief without
+checkpoint pauses. It does not count as guided participation. See the
+[temporary test skill](skills/automatic-test/SKILL.md), also usable in a local
+coding agent. All normal lab requests continue to use the guided route.
+
 The BlueChip pilot runs the guided lab through one browser link. No student installation is needed. BlueChip presents the lesson; an instructor-managed backend saves your own workspace, runs fresh CPU models, and obtains Nemotron interpretations.
 
 You can ask how the report is generated and where its data, skills, reference assets, DuckDB calculations and outputs live. The agent retrieves a verified description of the current deployment and explains server-side paths separately from your available downloads. The hosted API supports the released workflow and bounded SQL exploration; implementing alternative models or rewriting chart code remains an exercise for the optional coding-agent route.
