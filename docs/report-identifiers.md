@@ -1,6 +1,6 @@
 # Invisible report identifiers
 
-The instructor selected a local, invisible footer instead of a global registry on November 9, 2026. Every new executive PDF produced by `cohort_lab.report.build_report` receives a random `SN-` identifier. The guided local workflow, temporary automatic trial and BlueChip backend all call this generator. A hosted deployment must explicitly adopt the revised release; already frozen services and previously downloaded repositories do not update themselves.
+The instructor selected a local, invisible footer instead of a global registry on November 9, 2026. Every new executive PDF produced by `cohort_lab.report.build_report` receives a random `SN-` identifier. The guided local workflow and BlueChip backend both call this generator. A hosted deployment must explicitly adopt the revised release; already frozen services and previously downloaded repositories do not update themselves.
 
 The identifier is saved once as `report_identity.json` in the output workspace, repeated in each PDF page's footer text layer, and recorded in PDF metadata and the report manifest. PDF text rendering mode 3 makes it invisible on white, colored and printed pages. It is not white text. It contains no name, email, account, device identifier or timestamp. No network call, login or external registration is made.
 
