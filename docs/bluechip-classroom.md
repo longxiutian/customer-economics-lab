@@ -68,6 +68,10 @@ Checkpoint 18 requires the learner's own verdict and action, builds Version B fr
 
 ## Acceptance record
 
+For the next deployment, also apply [the service reliability contract](bluechip-reliability.md),
+including independent bridge/reviewer ownership and outage/recovery tests. Keep
+its candidate and live-deployment evidence separate from the dated pilot records below.
+
 Save actual receipts outside the immutable release; do not edit this contract mid-run to update a result. The handoff must report:
 
 - broker build, migration, deployed version and access mode;
