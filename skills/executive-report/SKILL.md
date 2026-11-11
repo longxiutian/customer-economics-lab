@@ -5,7 +5,7 @@ description: Format and verify the final executive report at checkpoint 18 of th
 
 # Executive customer-economics report
 
-Use this supporting skill when the guided state machine reaches reporting checkpoint 18 after the learner has supplied the final verdict, recommended action and explicit **next step**. The scoped [November 11 automatic test](../automatic-test/SKILL.md) may instead invoke the final computational stage after stages 0–6, with an analyst-authored recommendation and no invented learner judgments. Otherwise, if invoked earlier, return to the [main guided skill](../../SKILL.md) and resume the student's current checkpoint. Do not run earlier stages or create judgments to satisfy a gate. The student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
+Use this supporting skill when the guided state machine reaches reporting checkpoint 18 after the learner has supplied the final verdict, recommended action and explicit **next step**. If invoked earlier, return to the [main guided skill](../../SKILL.md) and resume the student's current checkpoint. Do not run earlier stages or create judgments to satisfy a gate. The student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
 
 ## Read and preserve the visual system
 

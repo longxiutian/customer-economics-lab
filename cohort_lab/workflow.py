@@ -63,7 +63,6 @@ def implementation_snapshot(root: Path | None = None) -> dict:
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
-    paths.extend(p for p in (root/'skills/automatic-test').glob('*') if p.is_file())
     paths.extend(root / name for name in ("lab.py", "student.py", "README.md", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
     paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
