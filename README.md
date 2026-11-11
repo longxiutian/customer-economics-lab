@@ -29,12 +29,6 @@ Use BlueChip during the service window announced for your session. You need your
 
 Your work is saved to your own workspace. Return with the same BlueChip account and ask to resume your lab to continue from your saved checkpoint.
 
-You can also ask how the analysis works. For example:
-
-> Walk me through how the eight datasets, SKILL.md, reference assets, DuckDB SQL, models and figures become this report. Explain where my results are saved and which files I can download.
-
-For projects that change the model or chart code, use the [personal coding-agent route](#personal-coding-agent-copy-and-paste-into-your-ai-harness) below.
-
 ## Personal coding agent: copy and paste into your AI harness
 
 Open **Codex, Claude Code, or GitHub Copilot in agent mode** in a local or cloud workspace where it can retrieve files and run code. Paste the entire prompt below; the agent retrieves the lab for you. You do not need to manually download a ZIP, install Git, or create a GitHub account.
