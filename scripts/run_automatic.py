@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Temporary once-through trial using the unchanged canonical analytical stages."""
+"""Legacy automatic-run engine for preserved hosted test workspaces.
+
+The student CLI is retired. New students use the guided root SKILL.md.
+"""
 from __future__ import annotations
 
-import argparse
 import json
 from pathlib import Path
 import sys
@@ -88,26 +90,10 @@ def run(output: Path, *, prompt: str | None, harness: str, resume: bool = False,
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=ROOT / 'outputs/automatic-trial')
-    parser.add_argument('--prompt-file', type=Path, help='UTF-8 file containing the actual student starting request.')
-    parser.add_argument('--harness', required=True, help='Actual coding-agent name, e.g. Codex or Claude Code.')
-    parser.add_argument('--resume', action='store_true')
-    parser.add_argument('--seed', type=int, default=20261116)
-    parser.add_argument('--steps', type=int, default=3000)
-    parser.add_argument('--no-pdf', action='store_true')
-    args = parser.parse_args()
-    try:
-        prompt = args.prompt_file.read_text(encoding='utf-8') if args.prompt_file else None
-        state = run(args.output, prompt=prompt, harness=args.harness, resume=args.resume,
-                    compile_pdf=not args.no_pdf, seed=args.seed, steps=args.steps)
-        print(json.dumps({'status': state['status'], 'receipt': str(args.output / 'automatic_run.json'),
-                          'report': str(args.output / 'report/customer-economics-report.pdf') if not args.no_pdf else None,
-                          'personal_debrief': state.get('personal_debrief'), 'debrief_review': state.get('debrief_review')}, indent=2))
-    except (OSError, ValueError) as error:
-        print(str(error), file=sys.stderr)
-        return 2
-    return 0
+    print('The temporary automatic test has ended. Read SKILL.md and use the guided '
+          'student workflow, pausing at each checkpoint for the learner to say next step.',
+          file=sys.stderr)
+    return 2
 
 
 if __name__ == '__main__':
