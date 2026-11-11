@@ -119,3 +119,10 @@ The November 11 running session retains its frozen analysis and existing recover
 processes. Staged changes do not silently replace that session. The immediate
 observation-failure fix and the broader next-session candidate have separate
 verification receipts.
+
+The November 11 hardened SSH adapter is explicitly limited to one GPU and rejects
+a four-GPU deployment. Before adopting it for four replicas, test per-replica
+failure isolation together with CPU/router readiness: one missing observation,
+one terminated GPU, a terminated CPU allocation and all GPUs unavailable.
+Healthy replicas must retain capacity when another replica fails. Do not remove
+the single-GPU guard merely to make a four-GPU configuration start.
