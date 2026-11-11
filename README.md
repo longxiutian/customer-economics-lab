@@ -18,59 +18,22 @@ An MCP connection supplies tools and services; it does not automatically fund th
 
 ## Browser scenario: BlueChip + Longleaf
 
-**November 11 two-student automatic test:** the instructor is arranging a
-9:30 a.m.–12:30 p.m. Eastern window. Once live readiness is confirmed, use
-the [same BlueChip link](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602)
-and paste `Run the Studio North automatic test and generate my report and personal debrief.`
-This explicit test runs through all computations and queues the debrief without
-checkpoint pauses. It does not count as guided participation. See the
-[temporary test skill](skills/automatic-test/SKILL.md), also usable in a local
-coding agent. All normal lab requests continue to use the guided route.
+Use BlueChip during the service window announced for your session. You need your UNC BlueChip account and a web browser. Nothing needs to be installed.
 
-The BlueChip pilot runs the guided lab through one browser link. No student installation is needed. BlueChip presents the lesson; an instructor-managed backend saves your own workspace, runs fresh CPU models, and obtains Nemotron interpretations.
+1. Open [Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602) and sign in with your UNC account.
+2. Click **Start my Studio North lab**, or paste: `Start or resume my Studio North lab.`
+3. At each checkpoint, review the tables, diagrams or charts, ask questions, and share your interpretation. Type **next step** when you are ready to continue.
+4. While a calculation runs, open the **live progress** link to see its status. Type **check progress** in BlueChip to retrieve the result.
+5. At the final checkpoint, give your recommendation for Studio North, then type **next step** to generate your report.
+6. Download your **executive report** and **personal learning debrief** before the service window closes. The debrief may finish after the report; use **check progress** to retrieve its download links.
 
-You can ask how the report is generated and where its data, skills, reference assets, DuckDB calculations and outputs live. The agent retrieves a verified description of the current deployment and explains server-side paths separately from your available downloads. The hosted API supports the released workflow and bounded SQL exploration; implementing alternative models or rewriting chart code remains an exercise for the optional coding-agent route.
+Your work is saved to your own workspace. Return with the same BlueChip account and ask to resume your lab to continue from your saved checkpoint.
 
-**November 7 pilot has ended.** The rehearsal used [Studio North in BlueChip](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602): sign in with your UNC BlueChip account, then click **Start my Studio North lab**. Its debugging window ended at **5:15 p.m. Eastern on November 7, 2026**. Use this route only after the instructor announces an active service window. Two API rehearsals and one browser rehearsal produced matching reports with fresh fits. The browser run required a checkpoint-display recovery; see the acceptance record for the remaining interface checks. The instructor confirms MBA and MSM BlueChip access; another student's end-to-end use of this agent and whole-class capacity still need testing; November 16 provisioning is separate. See the [BlueChip setup and acceptance record](docs/bluechip-classroom.md).
+You can also ask how the analysis works. For example:
 
-In the configured BlueChip agent, paste:
+> Walk me through how the eight datasets, SKILL.md, reference assets, DuckDB SQL, models and figures become this report. Explain where my results are saved and which files I can download.
 
-```text
-Start or resume my Studio North lab. Check the real service and my saved
-workspace. Introduce the current checkpoint, show its evidence, and wait.
-Advance one checkpoint only when my whole message is "next step".
-```
-
-<details>
-<summary>Earlier connection experiment: personal browser ChatGPT (not released)</summary>
-
-The classroom starting point is **your personal ChatGPT account and UNC network access**. The planned lab connection runs the software centrally, gives each student a separate workspace, and runs each student's own statistical fits. You are not expected to install Python, Git, a coding agent, or a tunnel client, buy a paid plan, or obtain an API key or Longleaf account.
-
-**Connection status: being prepared; not yet ready for class.** The instructor will provide the verified plugin link and sign-in instructions. Personal-account access, including Free accounts, must be tested before this route is released. The working local workflow in this repository and the personal model pilot do not yet constitute the hosted classroom service.
-
-After the instructor supplies the working connection, open a new ChatGPT conversation, select the lab plugin, and paste the [browser student prompt](docs/chatgpt-web-student-prompt.txt). It checks the actual connection before starting. A prompt alone cannot connect ChatGPT to UNC.
-
-```text
-Use the connected UNC Studio North Lab plugin to guide me through the lab.
-First verify the actual connection, pinned release, my authenticated workspace,
-and tools for saved lesson state, fresh fits and report downloads. If any are
-missing, explain what is missing and stop; do not simulate execution.
-
-Start or resume my own workspace. Introduce the assignment, show my current
-checkpoint, and wait. Advance one checkpoint only when my entire message is
-"next step". Questions and judgments do not advance the lesson. Show the actual
-intermediate outputs and invite my interpretation at every step.
-
-Use UNC Nemotron to interpret the returned evidence and label its responses.
-Run my own fresh CPU fit at the fitting checkpoint, preserving the released
-settings and the same job ID through retries. Save my actual judgments.
-Generate and validate my report only at the final checkpoint after my final
-verdict and action, then give me the real download returned by the service.
-```
-
-The [classroom access plan](docs/chatgpt-web-classroom.md) records the required connection, student isolation, fresh fits, and readiness checks. This earlier browser-plugin plan is distinct from the proposed university-funded coding-agent MCP route.
-
-</details>
+For projects that change the model or chart code, use the [personal coding-agent route](#personal-coding-agent-copy-and-paste-into-your-ai-harness) below.
 
 ## Personal coding agent: copy and paste into your AI harness
 
