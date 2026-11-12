@@ -1,7 +1,7 @@
 {
   "type": "object",
   "properties": {
-    "action": {"type": "string", "enum": ["status", "start", "message", "choose", "query", "interpret", "job_status", "validate", "debrief"]},
+    "action": {"type": "string", "enum": ["status", "files", "start", "message", "choose", "query", "interpret", "job_status", "validate", "debrief"], "description": "Use files alone for actual saved paths, DuckDB provenance, output lineage and fresh downloads; it requires no compute and never advances."},
     "request_id": {"type": "string", "description": "Unique UUID per genuine operation; reuse for retries."},
     "expected_revision": {"type": "integer", "description": "Latest revision returned by status. Required for queued operations."},
     "message": {"type": "string", "description": "The learner's actual message, verbatim. Only standalone next step advances."},

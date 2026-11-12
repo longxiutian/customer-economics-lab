@@ -55,6 +55,8 @@ def deliver_result(broker, job, body):
     """Idempotent delivery only; this function never executes a lesson or model."""
     settled=broker.request('/api/worker/job_status?job_id='+job['id'],method='GET')
     if settled['status']=='completed' or (settled['status']=='failed' and 'error' in body):
+        if settled['status']=='completed':
+            observe_files(broker, job)
         return
     body=json.loads(json.dumps(body))
     if 'result' in body:
@@ -72,6 +74,22 @@ def deliver_result(broker, job, body):
                 headers={'Content-Type':artifact['mime'],'X-Artifact-Id':artifact['artifact_id'],
                          'X-Artifact-Name':quote(artifact['name'],safe=''),'X-Artifact-SHA256':artifact['sha256']})
     broker.request('/api/worker/finish?job_id='+job['id'],body)
+    if 'result' in body:
+        observe_files(broker, job)
+
+
+def observe_files(broker, job):
+    """File metadata is separate from calculation receipts and cannot fail a fit."""
+    if broker.config.get('lane') == 'debrief' or broker.config.get('file_map_paths_disclosable') is not True:
+        return
+    try:
+        from hosting.file_manifest import build_manifest
+        config = broker.config
+        observation = build_manifest(ROOT, Path(config['runtime'])/'workspaces'/job['run_id'],
+                                     session_id=config['session_id'], store_id=config['store_id'], paths_disclosable=True)
+        broker.request('/api/worker/manifest', observation, method='PUT')
+    except Exception as exc:
+        print(json.dumps({'event':'file_map_pending','run_id':job['run_id'],'error_type':type(exc).__name__}),flush=True)
 
 
 def redeliver_until(broker, job, result_file, spool, *, deadline, live, stopping):

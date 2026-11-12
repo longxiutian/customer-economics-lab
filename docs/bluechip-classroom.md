@@ -2,6 +2,12 @@
 
 The instructor selected this additional scenario on November 7, 2026. It preserves the local coding-agent route and the separate personal-ChatGPT distribution plan. The student experience is one BlueChip agent link, organization sign-in, and nineteen checkpoints paced by the student's own `next step` messages. Students install nothing.
 
+The November 12 file-location update uses the read-only `files` action for actual
+owner-specific paths, in-memory DuckDB provenance, saved-output lineage and fresh
+downloads. See [the file-map contract](hosted-file-map.md), including its separate
+retrieval period and operator setup. The November 7 deployment and acceptance
+details below are historical; they do not describe later CPU placement or windows.
+
 **Deployment status: a working November 7 instructor pilot.** [Open the guided BlueChip agent](https://bluechip.kenan-flagler.unc.edu/chat/959a9b88-8e0a-4598-ba27-f8f2e6cfe602) and select **Start my Studio North lab**. Its sharing setting is “Anyone with link in my organization.” The bounded service ends November 7, 2026 at 17:15:56 America/New_York. The full lesson uses the prepared backend because the portal sandbox lacks the released Python/JAX/NumPyro/DuckDB/TeX toolchain. Two complete API rehearsals and one browser rehearsal produced the intended report. The browser rehearsal included the checkpoint-12 presentation recovery documented below. A second student's end-to-end use of this agent, use-only permissions and whole-class capacity remain separate acceptance checks; this is not a November 16 deployment.
 
 ## Components and ownership
