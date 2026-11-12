@@ -66,6 +66,15 @@ The current student distribution has one teaching route: `student.py` with expli
 
 ## Atomic steps and intermediate evidence
 
+For questions about this run's files, use observed paths and existing artifacts;
+do not rerun the analysis just to describe it. In BlueChip, use the read-only
+`files` action and follow [the hosted file-map contract](docs/hosted-file-map.md).
+In a local harness, inspect the current project and output folders directly.
+Explain DuckDB's actual in-memory use from the saved SQL/code and provenance,
+distinguish remote storage from the student's download folder, and trace a saved
+exhibit to its real inputs. Missing outputs must stay missing; never substitute
+another run's paths or reference outputs for this learner's work.
+
 The [atomicity audit and checkpoint map](docs/student-workflow.md) links every teaching checkpoint to its real artifact and computation. The audit splits the formerly broad business/data, UCV/segmentation, observed-analysis and forecasting stages. `cohort_lab/student.py` enforces one transition per consent message and keeps report compilation last.
 
 The sequence is **opening → readiness → journey → source tables → UCV → baseline segmentation → SQL cohort construction → retention → cohort cash → segmentation evaluation → journey diagnostics → company economics → continuous iCAC tests → model explanation → fitting/validation → value/payback → acquisition decision → learner recommendation → report**.

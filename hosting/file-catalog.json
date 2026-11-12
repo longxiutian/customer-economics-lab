@@ -1,0 +1,135 @@
+{
+  "schema": "studio-north.file-catalog/1",
+  "groups": [
+    {
+      "root": "source",
+      "category": "Raw CSV datasets",
+      "purpose": "Frozen synthetic CDP inputs.",
+      "rels": [
+        "data/people.csv",
+        "data/subscription_periods.csv",
+        "data/transactions.csv",
+        "data/product_events.csv",
+        "data/feedback.csv",
+        "data/campaign_spend.csv",
+        "data/acquisition_attribution.csv",
+        "data/channel_holdouts.csv"
+      ]
+    },
+    {
+      "root": "source",
+      "category": "Python",
+      "purpose": "Guided entrypoint, calculations, model fitting, chart rendering and validation.",
+      "rels": [
+        "student.py",
+        "cohort_lab/analysis.py",
+        "cohort_lab/query.py",
+        "cohort_lab/model.py",
+        "cohort_lab/report.py",
+        "cohort_lab/student.py",
+        "scripts/verify_reproducibility.py"
+      ]
+    },
+    {
+      "root": "source",
+      "category": "Source SQL",
+      "purpose": "Canonical analytical and journey-friction views.",
+      "rels": [
+        "sql/01_views.sql",
+        "sql/02_friction.sql"
+      ]
+    },
+    {
+      "root": "source",
+      "category": "Skills",
+      "purpose": "Analysis, teaching checkpoints and report instructions.",
+      "rels": [
+        "SKILL.md",
+        "skills/student-teacher/SKILL.md",
+        "skills/executive-report/SKILL.md"
+      ]
+    },
+    {
+      "root": "source",
+      "category": "Reference assets",
+      "purpose": "Orduz model source, Larsen acquisition-cost reference and Archify provenance.",
+      "rels": [
+        "assets/articles/orduz-2024-cohort-revenue-retention/README.md",
+        "assets/articles/orduz-2024-cohort-revenue-retention/source.ipynb",
+        "assets/articles/orduz-2024-cohort-revenue-retention/orduz-source-notebook.pdf",
+        "assets/articles/larsen-2019-customer-acquisition-cost/README.md",
+        "vendor/archify-provenance.json"
+      ]
+    },
+    {
+      "root": "source",
+      "category": "Report template",
+      "purpose": "Jinja/TeX template filled from calculated evidence.",
+      "rels": [
+        "templates/customer-economics-report-b.tex.j2"
+      ]
+    },
+    {
+      "root": "workspace",
+      "category": "Executed SQL",
+      "purpose": "Saved input registration, view definitions, export and summary queries.",
+      "rels": [
+        "lesson/sql/00_sources.sql",
+        "lesson/sql/01_views.sql",
+        "lesson/sql/02_friction.sql",
+        "lesson/sql/02_exports.sql",
+        "lesson/sql/03_summary.sql"
+      ]
+    },
+    {
+      "root": "workspace",
+      "category": "Saved tables",
+      "purpose": "Sorted CSV outputs of DuckDB queries.",
+      "prefix": "lesson/tables/",
+      "ext": ".csv"
+    },
+    {
+      "root": "workspace",
+      "category": "Figures",
+      "purpose": "Rendered quantitative report exhibits.",
+      "prefix": "lesson/report/figures/",
+      "ext": ".png"
+    },
+    {
+      "root": "workspace",
+      "category": "Diagrams",
+      "purpose": "Rendered Archify diagrams.",
+      "prefix": "lesson/diagrams/",
+      "ext": ".png"
+    },
+    {
+      "root": "workspace",
+      "category": "Model results",
+      "purpose": "Fitted model summary, provenance and posterior draws.",
+      "rels": [
+        "lesson/model_summary.json",
+        "lesson/model_manifest.json",
+        "lesson/posterior_draws.json"
+      ]
+    },
+    {
+      "root": "workspace",
+      "category": "Analysis provenance",
+      "purpose": "Input, code, SQL and output hashes; recorded DuckDB version.",
+      "rels": [
+        "lesson/analysis_manifest.json",
+        "lesson/analysis_input_manifest.json",
+        "lesson/implementation_manifest.json"
+      ]
+    },
+    {
+      "root": "workspace",
+      "category": "Final report",
+      "purpose": "Executive report PDF and editable TeX source.",
+      "rels": [
+        "lesson/report/customer-economics-report.pdf",
+        "lesson/report/customer-economics-report.tex"
+      ]
+    }
+  ]
+}

@@ -174,6 +174,7 @@ def worker_config(plan, lane, index):
         "worker_id": f"{cfg['session_id']}-{lane}-{index:03d}", "lane": lane,
         "expires_at": plan.deadline, "debrief_enabled": False,
         "automatic_test_until": cfg.get('automatic_test_until', 0),
+        "file_map_paths_disclosable": cfg.get('file_map_paths_disclosable', False),
         "telemetry": {"path": str(plan.jobtmp / "telemetry.sqlite"), "session_id": cfg["session_id"]},
         "progress_root": str(plan.jobtmp / "progress"),
         "model_status_path": str(plan.jobtmp / "model-status.json"),
