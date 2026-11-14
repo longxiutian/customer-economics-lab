@@ -59,11 +59,11 @@ def implementation_snapshot(root: Path | None = None) -> dict:
     """Fingerprint code, bundled dependencies and instructions, excluding outputs."""
     root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
     paths = []
-    for folder, pattern in (("cohort_lab", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("skills/student-teacher", "*"), ("skills/model-challenge", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
+    for folder, pattern in (("cohort_lab", "*.py"), ("api_bridge/src", "*.py"), ("sql", "*.sql"), ("templates", "*"), ("skills/executive-report", "*"), ("skills/student-teacher", "*"), ("skills/model-challenge", "*"), ("skills/unc-api", "*"), ("assets/articles", "*"), ("docs", "*.md"), ("vendor/archify", "*")):
         directory = root / folder
         if directory.exists():
             paths.extend(p for p in directory.rglob(pattern) if p.is_file() and "__pycache__" not in p.parts)
-    paths.extend(root / name for name in ("lab.py", "student.py", "README.md", "SKILL.md", "pyproject.toml", "uv.lock", "vendor/archify-provenance.json") if (root / name).is_file())
+    paths.extend(root / name for name in ("lab.py", "student.py", "README.md", "SKILL.md", "pyproject.toml", "uv.lock", "api_bridge/pyproject.toml", "api_bridge/uv.lock", "docs/unc-api-startup-prompt.txt", "vendor/archify-provenance.json") if (root / name).is_file())
     paths.extend(p for p in (root/'tools').glob('*') if p.is_file())
     paths.extend(p for p in (root/'scripts').glob('*') if p.suffix in {'.mjs', '.py'} and p.is_file())
     paths.extend(p for p in (root/'hosting').glob('*') if p.suffix in {'.py', '.json', '.txt'} and p.is_file())
