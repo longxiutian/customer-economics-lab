@@ -2,6 +2,9 @@
 import asyncio
 import json
 import time
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import httpx
@@ -13,6 +16,33 @@ from unc_sol_bridge.packets import compile_packet
 from unc_sol_bridge.relay import call
 from unc_sol_bridge.server import build_server
 from unc_sol_bridge.setup import prepare
+
+
+def test_cli_json_survives_windows_non_utf8_stdout(tmp_path):
+    config = make_config(tmp_path, baseline_source="Student’s existing usage, offline fixture")
+    seed(config, 0)
+    process = subprocess.run(
+        [sys.executable, "-m", "unc_sol_bridge", "relay", "--config", str(config.path), "--tool", "sol_status"],
+        env={**os.environ, "PYTHONIOENCODING": "cp1252"}, capture_output=True,
+        encoding="utf-8", timeout=30,
+        **({"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {}))
+    assert process.returncode == 0 and process.stdout.isascii()
+    assert json.loads(process.stdout)["budget"]["baseline_source"] == "Student’s existing usage, offline fixture"
+
+
+def test_unstructured_mcp_error_does_not_claim_a_zero_bill(tmp_path, monkeypatch):
+    from mcp import ClientSession
+    from mcp.types import CallToolResult, TextContent
+    config = make_config(tmp_path)
+    seed(config, 0)
+    async def malformed(self, *args, **kwargs):
+        return CallToolResult(content=[TextContent(type="text", text="unstructured tool failure")], is_error=True)
+    monkeypatch.setattr(ClientSession, "call_tool", malformed)
+    with pytest.raises(BridgeError) as caught:
+        asyncio.run(call(config.path, "sol_status", {}))
+    # anyio may wrap the deliberate error in a task-group exception.
+    assert caught.value.kind in {"mcp_result_invalid", "mcp_unavailable"}
+    assert caught.value.facts["provider_called"] == "unknown"
 
 
 def test_stdio_missing_auth_is_local_and_extra_models_are_rejected(tmp_path, monkeypatch):

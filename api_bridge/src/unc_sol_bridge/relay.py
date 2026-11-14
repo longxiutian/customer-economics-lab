@@ -43,7 +43,8 @@ async def call(config_path, tool, arguments):
                         await session.initialize()
                         result = await session.call_tool(tool, arguments)
                         if result.structured_content is None:
-                            raise BridgeError("mcp_result_invalid", "The MCP returned no structured result; no automatic retry.")
+                            raise BridgeError("mcp_result_invalid", "The MCP returned no structured result; no automatic retry.",
+                                              provider_called="unknown", charge="unknown; inspect the durable ledger")
                         return result.structured_content
     except BridgeError:
         raise

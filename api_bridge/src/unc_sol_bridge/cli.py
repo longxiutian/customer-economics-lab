@@ -98,7 +98,7 @@ def _run(args) -> int:
         from .setup import prepare
         result = prepare(config_path=args.config, source_root=args.source_root, run_dir=args.run_dir,
                          credential_file=args.credential_file, harness=args.harness)
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        print(json.dumps(result, indent=2))  # ASCII-safe JSON on Windows console code pages
         return 0 if result["ok"] and not result["problems"] else 1
     config = load_config(args.config)
     if args.command == "check":
@@ -126,7 +126,7 @@ def _run(args) -> int:
         except (ValueError, OSError):
             raise BridgeError("invalid_arguments", "The relay arguments file is unreadable; no call was made.") from None
         result = asyncio.run(call(config.path, args.tool, arguments))
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        print(json.dumps(result, indent=2))  # the model text remains lossless after JSON decoding
         return 0 if result["ok"] else 1
     # live-opening: the single operator-run startup call. The key lives only in this process's memory.
     key = check_key(sys.stdin.readline() if args.key_stdin else getpass.getpass("UNC Sol key for this one test (hidden): "))
