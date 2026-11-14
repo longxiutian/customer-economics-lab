@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "live startup verified; Windows display recovered without another provider request",
+  "date_utc": "2026-11-14T05:09:34Z",
+  "live_source_commit": "b9a0472905d69e9b220adf4afa311bb25a42b1a2",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "provider_requests": 1,
+  "packet_bytes": 3124,
+  "packet_sha256": "4f305bd303c93f7608027b3181eff97cac04ce0e73653a3131ad8a733b2ac921",
+  "bridge_source_sha256": "332f39c4ea7ad216aceb6c4ecac71353a09b737b9b74550477a407a44615f7fd",
+  "usage": {
+    "cached_input_tokens": 0,
+    "charge": 898,
+    "inclusive_of_reasoning_and_cache": true,
+    "input_bound_tokens": 3324,
+    "input_tokens": 607,
+    "output_tokens": 291,
+    "reasoning_tokens": 0,
+    "reserved": 6324,
+    "scope": "university_mcp",
+    "state": "settled"
+  },
+  "provider_elapsed_seconds": 9.734,
+  "startup_cap": 10000,
+  "output_cap_including_reasoning": 3000,
+  "checkpoint_after": 0,
+  "analysis_fit_or_report_run": false,
+  "same_chat_stdio_mcp": true,
+  "cached_retrieval_provider_called": false,
+  "windows_console_json": "lossless ASCII escapes; UTF-8 decoder verified against the saved non-ASCII answer",
+  "source_integrity": "Original run preserved against its live source commit; display fix is a later revision. No manifest was rewritten.",
+  "full_19_checkpoint_live_benchmark": "not run; production continuation phases are disabled",
+  "offline_tests": {
+    "bridge_cases_passed": 85,
+    "stdio_exchange": "verified with missing authentication, extra arguments, omitted arguments and Windows cp1252 parent stdout",
+    "source_build": "sdist and wheel built successfully",
+    "codex_optional_config": "native parser accepted; required=false; user configuration unchanged"
+  },
+  "post_live_fixes": [
+    "Lossless ASCII JSON from CLI prevents Windows cp1252/UTF-8 mismatch",
+    "An unstructured MCP failure preserves unknown provider/billing status"
+  ]
+}
