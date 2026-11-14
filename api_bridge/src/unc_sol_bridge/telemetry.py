@@ -21,6 +21,11 @@ def record(config, receipt, text):
         if not Path(module.__file__).resolve().is_relative_to(config.source_root):
             return "source_conflict"
         request_id, usage = receipt["request_id"], receipt["usage"]
+        if usage["input_tokens"] is None or usage["output_tokens"] is None:
+            # The bridge ledger/receipt retains the unknown hold. Do not seal an
+            # immutable per-call usage event before recovery obtains its receipt.
+            # This also prevents a later known result conflicting with a null event.
+            return "pending; unknown usage retained in bridge receipt" if usage["state"] == "held" else "not_dispatched"
         happened_at = calendar.timegm(time.strptime(receipt["completed_at"], "%Y-%m-%dT%H:%M:%SZ"))
         scope = "debrief" if receipt["intent"] == "debrief" else "university_mcp"
         module.record(config.run_dir, {

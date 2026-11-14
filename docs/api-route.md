@@ -24,25 +24,30 @@ If uv's automatically selected interpreter is broken, select an existing Python
 Python. On Windows use the native Windows environment for the OS credential
 store, even when the coding harness can also use WSL.
 
-The instructor supplies **one private credential record**, outside the checkout.
-It contains `subscription`, `period_id` (current UTC YYYY-MM),
-`baseline_tokens`, `baseline_source` and `primary_key`. Never print its values
-or include it in Git, chat prompts or generated reports. The primary and secondary
-key of a subscription share its quota; do not rotate between them.
-Automatic key distribution is not implemented in this pilot.
-
 The agent chooses absolute paths for a fresh output directory and an owner-local
 configuration outside the checkout, then runs:
 
 ```text
-uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge prepare --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --credential-file PRIVATE_RECORD --harness Codex
+uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --harness Codex
 ```
 
-Replace `Codex` with the actual harness name. Preparation does only local work:
-validate metadata, save the key in the OS keyring, run `student.py start`, and
-initialize debrief logging. If a secure keyring backend is unavailable it fails
-before a provider call; environment references are a separate supported
-configuration for clients whose private environment is already provisioned.
+Use `Codex`, `"Claude Code"` or `"VS Code"` for the actual harness. Connection
+creates a pending device at the instructor's gateway, saves an opaque credential
+in the secure OS keyring, runs `student.py start` and initializes debrief logging.
+It does not call a model or send an API key to the student. Open the returned
+BlueChip link, sign in with UNC and send `pair CODE` using the printed short
+code. Return to the original coding chat and say `done`, then run:
+
+```text
+uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge pair-status --config CONFIG
+```
+
+Continue only when its status is `approved`. Re-running `connect` resumes setup;
+it can renew an expired short code without changing the device or usage ledger.
+Pair codes expire after 15 minutes;
+device authorization lasts 30 days and can be revoked. A secure keyring is
+required for this route; there is no plaintext fallback. Unavailable connection
+or enrollment checks do not change the native harness or call another provider.
 
 Use a connected native `unc_sol` tool, or the explicit same-chat SDK relay:
 
@@ -89,22 +94,34 @@ conservative rather than an exact tokenizer measurement. Reported usage settles
 the call, counting inclusive input/output once. An actual overrun quarantines
 future calls. Concurrent processes share the same owner-local ledger.
 
-The allocation cap is at most 400,000 combined tokens. This local guard cannot
-discover usage from another device or application: provide an honest prior-use
-baseline and retain its source. Keep the same state directory on resume; moving
-to another machine needs a reconciled baseline. UNC's upstream quota remains
-authoritative. A past or future month cannot be used for a new dispatch.
+Each subscription has at most 400,000 combined tokens. The managed gateway
+accounts for usage across the learner's devices and assigned subscriptions.
+Before a request, it can close an allowance with insufficient confirmed
+headroom and assign a fresh approved subscription. This happens in the
+background; the same chat, files, checkpoint and usage history continue.
+Closed allowances are not handed out again as unused. Assignment and accounting
+are atomic; overlapping requests cannot claim the same allowance. Subscription
+changes never bypass the current 10,000-token, one-opening startup limit.
+UNC's upstream quota remains authoritative; pool baselines must include any use
+outside this gateway. Expired accounting periods cannot dispatch new calls.
 
 Timeout, cancellation or missing usage holds the reservation. A run with unknown
-usage cannot send another call until reconciled. Auth/quota failures are not a
-reason to switch keys. A duplicate ID never sends HTTP again. Budget and phase
-denials happen before any provider request.
+usage cannot send another call until reconciled. Rate limits, authentication
+failures and ambiguous errors never switch subscriptions. No reactive UNC quota
+error signature has yet been verified, so current rollover uses ledger headroom
+only. An existing request ID retrieves its saved result; it never repeats model
+inference. Budget and phase denials happen before any provider request.
+
+Legacy instructor tests may still use `prepare --credential-file PRIVATE_RECORD`
+with one privately supplied subscription. That route retains its original local
+400,000-token cap and cannot participate in automatic pool rollover. Do not
+collect or paste credentials for the managed student route.
 
 ## Continue the lesson
 
 This test release enforces startup-only in code; editing its configuration cannot
 enable a full run. A separately verified continuation release will follow
-`skills/unc-api/SKILL.md` and retain the same allocation and ledger. Its designed
+`skills/unc-api/SKILL.md` and retain the same managed identity and ledger. Its designed
 normal packet limit is 8,000
 bytes (configurable up to 16,000). It does not bypass the nineteen checkpoint
 gates. Full analytical dependencies are installed at readiness. All statistical
@@ -131,6 +148,10 @@ registration when a chat cannot load a new tool immediately.
 The measured startup receipt is published separately under
 [`api_bridge/acceptance/startup.json`](../api_bridge/acceptance/startup.json).
 It is not an analytical input or a reference answer for students.
+Managed assignment has its own [acceptance record](../api_bridge/acceptance/managed-assignment.json),
+which distinguishes offline concurrency and rollover tests from live connection
+and student-account checks. A successful connection alone does not establish a
+completed lesson or report.
 
 ```text
 uv sync --project api_bridge --frozen --extra keyring --group dev

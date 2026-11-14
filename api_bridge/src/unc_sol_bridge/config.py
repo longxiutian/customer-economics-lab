@@ -11,11 +11,14 @@ MODEL = "gpt-6.1-sol"
 EFFORT = "medium"
 MAX_OUTPUT_TOKENS = 3000  # visible output plus reasoning
 ALLOCATION_LIMIT = 400_000
+MANAGED_ALLOCATION_LIMIT = 127 * ALLOCATION_LIMIT  # local ceiling only; central admission owns the actual pool
 PHASES = {"startup": (10_000, 5_000), "pilot": (100_000, 16_000), "full": (ALLOCATION_LIMIT, 16_000)}  # stage cap, packet bytes
+MANAGED_PHASES = {**PHASES, "full": (MANAGED_ALLOCATION_LIMIT, 16_000)}
 RELEASE_PHASES = frozenset({"startup"})  # widen only in a separately verified guided-continuation release
 REQUIRED = {"schema_version", "source_root", "run_dir", "state_dir", "subscription_label", "period_id", "baseline_tokens",
             "baseline_source", "allocation_cap", "phase", "stage_cap", "source_fingerprint", "credential_ref"}
 OPTIONAL = {"data_dir", "packet_max_bytes"}
+GATEWAY_FIELDS = {"mode", "device_id"}
 KEY_SHAPED = re.compile(r"\bsk-[A-Za-z0-9_-]{8,}|(?i:bearer)\s+\S{8,}|\beyJ[A-Za-z0-9_-]{8,}|(?<![A-Fa-f0-9])[A-Fa-f0-9]{32}(?![A-Fa-f0-9])")
 SECRETISH = re.compile(KEY_SHAPED.pattern + r"|[A-Za-z0-9+/_=-]{48,}")
 
@@ -45,6 +48,8 @@ class BridgeConfig:
     packet_max_bytes: int
     source_fingerprint: str
     credential_ref: dict
+    mode: str = "direct"
+    device_id: str = ""
 
 
 def _text(raw, key, pattern, limit=64):
@@ -77,16 +82,21 @@ def load_config(path) -> BridgeConfig:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         raise BridgeError("config_invalid", f"The configuration file is unreadable ({type(error).__name__}).") from None
-    if not isinstance(raw, dict) or (set(raw) ^ REQUIRED) - OPTIONAL:
-        wrong = sorted(str(key)[:32] for key in (set(raw) ^ REQUIRED) - OPTIONAL)[:8] if isinstance(raw, dict) else []
+    required = REQUIRED | GATEWAY_FIELDS if isinstance(raw, dict) and raw.get("schema_version") == 2 else REQUIRED
+    if not isinstance(raw, dict) or (set(raw) ^ required) - OPTIONAL:
+        wrong = sorted(str(key)[:32] for key in (set(raw) ^ required) - OPTIONAL)[:8] if isinstance(raw, dict) else []
         raise BridgeError("config_invalid", f"Missing or unsupported configuration keys: {wrong}. "
                           "Endpoint, model and key values are never configurable.")
-    _integer(raw, "schema_version", 1, 1)
+    version = _integer(raw, "schema_version", 1, 2)
+    mode, device_id = "direct", ""
+    if version == 2:
+        mode = _text(raw, "mode", "gateway")
+        device_id = _text(raw, "device_id", r"[A-Za-z0-9_-]{22,64}")
     phase = _text(raw, "phase", "startup|pilot|full")
     if phase not in RELEASE_PHASES:
         raise BridgeError("phase_not_released", "This test release permits the one-opening startup phase only. Preserve the ledger and wait for the guided-continuation release.")
-    stage_limit, packet_limit = PHASES[phase]
-    cap = _integer(raw, "allocation_cap", 1, ALLOCATION_LIMIT)
+    stage_limit, packet_limit = (MANAGED_PHASES if mode == "gateway" else PHASES)[phase]
+    cap = _integer(raw, "allocation_cap", 1, MANAGED_ALLOCATION_LIMIT if mode == "gateway" else ALLOCATION_LIMIT)
     source_root, run_dir, state_dir = (_directory(raw, key) for key in ("source_root", "run_dir", "state_dir"))
     data_dir = _directory(raw, "data_dir") if "data_dir" in raw else (source_root / "data").resolve()
     if not (source_root / "cohort_lab" / "student.py").is_file():
@@ -115,4 +125,4 @@ def load_config(path) -> BridgeConfig:
         baseline_source=_text(raw, "baseline_source", r"[^\x00-\x1f]{8,200}", limit=200),
         allocation_cap=cap, phase=phase, stage_cap=_integer(raw, "stage_cap", 1, min(stage_limit, cap)),
         packet_max_bytes=_integer(raw, "packet_max_bytes", 2_000, packet_limit) if "packet_max_bytes" in raw else min(packet_limit, 8_000),
-        source_fingerprint=fingerprint, credential_ref=credential)
+        source_fingerprint=fingerprint, credential_ref=credential, mode=mode, device_id=device_id)

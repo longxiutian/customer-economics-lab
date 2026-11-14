@@ -32,6 +32,7 @@ class Outcome:
     response_id: str = ""
     http_status: int | None = None
     detail: str = ""
+    retrieved: bool = False
 
 
 def endpoint_ready(url=None) -> bool:

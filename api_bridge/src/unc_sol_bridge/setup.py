@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 from .bridge import Bridge
-from .config import BridgeError, load_config
+from .config import BridgeError, load_config, MANAGED_ALLOCATION_LIMIT
 from .credentials import _keyring, check_key
 from .packets import source_fingerprint
 
@@ -79,3 +79,63 @@ def prepare(*, config_path, source_root, run_dir, credential_file, harness):
     path.write_text(json.dumps(raw, indent=2) + "\n", encoding="utf-8")
     config = load_config(path)
     return Bridge(config).status()
+
+
+async def connect(*, config_path, source_root, run_dir, harness, transport=None):
+    """UNC device pairing. This calls the gateway, never a model or the APIM key service."""
+    from .gateway import GatewayClient, new_secret, start_pair
+    from .credentials import load_key
+    import time
+    root, run, path = (Path(value).resolve() for value in (source_root, run_dir, config_path))
+    if path.exists():
+        config = load_config(path)
+        if config.mode != "gateway" or config.source_root != root or config.run_dir != run:
+            raise BridgeError("config_conflict", "The existing configuration belongs to a different route or workspace.")
+        client = GatewayClient(config.device_id, load_key(config.credential_ref), transport=transport)
+        status = await client._request("POST", "/pair/poll", {})
+        if status.get("status") == "approved":
+            return {**Bridge(config).status(), "connection": "approved"}
+        if status.get("status") not in {"pending", "expired"}:
+            raise BridgeError("pairing_unavailable", "This device authorization is unavailable. No model was called.")
+        pairing_path = path.with_suffix(".pairing.json")
+        try:
+            pairing = json.loads(pairing_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            pairing = {}
+        if status["status"] == "expired" or not pairing.get("user_code"):
+            pairing = await client._request("POST", "/pair/renew", {})
+            if not pairing.get("ok") or not pairing.get("user_code"):
+                raise BridgeError("pairing_unavailable", "A new pairing code was not issued. No model was called.")
+            pairing_path.write_text(json.dumps(pairing, indent=2)+"\n", encoding="utf-8")
+        return {**Bridge(config).status(), "pairing": pairing,
+                "next": "Open approval_url, send pair USER_CODE, return here and say done."}
+    if path.is_relative_to(root) or path.is_relative_to(run):
+        raise BridgeError("config_location", "Keep device configuration outside the repository and run folder.")
+    if harness not in {"Codex", "Claude Code", "VS Code"}:
+        raise BridgeError("invalid_arguments", "Use Codex, Claude Code or VS Code for the harness label.")
+    keyring = _keyring()  # fail before creating a remote pending device if secure storage is unavailable
+    secret = new_secret()
+    pairing = await start_pair(secret, harness, transport=transport)
+    reference = {"kind": "keyring", "service": "unc-sol-device", "name": pairing["device_id"]}
+    raw = {"schema_version": 2, "mode": "gateway", "device_id": pairing["device_id"],
+           "source_root": str(root), "run_dir": str(run), "state_dir": str(Path.home()/".unc-sol-bridge"/"state"),
+           "subscription_label": "managed-" + pairing["device_id"][:20], "period_id": time.strftime("%Y-%m", time.gmtime()),
+           "baseline_tokens": 0, "baseline_source": "Gateway centrally accounts for all assigned UNC subscriptions.",
+           "allocation_cap": MANAGED_ALLOCATION_LIMIT, "phase": "startup", "stage_cap": 10000,
+           "source_fingerprint": source_fingerprint(root), "credential_ref": reference}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    candidate = path.with_suffix(".candidate.json")
+    try:
+        candidate.write_text(json.dumps(raw, indent=2)+"\n", encoding="utf-8")
+        load_config(candidate)
+    finally:
+        candidate.unlink(missing_ok=True)
+    keyring.set_password(reference["service"], reference["name"], secret)
+    _local(root, ["student.py", "--output", str(run), "start"])
+    _local(root, ["-m", "cohort_lab.debrief", "--output", str(run), "init", "--route", "university_mcp", "--harness", harness])
+    path.write_text(json.dumps(raw, indent=2)+"\n", encoding="utf-8")
+    # Pair code is not a credential. Preserve it for resuming setup after a local interruption.
+    pairing_path = path.with_suffix(".pairing.json")
+    pairing_path.write_text(json.dumps(pairing, indent=2)+"\n", encoding="utf-8")
+    return {**Bridge(load_config(path)).status(), "pairing": pairing,
+            "next": "Open approval_url, send pair USER_CODE, then return to this chat and say done. Never paste a key."}

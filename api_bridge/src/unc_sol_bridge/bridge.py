@@ -59,7 +59,13 @@ class Bridge:
     def _budget(self) -> dict:
         c = self.config
         self.ledger.open_period(c.subscription_label, c.period_id, c.allocation_cap, c.baseline_tokens, c.baseline_source)
-        return dict(self.ledger.snapshot(c.subscription_label, c.period_id, c.phase), stage=c.phase, stage_cap=c.stage_cap, period_id=c.period_id)
+        view = dict(self.ledger.snapshot(c.subscription_label, c.period_id, c.phase), stage=c.phase, stage_cap=c.stage_cap, period_id=c.period_id)
+        if c.mode == "gateway":
+            # Do not present a local ceiling as the available class pool balance.
+            view.update(allocation_cap=None, remaining=max(0,c.stage_cap-view["stage_used"]),
+                        scope="this_device_only", remaining_scope="current_stage_on_this_device",
+                        central_admission=True, rollover_managed=True)
+        return view
 
     def _checkpoint(self) -> dict:
         lessons = load_lessons(self.config.source_root)
@@ -80,6 +86,7 @@ class Bridge:
         payload = {"ok": True, "kind": "status", "provider_called": False, "model": MODEL, "effort": EFFORT,
                    "max_output_tokens": MAX_OUTPUT_TOKENS, "phase": c.phase, "packet_max_bytes": c.packet_max_bytes,
                    "endpoint_pinned": endpoint_ready(self._url), "credential": describe(c.credential_ref), "problems": []}
+        payload["route"] = "managed_unc_pool" if c.mode == "gateway" else "individual_subscription"
         for name, probe in (("checkpoint", self._checkpoint), ("budget", self._budget)):
             try:
                 payload[name] = probe()
@@ -108,6 +115,15 @@ class Bridge:
             request_id, c = args["request_id"], self.config
             row = self.ledger.get(request_id)
             if row is not None:
+                if c.mode == "gateway" and row["state"] in ("held", "inflight"):
+                    packet = compile_packet(c, args["intent"], args["learner_text"], args["artifact_ids"], args["note"])
+                    if row["run"] != self.run_id or packet.sha256 != row["packet_sha"]:
+                        raise BridgeError("request_conflict", "Recovery must use the original run and packet. It never submits a new model request.")
+                    from .gateway import GatewayClient
+                    recovered = await GatewayClient(c.device_id, self._key or load_key(c.credential_ref), transport=self._transport).recover(request_id)
+                    result = self._conclude(request_id, packet, recovered, row["reserved"])
+                    result.update(provider_called=False, resumed=True)
+                    return result
                 return self._resume(row)
             if c.phase == "startup" and args["intent"] != "open":
                 raise BridgeError("startup_opening_only", "The startup phase permits exactly one opening call and nothing else.")
@@ -117,7 +133,11 @@ class Bridge:
             key = self._key or load_key(c.credential_ref)
             if key in packet.instructions or key in packet.text:
                 raise BridgeError("credential_in_packet", "The packet contains the configured key; nothing was sent.")
-            client = SolClient(key, transport=self._transport, url=self._url)
+            if c.mode == "gateway":
+                from .gateway import GatewayClient
+                client = GatewayClient(c.device_id, key, transport=self._transport)
+            else:
+                client = SolClient(key, transport=self._transport, url=self._url)
             self._budget()
             reserved = self.ledger.reserve(
                 request_id=request_id, allocation=c.subscription_label, period=c.period_id, run=self.run_id, stage=c.phase,
@@ -126,7 +146,8 @@ class Bridge:
         except BridgeError as error:
             return failure(error)
         try:
-            outcome = await client.ask(packet.instructions, packet.text)
+            outcome = (await client.ask(packet.instructions, packet.text, request_id, args["intent"]) if c.mode == "gateway"
+                       else await client.ask(packet.instructions, packet.text))
         except BaseException:  # cancellation or a crash after dispatch is not proof of a zero bill
             self.ledger.finish(request_id, "held", detail="interrupted after dispatch; charge unknown")
             raise
@@ -159,7 +180,7 @@ class Bridge:
             recorded = True
         except OSError:
             recorded = False
-        payload = self._payload(receipt, outcome.text if kind in ("completed", "refused") else "", resumed=False)
+        payload = self._payload(receipt, outcome.text if kind in ("completed", "refused") else "", resumed=outcome.retrieved)
         if not recorded:
             payload["local_record"] = "failed to write run files; the ledger still holds this call"
         from .telemetry import record

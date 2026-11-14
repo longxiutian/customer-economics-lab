@@ -100,7 +100,21 @@ def _run(args) -> int:
                          credential_file=args.credential_file, harness=args.harness)
         print(json.dumps(result, indent=2))  # ASCII-safe JSON on Windows console code pages
         return 0 if result["ok"] and not result["problems"] else 1
+    if args.command == "connect":
+        from .setup import connect
+        result = asyncio.run(connect(config_path=args.config, source_root=args.source_root,
+                                     run_dir=args.run_dir, harness=args.harness))
+        print(json.dumps(result, indent=2))
+        return 0 if result["ok"] and not result["problems"] else 1
     config = load_config(args.config)
+    if args.command == "pair-status":
+        from .gateway import GatewayClient
+        from .credentials import load_key
+        if config.mode != "gateway":
+            raise BridgeError("config_conflict", "This command checks managed-UNC device pairing only.")
+        data = asyncio.run(GatewayClient(config.device_id, load_key(config.credential_ref))._request("POST", "/pair/poll", {}))
+        print(json.dumps(data, indent=2))
+        return 0 if data.get("status") == "approved" else 1
     if args.command == "check":
         status = Bridge(config).status()
         print(json.dumps(status, indent=2))
@@ -116,6 +130,8 @@ def _run(args) -> int:
         print(install(args.client, args.target, render(args.client, config)))
         return 0
     if args.command == "set-key":
+        if config.mode == "gateway":
+            raise BridgeError("config_conflict", "Managed UNC credentials are established through device pairing, not pasted keys.")
         store_key(config.credential_ref)
         print("stored in the OS keyring")
         return 0
@@ -139,7 +155,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="unc-sol-bridge", description="Budget-guarded MCP bridge to UNC gpt-6.1-sol.")
     commands = parser.add_subparsers(dest="command", required=True)
     parsers = {name: commands.add_parser(name) for name in
-               ("serve", "check", "fingerprint", "templates", "install", "set-key", "live-opening", "relay", "prepare")}
+               ("serve", "check", "fingerprint", "templates", "install", "set-key", "live-opening", "relay", "prepare", "connect", "pair-status")}
     for name, sub in parsers.items():
         sub.add_argument("--source-root" if name == "fingerprint" else "--config", required=True)
     parsers["templates"].add_argument("--out", required=True)
@@ -153,6 +169,9 @@ def main(argv=None) -> int:
     parsers["prepare"].add_argument("--run-dir", required=True)
     parsers["prepare"].add_argument("--credential-file", required=True)
     parsers["prepare"].add_argument("--harness", required=True)
+    parsers["connect"].add_argument("--source-root", required=True)
+    parsers["connect"].add_argument("--run-dir", required=True)
+    parsers["connect"].add_argument("--harness", required=True, choices=("Codex", "Claude Code", "VS Code"))
     args = parser.parse_args(argv)
     try:
         return _run(args)

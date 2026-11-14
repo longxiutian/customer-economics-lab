@@ -13,15 +13,19 @@ to gpt-6.1-sol through this repository's MCP bridge; never use Luna.
 Read only skills/unc-api/SKILL.md and its startup setup instructions initially.
 Use the separate locked api_bridge environment. On Windows use native Windows
 Python for its secure credential store, including from a WSL-based harness.
-Use the private Studio-North-UNC-test.credentials.json I supply separately.
-Pass its local path to prepare; do not print its contents, put the key in this
-chat, or include it in Git. If the file is missing, ask where I saved it.
+Run the documented connect command with this harness's name, a fresh output
+folder and a configuration outside Git. Show me its BlueChip connection link
+and short code. I will sign in with UNC, send pair CODE, then return here and
+say done. Check pair-status before inference. Do not ask me or my instructor
+for an API key: the service assigns an approved subscription in the background.
+If the connection service is unavailable, report that route failure and stop
+this test; preserve my ordinary chat and provider.
 
 Prepare a fresh guided workspace and debrief log locally. Use sol_status and
 sol_preview, then exactly one sol_ask opening through native MCP tools or the
 same-chat stdio MCP relay. The bridge itself must compile the compact packet and
 enforce the 10,000-token startup cap. Do not send our transcript, reread the whole
-repository, replace my provider, rotate keys or automatically retry.
+repository, replace my provider, manually rotate keys or automatically retry.
 
 Show Sol's actual opening, served model, input/output usage, packet bytes and
 reservation. Remain at checkpoint 0 and wait for me. Do not run readiness,

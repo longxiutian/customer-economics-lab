@@ -16,7 +16,7 @@ All three scenarios use the same guided skill and end with an executive report *
 
 An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
 
-For the UNC API pilot, use the instructor's pinned test release and private credential file, then paste [the startup prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. It follows [the UNC API subskill](skills/unc-api/SKILL.md) and begins with one opening. The full guided workflow and quota adequacy are tested separately.
+For the UNC API pilot, paste [the startup prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. Authorize its short connection code through UNC BlueChip, then return to that chat. No API key is needed. It follows [the UNC API subskill](skills/unc-api/SKILL.md) and begins with one opening. The full guided workflow and quota adequacy are tested separately.
 
 ## Browser scenario: BlueChip + Longleaf
 
