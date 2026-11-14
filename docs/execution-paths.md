@@ -18,20 +18,21 @@ The workspace holds the CSVs, DuckDB SQL, fitted model outputs, figures, TeX/PDF
 your saved judgments and personal-debrief evidence. You can ask the agent to
 investigate alternative code or models after the baseline, preserving the baseline.
 
-## 2. UNC-funded model service through MCP — TBD
+## 2. UNC-funded model service through MCP — pilot
 
-The proposed experience uses a student coding client, potentially Codex on a Free
-account, connected to an authenticated university model service through MCP.
-University-funded calls would use a central quota and return usage receipts.
-The local/cloud workspace still needs a working execution environment for the
-analysis and report. UNC funding, authentication, quotas, supported clients and
-the end-to-end student workflow remain to be agreed and tested with UNC IT.
+The [UNC API pilot](api-route.md) keeps the student in their current coding-agent
+chat. An optional local MCP sends compact checkpoint evidence to UNC
+gpt-6.1-sol; the native agent runs the local analysis and presents the teaching.
+Each supplied APIM subscription has a 400,000-token monthly input/output quota.
+The bridge reserves budget before dispatch and records actual receipts. Its
+one-opening startup test precedes a full guided lab benchmark; automated key
+distribution remains separate work.
 
 MCP exposes tools and information. It does not by itself replace or pay for the
 client's own conversational inference. A model served through an MCP tool and the
 client's native model are separate usage streams. Free Codex is subject to product
 access and limits; its adequacy for this complete lab must be tested. This is a
-scenario for investigation, not a released student instruction or promised benefit.
+pilot whose complete nineteen-checkpoint token requirement still needs measurement.
 
 ## 3. BlueChip with Longleaf-hosted Nemotron
 

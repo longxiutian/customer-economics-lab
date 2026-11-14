@@ -1,0 +1,28 @@
+Run the Studio North UNC API startup test in this chat.
+
+Use https://github.com/longxiutian/customer-economics-lab at the exact test
+revision supplied by the instructor. Otherwise resolve branch
+codex/studio-north-sol-bridge once to a full commit SHA and retrieve that exact
+revision into a fresh folder. Preserve any existing lab. Use the public archive
+if Git is unavailable; I should not need a GitHub account or another app.
+
+Keep my ordinary account's native model, sign-in and provider as the execution
+harness. Do not configure UNC as the native provider. Delegate the lab's teaching
+to gpt-6.1-sol through this repository's MCP bridge; never use Luna.
+
+Read only skills/unc-api/SKILL.md and its startup setup instructions initially.
+Use the separate locked api_bridge environment. On Windows use native Windows
+Python for its secure credential store, including from a WSL-based harness.
+Use the private Studio-North-UNC-test.credentials.json I supply separately.
+Pass its local path to prepare; do not print its contents, put the key in this
+chat, or include it in Git. If the file is missing, ask where I saved it.
+
+Prepare a fresh guided workspace and debrief log locally. Use sol_status and
+sol_preview, then exactly one sol_ask opening through native MCP tools or the
+same-chat stdio MCP relay. The bridge itself must compile the compact packet and
+enforce the 10,000-token startup cap. Do not send our transcript, reread the whole
+repository, replace my provider, rotate keys or automatically retry.
+
+Show Sol's actual opening, served model, input/output usage, packet bytes and
+reservation. Remain at checkpoint 0 and wait for me. Do not run readiness,
+statistical fitting or report generation during this startup test.

@@ -11,10 +11,12 @@ All three scenarios use the same guided skill and end with an executive report *
 | Scenario | Where you work | Model access |
 | --- | --- | --- |
 | [Personal coding agent](#personal-coding-agent-copy-and-paste-into-your-ai-harness) | Codex, Claude Code, or VS Code with an agent and a local/cloud lab folder | Your supported plan or API account |
-| University-funded MCP — **TBD** | A coding agent connected to a proposed UNC model service | Funding, sign-in and free-client suitability still need confirmation |
+| [UNC API pilot](docs/api-route.md) | Your existing coding-agent chat, with local analysis and a compact MCP bridge | UNC gpt-6.1-sol for teaching; the harness's own usage remains separate |
 | [BlueChip + Longleaf](#browser-scenario-bluechip--longleaf) | BlueChip in your browser; the backend runs the lab | Instructor-provisioned Nemotron service during the announced window |
 
 An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
+
+For the UNC API pilot, use the instructor's pinned test release and private credential file, then paste [the startup prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. It follows [the UNC API subskill](skills/unc-api/SKILL.md) and begins with one opening. The full guided workflow and quota adequacy are tested separately.
 
 ## Browser scenario: BlueChip + Longleaf
 
