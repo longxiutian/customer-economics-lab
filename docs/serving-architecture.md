@@ -117,7 +117,7 @@ are still required. No student notifications are sent by the prototype.
    --receipts <private-run-receipts> --run-id <run> --session-id <session>
    --workspace <learner-workspace> --output <private-debrief-folder>`.
    Add `--fixture` only for a rehearsal. The end-command cutoff excludes later
-   activity; instructor feedback stays in the workspace and is not review evidence.
+   activity; instructor feedback is collected separately by the private broker and is not review evidence.
 3. Inspect `evidence-packet.json`; send `opus-request.txt` through the authorized
    metered tool at high effort. Record the terminal response and actual usage.
    Validate, review and render it. Keep unknown provider outcomes pending; no

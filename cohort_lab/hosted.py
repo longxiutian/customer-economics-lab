@@ -233,7 +233,7 @@ class HostedLesson:
         packet = json.loads(json.dumps(packet))
         artifacts = []
         known = set()
-        allowed_source = {ROOT / "docs/business_brief.md", ROOT / "docs/model-specification.md", ROOT / "sql/01_views.sql", ROOT / "data/people.csv"}
+        allowed_source = {ROOT / "docs/business_brief.md", ROOT / "docs/studio-north-scene.md", ROOT / "docs/model-specification.md", ROOT / "sql/01_views.sql", ROOT / "data/people.csv"}
 
         def register(value):
             path = Path(value).resolve()

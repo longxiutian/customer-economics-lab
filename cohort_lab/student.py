@@ -30,8 +30,8 @@ LESSONS = (
            "Verify the frozen dataset and the tools needed to run the analysis locally.",
            "Show each readiness result. Resolve a failed check before moving on."),
     Lesson("Understand the customer journey", 1,
-           "Read the broad customer journey and identify where membership value or friction could arise.",
-           "Which point in this journey could affect renewal? A journey hypothesis is not yet evidence.", ("diagrams/business-journey.png", "diagrams/business-journey.json")),
+           "Set the scene: explain Studio North's monthly membership, templates, guided learning, saving-time and building-skills needs, and management's growth decision. Then map how a member discovers the service, gets first value and decides whether to renew.",
+           "Which point in this journey could affect renewal, and why would it matter to operations and finance as well as acquisition? A journey hypothesis is not yet evidence.", ("diagrams/business-journey.png", "diagrams/business-journey.json", "@docs/studio-north-scene.md")),
     Lesson("Inspect the eight source tables", 1,
            "Identify each source owner, row unit, key and relationship before joining records.",
            "Why could joining transaction and activity rows directly multiply revenue?", ("diagrams/source_inventory.json", "diagrams/source-tables.png")),
@@ -128,13 +128,16 @@ class StudentWorkflow:
                   "message": "Report ready. Continue asking questions, or say end lab / end simulation when finished." if step == len(LESSONS) - 1 else "Type next step to continue; say end lab or end simulation when finished."}
         if closing['state']=='awaiting_feedback':packet['message']=closing['question']
         elif closing['state']=='ended':packet['message']='Lab ended. Generate the usage report from the saved activity. Type continue lab to reopen.'
+        from .instructor_feedback import NOTICE,status as feedback_status
+        if closing['state']=='awaiting_feedback':packet['feedback_notice']=NOTICE
+        if closing['state']=='ended':packet['instructor_feedback']=feedback_status(self.output)
         if error:
             packet["error"] = error
         if closing['usage_report_allowed']:
             debrief = self.output / "debrief/latest.json"
             if debrief.is_file():
                 packet["personal_debrief"] = json.loads(debrief.read_text(encoding="utf-8"))
-                packet["debrief_instruction"] = "Review and personalize the usage/learning report from this ended session, then deliver it. Instructor feedback stays private in the workspace."
+                packet["debrief_instruction"] = "Review and personalize the usage/learning report from this ended session, then deliver it. Instructor feedback is collected separately and excluded from model evidence."
         return packet
 
     def start(self):

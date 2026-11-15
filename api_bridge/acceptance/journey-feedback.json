@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "instructor_simulated_targeted_rehearsal",
+  "source_commit": "db702a57c4a5f92cb4686b11314a0528bab542dd",
+  "backend_commit": "d36b9f0d8385c759c00cd75dbe5740c9ef52082f",
+  "backend_version": 19,
+  "actual_stdio_mcp_teaching_calls": 2,
+  "new_scene_at_checkpoint": 2,
+  "actual_journey_render": true,
+  "explicit_end_then_notice_then_feedback": true,
+  "central_collector_results": [
+    {
+      "route": "university_mcp",
+      "exact_text_and_identifier": true,
+      "delivery": "delivered"
+    },
+    {
+      "route": "personal",
+      "exact_text_and_identifier": true,
+      "delivery": "delivered"
+    }
+  ],
+  "private_export_exact_unicode_crlf_and_spaces": true,
+  "feedback_absent_from_model_evidence": true,
+  "new_debrief_frame_accepted": {
+    "step": 2,
+    "title": "Understand the customer journey",
+    "intent": "debrief",
+    "frame_hash": "Mo1qwq_gGD3SqH86Zdcyi3keuiIAgokvYPRORvLM_dY",
+    "registry": "studio-north-guided/2",
+    "basis": "local_state",
+    "validation": "scope_and_budget",
+    "server_sequence_verified": false
+  },
+  "sol_teaching_tokens": 2909,
+  "targeted_debrief": {
+    "status": "not_dispatched",
+    "reason": "Jev metadata unavailable",
+    "Sol_charged_tokens": 0,
+    "outstanding": 0,
+    "automatic_retry": false
+  },
+  "full_report_repeated": false,
+  "prior_full_rehearsal": "api_bridge/acceptance/full-guided.json",
+  "regression_checks": {
+    "bridge": 98,
+    "feedback_closing_student_debrief": 56,
+    "legacy_automatic": 10,
+    "gateway_feedback_pool_curriculum": 30,
+    "broker_script_suites": 4
+  },
+  "hosted_login_collection": "Authenticated broker integration passes offline; live Longleaf worker adoption requires the class release."
+}

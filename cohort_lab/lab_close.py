@@ -1,4 +1,4 @@
-"""Explicit learner-controlled closing; feedback remains in the learner's workspace."""
+"""Explicit learner-controlled closing, with instructor feedback separated from learning evidence."""
 from __future__ import annotations
 import hashlib
 import json
@@ -31,10 +31,11 @@ def artifacts(output):
 
 def summary(output):
     value=read(output)
-    result={k:value[k] for k in ('state','cycle_id','trigger','requested_at','ended_at','cutoff','artifacts_at_end') if k in value}
+    result={k:value[k] for k in ('state','cycle_id','trigger','requested_at','ended_at','cutoff','artifacts_at_end','notice_version') if k in value}
     result['usage_report_allowed']=value.get('state')=='ended' and value.get('feedback',{}).get('status') in {'provided','declined'}
     if value['state']=='awaiting_feedback':result['question']=QUESTION
-    if value.get('feedback'):result['feedback']={'status':value['feedback']['status'],'sha256':value['feedback']['sha256'],'storage':'workspace_only','sent_to_professor':False}
+    if value.get('feedback'):
+        result['feedback']={'status':value['feedback']['status'],'sha256':value['feedback']['sha256'],'local_original':True} if value.get('notice_version') else {'status':value['feedback']['status'],'sha256':value['feedback']['sha256'],'storage':'workspace_only','sent_to_professor':False}
     return result
 
 
@@ -44,13 +45,15 @@ def handle(output, message):
     normalized=message.strip().casefold().rstrip('.!?').strip()
     value=read(output)
     if normalized=='continue lab' and value['state']!='active':
+        from .instructor_feedback import deliver_safe
+        deliver_safe(output)
         history=value.get('history',[])+[{k:v for k,v in value.items() if k!='history'}]
         _write(output,{'state':'active','history':history})
         return True
     if normalized in TRIGGERS:
         if value['state']=='active':
             stamp=time.time()
-            value={**value,'schema_version':1,'state':'awaiting_feedback','cycle_id':str(uuid.uuid4()),
+            value={**value,'schema_version':2,'notice_version':1,'state':'awaiting_feedback','cycle_id':str(uuid.uuid4()),
                    'trigger':message,'requested_at':stamp,'cutoff':stamp,'artifacts_at_end':artifacts(output),'question':QUESTION}
             _write(output,value)
         return True
@@ -59,8 +62,10 @@ def handle(output, message):
         value.update(state='ended',ended_at=time.time(),feedback={
             'status':'declined' if normalized in SKIPS else 'provided',
             'reply':message,'sha256':hashlib.sha256(message.encode('utf-8')).hexdigest(),
-            'storage':'workspace_only','sent_to_professor':False})
+            'local_original':True})
         _write(output,value)
+        from .instructor_feedback import deliver_safe
+        deliver_safe(output)
         return True
     return value['state']=='ended'
 

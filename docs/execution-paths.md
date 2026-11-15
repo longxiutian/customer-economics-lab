@@ -18,21 +18,28 @@ The workspace holds the CSVs, DuckDB SQL, fitted model outputs, figures, TeX/PDF
 your saved judgments and personal-debrief evidence. You can ask the agent to
 investigate alternative code or models after the baseline, preserving the baseline.
 
-## 2. UNC-funded model service through MCP — pilot
+## 2. UNC-funded model service through MCP
 
-The [UNC API pilot](api-route.md) keeps the student in their current coding-agent
+The [UNC API route](api-route.md) keeps the student in their current coding-agent
 chat. An optional local MCP sends compact checkpoint evidence to UNC
 gpt-6.1-sol; the native agent runs the local analysis and presents the teaching.
-Each supplied APIM subscription has a 400,000-token monthly input/output quota.
-The bridge reserves budget before dispatch and records actual receipts. Its
-one-opening startup test precedes a full guided lab benchmark; automated key
-distribution remains separate work.
+Paste [the UNC API prompt](unc-api-startup-prompt.txt). The bridge prepares its
+secure connection, checks lab relevance with Jev and assigns model access in the
+background. Students do not request or paste an API key. Each subscription has
+a 400,000-token monthly input/output allowance; confirmed ledger headroom controls
+background rollover to another approved subscription. The bridge reserves budget
+before dispatch and records actual receipts. All statistical computation and
+report generation still run in the coding agent's local/cloud workspace.
 
 MCP exposes tools and information. It does not by itself replace or pay for the
 client's own conversational inference. A model served through an MCP tool and the
 client's native model are separate usage streams. Free Codex is subject to product
-access and limits; its adequacy for this complete lab must be tested. This is a
-pilot whose complete nineteen-checkpoint token requirement still needs measurement.
+access and limits. The [full guided rehearsal](../api_bridge/acceptance/full-guided.json)
+completed nineteen checkpoints, fresh CPU fits, the 45-page executive report and
+a reviewed personal debrief. Its 26 Sol calls used 62,757 UNC tokens; native
+harness usage is a separate stream. The instructor also successfully tested the
+same-chat route. These are measured examples, rather than a fixed budget for every
+student's questions.
 
 ## 3. BlueChip with Longleaf-hosted Nemotron
 
@@ -44,17 +51,20 @@ Student workspaces remain outside GPU memory and do not reset when a later reque
 is sent to another replica. This increases inference capacity; CPU fits and PDF
 builds also need sufficient capacity.
 
-The one-GPU rehearsal was verified. Four-replica classroom provisioning and a real
-student end-to-end check remain separate deployment work. The prior fixed rehearsal
-window is expired; neither this document nor a pasted prompt starts a new service.
+Use this route during the instructor's announced service window. Its class-release
+and capacity checks are managed separately from the local UNC API route. A pasted
+prompt does not start a GPU allocation. Keep your saved workspace and use the
+returned progress link while computation or interpretation is queued.
 
 ## The same personal debrief for each route
 
 The [personal-debrief contract](personal-debrief.md) belongs to the GitHub skills.
 It tracks actual questions, saved reasoning, output evidence and available usage
-from the opening. Every route ends with the management report plus personal
-recommendations for Studio North analysis and better AI practice. Measured counters,
-estimated recorded text and unavailable usage remain separate.
+from the opening. Download the executive report at checkpoint 18 and continue
+asking questions. When finished, say **end lab** or **end simulation**, then
+answer **“Any feedback to Professor Tian?”** or say **skip feedback**. The personal
+usage/learning debrief follows that response. Measured counters, estimated
+recorded text and unavailable usage remain separate.
 
 ## Primary references
 
