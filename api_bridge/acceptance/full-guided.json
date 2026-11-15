@@ -1,0 +1,330 @@
+{
+  "schema_version": 1,
+  "kind": "live_scripted_rehearsal_with_simulated_learner",
+  "tested_at_utc": "2026-11-15",
+  "source_commit": "f0a412e48fb872fd44c4a3749d94cb4eeb3aa2a3",
+  "route": "Current coding-agent chat -> local stdio MCP SDK relay -> managed UNC gateway -> gpt-6.1-sol",
+  "principal_design_review": {
+    "model": "claude-fable-5-2",
+    "effort": "xhigh",
+    "prompt_cache_ttl": "1h",
+    "cache_read_tokens": 11512
+  },
+  "served_model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "checkpoints": 19,
+  "sol_calls": 26,
+  "sol_tokens": 62757,
+  "lab_teaching_tokens_before_end": 58532,
+  "debrief_generation_tokens_separate": 4225,
+  "jev_admission_tokens_separate": 22590,
+  "native_harness_tokens": null,
+  "maximum_packet_bytes": 11801,
+  "released_packet_limit_bytes": 16000,
+  "output_token_ceiling": 3000,
+  "fresh_cpu_fits": {
+    "seconds": 433.03,
+    "backend": "cpu",
+    "chains": 4,
+    "uses_saved_reference_fits": false,
+    "max_r_hat": 1.0018219215483757,
+    "min_ess": 950.0994265219699,
+    "divergences": 0
+  },
+  "outputs": {
+    "executive_pdf_pages": 45,
+    "executive_pdf_sha256": "101d9cd9864b4ae5c7c574fc63acb1a178a7eecc56cc708788212b1f222907c6",
+    "reviewed_personal_html": true,
+    "review_json_sha256": "178d11cbda30901342b03d118888502de79ad7d1b0fd649b0de805fa4462db87",
+    "pdf_review": "Cover inspected; all pages rendered and contact sheets inspected. No overfull boxes or undefined-citation warnings in final TeX log."
+  },
+  "closing_checks": {
+    "no_debrief_at_report_completion": true,
+    "questions_after_report_did_not_advance": true,
+    "next_step_at_18_no_op": true,
+    "explicit_end": "end lab",
+    "question": "Any feedback to Professor Tian?",
+    "waited_for_feedback": true,
+    "feedback_text_excluded_from_model_evidence": true,
+    "feedback_delivery": "Workspace only; instructor collection not configured",
+    "cutoff": "End-command timestamp; later activity and debrief generation excluded"
+  },
+  "recovery": {
+    "opening_response_shape_fixed_in_gateway_envelope": true,
+    "same_id_authenticated_retrieval": true,
+    "repeated_opening_inference": false,
+    "unresolved_reservations": 0
+  },
+  "negative_scope": {
+    "result": "outside_lab_scope",
+    "Sol_called": false,
+    "Sol_charge": 0
+  },
+  "offline_checks": {
+    "bridge_tests": 98,
+    "workflow_and_debrief_tests": 59,
+    "gateway_and_pool_tests": 24,
+    "broker_tests": "session/debrief, archived automatic behavior, core broker, file-map passed",
+    "new_gateway_modules_typescript": "passed"
+  },
+  "limits": [
+    "Scripted simulated learner, not a live Duke student-account completion or evidence of student learning.",
+    "Native harness inference has its own account limits; its total was not measured.",
+    "No claim of whole-class live throughput or another student network.",
+    "Hosted BlueChip worker/instruction rollout is a separate class-release adoption gate."
+  ],
+  "requests": [
+    {
+      "checkpoint": 0,
+      "intent": "open",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 708,
+      "output_tokens": 339,
+      "total_tokens": 1047,
+      "packet_bytes": 3643
+    },
+    {
+      "checkpoint": 1,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 630,
+      "output_tokens": 358,
+      "total_tokens": 988,
+      "packet_bytes": 2889
+    },
+    {
+      "checkpoint": 2,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 746,
+      "output_tokens": 344,
+      "total_tokens": 1090,
+      "packet_bytes": 3642
+    },
+    {
+      "checkpoint": 3,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 996,
+      "output_tokens": 497,
+      "total_tokens": 1493,
+      "packet_bytes": 3818
+    },
+    {
+      "checkpoint": 4,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2203,
+      "output_tokens": 621,
+      "total_tokens": 2824,
+      "packet_bytes": 9834
+    },
+    {
+      "checkpoint": 5,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 808,
+      "output_tokens": 366,
+      "total_tokens": 1174,
+      "packet_bytes": 3159
+    },
+    {
+      "checkpoint": 6,
+      "intent": "question",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 3002,
+      "output_tokens": 407,
+      "total_tokens": 3409,
+      "packet_bytes": 10539
+    },
+    {
+      "checkpoint": 6,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2845,
+      "output_tokens": 457,
+      "total_tokens": 3302,
+      "packet_bytes": 9666
+    },
+    {
+      "checkpoint": 7,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1481,
+      "output_tokens": 366,
+      "total_tokens": 1847,
+      "packet_bytes": 5023
+    },
+    {
+      "checkpoint": 8,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1481,
+      "output_tokens": 483,
+      "total_tokens": 1964,
+      "packet_bytes": 5049
+    },
+    {
+      "checkpoint": 9,
+      "intent": "critique",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1775,
+      "output_tokens": 365,
+      "total_tokens": 2140,
+      "packet_bytes": 6796
+    },
+    {
+      "checkpoint": 9,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1469,
+      "output_tokens": 407,
+      "total_tokens": 1876,
+      "packet_bytes": 5391
+    },
+    {
+      "checkpoint": 10,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2929,
+      "output_tokens": 449,
+      "total_tokens": 3378,
+      "packet_bytes": 10029
+    },
+    {
+      "checkpoint": 11,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 3260,
+      "output_tokens": 407,
+      "total_tokens": 3667,
+      "packet_bytes": 9224
+    },
+    {
+      "checkpoint": 12,
+      "intent": "question",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2326,
+      "output_tokens": 416,
+      "total_tokens": 2742,
+      "packet_bytes": 8039
+    },
+    {
+      "checkpoint": 12,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2088,
+      "output_tokens": 584,
+      "total_tokens": 2672,
+      "packet_bytes": 6889
+    },
+    {
+      "checkpoint": 13,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2436,
+      "output_tokens": 486,
+      "total_tokens": 2922,
+      "packet_bytes": 11801
+    },
+    {
+      "checkpoint": 14,
+      "intent": "question",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 3450,
+      "output_tokens": 452,
+      "total_tokens": 3902,
+      "packet_bytes": 11199
+    },
+    {
+      "checkpoint": 14,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 3191,
+      "output_tokens": 459,
+      "total_tokens": 3650,
+      "packet_bytes": 9934
+    },
+    {
+      "checkpoint": 15,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1810,
+      "output_tokens": 550,
+      "total_tokens": 2360,
+      "packet_bytes": 6048
+    },
+    {
+      "checkpoint": 16,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1944,
+      "output_tokens": 475,
+      "total_tokens": 2419,
+      "packet_bytes": 6858
+    },
+    {
+      "checkpoint": 17,
+      "intent": "critique",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2205,
+      "output_tokens": 463,
+      "total_tokens": 2668,
+      "packet_bytes": 8180
+    },
+    {
+      "checkpoint": 17,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 1911,
+      "output_tokens": 438,
+      "total_tokens": 2349,
+      "packet_bytes": 6712
+    },
+    {
+      "checkpoint": 18,
+      "intent": "debrief",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 2864,
+      "output_tokens": 1361,
+      "total_tokens": 4225,
+      "packet_bytes": 11380
+    },
+    {
+      "checkpoint": 18,
+      "intent": "question",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 886,
+      "output_tokens": 517,
+      "total_tokens": 1403,
+      "packet_bytes": 4280
+    },
+    {
+      "checkpoint": 18,
+      "intent": "teach",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 694,
+      "output_tokens": 552,
+      "total_tokens": 1246,
+      "packet_bytes": 3275
+    }
+  ],
+  "post_release_access_check": {
+    "fresh_device_after_allowlist_removed": true,
+    "no_BlueChip_or_manual_key": true,
+    "partial_end_simulation": true,
+    "skip_feedback": true,
+    "checkpoint": 0,
+    "executive_report_exists": false,
+    "validated_personal_debrief": true,
+    "sol_tokens": 3773,
+    "outstanding": 0,
+    "scope": "Second fresh operator device; no instructor device allowlist or BlueChip sign-in. Not a real student-account trial."
+  },
+  "gateway_release": {
+    "site_version": 18,
+    "environment_revision": 21,
+    "source_commit": "723f6da721621fcb843a84b68f3317f5b4e7f2fe",
+    "phase": "full"
+  }
+}
