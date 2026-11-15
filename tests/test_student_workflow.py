@@ -95,11 +95,14 @@ def test_report_is_last_and_requires_real_judgments(setup):
     assert lab.status()["step"] == 17
     completed = lab.handle_message("next step")
     assert completed["step"] == 18
-    assert completed["personal_debrief"]["snapshot_id"]
-    assert (setup[1] / "debrief/latest.json").exists()
+    assert 'personal_debrief' not in completed
+    assert not (setup[1] / "debrief/latest.json").exists()
     assert setup[2] == list(range(8))
     assert (setup[1] / "report/customer-economics-report.pdf").exists()
     assert not lab.handle_message("next step")["advanced"]
+    assert lab.handle_message('end lab')['message']=='Any feedback to Professor Tian?'
+    assert not (setup[1]/'debrief/latest.json').exists()
+    assert lab.handle_message('skip feedback')['closing']['usage_report_allowed']
 
 
 def test_changed_grouping_rewinds_lesson_and_archives_report(setup):

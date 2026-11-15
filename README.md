@@ -11,10 +11,12 @@ All three scenarios use the same guided skill and end with an executive report *
 | Scenario | Where you work | Model access |
 | --- | --- | --- |
 | [Personal coding agent](#personal-coding-agent-copy-and-paste-into-your-ai-harness) | Codex, Claude Code, or VS Code with an agent and a local/cloud lab folder | Your supported plan or API account |
-| University-funded MCP — **TBD** | A coding agent connected to a proposed UNC model service | Funding, sign-in and free-client suitability still need confirmation |
+| [UNC API pilot](docs/api-route.md) | Your existing coding-agent chat, with local analysis and a compact MCP bridge | UNC gpt-6.1-sol for teaching; the harness's own usage remains separate |
 | [BlueChip + Longleaf](#browser-scenario-bluechip--longleaf) | BlueChip in your browser; the backend runs the lab | Instructor-provisioned Nemotron service during the announced window |
 
 An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
+
+For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. The bridge checks lab relevance with Jev and assigns model access in the background. No separate sign-in or API key is needed. Follow [the UNC API subskill](skills/unc-api/SKILL.md), one checkpoint at a time; retain your current app and sign-in.
 
 ## Browser scenario: BlueChip + Longleaf
 
@@ -25,7 +27,7 @@ Use BlueChip during the service window announced for your session. You need your
 3. At each checkpoint, review the tables, diagrams or charts, ask questions, and share your interpretation. Type **next step** when you are ready to continue.
 4. While a calculation runs, open the **live progress** link to see its status. Type **check progress** in BlueChip to retrieve the result.
 5. At the final checkpoint, give your recommendation for Studio North, then type **next step** to generate your report.
-6. Download your **executive report** and **personal learning debrief** before the service window closes. The debrief may finish after the report; use **check progress** to retrieve its download links.
+6. Download your **executive report**. Keep asking questions until you are finished; then say **end lab** or **end simulation**. Answer **“Any feedback to Professor Tian?”** or say **skip feedback** to receive your personal usage/learning debrief. Use **check progress** while that separate review runs.
 
 Your work is saved to your own workspace. Return with the same BlueChip account and ask to resume your lab to continue from your saved checkpoint.
 
@@ -66,8 +68,10 @@ my recommendation and explicitly said "next step".
 Follow docs/personal-debrief.md from the opening. Keep my actual questions,
 visible replies, judgments and output references. Record available model-usage
 receipts; otherwise label an estimate of recorded text and leave full usage
-unknown. At the end, give me the executive report AND a personal learning debrief
-with evidence-linked Studio North and AI-practice next prompts.
+unknown. Deliver the executive report at the final checkpoint. Generate no usage
+report or personal debrief until I say "end lab" or "end simulation"; then ask
+"Any feedback to Professor Tian?" and wait for my answer or "skip feedback".
+Keep that feedback local. Afterward give me the evidence-linked personal debrief.
 ```
 
 The agent retrieves and records one exact revision before setup. If the instructor supplied a guided ZIP or an existing lab folder, it can use that edition instead. Older tagged releases may not contain the teaching skill, so the agent checks before proceeding. This coding-agent setup is separate from the BlueChip browser route.

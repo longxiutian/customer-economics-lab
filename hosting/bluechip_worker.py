@@ -160,7 +160,7 @@ def execute_one(config, job_path, result_path):
             result=execute_assigned(config,job)
         else:
             result = lesson.execute(job)
-            if result['packet'].get('validation',{}).get('report_complete') and config.get('telemetry'):
+            if result['packet'].get('closing',{}).get('usage_report_allowed') and config.get('telemetry'):
                 from hosting.hosted_debrief import prepare
                 base,output,receipts=lesson.locations(job['run_id'])
                 result['packet']['debrief_input']=prepare(config,output,receipts,job)

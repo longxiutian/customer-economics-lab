@@ -88,6 +88,9 @@ class Telemetry:
         """
         run, job = receipt["run_id"], receipt["job_id"]
         payload = receipt["payload"]
+        message=payload.get('message','').strip().casefold()
+        control=message in {'end lab','end simulation','continue lab'} or receipt.get('closing_before')=='ended'
+        purpose='session_control' if control else 'instructor_feedback' if receipt.get('closing_before')=='awaiting_feedback' else 'lab'
         self.append(event_id="cpu-request:" + job, run_id=run, session_id=session_id,
                     kind="lab_request", happened_at=receipt["started_at"],
                     payload={"request_id": job, "action": payload["action"],
@@ -95,6 +98,7 @@ class Telemetry:
                              "choice_key": payload.get("key"), "choice_value": payload.get("value"),
                              "execution_mode": payload.get("mode", "guided"),
                              "source": "lab_api_received", "verbatim_platform_transcript": False,
+                             "purpose":purpose,
                              "checkpoint_before": receipt.get("expected_step")})
         if receipt["status"] == "started":
             return

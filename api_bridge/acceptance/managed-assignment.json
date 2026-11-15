@@ -1,0 +1,71 @@
+{
+  "schema_version": 2,
+  "feature": "direct-managed-UNC-subscriptions",
+  "phase": "startup-only",
+  "model": "gpt-6.1-sol",
+  "effort": "medium",
+  "admission": {
+    "provider": "Venice",
+    "model": "jev-latest",
+    "policy": "studio-north-purpose/1",
+    "policy_sha256": "2ad357461a5c04b0c6f9eeace0d55794dbe67e01f050b88d1ce34bac9ab1a9c4",
+    "bluechip_required": false,
+    "person_identity_verified": false,
+    "credential_scope": "saved device connection"
+  },
+  "student_receives_apim_key": false,
+  "assignment": "central-atomic-first-admission-after-purpose-check",
+  "rollover": "automatic-ledger-headroom-only",
+  "rollover_on_ambiguous_failure": false,
+  "subscription_cap": 400000,
+  "startup_stage_cap": 10000,
+  "startup_one_opening_per_device": true,
+  "packet_bytes_max": 5000,
+  "max_output_tokens": 3000,
+  "verification": {
+    "offline_python_tests": 96,
+    "offline_server_tests": 20,
+    "real_sqlite_concurrency": {
+      "independent_devices": 45,
+      "same_device_overlapping_requests": 45
+    },
+    "live_production_shape_classifier_cases": 8,
+    "live_classifier_cases_correct": 8,
+    "live_startup": true,
+    "live_model": "gpt-6.1-sol",
+    "live_sol_usage": {
+      "cached_input_tokens": 0,
+      "charge": 902,
+      "inclusive_of_reasoning_and_cache": true,
+      "input_bound_tokens": 3324,
+      "input_tokens": 607,
+      "output_tokens": 295,
+      "reasoning_tokens": 0,
+      "reserved": 6324,
+      "scope": "university_mcp",
+      "state": "settled"
+    },
+    "live_admission_usage": {
+      "input_tokens": 711,
+      "output_tokens": 42
+    },
+    "live_cached_repeat": true,
+    "live_authenticated_gateway_recovery": true,
+    "live_irrelevant_denial_before_allocation": true,
+    "pool_eligible_subscriptions": 127,
+    "student_on_other_computer": false,
+    "full_lab_benchmark": false
+  },
+  "release_gates": [
+    "Test in the student's own coding harness on another computer",
+    "Benchmark and release guided continuation separately"
+  ],
+  "hosting_limit": "Bounded post-disconnect grace; longer unknown outcomes remain held and are never replayed",
+  "consultation": {
+    "model": "claude-fable-5-2",
+    "effort": "xhigh",
+    "cache_ttl": "1h",
+    "main_design_reasoner": true
+  },
+  "checked_utc": "2026-11-15"
+}

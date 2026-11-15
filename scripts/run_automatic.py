@@ -78,8 +78,7 @@ def run(output: Path, *, prompt: str | None, harness: str, resume: bool = False,
         if hosted:
             state['debrief_review'] = 'A separate instructor review job uses the actual hosted telemetry; no guided participation is claimed.'
         else:
-            state['personal_debrief'] = debrief.prepare(output)
-            state['debrief_review'] = 'The current agent must personalize, validate and render the saved scaffold before delivery.'
+            state['debrief_review'] = 'Wait for the learner to say end lab or end simulation and answer or skip the instructor-feedback question before generating the usage report.'
         _write_json(receipt, state)
         return state
     except BaseException as error:

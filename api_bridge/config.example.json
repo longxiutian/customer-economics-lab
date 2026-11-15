@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "source_root": "/absolute/path/to/studio-north",
+  "run_dir": "/absolute/path/to/studio-north/runs/my-lesson",
+  "state_dir": "/absolute/path/to/home/.unc-sol-bridge/state",
+  "subscription_label": "student-allocation-label",
+  "period_id": "2026-11",
+  "baseline_tokens": 0,
+  "baseline_source": "where and when this month's usage was read; never a guess",
+  "allocation_cap": 400000,
+  "phase": "startup",
+  "stage_cap": 10000,
+  "source_fingerprint": "paste the output of: unc-sol-bridge fingerprint --source-root <source_root>",
+  "credential_ref": {"kind": "keyring", "service": "unc-sol-bridge", "name": "student"}
+}

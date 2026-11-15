@@ -26,6 +26,7 @@ class AutomaticTest:
         return self.status()
 
     def status(self):
+        from .lab_close import summary
         state = json.loads(self.path.read_text(encoding='utf-8'))
         if state['implementation'] != implementation_snapshot() or state['inputs'] != verify_frozen_inputs(self.data_dir):
             raise WorkflowError('The automatic test release changed; preserve the original workspace for operator review.')
@@ -37,12 +38,17 @@ class AutomaticTest:
                 'completed_stages': state['completed_stages'],
                 'objective': 'Review the computed Studio North report and its evidence.',
                 'check': 'This automatic test does not establish completion of the guided lesson or independent student judgments.',
-                'message': 'Automatic analysis complete. Deliver the report and request the separate personal debrief.',
+                'closing':summary(self.output),
+                'message': 'Report ready. Say end lab or end simulation when finished; then answer the instructor-feedback question before the usage report.',
                 'result': {'files': [{'path': str(self.path)}]}}
 
     def handle_message(self, message):
         # Actual questions are logged by HostedLesson; no computation restarts.
-        return self.status()
+        from .lab_close import handle,summary
+        handle(self.output,message)
+        result=self.status();closing=summary(self.output)
+        if closing['state']=='awaiting_feedback':result['message']=closing['question']
+        return result
 
     def set_choice(self, key, value):
         raise WorkflowError('This automatic test has an analyst recommendation. It cannot be converted into guided participation by saving a choice.')

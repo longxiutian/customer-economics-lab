@@ -13,10 +13,16 @@ def input_hash(output):
     output=Path(output)
     hashes={name:hashlib.sha256((output/name).read_bytes()).hexdigest() for name in
             ('report/customer-economics-report.pdf','learner_choices.json') if (output/name).is_file()}
+    from cohort_lab.lab_close import binding
+    hashes['ended_session']=binding(output)['sha256']
     return hashlib.sha256(json.dumps(hashes,sort_keys=True).encode()).hexdigest()
 
 
 def completed(output, *, expected_hash=None):
+    from cohort_lab.lab_close import summary
+    if not summary(output)['usage_report_allowed']:
+        return {'status':'awaiting_feedback' if summary(output)['state']=='awaiting_feedback' else 'awaiting_end',
+                'reason':'Wait for end lab or end simulation, then ask: Any feedback to Professor Tian?'}
     root=io_path(output)/'personal-debrief'
     pointer=root/'completion.json'
     if pointer.is_file():
@@ -28,6 +34,9 @@ def completed(output, *, expected_hash=None):
 
 def prepare(config, output, receipts, job):
     """CPU side: freeze redacted evidence after the final receipt was committed."""
+    from cohort_lab.lab_close import binding,require_ended
+    require_ended(output,verify_artifacts=True)
+    closing=binding(output)
     root=Path(output)/'personal-debrief'
     root.mkdir(parents=True,exist_ok=True)
     fingerprint=input_hash(output)
@@ -41,8 +50,8 @@ def prepare(config, output, receipts, job):
         receipt=json.loads(path.read_text(encoding='utf-8'))
         if receipt['payload']['action']!='debrief':
             ledger.ingest_receipt(receipt,session_id=telemetry['session_id'])
-    snapshot=freeze(ledger,run_id=job['run_id'],session_id=telemetry['session_id'],path=version/'evidence.json',fixture=config.get('fixture',False))
-    return {'binding':fingerprint,'evidence':provider_packet(snapshot)}
+    snapshot=freeze(ledger,run_id=job['run_id'],session_id=telemetry['session_id'],path=version/'evidence.json',fixture=config.get('fixture',False),cutoff=closing['cutoff'])
+    return {'binding':fingerprint,'closing':closing,'evidence':provider_packet(snapshot)}
 
 
 def create(config, output, receipts, job, *, client_factory=None):
@@ -52,6 +61,19 @@ def create(config, output, receipts, job, *, client_factory=None):
 def create_frozen(config, output, frozen, job, *, client_factory=None):
     """Windows review side: accepts only the assigned broker job's frozen packet."""
     import re
+    closing=frozen.get('closing',{})
+    if not closing.get('usage_report_allowed') or closing.get('state')!='ended':
+        raise ValueError('Usage report requires the explicit end command and answered/skipped instructor feedback.')
+    proof={k:v for k,v in closing.items() if k!='sha256'}
+    if hashlib.sha256(json.dumps(proof,sort_keys=True,separators=(',',':')).encode()).hexdigest()!=closing.get('sha256'):
+        raise ValueError('Invalid ended-session proof')
+    # A protected assigned review job carries a redacted closing receipt across
+    # the CPU/review stores. The instructor-feedback text stays in its workspace.
+    closure_path=io_path(output)/'usage/lab-close.json'
+    if not closure_path.exists():write_json(closure_path,closing)
+    else:
+        from cohort_lab.lab_close import binding
+        if binding(output)['sha256']!=closing['sha256']:raise ValueError('Closing receipt differs from this workspace.')
     from hosting.metered_debrief import MeteredClient, checked_response
     fingerprint=frozen['binding']
     if not re.fullmatch('[a-f0-9]{64}',fingerprint):raise ValueError('Invalid report binding')
@@ -107,10 +129,12 @@ def execute_assigned(config, job, *, client_factory=None):
     if not IDENTIFIER.fullmatch(job['id']) or job['release_hash']!=config['release_hash']:
         raise ValueError('Invalid assigned job or pinned release')
     source=job.get('source_packet') or {}
-    if job['payload']['action']!='debrief' or source.get('step')!=18 or not source.get('validation',{}).get('report_complete'):
-        raise ValueError('A debrief needs this assigned workspace\'s validated report')
+    if job['payload']['action']!='debrief' or not source.get('closing',{}).get('usage_report_allowed'):
+        raise ValueError('A debrief needs this assigned workspace\'s ended session and handled feedback')
     frozen=source.get('debrief_input')
     if not frozen:raise ValueError('The CPU worker has not frozen review evidence')
+    if {k:v for k,v in frozen.get('closing',{}).items() if k!='sha256'}!=source.get('closing'):
+        raise ValueError('The review packet belongs to a different session ending')
     adapter=HostedLesson(Path(config['runtime']))
     base,output,receipts=adapter.locations(job['run_id'])
     output,receipts=io_path(output),io_path(receipts)

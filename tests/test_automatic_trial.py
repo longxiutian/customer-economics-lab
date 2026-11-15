@@ -51,7 +51,10 @@ def test_once_through_keeps_actual_prompt_and_produces_an_honest_debrief(trial):
     assert packet['metrics']['lab_requests'] == 1
     assert packet['metrics']['full_session_inference_tokens'] is None
     assert any(e['kind'] == 'prompt_excerpt' and e['text'] == prompt for e in packet['evidence'])
-    document = json.loads((output / 'debrief/latest.json').read_text())['debrief']
+    assert not (output/'debrief/latest.json').exists()
+    from cohort_lab.lab_close import handle
+    handle(output,'end lab');handle(output,'skip feedback')
+    document=debrief.prepare(output)['debrief']
     from pathlib import Path
     assert 'automatic trial; no teaching checkpoints' in Path(document).read_text(encoding='utf-8')
     automatic.run(output, prompt=None, harness='Fixture agent', resume=True)

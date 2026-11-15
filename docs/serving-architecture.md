@@ -111,9 +111,13 @@ are still required. No student notifications are sent by the prototype.
 ## Reproduce and activate deliberately
 
 1. Run `uv run --frozen python -m pytest tests/test_lab_telemetry.py tests/test_hosted.py`.
-2. Import a completed run with `uv run --frozen python -m hosting.student_debrief
+2. After the learner says **end lab** or **end simulation** and answers or skips
+   **“Any feedback to Professor Tian?”**, import that ended run with
+   `uv run --frozen python -m hosting.student_debrief
    --receipts <private-run-receipts> --run-id <run> --session-id <session>
-   --output <private-debrief-folder>`. Add `--fixture` only for a rehearsal.
+   --workspace <learner-workspace> --output <private-debrief-folder>`.
+   Add `--fixture` only for a rehearsal. The end-command cutoff excludes later
+   activity; instructor feedback stays in the workspace and is not review evidence.
 3. Inspect `evidence-packet.json`; send `opus-request.txt` through the authorized
    metered tool at high effort. Record the terminal response and actual usage.
    Validate, review and render it. Keep unknown provider outcomes pending; no

@@ -151,6 +151,10 @@ def snapshot(output, *, private_terms=()):
     output = Path(output).resolve()
     s = session(output)
     events = Telemetry(output / "usage/events.sqlite").events(s["run_id"], s["session_id"])
+    from .lab_close import summary
+    closing=summary(output)
+    cutoff=closing.get('cutoff') if closing.get('usage_report_allowed') else None
+    if cutoff:events=[e for e in events if e['received_at']<=cutoff]
     lesson = read(output / "lesson_state.json", {})
     automatic = read(output / "automatic_run.json", {})
     if lesson and automatic:
@@ -160,7 +164,7 @@ def snapshot(output, *, private_terms=()):
     choices = read(output / "learner_choices.json", {})
     if automatic and choices:
         raise ValueError("Automatic trial outputs must not contain synthesized learner judgments.")
-    prompts = (automatic or lesson).get("messages", [])
+    prompts = [p for p in (automatic or lesson).get("messages", []) if p.get('purpose','lab')=='lab' and (not cutoff or p.get('happened_at',0)<=cutoff)]
     texts = [p["text"] for p in prompts]
     texts += [e["payload"]["text"] for e in events if e["kind"] == "text" and e["payload"]["scope"] == "lab"]
     files = {}
@@ -170,9 +174,11 @@ def snapshot(output, *, private_terms=()):
             import hashlib
             files[name] = hashlib.sha256(p.read_bytes()).hexdigest()
     lesson_identity = {k: lesson.get(k) for k in ("completed_step", "messages", "inputs", "implementation", "invalidations")}
+    lesson_identity['messages']=prompts
     if automatic:
         lesson_identity = {k: automatic.get(k) for k in ("mode", "status", "messages", "inputs", "implementation", "completed_stages")}
-    sid = sha({"session": s, "events": [e["digest"] for e in events], "lesson": lesson_identity,
+        lesson_identity['messages']=prompts
+    sid = sha({"session": s, "events": [e["digest"] for e in events], "lesson": lesson_identity,"closing":closing,
                "choices": choices, "artifacts": files})[:24]
     streams = usage_summary(events)
     for i, row in enumerate(streams, 1):
@@ -209,7 +215,7 @@ def snapshot(output, *, private_terms=()):
         add("artifact", f"Saved artifact {name}; SHA-256 {digest}", "workspace file hash")
     for e in [e for e in events if e["kind"] == "text" and e["payload"]["role"] == "assistant" and e["payload"]["scope"] == "lab"][-2:]:
         add("model_excerpt", e["payload"]["text"][:2200], "recorded visible assistant reply; not independently verified")
-    return {"schema_version": 2, "snapshot_id": sid, "fixture": False,
+    return {"schema_version": 2, "snapshot_id": sid, "fixture": False,"closing":closing,
             "metrics": metrics, "coverage": coverage, "evidence": evidence}
 
 
@@ -235,6 +241,8 @@ def fallback_feedback(packet):
 
 
 def render_portable(packet, response, *, path, provenance=None):
+    if not packet.get('closing',{}).get('usage_report_allowed'):
+        raise ValueError('End the lab and answer or skip the instructor-feedback question before rendering a usage report.')
     validate_response(packet, response)
     esc = html.escape
     m = packet["metrics"]
@@ -268,6 +276,8 @@ def render_portable(packet, response, *, path, provenance=None):
 
 def prepare(output):
     output = Path(output)
+    from .lab_close import require_ended
+    require_ended(output,verify_artifacts=True)
     packet = snapshot(output)
     folder = output / "debrief" / packet["snapshot_id"]
     write(folder / "evidence-packet.json", packet)
@@ -298,10 +308,14 @@ def main():
     elif a.command == "record": result = {"appended": record(a.output, read(a.file))}
     elif a.command == "prepare": result = prepare(a.output)
     else:
+        from .lab_close import require_ended
+        current_close=require_ended(a.output,verify_artifacts=True)
         packet, response = read(a.snapshot), read(a.response)
         latest = read(a.output / "debrief/latest.json")
         if not latest or latest["snapshot_id"] != packet["snapshot_id"] or Path(latest["evidence"]).resolve() != a.snapshot.resolve():
             raise ValueError("Use this workspace's current frozen evidence packet.")
+        if packet.get('closing')!=current_close:
+            raise ValueError('This debrief belongs to an earlier lab ending. Prepare the current ended session first.')
         validate_response(packet, response)
         target = a.snapshot.parent / "personal-debrief.html"
         write(a.snapshot.parent / "feedback-reviewed.json", response)
