@@ -21,6 +21,15 @@ def record(config, receipt, text):
         if not Path(module.__file__).resolve().is_relative_to(config.source_root):
             return "source_conflict"
         request_id, usage = receipt["request_id"], receipt["usage"]
+        admission = receipt.get("admission") or {}
+        measured = admission.get("usage") or {}
+        if all(type(measured.get(k)) is int and measured[k]>=0 for k in ("input_tokens","output_tokens")):
+            module.record(config.run_dir, {
+                "event_id":f"jev-usage-{request_id}","kind":"usage","provider":"Venice",
+                "model":admission.get("model","jev-latest"),"meter_scope":"admission","stream_id":"studio-north-jev",
+                "mode":"call","source":f"sol_bridge/{request_id}.json","semantics":"openai_inclusive",
+                "usage":measured,"happened_at":admission.get("checked_at",0),
+            })
         if usage["input_tokens"] is None or usage["output_tokens"] is None:
             # The bridge ledger/receipt retains the unknown hold. Do not seal an
             # immutable per-call usage event before recovery obtains its receipt.

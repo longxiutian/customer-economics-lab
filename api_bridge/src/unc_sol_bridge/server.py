@@ -79,7 +79,8 @@ def build_server(config_path) -> MCPServer:
     async def sol_ask(request_id: str, intent: Intent, learner_text: str = "", artifact_ids: list[str] = [], note: str = "") -> CallToolResult:  # noqa: B006
         """One metered UNC gpt-6.1-sol teaching call for the saved checkpoint. The server builds the whole prompt.
         Pass a new unique request_id per learner turn; learner_text must be the learner's literal words. A repeated
-        request_id returns the recorded answer without a new call. Never retry a failed call on your own."""
+        request_id returns the recorded answer without a new call. For a managed opening, learner_text is the
+        literal starting request sent separately to Jev for lab-purpose admission. Never retry a failed call on your own."""
         try:
             return _result(await bridge().ask(
                 {"request_id": request_id, "intent": intent, "learner_text": learner_text,

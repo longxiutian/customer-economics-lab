@@ -33,6 +33,7 @@ class Outcome:
     http_status: int | None = None
     detail: str = ""
     retrieved: bool = False
+    admission: dict | None = None
 
 
 def endpoint_ready(url=None) -> bool:

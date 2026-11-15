@@ -107,14 +107,14 @@ def _run(args) -> int:
         print(json.dumps(result, indent=2))
         return 0 if result["ok"] and not result["problems"] else 1
     config = load_config(args.config)
-    if args.command == "pair-status":
+    if args.command == "connection-status":
         from .gateway import GatewayClient
         from .credentials import load_key
         if config.mode != "gateway":
-            raise BridgeError("config_conflict", "This command checks managed-UNC device pairing only.")
-        data = asyncio.run(GatewayClient(config.device_id, load_key(config.credential_ref))._request("POST", "/pair/poll", {}))
+            raise BridgeError("config_conflict", "This command checks the managed UNC device connection only.")
+        data = asyncio.run(GatewayClient(config.device_id, load_key(config.credential_ref))._request("GET", "/device/status"))
         print(json.dumps(data, indent=2))
-        return 0 if data.get("status") == "approved" else 1
+        return 0 if data.get("status") == "registered" else 1
     if args.command == "check":
         status = Bridge(config).status()
         print(json.dumps(status, indent=2))
@@ -155,7 +155,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="unc-sol-bridge", description="Budget-guarded MCP bridge to UNC gpt-6.1-sol.")
     commands = parser.add_subparsers(dest="command", required=True)
     parsers = {name: commands.add_parser(name) for name in
-               ("serve", "check", "fingerprint", "templates", "install", "set-key", "live-opening", "relay", "prepare", "connect", "pair-status")}
+               ("serve", "check", "fingerprint", "templates", "install", "set-key", "live-opening", "relay", "prepare", "connect", "connection-status")}
     for name, sub in parsers.items():
         sub.add_argument("--source-root" if name == "fingerprint" else "--config", required=True)
     parsers["templates"].add_argument("--out", required=True)

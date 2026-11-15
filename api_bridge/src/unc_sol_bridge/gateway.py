@@ -36,10 +36,10 @@ class GatewayClient:
             raise BridgeError("gateway_response_invalid", "The gateway did not return a structured result; preserve the reservation.")
         return data
 
-    async def ask(self, instructions, text, request_id, intent):
+    async def ask(self, instructions, text, request_id, intent, learner_text):
         try:
             data = await self._request("POST", "/ask", {"request_id": request_id, "intent": intent,
-                                                     "instructions": instructions, "packet": text})
+                                                     "instructions": instructions, "packet": text, "learner_text": learner_text})
         except BridgeError:
             return Outcome("gateway_unknown", detail="Retrieve the same request ID; do not send a new opening.")
         return self._outcome(data)
@@ -61,7 +61,8 @@ class GatewayClient:
             import re
             if isinstance(canonical, str) and re.fullmatch(r"[A-Za-z0-9_-]{8,64}", canonical):
                 detail += "; saved request: " + canonical
-            return Outcome("gateway_denied" if known_unsent else "gateway_unknown", dispatched=not known_unsent, detail=detail)
+            return Outcome("gateway_denied" if known_unsent else "gateway_unknown", dispatched=not known_unsent, detail=detail,
+                           admission=data.get("admission") if isinstance(data.get("admission"),dict) else None)
         raw = data["outcome"]
         accepted = {f.name for f in fields(Outcome)}
         if set(raw) - accepted or not isinstance(raw.get("kind"), str):
@@ -79,11 +80,3 @@ def new_secret():
 def secret_hash(secret):
     import base64
     return base64.urlsafe_b64encode(hashlib.sha256(secret.encode("utf-8")).digest()).decode().rstrip("=")
-
-
-async def start_pair(secret, harness, *, transport=None):
-    client = GatewayClient("pending", secret, transport=transport)
-    data = await client._request("POST", "/pair/start", {"secret_hash": secret_hash(secret), "harness": harness})
-    if not data.get("ok"):
-        raise BridgeError("pairing_unavailable", "UNC connection setup is unavailable. No model was called.")
-    return data

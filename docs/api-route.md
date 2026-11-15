@@ -31,23 +31,14 @@ configuration outside the checkout, then runs:
 uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --harness Codex
 ```
 
-Use `Codex`, `"Claude Code"` or `"VS Code"` for the actual harness. Connection
-creates a pending device at the instructor's gateway, saves an opaque credential
-in the secure OS keyring, runs `student.py start` and initializes debrief logging.
-It does not call a model or send an API key to the student. Open the returned
-BlueChip link, sign in with UNC and send `pair CODE` using the printed short
-code. Return to the original coding chat and say `done`, then run:
-
-```text
-uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge pair-status --config CONFIG
-```
-
-Continue only when its status is `approved`. Re-running `connect` resumes setup;
-it can renew an expired short code without changing the device or usage ledger.
-Pair codes expire after 15 minutes;
-device authorization lasts 30 days and can be revoked. A secure keyring is
-required for this route; there is no plaintext fallback. Unavailable connection
-or enrollment checks do not change the native harness or call another provider.
+Use `Codex`, `"Claude Code"` or `"VS Code"` for the actual harness. Preparation
+is entirely local: create a random device credential in the secure OS keyring,
+run `student.py start`, and initialize debrief logging. Re-running `connect`
+resumes that configuration. The first opening registers the device automatically;
+no separate sign-in, pairing code, student name or API-key entry is needed.
+The device credential lasts 30 days and can be revoked. A secure keyring is
+required; there is no plaintext fallback. This device identifies a saved
+connection, not a verified person or enrollment.
 
 Use a connected native `unc_sol` tool, or the explicit same-chat SDK relay:
 
@@ -57,8 +48,18 @@ uv run --project api_bridge --frozen python -m unc_sol_bridge relay --config CON
 uv run --project api_bridge --frozen python -m unc_sol_bridge relay --config CONFIG --tool sol_ask --arguments OPEN_ASK_JSON
 ```
 
-`OPEN_PREVIEW_JSON` contains `{"intent":"open"}`.
-`OPEN_ASK_JSON` contains `{"request_id":"a-new-unique-id","intent":"open"}`.
+`OPEN_PREVIEW_JSON` contains `{"intent":"open","learner_text":"THE LITERAL STARTING REQUEST"}`.
+`OPEN_ASK_JSON` contains the same literal text plus a unique `request_id`.
+Use the actual student message, not the placeholder or an agent-composed request.
+The starting request must fit 4096 UTF-8 bytes; oversized text is rejected, never
+silently truncated. It is sent separately to Venice-hosted **Jev** for two typed
+judgments: lab purpose and an explicit request to bypass access rules. The
+gateway applies the frozen policy in `api_bridge/admission/relevance-policy.json`.
+An uncertain, rejected or unavailable check does not allocate a student key or
+call Sol. No alternate classifier is called. The opening packet sent to Sol
+must match the released hash exactly; the literal starting request cannot
+override its instructions. Both stages have durable request IDs and separate
+usage receipts. Repeat IDs retrieve results without repeating either inference.
 These small argument files have no credentials. The relay starts the same local
 stdio server using the official MCP SDK, performs one call and closes the child.
 Windows children use `pythonw.exe`. It does not bypass the MCP or replace the
@@ -78,7 +79,7 @@ stay in a local manifest. Learner words and judgments are retained literally or
 rejected if oversized. The API accepts no transcript, arbitrary file body, system
 instructions, previous-response ID, model or endpoint.
 
-Each UNC HTTP request fixes `gpt-6.1-sol`, medium reasoning, non-streaming,
+Each teaching HTTP request fixes `gpt-6.1-sol`, medium reasoning, non-streaming,
 `store=false`, no tools and no retries. It refuses redirects. A different served
 model is rejected and quarantines the allocation.
 
@@ -95,7 +96,7 @@ the call, counting inclusive input/output once. An actual overrun quarantines
 future calls. Concurrent processes share the same owner-local ledger.
 
 Each subscription has at most 400,000 combined tokens. The managed gateway
-accounts for usage across the learner's devices and assigned subscriptions.
+accounts for usage across the saved device connection's assigned subscriptions.
 Before a request, it can close an allowance with insufficient confirmed
 headroom and assign a fresh approved subscription. This happens in the
 background; the same chat, files, checkpoint and usage history continue.
@@ -152,6 +153,8 @@ Managed assignment has its own [acceptance record](../api_bridge/acceptance/mana
 which distinguishes offline concurrency and rollover tests from live connection
 and student-account checks. A successful connection alone does not establish a
 completed lesson or report.
+The [Jev calibration receipt](../api_bridge/admission/live-calibration.json)
+records the tested policy and representative production-shaped cases.
 
 ```text
 uv sync --project api_bridge --frozen --extra keyring --group dev

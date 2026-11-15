@@ -5,10 +5,11 @@ import hashlib
 import json
 import re
 import time
+from dataclasses import replace
 
 from .budget import Ledger
 from .client import SolClient, endpoint_ready
-from .config import EFFORT, MAX_OUTPUT_TOKENS, MODEL, BridgeConfig, BridgeError
+from .config import EFFORT, MAX_OUTPUT_TOKENS, MODEL, KEY_SHAPED, BridgeConfig, BridgeError
 from .credentials import describe, load_key
 from .packets import INTENTS, compile_packet, load_lessons, load_state, source_fingerprint
 
@@ -56,6 +57,18 @@ class Bridge:
         self.run_id = hashlib.sha256(str(config.run_dir).encode("utf-8")).hexdigest()[:16]
         self.local = config.run_dir / "sol_bridge"  # created only after the lesson exists, so a fresh run folder stays fresh
 
+    def _packet(self,args):
+        managed_open=self.config.mode=="gateway" and args["intent"]=="open"
+        literal=args["learner_text"]
+        if managed_open and (not literal.strip() or len(literal.encode("utf-8"))>4096 or KEY_SHAPED.search(literal)):
+            raise BridgeError("learner_text_required", "Pass the learner's literal starting request, at most 4096 UTF-8 bytes, with no credentials. It goes to Jev for the lab-purpose check.")
+        packet=compile_packet(self.config,args["intent"],"" if managed_open else literal,args["artifact_ids"],args["note"])
+        if managed_open:
+            request_sha=hashlib.sha256(literal.encode("utf-8")).hexdigest()
+            packet=replace(packet,sha256=hashlib.sha256((packet.sha256+"\0"+request_sha).encode()).hexdigest(),
+                           manifest={**packet.manifest,"admission_request_sha256":request_sha,"admission_request_bytes":len(literal.encode("utf-8"))})
+        return packet
+
     def _budget(self) -> dict:
         c = self.config
         self.ledger.open_period(c.subscription_label, c.period_id, c.allocation_cap, c.baseline_tokens, c.baseline_source)
@@ -96,7 +109,7 @@ class Bridge:
 
     def preview(self, raw) -> dict:
         args = _arguments(raw, ("intent", "learner_text", "artifact_ids", "note"), ("intent",))
-        packet = compile_packet(self.config, args["intent"], args["learner_text"], args["artifact_ids"], args["note"])
+        packet = self._packet(args)
         budget, needed = self._budget(), packet.input_bound + MAX_OUTPUT_TOKENS
         fits = budget["quarantine"] is None and needed <= budget["remaining"] and budget["stage_used"] + needed <= self.config.stage_cap
         return {"ok": True, "kind": "preview", "provider_called": False, "packet": packet.manifest | {"sha256": packet.sha256},
@@ -115,8 +128,10 @@ class Bridge:
             request_id, c = args["request_id"], self.config
             row = self.ledger.get(request_id)
             if row is not None:
+                if c.mode=="gateway" and self._packet(args).sha256!=row["packet_sha"]:
+                    raise BridgeError("request_conflict", "This request ID already binds a different packet or starting request.")
                 if c.mode == "gateway" and row["state"] in ("held", "inflight"):
-                    packet = compile_packet(c, args["intent"], args["learner_text"], args["artifact_ids"], args["note"])
+                    packet = self._packet(args)
                     if row["run"] != self.run_id or packet.sha256 != row["packet_sha"]:
                         raise BridgeError("request_conflict", "Recovery must use the original run and packet. It never submits a new model request.")
                     from .gateway import GatewayClient
@@ -127,11 +142,11 @@ class Bridge:
                 return self._resume(row)
             if c.phase == "startup" and args["intent"] != "open":
                 raise BridgeError("startup_opening_only", "The startup phase permits exactly one opening call and nothing else.")
-            packet = compile_packet(c, args["intent"], args["learner_text"], args["artifact_ids"], args["note"])
+            packet = self._packet(args)
             if not endpoint_ready(self._url):
                 raise BridgeError("endpoint_unpinned", "This release has no pinned https Responses URL; no call is possible.")
             key = self._key or load_key(c.credential_ref)
-            if key in packet.instructions or key in packet.text:
+            if key in packet.instructions or key in packet.text or key in args["learner_text"]:
                 raise BridgeError("credential_in_packet", "The packet contains the configured key; nothing was sent.")
             if c.mode == "gateway":
                 from .gateway import GatewayClient
@@ -146,7 +161,7 @@ class Bridge:
         except BridgeError as error:
             return failure(error)
         try:
-            outcome = (await client.ask(packet.instructions, packet.text, request_id, args["intent"]) if c.mode == "gateway"
+            outcome = (await client.ask(packet.instructions, packet.text, request_id, args["intent"], args["learner_text"]) if c.mode == "gateway"
                        else await client.ask(packet.instructions, packet.text))
         except BaseException:  # cancellation or a crash after dispatch is not proof of a zero bill
             self.ledger.finish(request_id, "held", detail="interrupted after dispatch; charge unknown")
@@ -163,6 +178,7 @@ class Bridge:
         receipt = {"request_id": request_id, "kind": kind, "checkpoint": packet.step, "intent": packet.intent,
                    "model": outcome.model or None, "response_id": outcome.response_id or None, "http_status": outcome.http_status,
                    "detail": outcome.detail, "packet": packet.manifest | {"sha256": packet.sha256},
+                   "admission": outcome.admission,
                    "usage": {"scope": "university_mcp", "input_tokens": row["input_tokens"], "output_tokens": row["output_tokens"],
                              "reasoning_tokens": outcome.reasoning_tokens, "cached_input_tokens": outcome.cached_input_tokens,
                              "charge": row["charge"], "inclusive_of_reasoning_and_cache": True, "state": state,
@@ -215,6 +231,8 @@ class Bridge:
                    "next": GUIDANCE.get(kind, HALT)}
         if text:
             payload["text"] = text
+        if receipt.get("admission"):
+            payload["admission"] = receipt["admission"]
         try:
             payload["budget"] = self._budget()
         except BridgeError as error:
