@@ -116,7 +116,7 @@ def load_lessons(source_root: Path) -> tuple:
 
 def source_fingerprint(source_root: Path, lessons=None) -> str:
     lessons = lessons or load_lessons(source_root)
-    names = sorted({"cohort_lab/student.py", "cohort_lab/lab_close.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")})
+    names = sorted({"cohort_lab/student.py", "cohort_lab/lab_close.py", "cohort_lab/instructor_feedback.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")})
     return _sha("".join(f"{name}\0{_file_sha(_inside(source_root, name))}\n" for name in names).encode("utf-8"))
 
 
@@ -295,11 +295,11 @@ def closing_state(config):
     raw,_=_read_json(config.run_dir,'usage/lab-close.json','closing_invalid')
     if not isinstance(raw,dict) or raw.get('state') not in {'active','awaiting_feedback','ended'}:
         raise PacketError('closing_invalid','The saved closing state is unreadable.')
-    value={k:raw[k] for k in ('state','cycle_id','trigger','requested_at','ended_at','cutoff','artifacts_at_end') if k in raw}
+    value={k:raw[k] for k in ('state','cycle_id','trigger','requested_at','ended_at','cutoff','artifacts_at_end','notice_version') if k in raw}
     feedback=raw.get('feedback',{})
     value['usage_report_allowed']=raw['state']=='ended' and feedback.get('status') in {'provided','declined'}
     if raw['state']=='awaiting_feedback':value['question']='Any feedback to Professor Tian?'
-    if feedback:value['feedback']={k:feedback[k] for k in ('status','sha256','storage','sent_to_professor')}
+    if feedback:value['feedback']={'status':feedback['status'],'sha256':feedback['sha256'],'local_original':True} if raw.get('notice_version') else {k:feedback[k] for k in ('status','sha256','storage','sent_to_professor')}
     if value['usage_report_allowed']:
         current={name:_file_sha(config.run_dir/name) if (config.run_dir/name).is_file() else None
                  for name in ('report/customer-economics-report.pdf','learner_choices.json')}

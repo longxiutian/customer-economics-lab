@@ -71,7 +71,9 @@ receipts; otherwise label an estimate of recorded text and leave full usage
 unknown. Deliver the executive report at the final checkpoint. Generate no usage
 report or personal debrief until I say "end lab" or "end simulation"; then ask
 "Any feedback to Professor Tian?" and wait for my answer or "skip feedback".
-Keep that feedback local. Afterward give me the evidence-linked personal debrief.
+Save that feedback separately through the lab's private feedback collector with
+my lab identifier, keeping it out of model prompts. Afterward give me the
+evidence-linked personal debrief.
 ```
 
 The agent retrieves and records one exact revision before setup. If the instructor supplied a guided ZIP or an existing lab folder, it can use that edition instead. Older tagged releases may not contain the teaching skill, so the agent checks before proceeding. This coding-agent setup is separate from the BlueChip browser route.
@@ -108,7 +110,7 @@ The main model combines heterogeneous-churn shifted-Beta-Geometric retention wit
 
 Use the guided edition retrieved by the prompt above, pinned to its recorded commit. Earlier release downloads containing the batch shortcut are hidden from the student release list. Historical tags and receipts remain for provenance; see the [versioning policy](docs/versioning.md).
 
-Current companion slides: [PDF](teaching/Studio-North-Agentic-AI-Lab.pdf) / [PowerPoint](teaching/Studio-North-Agentic-AI-Lab.pptx). This 33-slide edition explains how the report was made and ends with seven reusable FAQ prompts. See [the slide brief and provenance](docs/companion-slides.md).
+Your course's current slides are published on its Canvas Day page. They explain the three execution routes, how the report is created and the follow-up FAQ prompts. The repository's [PDF](teaching/Studio-North-Agentic-AI-Lab.pdf) / [PowerPoint](teaching/Studio-North-Agentic-AI-Lab.pptx) companion is an archived construction reference. See [the current slide brief and archived provenance](docs/companion-slides.md).
 
 The original code, synthetic data, and teaching materials use the repository's MIT license. Bundled third-party components retain their own licenses and provenance under `assets/` and `vendor/`.
 

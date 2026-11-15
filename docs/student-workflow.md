@@ -8,7 +8,7 @@ The audit found that the original eight computational stages combined several le
 |---|---|---|---|
 | 0 | Understand the assignment | Business introduction and roadmap | None |
 | 1 | Establish readiness | Actual dependency/data checks | 0 |
-| 2 | Understand the journey | Broad Studio North journey map | 1 |
+| 2 | Understand the business and journey | What members buy, their reasons to renew, the customer-up company question, then the actual journey map | 1 |
 | 3 | Understand source grains and joins | Eight-table inventory and relationship map | Reuse 1 |
 | 4 | Apply the UCV | Eight field-level UCV tables | 2 |
 | 5 | Propose a baseline grouping | Actual profile fields; learner rationale and journey hypothesis | Reuse 2 |

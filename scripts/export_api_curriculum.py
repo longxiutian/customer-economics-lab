@@ -22,7 +22,7 @@ def export():
         packet=compile_packet(config,'open')
     target=ROOT/'api_bridge/admission'
     opening={'instructions':packet.instructions,'packet':packet.text,'input_bytes':packet.input_bytes}
-    curriculum={'revision':'studio-north-guided/1','teacher':TEACHER_CONTRACT,'debrief':rubric,'lessons':[
+    curriculum={'revision':'studio-north-guided/2','teacher':TEACHER_CONTRACT,'debrief':rubric,'lessons':[
         {'title':lesson.title,'objective':lesson.objective,'check':lesson.check,
          'artifacts':[p for p in lesson.files if p!='learner_choices.json']+list(EXTRA_ARTIFACTS.get(i,()))}
         for i,lesson in enumerate(lessons)]}

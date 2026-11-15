@@ -11,10 +11,10 @@ The skill owns this requirement, regardless of who supplies model access:
   repository in a local/cloud workspace. The current agent drafts and checks the
   debrief. Instructor-orchestrated Opus 5.5 high can refine the same evidence packet
   when that authorized service is available; students need not buy separate Opus access.
-- **University-funded MCP scenario (TBD):** the same local workflow and debrief,
-  with university model calls recorded in their own meter scope. The client's own
-  inference remains separate. No connection, funding commitment or unlimited
-  Free-account capacity is implied by the proposed design.
+- **UNC-funded MCP:** the same local workflow, with UNC gpt-6.1-sol teaching and
+  debrief calls recorded in their own meter scope. The secure connection assigns
+  model access in the background. Use [the tested prompt](unc-api-startup-prompt.txt);
+  the client's own inference remains a separate account/usage stream.
 - **BlueChip + Longleaf:** the server records authenticated run activity and
   Nemotron receipts; Codex orchestrates Opus 5.5 high using `hosting/student_debrief.py`.
   Native BlueChip usage remains a separate source. Private delivery uses the
@@ -105,8 +105,27 @@ a usage report, scaffold or personal-review job yet. Closing works on every rout
 3. After `closing.usage_report_allowed` is true, prepare and review the debrief.
 
 The end command fixes the activity cutoff. Instructor feedback is saved verbatim
-in `usage/lab-close.json`, separately from learning evidence, and is not sent to
-the teaching/review model or to Professor Tian. Collection is not configured.
+in `usage/lab-close.json`, separately from learning evidence. Show the collection
+notice: replies or declines are saved privately for Professor Tian with a stable
+lab identifier, or the BlueChip login in the hosted route. Local students may sign
+their reply. Feedback and login identifiers never enter teaching/review evidence.
+
+The two local routes use the standard-library HTTPS helper in
+`cohort_lab/instructor_feedback.py`; no model, MCP or extra Python dependency is
+needed to submit feedback. Its append-only installation credential has no model
+or read access and lives outside the repository/run folder. Delivery uses a local
+outbox at `usage/instructor-feedback.json`. A failed upload remains pending and
+does not block the personal debrief. `prepare`, `continue lab` and the explicit
+command below each permit one bounded delivery attempt. Hosted collection is
+performed by the authenticated broker, without a second local upload.
+
+```text
+uv run --frozen python -m cohort_lab.instructor_feedback --output outputs/student
+```
+
+Historical closures without the collection notice remain local. The instructor
+retrieves the encrypted central records through a protected export; feedback is
+not published in GitHub or included in learning/usage recommendations.
 Ending early is allowed: describe the actual partial session. **continue lab**
 reopens activity and requires a new ending and feedback response for a new report.
 

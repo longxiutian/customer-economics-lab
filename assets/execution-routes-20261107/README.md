@@ -1,5 +1,7 @@
 # Studio North: three execution routes
 
+This folder preserves the November 7 module and its reproducible source. The current course deck is maintained by the MBA/KFM chat and published on the Canvas Day page. Use [the current execution-path instructions](../../docs/execution-paths.md) for the working UNC API route and the current end/feedback/debrief sequence; slide counts and TBD labels below describe this archived module.
+
 Nine-slide integration module for the main Studio North lab deck, revised November 7, 2026. It replaces the earlier separate BlueChip architecture supplement. It is not a second course deck.
 
 ## Integration into the day slides

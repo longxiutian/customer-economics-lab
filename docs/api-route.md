@@ -134,8 +134,9 @@ PDF work is local and consumes no UNC inference tokens. Deliver the report at
 checkpoint 18 and keep questions open. A further next step is a local no-op.
 Only end lab or end simulation begins closing; ask exactly Any feedback to
 Professor Tian? and wait for a reply or skip feedback. Then prepare and validate
-the separate usage/learning debrief. Instructor feedback remains local, excluded
-from both Jev and Sol. For the debrief call, pass the saved literal end command
+the separate usage/learning debrief. Instructor feedback is collected separately
+by the private broker with a stable lab identifier, excluded from both Jev and
+Sol. The standard-library feedback helper needs no MCP or model call. For the debrief call, pass the saved literal end command
 as learner_text. An early ending can produce a partial-session debrief.
 
 Each call saves `sol_bridge/REQUEST.json`, its delivered text and a usage log in

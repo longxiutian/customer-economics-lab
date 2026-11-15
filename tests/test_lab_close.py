@@ -41,7 +41,7 @@ def test_feedback_stays_local_and_later_activity_is_excluded(tmp_path):
     assert read(root)['feedback']['reply'].startswith('Please spend longer')
     frozen=snapshot(root)
     assert 'Please spend longer' not in json.dumps(frozen)
-    assert not frozen['closing']['feedback']['sent_to_professor']
+    assert frozen['closing']['feedback']['local_original']
     record(root,{'event_id':'late','kind':'text','role':'assistant','text':'This arrived after the cutoff.'})
     assert snapshot(root)==frozen
     receipt=binding(root)

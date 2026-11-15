@@ -196,7 +196,7 @@ def snapshot(output, *, private_terms=()):
     coverage = {"usage": "Measured receipt streams and estimated recorded text are separate. Never add them or convert a subscription percentage into tokens.",
                 "questions": "Actual learner messages saved by the guided lesson; assistant/tool text only when the harness recorded it.",
                 "route": "The personal/university MCP route can edit a local/cloud checkout. The hosted Longleaf route exposes its verified server tools only.",
-                "privacy": "This packet excludes private run/session IDs. It is local by default; no class-wide export or delivery occurs.",
+                "privacy": "This learning packet excludes private run/session IDs and instructor-feedback text. Instructor feedback is collected separately by the lab broker.",
                 "debrief_usage": "Feedback-generation usage is a separate scope and may arrive after this snapshot."}
     if automatic:
         coverage["questions"] = "Actual starting request from automatic_run.json; visible assistant/tool text only when recorded. No checkpoint interaction was requested or simulated."
@@ -278,6 +278,8 @@ def prepare(output):
     output = Path(output)
     from .lab_close import require_ended
     require_ended(output,verify_artifacts=True)
+    from .instructor_feedback import deliver_safe
+    deliver_safe(output)
     packet = snapshot(output)
     folder = output / "debrief" / packet["snapshot_id"]
     write(folder / "evidence-packet.json", packet)
