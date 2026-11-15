@@ -32,7 +32,12 @@ TEACHER_CONTRACT = (
     "critique = assess the learner's reasoning candidly; troubleshoot = diagnose the reported problem; "
     "debrief = personalize the learning debrief from its frozen evidence.\n"
     "Write plain prose for a chat window with no tool, file or code requests. Finish by posing the check as a "
-    "question and reminding the learner that typing next step continues."
+    "question and reminding the learner that typing next step continues when checkpoint <18 and the lab is active. "
+    "At checkpoint 18 deliver the report and invite questions; report completion does not end the lab. "
+    "Only the learner's end lab/end simulation starts closing: ask exactly Any feedback to Professor Tian? "
+    "Wait for an answer or skip feedback before a usage/learning debrief. Never solicit another next step "
+    "when closing or writing the debrief. Instructor feedback text is private and excluded from your evidence. "
+    "Keep a chat answer under 350 words, grounded in the current evidence."
 )
 
 
@@ -111,7 +116,7 @@ def load_lessons(source_root: Path) -> tuple:
 
 def source_fingerprint(source_root: Path, lessons=None) -> str:
     lessons = lessons or load_lessons(source_root)
-    names = sorted({"cohort_lab/student.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")})
+    names = sorted({"cohort_lab/student.py", "cohort_lab/lab_close.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")})
     return _sha("".join(f"{name}\0{_file_sha(_inside(source_root, name))}\n" for name in names).encode("utf-8"))
 
 
@@ -197,8 +202,22 @@ def _json_summary(path: Path, budget: int):
         return None, "not transmitted: the file is not valid JSON"
     if _size(value) <= budget:
         return value, ""
+    if path.name=='model_summary.json' and isinstance(value,dict) and 'diagnostic' in value:
+        checks=('inference','chains','warmup_per_chain','samples_per_chain','target_accept','max_r_hat','min_ess','divergences','n_retention_cells','n_revenue_cells','retention_pearson_dispersion')
+        diagnostic=lambda v:{k:v[k] for k in checks if k in v}
+        compact={k:value[k] for k in ('model','backend','float_precision','horizon_months','discount_rate') if k in value}
+        compact['diagnostic']=diagnostic(value.get('diagnostic',{}))
+        for key in ('backtest','valuation_backtest'):
+            original=value.get(key,{})
+            compact[key]={k:v for k,v in original.items() if not isinstance(v,(dict,list)) or k=='held_out_calendar_months'}
+            compact[key]['diagnostic']=diagnostic(original.get('diagnostic',{}))
+        if _size(compact)<=budget:
+            return compact,'Aggregate checks at each named validation origin; parameter rows and descriptive detail omitted. Full source JSON stays downloadable.'
+        compact={k:compact[k] for k in ('model','diagnostic')}
+        if _size(compact)<=budget:return compact,'Final-fit diagnostic only; separate chronological validation remains in the supplied CSVs. Full JSON omitted.'
+        raise PacketError('packet_over_cap','Model diagnostics do not fit; select fewer artifacts. Nothing was sent.')
     if path.name == "evidence-packet.json" and isinstance(value, dict) and isinstance(value.get("evidence"), list):
-        summary = {key: value[key] for key in ("schema_version", "snapshot_id", "coverage") if key in value}
+        summary = {key: value[key] for key in ("schema_version", "snapshot_id", "coverage", "closing") if key in value}
         summary["evidence"] = []
         for entry in value["evidence"]:
             if _size(dict(summary, evidence=summary["evidence"] + [entry])) <= budget:
@@ -250,6 +269,9 @@ def allowed_artifacts(config: BridgeConfig, lessons, state, intent: str) -> list
         declared = Path(latest.get("evidence", "")).resolve()
         if declared != _inside(config.run_dir, name):
             raise PacketError("debrief_invalid", "The debrief pointer does not identify this workspace's frozen evidence.")
+        frozen,_=_read_json(config.run_dir,name,'debrief_invalid')
+        if frozen.get('closing')!=closing_state(config):
+            raise PacketError('debrief_invalid','Prepare fresh evidence for this exact ended session.')
         return [name]
     step = state["completed_step"]
     ids = [name for name in lessons[step].files if name != "learner_choices.json"] + list(EXTRA_ARTIFACTS.get(step, ()))
@@ -257,10 +279,33 @@ def allowed_artifacts(config: BridgeConfig, lessons, state, intent: str) -> list
     trace = result.get("cell_trace") if isinstance(result, dict) else None
     for raw in trace.get("artifacts", []) if isinstance(trace, dict) and isinstance(trace.get("artifacts"), list) else []:
         try:
-            ids.append(Path(raw).resolve().relative_to(config.run_dir).as_posix())
+            relative=Path(raw).resolve().relative_to(config.run_dir).as_posix()
+            # Registration SQL contains machine paths; query + result are the
+            # evidence needed to teach this cell. Other receipts stay local.
+            if Path(relative).name in {'query.sql','result.csv'}:ids.append(relative)
         except (TypeError, ValueError, OSError):
             continue
     return list(dict.fromkeys(ids))
+
+
+def closing_state(config):
+    """Read a redacted closing proof without loading analytical dependencies."""
+    path=config.run_dir/'usage/lab-close.json'
+    if not path.is_file():return {'state':'active','usage_report_allowed':False}
+    raw,_=_read_json(config.run_dir,'usage/lab-close.json','closing_invalid')
+    if not isinstance(raw,dict) or raw.get('state') not in {'active','awaiting_feedback','ended'}:
+        raise PacketError('closing_invalid','The saved closing state is unreadable.')
+    value={k:raw[k] for k in ('state','cycle_id','trigger','requested_at','ended_at','cutoff','artifacts_at_end') if k in raw}
+    feedback=raw.get('feedback',{})
+    value['usage_report_allowed']=raw['state']=='ended' and feedback.get('status') in {'provided','declined'}
+    if raw['state']=='awaiting_feedback':value['question']='Any feedback to Professor Tian?'
+    if feedback:value['feedback']={k:feedback[k] for k in ('status','sha256','storage','sent_to_professor')}
+    if value['usage_report_allowed']:
+        current={name:_file_sha(config.run_dir/name) if (config.run_dir/name).is_file() else None
+                 for name in ('report/customer-economics-report.pdf','learner_choices.json')}
+        if raw.get('trigger','').strip().casefold().rstrip('.!?').strip() not in {'end lab','end simulation'} or current!=raw.get('artifacts_at_end'):
+            raise PacketError('closing_invalid','The session changed after ending. Reopen and end it again before a debrief.')
+    return value
 
 
 def _previous_reply(config: BridgeConfig, step: int, budget: int):
@@ -289,6 +334,11 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
     state, state_sha = load_state(config, lessons)
     step, last = state["completed_step"], len(lessons) - 1
     lesson = lessons[step]
+    closing=closing_state(config)
+    if intent=='debrief' and not closing['usage_report_allowed']:
+        raise PacketError('lab_not_ended','Say end lab or end simulation, then answer or skip: Any feedback to Professor Tian?')
+    if intent!='debrief' and closing['state']!='active':
+        raise PacketError('lab_closing','Handle the pending feedback or type continue lab before requesting more teaching.')
     result = state["results"].get(str(step)) if isinstance(state["results"].get(str(step)), dict) else {}
     choices = {}
     if (config.run_dir / "learner_choices.json").exists():
@@ -318,7 +368,7 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
         raise PacketError("learner_text_required", "This intent needs the learner's own literal words.")
     if intent in ("open", "teach", "debrief") and learner_text:
         raise PacketError("learner_text_not_allowed", "This intent carries no free text; use question or critique for learner words.")
-    if (intent == "open" and step != 0) or (intent == "debrief" and step != last):
+    if intent == "open" and step != 0:
         raise PacketError("intent_not_available", f"Intent {intent} is not available at checkpoint {step}.")
     missing = [key for key in REQUIRED_CHOICES.get(step, ())
                if not (choices.get(key).strip() if isinstance(choices.get(key), str) else choices.get(key))]
@@ -336,6 +386,7 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
             "objective": lesson.objective, "check": lesson.check,
             "progress": "The harness has completed nothing beyond this checkpoint." if step < last else "All checkpoints are complete.",
             "judgments": choices or "none saved"}
+    if intent=='debrief':body['closing']=closing
     if learner_text:
         body["learner_text"] = learner_text
     if note:
@@ -376,7 +427,9 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
     if input_bytes > config.packet_max_bytes:
         raise PacketError("packet_over_cap", f"The packet would be {input_bytes} bytes against a cap of {config.packet_max_bytes}. "
                           "Select fewer artifacts; nothing is trimmed silently.")
-    if KEY_SHAPED.search(text):
+    scanned=text
+    for artifact_id in selected:scanned=scanned.replace(artifact_id,'registered-artifact')
+    if KEY_SHAPED.search(scanned):
         raise PacketError("secret_shaped_input", "The packet contains credential-shaped material; nothing was sent. Remove it from the learner text or evidence.")
     manifest = {"step": step, "title": lesson.title, "intent": intent, "input_bytes": input_bytes,
                 "packet_max_bytes": config.packet_max_bytes, "input_bound_tokens": input_bytes + FRAMING_RESERVE,

@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import pytest
 from cohort_lab.debrief import initialize, record, snapshot, prepare, normalized_usage, fallback_feedback, render_portable
+from cohort_lab.lab_close import handle as close_message
 
 
 def workspace(tmp_path, name="learner", route="personal"):
@@ -65,6 +66,7 @@ def test_reset_or_overlapping_accounting_is_rejected(tmp_path):
 
 def test_frozen_feedback_replay_preserves_review(tmp_path):
     root=workspace(tmp_path)
+    close_message(root,'end lab');close_message(root,'skip feedback')
     result=prepare(root)
     path=Path(result["debrief"]); packet=json.loads(Path(result["evidence"]).read_text())
     response=fallback_feedback(packet)
@@ -74,7 +76,9 @@ def test_frozen_feedback_replay_preserves_review(tmp_path):
     assert prepare(root)["snapshot_id"] == result["snapshot_id"]
     assert path.read_bytes() == reviewed
     event={"event_id":"reply-2","kind":"text","role":"assistant","text":"Now inspect matched-age outcomes."}
+    close_message(root,'continue lab')
     record(root,event)
+    close_message(root,'end simulation');close_message(root,'No feedback')
     assert prepare(root)["snapshot_id"] != result["snapshot_id"]
     assert path.read_bytes() == reviewed
 
@@ -82,6 +86,7 @@ def test_frozen_feedback_replay_preserves_review(tmp_path):
 def test_missing_usage_and_untrusted_text_render_honestly(tmp_path):
     root=workspace(tmp_path)
     record(root,{"event_id":"xss","kind":"text","role":"assistant","text":"<script>alert(1)</script>"})
+    close_message(root,'end lab');close_message(root,'skip feedback')
     result=prepare(root)
     text=Path(result["debrief"]).read_text()
     assert "Provider-measured token usage: unavailable" in text

@@ -65,10 +65,11 @@ stdio server using the official MCP SDK, performs one call and closes the child.
 Windows children use `pythonw.exe`. It does not bypass the MCP or replace the
 native model. It needs no client reload.
 
-Startup permits one dispatched opening, a maximum 5,000-byte combined instruction/
-evidence packet, and a 3,000-token output ceiling including reasoning. Its stage
-cap is 10,000 tokens. Inspect actual usage and pause at checkpoint 0. Do not install
-the full analysis environment, advance readiness or fit models during this test.
+The managed connection uses the full guided phase, with a maximum 16,000-byte
+combined instruction/evidence packet and a 3,000-token output ceiling including
+reasoning. After the opening, wait for the learner's next step. Prepare the full
+analytical environment at readiness; never advance all checkpoints automatically.
+Legacy startup-only configurations retain their one-opening, 10,000-token guard.
 
 ## Compact packets and budget accounting
 
@@ -102,7 +103,7 @@ headroom and assign a fresh approved subscription. This happens in the
 background; the same chat, files, checkpoint and usage history continue.
 Closed allowances are not handed out again as unused. Assignment and accounting
 are atomic; overlapping requests cannot claim the same allowance. Subscription
-changes never bypass the current 10,000-token, one-opening startup limit.
+changes preserve the local phase guard and all learner-controlled checkpoint gates.
 UNC's upstream quota remains authoritative; pool baselines must include any use
 outside this gateway. Expired accounting periods cannot dispatch new calls.
 
@@ -120,13 +121,22 @@ collect or paste credentials for the managed student route.
 
 ## Continue the lesson
 
-This test release enforces startup-only in code; editing its configuration cannot
-enable a full run. A separately verified continuation release will follow
-`skills/unc-api/SKILL.md` and retain the same managed identity and ledger. Its designed
-normal packet limit is 8,000
-bytes (configurable up to 16,000). It does not bypass the nineteen checkpoint
-gates. Full analytical dependencies are installed at readiness. All statistical
-and PDF work is local and consumes no UNC inference tokens.
+Follow `skills/unc-api/SKILL.md` for all nineteen checkpoints. New managed
+connections use explicit 16,000-byte packets. Save and forward the learner's
+actual messages, and send `learner_text=ACTUAL_NEXT_STEP` with a teach request
+only after the local checkpoint advanced. Questions and critiques retain their
+literal text, capped at 1200 UTF-8 bytes. A registry validates the fixed teaching
+frame and registered artifacts at the gateway; it attests to scope and budget,
+not remote observation of local fits or verified student identity.
+
+Full analytical dependencies are installed at readiness. All statistical and
+PDF work is local and consumes no UNC inference tokens. Deliver the report at
+checkpoint 18 and keep questions open. A further next step is a local no-op.
+Only end lab or end simulation begins closing; ask exactly Any feedback to
+Professor Tian? and wait for a reply or skip feedback. Then prepare and validate
+the separate usage/learning debrief. Instructor feedback remains local, excluded
+from both Jev and Sol. For the debrief call, pass the saved literal end command
+as learner_text. An early ending can produce a partial-session debrief.
 
 Each call saves `sol_bridge/REQUEST.json`, its delivered text and a usage log in
 the student's output folder. Initialized debrief logging receives actual UNC

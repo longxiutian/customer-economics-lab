@@ -179,3 +179,33 @@ def test_released_opening_matches_the_frozen_gateway_packet(tmp_path):
     actual=compile_packet(config,"open")
     frozen=json.loads((REPO/"api_bridge/admission/opening.json").read_text())
     assert frozen=={"instructions":actual.instructions,"packet":actual.text,"input_bytes":actual.input_bytes}
+
+
+def test_managed_teaching_requires_actual_next_step_before_http(tmp_path):
+    config=replace(managed(tmp_path),phase='full',stage_cap=400000,packet_max_bytes=16000)
+    seed(config,1)
+    bridge=Bridge(config,transport=httpx.MockTransport(lambda _:pytest.fail('no HTTP expected')))
+    with pytest.raises(BridgeError) as caught:bridge.preview({'intent':'teach','learner_text':'go ahead'})
+    assert caught.value.kind=='learner_consent_required'
+    assert bridge.preview({'intent':'teach','learner_text':'next step'})['provider_called'] is False
+
+
+def test_debrief_gate_precedes_inference_and_feedback_never_enters_packet(tmp_path):
+    import sys
+    from test_bridge import REPO
+    sys.path.insert(0,str(REPO))
+    from cohort_lab.debrief import initialize,prepare
+    from cohort_lab.lab_close import handle
+    config=replace(managed(tmp_path),phase='full',stage_cap=400000,packet_max_bytes=16000)
+    seed(config,3);initialize(config.run_dir,route='university_mcp',harness='Codex')
+    bridge=Bridge(config,transport=httpx.MockTransport(lambda _:pytest.fail('no HTTP expected')))
+    for message in (None,'end simulation'):
+        if message:handle(config.run_dir,message)
+        with pytest.raises(BridgeError) as caught:bridge.preview({'intent':'debrief','learner_text':'end simulation'})
+        assert caught.value.kind=='lab_not_ended'
+    canary='INSTRUCTOR FEEDBACK MUST STAY LOCAL'
+    handle(config.run_dir,canary);prepare(config.run_dir)
+    packet=bridge._packet({'intent':'debrief','learner_text':'end simulation','artifact_ids':[],'note':''})
+    assert canary not in packet.text and packet.step==3
+    handle(config.run_dir,'continue lab')
+    with pytest.raises(BridgeError):bridge.preview({'intent':'debrief','learner_text':'end simulation'})

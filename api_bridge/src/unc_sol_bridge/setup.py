@@ -105,7 +105,7 @@ async def connect(*, config_path, source_root, run_dir, harness, transport=None)
            "source_root": str(root), "run_dir": str(run), "state_dir": str(Path.home()/".unc-sol-bridge"/"state"),
            "subscription_label": "managed-" + device_id[:20], "period_id": time.strftime("%Y-%m", time.gmtime()),
            "baseline_tokens": 0, "baseline_source": "Gateway centrally accounts for all assigned UNC subscriptions.",
-           "allocation_cap": MANAGED_ALLOCATION_LIMIT, "phase": "startup", "stage_cap": 10000,
+           "allocation_cap": MANAGED_ALLOCATION_LIMIT, "phase": "full", "stage_cap": MANAGED_ALLOCATION_LIMIT,"packet_max_bytes":16000,
            "source_fingerprint": source_fingerprint(root), "credential_ref": reference}
     path.parent.mkdir(parents=True, exist_ok=True)
     candidate = path.with_suffix(".candidate.json")

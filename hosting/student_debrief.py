@@ -54,7 +54,7 @@ use the packet's actual route when suggesting extensions. Never invent service a
 """
 
 
-def freeze(ledger, *, run_id, session_id, path, private_terms=(), fixture=False):
+def freeze(ledger, *, run_id, session_id, path, private_terms=(), fixture=False, cutoff=None):
     path = Path(path)
     if path.exists():
         prior = json.loads(path.read_text(encoding="utf-8"))
@@ -62,9 +62,10 @@ def freeze(ledger, *, run_id, session_id, path, private_terms=(), fixture=False)
             raise ValueError("Snapshot path belongs to another workspace")
         return prior
     events = ledger.events(run_id, session_id)
+    if cutoff is not None:events=[event for event in events if event['received_at']<=cutoff]
     if not events:
         raise ValueError("No evidence for this workspace/session")
-    requests = [e for e in events if e["kind"] == "lab_request"]
+    requests = [e for e in events if e["kind"] == "lab_request" and e['payload'].get('purpose','lab')=='lab']
     checkpoints = [e for e in events if e["kind"] == "checkpoint"]
     router_requests = {e["payload"]["request_id"] for e in events if e["kind"] == "inference_attempt"}
     attempts = {}
@@ -260,8 +261,11 @@ def main():
     p.add_argument("--run-id", required=True)
     p.add_argument("--session-id", required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--workspace", type=Path, required=True,help='The learner workspace containing an explicit ending and handled instructor feedback')
     p.add_argument("--fixture", action="store_true")
     args = p.parse_args()
+    from cohort_lab.lab_close import require_ended
+    closing=require_ended(args.workspace,verify_artifacts=True)
     args.output.mkdir(parents=True, exist_ok=True)
     ledger = Telemetry(args.output / "private-events.sqlite")
     receipts = [json.loads(path.read_text(encoding="utf-8")) for path in args.receipts.glob("*.json")]
@@ -270,7 +274,7 @@ def main():
             raise ValueError("Receipt directory contains another student's run")
         ledger.ingest_receipt(receipt, session_id=args.session_id)
     snapshot = freeze(ledger, run_id=args.run_id, session_id=args.session_id,
-                      path=args.output / "private-snapshot.json", fixture=args.fixture)
+                      path=args.output / "private-snapshot.json", fixture=args.fixture,cutoff=closing['cutoff'])
     packet = provider_packet(snapshot)
     (args.output / "opus-request.txt").write_text(RUBRIC + "\nEVIDENCE JSON:\n" + json.dumps(packet, ensure_ascii=False, indent=2), encoding="utf-8")
     (args.output / "evidence-packet.json").write_text(json.dumps(packet, ensure_ascii=False, indent=2), encoding="utf-8")

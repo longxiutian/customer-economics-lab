@@ -18,6 +18,8 @@ def fixture(tmp_path):
     config={'telemetry':{'path':str(tmp_path/'events.sqlite'),'session_id':'session'},'fixture':True,'debrief_enabled':True,'expires_at':time.time()+7200}
     Telemetry(config['telemetry']['path']).append(event_id='question',run_id='run-0001',session_id='session',kind='lab_request',happened_at=1,
         payload={'action':'message','message':'How does iCAC inform an acquisition decision without changing LTV?','source':'lab_api_received','checkpoint_before':12})
+    from cohort_lab.lab_close import handle
+    handle(output,'end lab');handle(output,'skip feedback')
     return output,receipts,config,{'id':'debrief-job-001','run_id':'run-0001','deadline':time.time()+7200}
 
 
@@ -48,6 +50,8 @@ def test_review_is_personal_private_validated_and_idempotent(tmp_path):
     assert not any(e['kind']=='usage' for e in Telemetry(config['telemetry']['path']).events('run-0001','session'))
     (output/'learner_choices.json').write_text('{"final_verdict":"A changed judgment"}')
     assert completed(output)['status']=='pending'
+    from cohort_lab.lab_close import handle
+    handle(output,'continue lab');handle(output,'end lab');handle(output,'skip feedback')
     create(config,output,receipts,job,client_factory=Reviewer)
     assert Reviewer.calls==2
 
@@ -83,7 +87,7 @@ def test_frozen_review_and_remote_job_preserve_report_without_refitting(tmp_path
     output,receipts,config,job=fixture(tmp_path)
     frozen=prepare(config,output,receipts,job)
     assert 'private_scope' not in frozen['evidence']
-    source={'step':18,'artifacts':[{'artifact_id':'main-report','name':'report/customer-economics-report.pdf'}],
+    source={'step':18,'closing':{k:v for k,v in frozen['closing'].items() if k!='sha256'},'artifacts':[{'artifact_id':'main-report','name':'report/customer-economics-report.pdf'}],
             'debrief_input':frozen,'validation':{'report_complete':True,'workflow_complete':False,'checks':{}}}
     config.update(runtime=str(tmp_path/'windows-review'),release_hash='release')
     job.update(release_hash='release',payload={'action':'debrief'},source_packet=source)

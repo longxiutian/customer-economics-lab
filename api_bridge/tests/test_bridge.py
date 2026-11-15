@@ -25,7 +25,7 @@ URL = "https://sol.invalid/openai/v1/responses"  # reserved TLD: unreachable eve
 KEY = "unit-test-key-0123456789abcdef"  # fake
 PERIOD = time.strftime("%Y-%m", time.gmtime())
 LESSONS = load_lessons(REPO)
-SOURCES = sorted({"cohort_lab/student.py", "hosting/student_debrief.py"} | {name[1:] for lesson in LESSONS for name in lesson.files if name.startswith("@")})
+SOURCES = sorted({"cohort_lab/student.py", "cohort_lab/lab_close.py", "hosting/student_debrief.py"} | {name[1:] for lesson in LESSONS for name in lesson.files if name.startswith("@")})
 CHOICES = {"final_verdict": "Mixed: retention improves, payback does not.", "recommended_action": "Hold partner spend until the next holdout."}
 REPLY = "Welcome to Studio North.\n\nWhat would you like to ask before typing next step?"
 QUESTION = "Why could joining transaction and activity rows multiply revenue?"
@@ -87,7 +87,7 @@ def harness_result(config, step):
     if step >= 6:
         result["data_context"] = {"dataset_version": "unit", "observed_cutoff_exclusive": "2026-01-01", "currency": "USD"}
     if step == 6:
-        trace = config.run_dir / "queries" / "age2.csv"
+        trace = config.run_dir / "queries" / ("b"*32) / "result.csv"
         trace.parent.mkdir(parents=True, exist_ok=True)
         trace.write_bytes(fixture_bytes(trace.name))
         result["cell_trace"] = {"sql": "SELECT cohort_month, age_month FROM customer_month WHERE age_month = 2", "artifacts": [str(trace)]}
@@ -225,7 +225,7 @@ def test_all_19_checkpoints_compile_bounded_packets_from_harness_fixtures(tmp_pa
         body = json.loads(packet.text)
         evidence = body.get("evidence", [])
         expected = ([name for name in lesson.files if name != "learner_choices.json"] + list(EXTRA_ARTIFACTS.get(step, ()))
-                    + (["queries/age2.csv"] if step == 6 else []))
+                    + (["queries/"+"b"*32+"/result.csv"] if step == 6 else []))
         assert packet.step == body["checkpoint"]["step"] == step
         assert (body["objective"], body["check"]) == (lesson.objective, lesson.check)
         assert packet.input_bytes <= config.packet_max_bytes
@@ -264,7 +264,7 @@ def test_selected_evidence_is_real_rows_with_recorded_omission(tmp_path):
     (5, "critique", {"learner_text": "   "}, "learner_text_required"),
     (5, "teach", {"learner_text": "next step"}, "learner_text_not_allowed"),
     (5, "open", {}, "intent_not_available"),
-    (5, "debrief", {}, "intent_not_available"),
+    (5, "debrief", {}, "lab_not_ended"),
     (5, "summarize", {}, "invalid_arguments"),
     (5, "troubleshoot", {"note": "n" * 281}, "note_over_cap"),
     (5, "teach", {"artifact_ids": ["lesson_state.json"]}, "artifact_rejected"),
@@ -289,12 +289,18 @@ def test_judgments_and_learner_text_are_literal_or_absent(tmp_path):
     text = "é" * 600  # exactly at the 1200-byte cap
     body = json.loads(compile_packet(config, "critique", text, note="Learner asked for a candid review.").text)
     assert (body["learner_text"], body["host_note"]) == (text, "Learner asked for a candid review.")
+    assert refused(config, "debrief") == "lab_not_ended"
+    import sys
+    sys.path.insert(0,str(REPO))
+    from cohort_lab.lab_close import handle
+    handle(config.run_dir,'end lab');handle(config.run_dir,'skip feedback')
     assert refused(config, "debrief") == "artifact_missing"
     (config.run_dir / "debrief").mkdir()
     sid = "a" * 24
     frozen = config.run_dir / "debrief" / sid / "evidence-packet.json"
     frozen.parent.mkdir()
-    contents = {"snapshot_id": sid, "evidence": [{"id": f"snap:{sid}/ev:1", "text": "traced the age-2 cell"}]}
+    from unc_sol_bridge.packets import closing_state
+    contents = {"snapshot_id": sid,"closing":closing_state(config), "evidence": [{"id": f"snap:{sid}/ev:1", "text": "traced the age-2 cell"}]}
     frozen.write_text(json.dumps(contents), encoding="utf-8")
     (config.run_dir / "debrief" / "latest.json").write_text(json.dumps({"snapshot_id": sid, "evidence": str(frozen)}), encoding="utf-8")
     evidence = json.loads(compile_packet(config, "debrief").text)["evidence"]

@@ -1,13 +1,7 @@
-Guide me through the Studio North UNC API startup test in this coding-agent chat.
+Guide me through the full Studio North lab in this coding-agent chat using the UNC API route.
 
-Use the public repository https://github.com/longxiutian/customer-economics-lab
-and the instructor's codex/studio-north-sol-bridge branch. Resolve it once to a
-full commit SHA and save that release identity. Preserve an existing lab; use a
-fresh folder for this test. A public archive is fine if Git is unavailable.
+Use https://github.com/longxiutian/customer-economics-lab, branch codex/studio-north-sol-bridge. Resolve it once to a full commit SHA and preserve that release in a fresh folder. Start by reading skills/unc-api/SKILL.md; load other setup material only as needed.
 
-Follow skills/unc-api/SKILL.md and its startup setup instructions. Prepare the
-local guided workspace and secure device connection. Use the repository's MCP
-bridge for Jev's lab-purpose check and UNC gpt-6.1-sol's opening lesson.
+Keep my existing app, sign-in and native provider. Use the repository's MCP bridge for automatic connection, Jev purpose checks and UNC gpt-6.1-sol teaching. Pass this message literally as the opening learner_text. Follow all 19 checkpoints and wait for my actual "next step" each time; run fresh analysis.
 
-Pass this message literally as learner_text to preview and ask. Show the actual
-opening, served model and measured usage. Remain at checkpoint 0 and wait for me.
+Deliver the executive report at checkpoint 18. Keep questions open. Generate no usage report until I say "end lab" or "end simulation"; then ask "Any feedback to Professor Tian?", wait for my reply or "skip feedback", and generate my personal debrief. Keep my instructor feedback local.

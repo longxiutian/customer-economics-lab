@@ -157,11 +157,17 @@ def test_debrief_uses_current_frozen_evidence_and_json_rubric(tmp_path):
     config = make_config(tmp_path, phase="full", stage_cap=400000)
     choices = {"final_verdict": "Mixed", "recommended_action": "Re-test the partner channel"}
     seed(config, 18, choices=choices)
+    import sys
+    from test_bridge import REPO
+    sys.path.insert(0,str(REPO))
+    from cohort_lab.lab_close import handle
+    from unc_sol_bridge.packets import closing_state
+    handle(config.run_dir,'end lab');handle(config.run_dir,'skip feedback')
     sid = "f" * 24
     folder = config.run_dir / "debrief" / sid
     folder.mkdir(parents=True)
     frozen = folder / "evidence-packet.json"
-    content = {"schema_version": 2, "snapshot_id": sid, "metrics": {"lab_requests": 22},
+    content = {"schema_version": 2, "snapshot_id": sid,"closing":closing_state(config), "metrics": {"lab_requests": 22},
                "coverage": {"usage": "UNC measured; native harness unknown"},
                "evidence": [{"id": f"snap:{sid}/ev:1", "kind": "saved_judgment",
                              "text": "Re-test the partner channel", "source": "learner_choices.json"}]}

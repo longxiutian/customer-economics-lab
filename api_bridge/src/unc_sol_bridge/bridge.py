@@ -58,11 +58,15 @@ class Bridge:
         self.local = config.run_dir / "sol_bridge"  # created only after the lesson exists, so a fresh run folder stays fresh
 
     def _packet(self,args):
-        managed_open=self.config.mode=="gateway" and args["intent"]=="open"
+        managed_open=self.config.mode=="gateway"
         literal=args["learner_text"]
         if managed_open and (not literal.strip() or len(literal.encode("utf-8"))>4096 or KEY_SHAPED.search(literal)):
             raise BridgeError("learner_text_required", "Pass the learner's literal starting request, at most 4096 UTF-8 bytes, with no credentials. It goes to Jev for the lab-purpose check.")
-        packet=compile_packet(self.config,args["intent"],"" if managed_open else literal,args["artifact_ids"],args["note"])
+        if managed_open and args['intent']=='teach' and literal.strip().casefold()!='next step':
+            raise BridgeError('learner_consent_required','Teaching an advanced checkpoint requires the actual next step message.')
+        if managed_open and args['intent']=='debrief' and literal.strip().casefold().rstrip('.!?').strip() not in {'end lab','end simulation'}:
+            raise BridgeError('end_command_required','Use the saved actual end command, without instructor feedback text.')
+        packet=compile_packet(self.config,args["intent"],"" if managed_open and args['intent'] in {'open','teach','debrief'} else literal,args["artifact_ids"],args["note"])
         if managed_open:
             request_sha=hashlib.sha256(literal.encode("utf-8")).hexdigest()
             packet=replace(packet,sha256=hashlib.sha256((packet.sha256+"\0"+request_sha).encode()).hexdigest(),

@@ -96,11 +96,23 @@ install platform-wide telemetry or promise that every student's interface expose
 
 ## Finish with the executive report and the learning debrief
 
-The last guided checkpoint prepares a local debrief scaffold automatically when
-logging was initialized. It is a fallback, not an Opus-written personal assessment.
-The current agent then performs the same evidence/review workflow as the hosted route:
+At checkpoint 18, deliver the executive report and invite questions. Do not prepare
+a usage report, scaffold or personal-review job yet. Closing works on every route:
 
-1. Record the final available usage receipts and visible lab replies; run `prepare`
+1. Forward the learner's standalone **end lab** or **end simulation** unchanged.
+2. Ask exactly **“Any feedback to Professor Tian?”** and wait. Forward their reply
+   or **skip feedback** unchanged. No analytical step advances during closing.
+3. After `closing.usage_report_allowed` is true, prepare and review the debrief.
+
+The end command fixes the activity cutoff. Instructor feedback is saved verbatim
+in `usage/lab-close.json`, separately from learning evidence, and is not sent to
+the teaching/review model or to Professor Tian. Collection is not configured.
+Ending early is allowed: describe the actual partial session. **continue lab**
+reopens activity and requires a new ending and feedback response for a new report.
+
+After closing, the current agent performs this evidence/review workflow:
+
+1. Ensure lab replies and available receipts were logged before the end command; run `prepare`
    with the same `--output` prefix. This freezes a new version under `debrief/<snapshot>/`.
 2. Read `feedback-request.txt` and `evidence-packet.json`. Draft or refine the
    requested JSON using the current authorized model, or the instructor's available
@@ -114,8 +126,8 @@ uv run --frozen python -m cohort_lab.debrief --output outputs/student render --s
 
 4. Give the student both the executive-report link and `personal-debrief.html`.
    Include a brief explanation of measured/estimated/unknown usage. Preserve the
-   frozen packet and reviewed JSON. Questions after completion do not restart the
-   analysis; explicitly refresh a debrief when later activity should be included.
+   frozen packet and reviewed JSON. Debrief-generation usage is separate from the
+   frozen lab activity. Reopen with **continue lab** to include later activity.
 
 The helper validates same-snapshot citations and exact quotes; the agent checks
 their meaning. `render` never calls a provider or sends a message. Student-owned

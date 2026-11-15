@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -115,20 +116,25 @@ class StudentWorkflow:
         return state
 
     def _packet(self, state, *, advanced=False, error=None):
+        from .lab_close import summary
+        closing=summary(self.output)
         step = state["completed_step"]
         item = LESSONS[step]
         packet = {"advanced": advanced, "step": step, "total_steps": len(LESSONS), "title": item.title,
                   "objective": item.objective, "check": item.check,
                   "result": state["results"].get(str(step), {}),
                   "choices": json.loads((self.output / "learner_choices.json").read_text(encoding="utf-8")) if (self.output / "learner_choices.json").exists() else {},
-                  "message": "Lab complete. Questions do not restart it." if step == len(LESSONS) - 1 else "Type next step to continue."}
+                  "closing":closing,
+                  "message": "Report ready. Continue asking questions, or say end lab / end simulation when finished." if step == len(LESSONS) - 1 else "Type next step to continue; say end lab or end simulation when finished."}
+        if closing['state']=='awaiting_feedback':packet['message']=closing['question']
+        elif closing['state']=='ended':packet['message']='Lab ended. Generate the usage report from the saved activity. Type continue lab to reopen.'
         if error:
             packet["error"] = error
-        if step == len(LESSONS) - 1:
+        if closing['usage_report_allowed']:
             debrief = self.output / "debrief/latest.json"
             if debrief.is_file():
                 packet["personal_debrief"] = json.loads(debrief.read_text(encoding="utf-8"))
-                packet["debrief_instruction"] = "Review and personalize this separate learning debrief using its frozen evidence, then deliver it with the executive report."
+                packet["debrief_instruction"] = "Review and personalize the usage/learning report from this ended session, then deliver it. Instructor feedback stays private in the workspace."
         return packet
 
     def start(self):
@@ -146,10 +152,16 @@ class StudentWorkflow:
         return self._packet(self._load())
 
     def handle_message(self, message):
+        from .lab_close import handle, read as close_state
         state = self._load()
         explicit = message.strip().casefold() == "next step"
-        state["messages"].append({"step": state["completed_step"], "text": message, "explicit_next_step": explicit})
+        previous_close=close_state(self.output)['state']
+        closing_control=handle(self.output,message)
+        purpose='instructor_feedback' if previous_close=='awaiting_feedback' and close_state(self.output)['state']=='ended' else 'session_control' if closing_control else 'lab'
+        state["messages"].append({"step": state["completed_step"], "text": message, "explicit_next_step": explicit,
+                                  "purpose":purpose,"happened_at":time.time()})
         self._save(state)
+        if closing_control:return self._packet(state)
         if not explicit or state["completed_step"] == len(LESSONS) - 1:
             return self._packet(state)
         upcoming = state["completed_step"] + 1
@@ -165,15 +177,12 @@ class StudentWorkflow:
         state["results"][str(upcoming)] = result
         state["completed_step"] = upcoming
         self._save(state)
-        if upcoming == len(LESSONS) - 1 and (self.output / "usage/session.json").is_file():
-            from .debrief import prepare
-            try:
-                prepare(self.output)
-            except (OSError, ValueError) as exc:
-                return self._packet(state, advanced=True, error={"personal_debrief": str(exc), "executive_report_preserved": True})
         return self._packet(state, advanced=True)
 
     def set_choice(self, key, value):
+        from .lab_close import summary
+        if summary(self.output)['state']!='active':
+            raise WorkflowError('Type continue lab before changing analytical judgments in a closing or ended session.')
         self._load()
         if not self.core.state_path.exists():
             raise WorkflowError("Finish the readiness checkpoint before saving analytical choices.")

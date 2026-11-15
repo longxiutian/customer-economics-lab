@@ -14,7 +14,7 @@ ALLOCATION_LIMIT = 400_000
 MANAGED_ALLOCATION_LIMIT = 127 * ALLOCATION_LIMIT  # local ceiling only; central admission owns the actual pool
 PHASES = {"startup": (10_000, 5_000), "pilot": (100_000, 16_000), "full": (ALLOCATION_LIMIT, 16_000)}  # stage cap, packet bytes
 MANAGED_PHASES = {**PHASES, "full": (MANAGED_ALLOCATION_LIMIT, 16_000)}
-RELEASE_PHASES = frozenset({"startup"})  # widen only in a separately verified guided-continuation release
+RELEASE_PHASES = frozenset({"startup", "full"})
 REQUIRED = {"schema_version", "source_root", "run_dir", "state_dir", "subscription_label", "period_id", "baseline_tokens",
             "baseline_source", "allocation_cap", "phase", "stage_cap", "source_fingerprint", "credential_ref"}
 OPTIONAL = {"data_dir", "packet_max_bytes"}
@@ -94,7 +94,7 @@ def load_config(path) -> BridgeConfig:
         device_id = _text(raw, "device_id", r"[A-Za-z0-9_-]{22,64}")
     phase = _text(raw, "phase", "startup|pilot|full")
     if phase not in RELEASE_PHASES:
-        raise BridgeError("phase_not_released", "This test release permits the one-opening startup phase only. Preserve the ledger and wait for the guided-continuation release.")
+        raise BridgeError("phase_not_released", "Use a released startup or full guided phase; preserve the existing ledger.")
     stage_limit, packet_limit = (MANAGED_PHASES if mode == "gateway" else PHASES)[phase]
     cap = _integer(raw, "allocation_cap", 1, MANAGED_ALLOCATION_LIMIT if mode == "gateway" else ALLOCATION_LIMIT)
     source_root, run_dir, state_dir = (_directory(raw, key) for key in ("source_root", "run_dir", "state_dir"))

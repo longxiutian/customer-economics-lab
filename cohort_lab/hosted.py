@@ -119,6 +119,8 @@ class HostedLesson:
             receipt = {"job_id": job_id, "run_id": run_id, "request_hash": request_hash,
                        "release_hash": manifest["release_hash"], "started_at": time.time(), "status": "started",
                        "payload": job["payload"], "expected_step": job["checkpoint"]}
+            from .lab_close import summary as close_summary
+            receipt['closing_before']=close_summary(output)['state']
             write_json(receipt_path, receipt)
             try:
                 payload, action = job["payload"], job["payload"]["action"]
@@ -164,8 +166,8 @@ class HostedLesson:
                     packet["validation"] = self.validate(output, receipts, packet)
                 elif action == 'debrief':
                     packet = lesson.status()
-                    if before!=18 or not self.validate(output,receipts,packet)['report_complete']:
-                        raise WorkflowError('Complete and validate the report before requesting a debrief.')
+                    if not packet.get('closing',{}).get('usage_report_allowed'):
+                        raise WorkflowError('Say end lab or end simulation, then answer or skip the instructor-feedback question before requesting the usage report.')
                     self.progress('debrief')
                     try:
                         packet['personal_debrief']=self.debriefer(output,receipts,job) if self.debriefer else {'status':'pending','reason':'Instructor reviewer unavailable'}
@@ -175,7 +177,7 @@ class HostedLesson:
                 else:
                     raise WorkflowError("Unknown lab operation.")
                 # Publish only artifacts from this checkpoint's allowlisted evidence.
-                if packet['step']==18 and 'personal_debrief' not in packet:
+                if packet.get('closing',{}).get('usage_report_allowed') and 'personal_debrief' not in packet:
                     from hosting.hosted_debrief import completed
                     packet['personal_debrief']=completed(output)
                 packet = self.evidence_packet(packet, output)
@@ -190,14 +192,14 @@ class HostedLesson:
                         write_json(base / 'automatic-fit.json', {k: receipt[k] for k in
                             ('job_id', 'release_hash', 'request_hash', 'model_outputs', 'calculation_finished_at')})
                 # CPU progress survives an unavailable model. Never label fallback prose Nemotron.
-                if self.interpreter and action in {"start", "message", "interpret"}:
+                if self.interpreter and action in {"start", "message", "interpret"} and packet.get('closing',{}).get('state','active')=='active':
                     try:
                         self.progress('nemotron')
                         packet["interpretation"] = self.interpreter(packet, payload.get("message", "Introduce this checkpoint."))
                     except Exception as exc:
                         packet["interpretation"] = {"status": "unavailable", "error_type": type(exc).__name__,
                                                     "message": "Nemotron did not return an interpretation. The computed checkpoint is saved."}
-                if packet["step"] == 18:
+                if packet["step"] == 18 or packet.get('closing',{}).get('usage_report_allowed'):
                     packet["validation"] = self.validate(output, receipts, packet)
                 result = {"api_version": API_VERSION, "run_id": run_id, "job_id": job_id,
                           "release_hash": manifest["release_hash"], "packet": packet,
@@ -317,9 +319,9 @@ class HostedLesson:
         if packet["step"] == 18:
             for name in ("report/customer-economics-report.pdf", "report/customer-economics-report.tex", "implementation_manifest.json", "model_summary.json", "model_manifest.json", "learner_choices.json"):
                 register(output / name)
-            if packet.get('personal_debrief',{}).get('status')=='completed':
-                for name in ('personal-debrief/personal-debrief.html','personal-debrief/personal-debrief.pdf'):
-                    register(output/name)
+        if packet.get('closing',{}).get('usage_report_allowed') and packet.get('personal_debrief',{}).get('status')=='completed':
+            for name in ('personal-debrief/personal-debrief.html','personal-debrief/personal-debrief.pdf'):
+                register(output/name)
         packet["artifacts"] = artifacts
         return packet
 
