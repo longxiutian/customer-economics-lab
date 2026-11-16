@@ -21,8 +21,8 @@ uv sync --project api_bridge --frozen --extra keyring
 
 If uv's automatically selected interpreter is broken, select an existing Python
 3.12 explicitly with `--python ABSOLUTE_PYTHON`; do not replace working system
-Python. On Windows use the native Windows environment for the OS credential
-store, even when the coding harness can also use WSL.
+Python. On Windows use native Windows Python and the OS credential store. Keep the
+bridge in the same native operating environment as the coding harness.
 
 The agent chooses absolute paths for a fresh output directory and an owner-local
 configuration outside the checkout, then runs:

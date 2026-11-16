@@ -287,7 +287,7 @@ def test_fixed_mix_comparison_does_not_mistake_mix_change_for_within_cell_change
 
 def test_native_pdf_commands_and_all_schema_fields_are_copyable(tmp_path):
     from cohort_lab.data import SCHEMAS
-    if not any(shutil.which(x) for x in ["pdflatex","tectonic","wsl"]):pytest.skip("Native TeX engine unavailable")
+    if not any(shutil.which(x) for x in ["pdflatex","tectonic"]):pytest.skip("Native TeX engine unavailable")
     (tmp_path/"figures").mkdir()
     for name in ["labreport.sty","longxiu-research-brief.sty"]:shutil.copyfile(report.ROOT/"templates"/name,tmp_path/name)
     tokens=["uv sync --frozen","uv run --frozen",*SCHEMAS,*sorted({f for schema in SCHEMAS.values() for f in schema})]

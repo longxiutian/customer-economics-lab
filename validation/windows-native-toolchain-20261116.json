@@ -1,0 +1,36 @@
+{
+  "date": "2026-11-16",
+  "platform": "Windows",
+  "python": "3.12.14",
+  "node": "v24.22.1",
+  "playwright": "1.62.1",
+  "browser": "Windows-native Chromium",
+  "scope": "Native local toolchain instructions and execution; no analytic data or model changes",
+  "checks": {
+    "native_tex_selection": "passed",
+    "missing_native_tex_preserves_editable_source": "passed",
+    "native_archify_browser_launch": "passed",
+    "native_archify_svg_and_png_export": "passed",
+    "released_api_opening_packet": "passed",
+    "release_audit": "Eight checks passed on initial run; two refreshed checks passed on targeted rerun",
+    "student_docs_skills_and_active_code_subsystem_reference_scan": "no matches"
+  },
+  "audit_refresh": [
+    "Use literal next step and verify shorthand does not advance",
+    "Compare only holdout waves whose follow-up is complete at the as-of cutoff, with normalized UTC timestamps"
+  ],
+  "render_probe": {
+    "input": "examples/reference/diagrams/source-systems.html",
+    "input_sha256": "56a3d7aacdeae4dae2e9e3b7e21f8c433b977eb9b71a9b7b2b340e3109f91fba",
+    "output_svg_sha256": "42dfe29455df1a1249bb1b14467ef79277e9cc28d491d4b607a487e7171325a6",
+    "output_png_sha256": "9974373a62dc750bf2aa6f3948ff863ea05af711fc193f115993bfa44c278e44",
+    "png_pixels": [
+      2136,
+      1440
+    ],
+    "input_scope": "Existing authored Archify HTML, freshly exported with the native renderer"
+  },
+  "full_pdf_render": "Not rerun: this validation host has no native TeX executable; selected-engine and missing-engine behavior were checked",
+  "model_fits_or_paid_inference": 0,
+  "historical_provenance": "Original source articles, reference build manifests and prior audit receipts preserved"
+}

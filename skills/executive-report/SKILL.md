@@ -7,6 +7,8 @@ description: Format and verify the final executive report at checkpoint 18 of th
 
 Use this supporting skill when the guided state machine reaches reporting checkpoint 18 after the learner has supplied the final verdict, recommended action and explicit **next step**. If invoked earlier, return to the [main guided skill](../../SKILL.md) and resume the student's current checkpoint. Do not run earlier stages or create judgments to satisfy a gate. The student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
 
+Compile and render with the learner's native Python, Node.js/Chromium, and TeX tools; follow [setup](../../docs/setup.md) for platform details.
+
 ## Read and preserve the visual system
 
 Use the shared `build_report` path, which adds an invisible PDF footer with one random report-run ID and validates the final course-neutral cover. Preserve the workspace's `report_identity.json` on rebuild; never replace it with a student's name or email. The PDF marker uses text rendering mode 3, so it is extractable but does not print or change the visible layout. No registry, registration or callback is required. Do not describe it as authenticated completion or tamper-proof student identity. Follow [the identifier and reproduction contract](../../docs/report-identifiers.md); a manual TeX compile alone does not add the footer. Keep reference previews separate from a learner's generated output.

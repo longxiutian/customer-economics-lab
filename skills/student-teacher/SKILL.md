@@ -7,6 +7,8 @@ description: Teach the Studio North customer-economics lab through visible inter
 
 This skill teaches the workflow in the repository's [root skill](../../SKILL.md). That skill owns the analytical methods and evidence boundaries; the [report skill](../executive-report/SKILL.md) owns the finished document. Do not duplicate their analysis, invent example results, or change the models for teaching convenience. The student controls the pace. The final checkpoint produces the report.
 
+Use the learner's native operating environment for all local tools, including Archify rendering and PDF compilation. Follow [setup](../../docs/setup.md) progressively at readiness; the opening needs no analytical dependencies.
+
 ## Select the execution route
 
 Select the instructor-provided route. **BlueChip** uses the [BlueChip classroom contract](../../docs/bluechip-classroom.md), its configured API tool and platform-supplied learner identity; **personal ChatGPT** uses the separate [browser classroom plan](../../docs/chatgpt-web-classroom.md). Check each route's recorded acceptance status. Begin by verifying the actual service, authenticated workspace, pinned release, expiry and capabilities. A model-generation connection alone cannot run this workflow. If the required connection is missing, explain what is missing and stop setup. Do not substitute imagined execution, a cached report, or a requirement to install local software or buy a subscription.
