@@ -7,6 +7,8 @@ description: Teach all nineteen Studio North checkpoints in the current coding-a
 
 Keep the current app, sign-in and native provider. The native agent executes the released local commands and presents evidence; UNC **gpt-6.1-sol** supplies teaching and interpretation through the MCP bridge. No Luna, provider replacement, full-transcript forwarding or alternate paid fallback. The native harness's inference has its own account limits. Read this skill first; load setup details only when needed, rather than ingesting the repository.
 
+Use the operating system's native Python and credential store, with native Node.js/Chromium and TeX at readiness. The local route stays in the student's current coding-agent chat.
+
 ## Connect and welcome
 
 Resolve the instructor's release to one full commit and preserve it in a fresh checkout/output folder. Never update a running release. Follow [setup and the opening](../../docs/api-route.md#setup-and-one-opening): use the locked `api_bridge/` environment and `connect`. This creates an opaque device credential in the secure OS keyring, opens checkpoint 0, and initializes usage logging. Keys are assigned privately by the gateway after purpose admission. No separate sign-in, student name or API-key entry is needed; device admission does not verify enrollment.

@@ -803,41 +803,16 @@ def _appendix_context(output: Path) -> dict:
 
 
 def _compile_native(source: Path, engine: str | None=None) -> dict:
-    """Compile portably; on this Windows host use native WSL in its Linux FS."""
+    """Compile with the selected native TeX executable on the current platform."""
     env=os.environ.copy();env.update({"SOURCE_DATE_EPOCH":str(EPOCH),"FORCE_SOURCE_DATE":"1","TZ":"UTC"})
     engine=engine or os.environ.get("COHORT_TEX_ENGINE")
     local=engine or ("tectonic" if shutil.which("tectonic") else "pdflatex" if shutil.which("pdflatex") else None)
-    if os.name=="nt" and not local and shutil.which("wsl"):
-        probe=run_process(["wsl","--exec","sh","-c","command -v pdflatex && kpsewhich sourcesans.sty"],capture_output=True,timeout=20)
-        if probe.returncode:raise RuntimeError("No native TeX engine found, and WSL lacks pdflatex/Source Sans. Install a supported TeX engine; editable .tex is preserved.")
-        linux_source=subprocess.check_output(["wsl","--exec","wslpath","-a",source.parent.as_posix()],text=True).strip()
-        figure_bytes=b"".join(p.name.encode("utf-8")+p.read_bytes() for p in sorted((source.parent/"figures").glob("*")) if p.is_file())
-        content_key=hashlib.sha256(source.read_bytes()+(source.parent/"labreport.sty").read_bytes()
-                                   +(source.parent/"longxiu-research-brief.sty").read_bytes()+figure_bytes).hexdigest()[:16]
-        # Independent output folders must never race on the same native build
-        # directory. TeX metadata omits host paths, preserving identical PDFs.
-        location_key=hashlib.sha256(source.parent.resolve().as_posix().encode("utf-8")).hexdigest()[:12]
-        key=content_key+"-"+location_key
-        script=("set -eu\n"
-                f"task_build=\"$HOME/.cache/customer-economics-lab/{key}\"\n"
-                "mkdir -p \"$task_build\"\n"
-                f"cp -a {__import__('shlex').quote(linux_source)}/. \"$task_build/\"\n"
-                "cd \"$task_build\"\n"
-                f"export SOURCE_DATE_EPOCH={EPOCH} FORCE_SOURCE_DATE=1 TZ=UTC\n"
-                "kpsewhich sourcesans.sty >/dev/null\n"
-                "pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error customer-economics-report.tex > compile-1.txt || { tail -60 compile-1.txt; exit 1; }\n"
-                "pdflatex -no-shell-escape -interaction=nonstopmode -halt-on-error customer-economics-report.tex > compile-2.txt\n"
-                f"cp customer-economics-report.pdf customer-economics-report.log {__import__('shlex').quote(linux_source)}/\n")
-        p=run_process(["wsl","--exec","bash","-s"],input=script.encode("utf-8"),capture_output=True,env=env,timeout=180)
-        if p.returncode:raise RuntimeError("WSL TeX compilation failed: "+p.stdout.decode("utf-8",errors="replace")[-2500:]+p.stderr.decode("utf-8",errors="replace")[-1500:])
-        used="WSL pdflatex"
-    else:
-        if not local:raise RuntimeError("Install a TeX engine (tectonic or pdflatex) or set COHORT_TEX_ENGINE; editable .tex is preserved.")
-        args=[local,"--keep-logs","--outdir",str(source.parent),str(source)] if "tectonic" in Path(local).name else [local,"-no-shell-escape","-interaction=nonstopmode","-halt-on-error",source.name]
-        for _ in range(1 if "tectonic" in Path(local).name else 2):
-            p=run_process(args,cwd=source.parent,env=env,capture_output=True,text=True,timeout=180)
-            if p.returncode:raise RuntimeError("TeX compilation failed: "+p.stdout[-2000:]+p.stderr[-1000:])
-        used=Path(local).name
+    if not local:raise RuntimeError("Install a native TeX engine (tectonic or pdflatex) or set COHORT_TEX_ENGINE; editable .tex is preserved.")
+    args=[local,"--keep-logs","--outdir",str(source.parent),str(source)] if "tectonic" in Path(local).name else [local,"-no-shell-escape","-interaction=nonstopmode","-halt-on-error",source.name]
+    for _ in range(1 if "tectonic" in Path(local).name else 2):
+        p=run_process(args,cwd=source.parent,env=env,capture_output=True,text=True,timeout=180)
+        if p.returncode:raise RuntimeError("TeX compilation failed: "+p.stdout[-2000:]+p.stderr[-1000:])
+    used=Path(local).name
     log=source.with_suffix(".log").read_text(encoding="utf-8",errors="replace") if source.with_suffix(".log").exists() else ""
     problems=[line for line in log.splitlines() if "Overfull" in line or "Undefined control" in line or "undefined references" in line]
     if problems:raise RuntimeError("TeX QA requires repair: "+"; ".join(problems))

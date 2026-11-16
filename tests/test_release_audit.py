@@ -28,17 +28,18 @@ def test_independent_real_guided_forward_walk_stops_on_questions(tmp_path):
     assert not (out / "tables").exists()
     question = lab.handle_message("What does a first-paid cohort mean?")
     assert not question["advanced"] and question["state"]["completed_stage"] == 0
-    assert lab.handle_message("next")["stage"] == 1
+    assert not lab.handle_message("next")["advanced"]
+    assert lab.handle_message("next step")["stage"] == 1
     assert (out / "diagrams" / "source-systems.html").is_file()
     assert not (out / "tables").exists()
-    assert lab.handle_message("next")["stage"] == 2
+    assert lab.handle_message("next step")["stage"] == 2
     assert not lab.handle_message("Can we group by need instead of age?")["advanced"]
     lab.set_choice("segmentation_rationale", "Need may describe the job customers want done; check it on mature cohorts.")
     resumed = LabWorkflow(ROOT / "data", out, compile_pdf=False)
     state = resumed.start()["state"]
     assert state["completed_stage"] == 2
     assert state["choices"]["segmentation_rationale"].startswith("Need may")
-    assert resumed.handle_message("next")["stage"] == 3
+    assert resumed.handle_message("next step")["stage"] == 3
     assert (out / "tables" / "cohort_age_summary.csv").is_file()
     assert not (out / "model_summary.json").exists()
     assert not (out / "report" / "customer-economics-report.pdf").exists()
@@ -78,8 +79,8 @@ def test_zip_bootstrap_never_invokes_git(tmp_path, monkeypatch):
     assert not (result / ".git").exists()
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="Tests Windows native-engine preference over WSL fallback")
-def test_native_tex_is_preferred_over_unconfigured_wsl(tmp_path, monkeypatch):
+@pytest.mark.skipif(sys.platform != "win32", reason="Tests the native Windows TeX execution path")
+def test_native_tex_uses_only_the_selected_engine(tmp_path, monkeypatch):
     from cohort_lab import report
     source = tmp_path / "customer-economics-report.tex"
     source.write_text("test source")
@@ -87,10 +88,10 @@ def test_native_tex_is_preferred_over_unconfigured_wsl(tmp_path, monkeypatch):
     (tmp_path / "labreport.sty").write_text("style")
     calls = []
     monkeypatch.delenv("COHORT_TEX_ENGINE", raising=False)
-    monkeypatch.setattr(report.shutil, "which", lambda name: name if name in ("tectonic", "wsl") else None)
-    def forbidden_wsl(*args, **kwargs):
-        raise AssertionError("A working native TeX installation must not be displaced by an unconfigured WSL")
-    monkeypatch.setattr(report.subprocess, "check_output", forbidden_wsl)
+    monkeypatch.setattr(report.shutil, "which", lambda name: name if name == "tectonic" else None)
+    def forbidden_external_lookup(*args, **kwargs):
+        raise AssertionError("Report compilation must use the selected native TeX executable")
+    monkeypatch.setattr(report.subprocess, "check_output", forbidden_external_lookup)
     def fake_run(command, **kwargs):
         calls.append(command)
         return subprocess.CompletedProcess(command, 0, "", "")
@@ -98,6 +99,20 @@ def test_native_tex_is_preferred_over_unconfigured_wsl(tmp_path, monkeypatch):
     result = report._compile_native(source)
     assert result["engine"] == "tectonic"
     assert calls and all(command[0] == "tectonic" for command in calls)
+
+
+def test_missing_native_tex_preserves_source_without_starting_other_tools(tmp_path, monkeypatch):
+    from cohort_lab import report
+    source = tmp_path / "customer-economics-report.tex"
+    source.write_text("editable report source")
+    monkeypatch.delenv("COHORT_TEX_ENGINE", raising=False)
+    monkeypatch.setattr(report.shutil, "which", lambda _: None)
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Missing native TeX must not start another environment")
+    monkeypatch.setattr(report, "run_process", forbidden)
+    with pytest.raises(RuntimeError, match="Install a native TeX engine"):
+        report._compile_native(source)
+    assert source.read_text() == "editable report source"
 
 
 def test_report_preserves_the_learners_distinct_judgment(tmp_path, monkeypatch):
@@ -147,9 +162,9 @@ def test_raw_source_as_of_replay_matches_only_history_known_then(tmp_path):
     manifest["source_cutoffs"] = {name:manifest["data_as_of"] for name in SCHEMAS}
     for name, columns in SCHEMAS.items():
         with (ROOT / "data" / name).open(newline="",encoding="utf-8") as f:
-            rows = [r for r in csv.DictReader(f) if r[fields[name]] < cutoff[:len(r[fields[name]])]]
+            rows = [r for r in csv.DictReader(f) if pd.to_datetime(r[fields[name]], utc=True) < pd.Timestamp(cutoff, tz="UTC")]
         if name == "channel_holdouts.csv":
-            rows = [r for r in rows if r["followup_end_at"] <= cutoff]
+            rows = [r for r in rows if pd.to_datetime(r["followup_end_at"], utc=True) <= pd.Timestamp(cutoff, tz="UTC")]
         path = historic / name
         with path.open("w",newline="",encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=list(columns),lineterminator="\n")
@@ -165,8 +180,11 @@ def test_raw_source_as_of_replay_matches_only_history_known_then(tmp_path):
         expected = complete[complete[date_field]<"2025-10-01"].reset_index(drop=True)
         actual = pd.read_csv(replay/"tables"/(name+".csv"))
         pd.testing.assert_frame_equal(expected,actual,check_exact=True)
-    # Acquisition pilot summaries are independent of later customer transactions.
-    pd.testing.assert_frame_equal(pd.read_csv(full/"tables/channel_cac.csv"),
+    # Only pilot waves with completed follow-up were knowable at this cutoff.
+    # Later customer transactions cannot change those completed-wave estimates.
+    complete_cac = pd.read_csv(full/"tables/channel_cac.csv")
+    expected_cac = complete_cac[pd.to_datetime(complete_cac["followup_end_at"], utc=True) <= pd.Timestamp(cutoff, tz="UTC")].reset_index(drop=True)
+    pd.testing.assert_frame_equal(expected_cac,
                                   pd.read_csv(replay/"tables/channel_cac.csv"),check_exact=True)
 
 

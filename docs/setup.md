@@ -6,6 +6,10 @@ The public source ZIP is sufficient. Git, a GitHub account, and a SQL database s
 
 No visible terminal windows: the helper uses Python's standard library inside the existing AI harness and launches no external commands or terminal application. It downloads the guided source only; it does not install dependencies or run the lesson. Read both skills and introduce Studio North before setup, then use `student.py` and the learner's explicit checkpoint messages.
 
+## Native toolchain
+
+Run the lab with tools native to the student's operating system. On Windows, use native Python and uv, Node.js and Chromium, and Tectonic or pdfLaTeX from PowerShell within the existing coding-agent chat. Archify uses that same native Node.js and browser toolchain. Keep the student's current app and operating environment.
+
 ## Python environment
 
 Use Python **3.12** and [uv](https://docs.astral.sh/uv/). Ask your local AI agent to locate an existing compatible interpreter first. From the extracted lab folder:
@@ -14,10 +18,10 @@ Use Python **3.12** and [uv](https://docs.astral.sh/uv/). Ask your local AI agen
 uv sync --frozen
 ```
 
-If the machine has several interpreters, select a verified Python 3.12 explicitly:
+If the machine has several interpreters, select a verified Python 3.12 explicitly. For example, on Windows:
 
 ```text
-uv sync --frozen --python /path/to/python3.12
+uv sync --frozen --python "C:\Path\To\Python312\python.exe"
 ```
 
 Use uv for all Python dependency management and execution (`uv sync`, `uv run --frozen python`, and, only in an explicitly separate experiment, `uv add`). Do not install packages with pip or Conda. The exact resolved package versions are in `uv.lock`. Both released models explicitly select CPU JAX/NumPyro with float64. Four NUTS chains run sequentially on one CPU device; a GPU, CUDA, and accelerator drivers are not required. The source article contains its author's original settings; follow this repository's CPU configuration. Keep the environment inside the repository's `.venv`, rather than changing unrelated global packages. Network access is needed for the initial package download.
@@ -33,7 +37,7 @@ Use uv for all Python dependency management and execution (`uv sync`, `uv run --
   ```
 
   The exporter fixes viewport, locale, time zone, light theme and animation state. HTML, SVG and PNG hashes enter the diagram manifest. A missing renderer fails explicitly rather than reusing a stale image. Install and exercise this dependency before class; package detection alone does not prove rendering works.
-- **Tectonic or pdfLaTeX** compiles the report. The renderer checks `COHORT_TEX_ENGINE` if set, then `tectonic` and `pdflatex` on PATH. On Windows it can also use an existing WSL pdfLaTeX installation. The report needs Source Sans (`sourcesans.sty`) plus the standard graphics, table, and TikZ packages in its template. Complete the first compilation before class so any package downloads are cached.
+- **Tectonic or pdfLaTeX** compiles the report. The renderer checks `COHORT_TEX_ENGINE` if set, then `tectonic` and `pdflatex` on PATH. Use a native executable on each supported operating system. The report needs Source Sans (`sourcesans.sty`) plus the standard graphics, table, and TikZ packages in its template. Complete the first compilation before class so any package downloads are cached.
 - An environment-specific renderer path may be supplied through `COHORT_TEX_ENGINE`. The lab does not require shell escape. A failed PDF build preserves the editable `.tex` and figures and reports the failure.
 
 ## Readiness

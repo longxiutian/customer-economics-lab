@@ -151,11 +151,6 @@ def _readiness(data_dir: Path, need_pdf: bool = True) -> dict:
     python_ready = sys.version_info[:2] == (3, 12)
     requested_tex = os.environ.get("COHORT_TEX_ENGINE")
     tex_engine = (shutil.which(requested_tex) or (requested_tex if Path(requested_tex).is_file() else None)) if requested_tex else (shutil.which("tectonic") or shutil.which("pdflatex"))
-    if not tex_engine and not requested_tex and sys.platform == "win32" and shutil.which("wsl"):
-        probe = run_process([shutil.which("wsl"), "--exec", "sh", "-lc", "command -v pdflatex"],
-                               text=True, capture_output=True, check=False, timeout=20)
-        if probe.returncode == 0 and probe.stdout.strip():
-            tex_engine = "WSL pdflatex"
     manifest = json.loads((data_dir / "data_manifest.json").read_text(encoding="utf-8"))
     return {
         "ready": python_ready and not missing and cpu_ready and node_ready and diagram_ready and (bool(tex_engine) or not need_pdf),
