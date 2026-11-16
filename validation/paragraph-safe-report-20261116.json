@@ -1,0 +1,21 @@
+{
+  "date": "2026-11-16",
+  "scope": "Paragraph-safe learner-authored report callouts",
+  "test": "tests/test_report_paragraphs.py::test_takeaway_preserves_paragraphs_and_escaped_text",
+  "native_tex_engine": "pdflatex",
+  "result": "1 passed",
+  "fixture_pages": 1,
+  "checked_text": [
+    "paragraph breaks preserved",
+    "percent and ampersand",
+    "dollar sign and underscore"
+  ],
+  "overfull_boxes": 0,
+  "full_report_render_verified": true,
+  "saved_model_outputs_and_choices_unchanged": true,
+  "additional_model_fits": 0,
+  "additional_model_calls": 0,
+  "changed_report_pages_visually_checked": true,
+  "style_sha256": "6f14903239dd50c4f54c875c25a46858a196d5d943a2c4c483d4d27ca1a290aa",
+  "test_sha256": "4273e1ff21bf6532a78a61c64b4792bcac7c6573df5202bdbd3eb4ed425e15f7"
+}

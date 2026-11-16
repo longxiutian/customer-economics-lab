@@ -101,7 +101,7 @@ Follow [the public reproducibility guide](../../docs/reproducibility.md) for exa
 
 ## Build and visual verification
 
-Use the repository's report command and supported native TeX engine. Source Sans is required; do not silently substitute another report typeface. Compile with shell escape disabled. Preserve editable sources if compilation is unavailable.
+Use the repository's report command and supported native TeX engine. Source Sans is required; do not silently substitute another report typeface. Compile with shell escape disabled. Preserve editable sources if compilation is unavailable. Preserve paragraph breaks in saved learner verdicts and actions while escaping TeX special characters. Callout typography must accept multiple paragraphs; use a scoped font declaration rather than wrapping the entire block in a single-text argument. Verify this with `tests/test_report_paragraphs.py` using the supported native TeX engine.
 
 Render every PDF page. Inspect a contact sheet and every changed page at full resolution. Verify US Letter portrait dimensions for the main report and appendices, except the explicitly labeled A3 landscape schema foldout. Check selectable text, correct page count, no accidental blank pages, no clipping, no overfull boxes, and a readable hierarchy. Keep the maintained body size; repair overflow through content organization and space allocation rather than globally shrinking text.
 
