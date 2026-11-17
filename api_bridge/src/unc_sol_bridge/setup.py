@@ -81,7 +81,7 @@ def prepare(*, config_path, source_root, run_dir, credential_file, harness):
     return Bridge(config).status()
 
 
-async def connect(*, config_path, source_root, run_dir, harness, transport=None):
+async def connect(*, config_path, source_root, run_dir, harness, project=False, transport=None):
     """Offline preparation. First ask registers the device and checks lab purpose."""
     from .gateway import new_secret
     import secrets
@@ -107,6 +107,8 @@ async def connect(*, config_path, source_root, run_dir, harness, transport=None)
            "baseline_tokens": 0, "baseline_source": "Gateway centrally accounts for all assigned UNC subscriptions.",
            "allocation_cap": MANAGED_ALLOCATION_LIMIT, "phase": "full", "stage_cap": MANAGED_ALLOCATION_LIMIT,"packet_max_bytes":16000,
            "source_fingerprint": source_fingerprint(root), "credential_ref": reference}
+    if project:
+        raw["project_only"] = True
     path.parent.mkdir(parents=True, exist_ok=True)
     candidate = path.with_suffix(".candidate.json")
     try:
@@ -115,8 +117,12 @@ async def connect(*, config_path, source_root, run_dir, harness, transport=None)
     finally:
         candidate.unlink(missing_ok=True)
     keyring.set_password(reference["service"], reference["name"], secret)
-    _local(root, ["student.py", "--output", str(run), "start"])
-    _local(root, ["-m", "cohort_lab.debrief", "--output", str(run), "init", "--route", "university_mcp", "--harness", harness])
+    if not project:
+        _local(root, ["student.py", "--output", str(run), "start"])
+    # A personal-token report may already have its own session and usage. Never relabel or reset it.
+    if not (run / "usage/session.json").exists():
+        _local(root, ["-m", "cohort_lab.debrief", "--output", str(run), "init", "--route", "university_mcp", "--harness", harness])
     path.write_text(json.dumps(raw, indent=2)+"\n", encoding="utf-8")
     return {**Bridge(load_config(path)).status(), "connection": "prepared_locally",
-            "next": "Preview the opening with the learner's literal starting request. First ask checks purpose with Jev, then obtains Sol teaching. No sign-in or key entry is needed."}
+            "next": ("Preview intent=project with the learner's literal Studio North request and selected existing artifacts. No opening or guided checkpoint is required."
+                     if project else "Preview the opening with the learner's literal starting request. First ask checks purpose with Jev, then obtains Sol teaching. No sign-in or key entry is needed.")}
