@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import httpx
 
-from .config import EFFORT, MAX_OUTPUT_TOKENS, MODEL
+from .config import EFFORT, MODEL, output_limit
 
 # The UNC Responses endpoint verified in the existing instructor integration.
 # Never read from client configuration, environment variables or MCP arguments.
@@ -40,8 +40,8 @@ def endpoint_ready(url=None) -> bool:
     return (RESPONSES_URL if url is None else url).startswith("https://")
 
 
-def build_request(instructions: str, text: str) -> dict:
-    return {"model": MODEL, "instructions": instructions, "input": text, "max_output_tokens": MAX_OUTPUT_TOKENS,
+def build_request(instructions: str, text: str, *, project=False) -> dict:
+    return {"model": MODEL, "instructions": instructions, "input": text, "max_output_tokens": output_limit("project" if project else "teach"),
             "reasoning": {"effort": EFFORT}, "store": False, "stream": False}
 
 
@@ -55,8 +55,8 @@ class SolClient:
         self._key, self._transport = api_key, transport
         self._url = RESPONSES_URL if url is None else url
 
-    async def ask(self, instructions: str, text: str) -> Outcome:
-        body = json.dumps(build_request(instructions, text)).encode("utf-8")
+    async def ask(self, instructions: str, text: str, *, project=False) -> Outcome:
+        body = json.dumps(build_request(instructions, text, project=project)).encode("utf-8")
         headers = {"Authorization": f"Bearer {self._key}", "Content-Type": "application/json", "Accept": "application/json"}
         try:
             async with asyncio.timeout(TOTAL_SECONDS):

@@ -5,13 +5,13 @@ import hashlib
 import json
 import re
 import time
-from dataclasses import replace
+from dataclasses import asdict, replace
 
 from .budget import Ledger
 from .client import SolClient, endpoint_ready
-from .config import EFFORT, MAX_OUTPUT_TOKENS, MODEL, KEY_SHAPED, BridgeConfig, BridgeError
+from .config import EFFORT, MAX_OUTPUT_TOKENS, PROJECT_OUTPUT_TOKENS, output_limit, MODEL, KEY_SHAPED, BridgeConfig, BridgeError
 from .credentials import describe, load_key
-from .packets import INTENTS, compile_packet, load_lessons, load_state, source_fingerprint
+from .packets import INTENTS, Packet, compile_packet, load_lessons, load_state, source_fingerprint
 
 REQUEST_ID = re.compile(r"[A-Za-z0-9_-]{8,64}")
 FIELDS = {"request_id": str, "intent": str, "learner_text": str, "artifact_ids": list, "note": str}
@@ -104,20 +104,26 @@ class Bridge:
                    "max_output_tokens": MAX_OUTPUT_TOKENS, "phase": c.phase, "packet_max_bytes": c.packet_max_bytes,
                    "endpoint_pinned": endpoint_ready(self._url), "credential": describe(c.credential_ref), "problems": []}
         payload["route"] = "managed_unc_pool" if c.mode == "gateway" else "individual_subscription"
+        payload["project_work_available"] = True
+        payload["project_max_output_tokens"] = PROJECT_OUTPUT_TOKENS
         for name, probe in (("checkpoint", self._checkpoint), ("budget", self._budget)):
             try:
                 payload[name] = probe()
             except BridgeError as error:
+                if name == "checkpoint" and c.project_only and error.kind == "lesson_not_started":
+                    payload["checkpoint"] = None
+                    payload["project"] = {"basis": "existing_project", "guided_completion_claimed": False}
+                    continue
                 payload["problems"].append({"kind": error.kind, "message": error.message})
         return payload
 
     def preview(self, raw) -> dict:
         args = _arguments(raw, ("intent", "learner_text", "artifact_ids", "note"), ("intent",))
         packet = self._packet(args)
-        budget, needed = self._budget(), packet.input_bound + MAX_OUTPUT_TOKENS
+        budget, needed = self._budget(), packet.input_bound + output_limit(packet.intent)
         fits = budget["quarantine"] is None and needed <= budget["remaining"] and budget["stage_used"] + needed <= self.config.stage_cap
         return {"ok": True, "kind": "preview", "provider_called": False, "packet": packet.manifest | {"sha256": packet.sha256},
-                "reservation_tokens": needed, "fits_token_caps": fits, "budget": budget}
+                "reservation_tokens": needed, "max_output_tokens": output_limit(packet.intent), "fits_token_caps": fits, "budget": budget}
 
     def receipt(self, raw) -> dict:
         args = _arguments(raw, ("request_id",), ("request_id",))
@@ -132,10 +138,23 @@ class Bridge:
             request_id, c = args["request_id"], self.config
             row = self.ledger.get(request_id)
             if row is not None:
-                if c.mode=="gateway" and self._packet(args).sha256!=row["packet_sha"]:
+                saved_packet = None
+                if args["intent"] == "project":
+                    # Retrieve the packet actually sent, even after project files or the prior reply changed.
+                    path = self.local / f"{request_id}.request.json"
+                    if not path.is_file():
+                        raise BridgeError("charge_held", "The original project packet is unavailable; preserve its ledger and do not resend inference.")
+                    try:
+                        saved = json.loads(path.read_text(encoding="utf-8"))
+                        saved_packet = Packet(**saved["packet"])
+                    except (OSError, ValueError, KeyError, TypeError):
+                        raise BridgeError("charge_held", "The saved project packet is unreadable; keep its existing reservation and inspect sol_receipt. No inference was repeated.", charge="existing reservation preserved") from None
+                    if saved.get("arguments") != args or saved.get("packet", {}).get("sha256") != row["packet_sha"]:
+                        raise BridgeError("request_conflict", "This request ID already binds a different project request. Use sol_receipt to inspect it.")
+                if c.mode=="gateway" and saved_packet is None and self._packet(args).sha256!=row["packet_sha"]:
                     raise BridgeError("request_conflict", "This request ID already binds a different packet or starting request.")
                 if c.mode == "gateway" and row["state"] in ("held", "inflight"):
-                    packet = self._packet(args)
+                    packet = saved_packet or self._packet(args)
                     if row["run"] != self.run_id or packet.sha256 != row["packet_sha"]:
                         raise BridgeError("request_conflict", "Recovery must use the original run and packet. It never submits a new model request.")
                     from .gateway import GatewayClient
@@ -161,12 +180,19 @@ class Bridge:
             reserved = self.ledger.reserve(
                 request_id=request_id, allocation=c.subscription_label, period=c.period_id, run=self.run_id, stage=c.phase,
                 stage_cap=c.stage_cap, single_call=c.phase == "startup", packet_sha=packet.sha256, step=packet.step,
-                input_bound=packet.input_bound, max_output=MAX_OUTPUT_TOKENS)
+                input_bound=packet.input_bound, max_output=output_limit(packet.intent))
+            if packet.intent == "project":
+                try:
+                    self.local.mkdir(parents=True, exist_ok=True)
+                    _atomic(self.local / f"{request_id}.request.json", json.dumps({"arguments": args, "packet": asdict(packet)}, ensure_ascii=False))
+                except OSError:
+                    self.ledger.finish(request_id, "released", detail="local project snapshot failed before dispatch")
+                    raise BridgeError("local_record_failed", "The original project packet could not be saved; no provider was called.") from None
         except BridgeError as error:
             return failure(error)
         try:
             outcome = (await client.ask(packet.instructions, packet.text, request_id, args["intent"], args["learner_text"]) if c.mode == "gateway"
-                       else await client.ask(packet.instructions, packet.text))
+                       else await client.ask(packet.instructions, packet.text, project=packet.intent == "project"))
         except BaseException:  # cancellation or a crash after dispatch is not proof of a zero bill
             self.ledger.finish(request_id, "held", detail="interrupted after dispatch; charge unknown")
             raise
@@ -178,7 +204,7 @@ class Bridge:
         self.ledger.finish(request_id, state, input_tokens=outcome.input_tokens, output_tokens=outcome.output_tokens,
                            total_tokens=outcome.total_tokens, detail=outcome.kind, quarantine=quarantine)
         row = self.ledger.get(request_id)
-        kind = outcome.kind if outcome.kind != "completed" or self._current_step() == packet.step else "stale_checkpoint"
+        kind = outcome.kind if outcome.kind != "completed" or packet.intent == "project" or self._current_step() == packet.step else "stale_checkpoint"
         receipt = {"request_id": request_id, "kind": kind, "checkpoint": packet.step, "intent": packet.intent,
                    "model": outcome.model or None, "response_id": outcome.response_id or None, "http_status": outcome.http_status,
                    "detail": outcome.detail, "packet": packet.manifest | {"sha256": packet.sha256},
@@ -220,7 +246,7 @@ class Bridge:
             raise BridgeError("call_in_flight" if row["state"] == "inflight" else "charge_held",
                               "This request was already dispatched and is never replayed. Its reservation stays counted.",
                               ledger_state=row["state"])
-        if receipt["kind"] == "completed" and self._current_step() != receipt["checkpoint"]:
+        if receipt["kind"] == "completed" and receipt.get("intent") != "project" and self._current_step() != receipt["checkpoint"]:
             receipt = dict(receipt, kind="stale_checkpoint")
         path = self.local / f"{row['request_id']}.txt"
         text = path.read_text(encoding="utf-8") if receipt["kind"] in ("completed", "refused") and path.is_file() else ""
@@ -235,6 +261,9 @@ class Bridge:
                    "next": GUIDANCE.get(kind, HALT)}
         if text:
             payload["text"] = text
+        if receipt.get("intent") == "project":
+            payload["next"] = ("Use Sol's actual plan/code to perform the learner's authorized local project edits and checks. "
+                               "Return focused results in another project packet if needed. Do not advance guided checkpoints or generate a debrief.") if kind == "completed" else GUIDANCE.get(kind, HALT)
         if receipt.get("admission"):
             payload["admission"] = receipt["admission"]
         try:

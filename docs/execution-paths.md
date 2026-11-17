@@ -31,6 +31,11 @@ background rollover to another approved subscription. The bridge reserves budget
 before dispatch and records actual receipts. All statistical computation and
 report generation still run in the coding agent's local/cloud workspace.
 
+You may also [continue an existing Studio North project](api-route.md#continue-an-existing-project)
+through this connection: dashboards, interactive charts, coding and debugging
+are supported even when your baseline report used personal tokens. The project
+continuation prompt preserves your results and avoids repeating the guided lab.
+
 MCP exposes tools and information. It does not by itself replace or pay for the
 client's own conversational inference. A model served through an MCP tool and the
 client's native model are separate usage streams. Free Codex is subject to product

@@ -12,7 +12,7 @@ from pathlib import Path
 
 from .config import BridgeConfig, BridgeError, KEY_SHAPED
 
-INTENTS = ("open", "teach", "question", "critique", "troubleshoot", "debrief")
+INTENTS = ("open", "teach", "question", "critique", "troubleshoot", "debrief", "project")
 LEARNER_MAX, NOTE_MAX, JUDGMENTS_MAX, PREVIOUS_MAX = 1200, 280, 2400, 1200  # UTF-8 bytes
 FRAMING_RESERVE = 200  # tokens added to the byte bound for message framing
 ANCHORS = {"@docs/business_brief.md": ("Studio North sells", "Management is reviewing", "> Are we moving", "The operating team provides")}
@@ -116,7 +116,12 @@ def load_lessons(source_root: Path) -> tuple:
 
 def source_fingerprint(source_root: Path, lessons=None) -> str:
     lessons = lessons or load_lessons(source_root)
-    names = sorted({"cohort_lab/student.py", "cohort_lab/lab_close.py", "cohort_lab/instructor_feedback.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")})
+    names = {"cohort_lab/student.py", "cohort_lab/lab_close.py", "hosting/student_debrief.py"} | {name[1:] for lesson in lessons for name in lesson.files if name.startswith("@")}
+    # The first released guided checkout predates central instructor-feedback collection.
+    # Preserve its original fingerprint algorithm; never add a missing source to a frozen lab.
+    if (source_root / "cohort_lab/instructor_feedback.py").is_file():
+        names.add("cohort_lab/instructor_feedback.py")
+    names = sorted(names)
     return _sha("".join(f"{name}\0{_file_sha(_inside(source_root, name))}\n" for name in names).encode("utf-8"))
 
 
@@ -331,6 +336,9 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
     if fingerprint != config.source_fingerprint:
         raise PacketError("source_fingerprint_mismatch", "Lesson sources differ from the fingerprint pinned in the bridge configuration.",
                           actual=fingerprint)
+    if intent == "project":
+        from .projects import compile_project
+        return compile_project(config, lessons, fingerprint, learner_text, artifact_ids, note)
     state, state_sha = load_state(config, lessons)
     step, last = state["completed_step"], len(lessons) - 1
     lesson = lessons[step]

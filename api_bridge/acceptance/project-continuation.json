@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "kind": "live_instructor_rehearsal_on_copies_of_existing_synthetic_outputs",
+  "tested_at_utc": "2026-11-17",
+  "bridge_source_commit": "649fd36ed600f455051ee982edadecb7e48c5a84",
+  "gateway_source_commit": "9a52a5e3e6507e2eb33c83dd64c39778812e55c2",
+  "gateway_version": 27,
+  "route": "same-chat stdio MCP SDK relay -> managed UNC gateway -> gpt-6.1-sol; local harness builds dashboard",
+  "purpose_policy": "studio-north-purpose/3",
+  "project_registry": "studio-north-project/1",
+  "served_model": "gpt-6.1-sol",
+  "reasoning_effort": "medium",
+  "guided_state_required": false,
+  "guided_completion_claimed": false,
+  "baseline": {
+    "source": "Copies of tables and report from the earlier full-guided instructor rehearsal",
+    "fresh_fit_in_this_test": false,
+    "report_regenerated": false,
+    "pdf_and_input_tables_unchanged": true,
+    "original_analytical_checkout_unchanged": true,
+    "legacy_release_without_instructor_feedback_module_supported": true
+  },
+  "live_tests": {
+    "jev_cases": 10,
+    "jev_expected_decisions_matched": 10,
+    "dashboard_request_admitted": true,
+    "dashboard_request_sol_tokens": 6082,
+    "dashboard_request_jev_tokens_separate": 1366,
+    "dashboard_packet_bytes": 7887,
+    "project_output_ceiling_including_reasoning": 6000,
+    "initial_teaching_limit_trial": {
+      "ceiling": 3000,
+      "result": "incomplete",
+      "sol_tokens": 5422,
+      "partial_code_delivered": false,
+      "usage_settled_and_preserved": true,
+      "response_to_observed_limit": "Separate fixed project output reservation; guided cap remains 3000"
+    },
+    "same_id_retrieval_returned_same_text": true,
+    "same_id_retrieval_provider_called": false,
+    "contextual_followup_without_lab_name_admitted": true,
+    "followup_sol_tokens": 949,
+    "followup_jev_tokens_separate": 1566,
+    "native_harness_inference_tokens": null
+  },
+  "dashboard": {
+    "implementation": "Model-returned stdlib Python builds offline HTML with inline JavaScript",
+    "saved_valuation_rows": 96,
+    "saved_current_icac_rows": 4,
+    "builder_executed_successfully": true,
+    "functional_check": "Generated JavaScript executed in Node VM with a minimal DOM fixture",
+    "checks": [
+      "Latest cohort selected by default after actual followup change",
+      "All saved rows render",
+      "Cohort filter",
+      "Channel and primary_need intersection",
+      "Current iCAC stays independent of cohort selection",
+      "Empty state",
+      "Reset restores all rows"
+    ],
+    "visual_browser_qa": "Unavailable: browser-control initialization returned access denied"
+  },
+  "offline_checks": {
+    "bridge_tests_passed": 115,
+    "bridge_tests_skipped": 1,
+    "skip_reason": "Windows host could not create a symbolic link; lexical traversal and secret guards passed",
+    "gateway_curriculum_pool_tests_passed": 27,
+    "guided_frames_and_end_feedback_guards_preserved": true,
+    "project_original_packet_recovery_after_local_edits": true,
+    "unknown_usage_hold_and_budget_guards_preserved": true
+  },
+  "external_design_review": {
+    "model": "claude-fable-5-2",
+    "effort": "xhigh",
+    "result": "Output allowance exhausted; no usable review returned or relied upon",
+    "tokens": 6913,
+    "cache_read_tokens": 0
+  },
+  "limits": [
+    "This is instructor rehearsal evidence, not the absent student's exact prompt/error or a new student-account acceptance test.",
+    "Project implementation reasoning uses UNC; native harness inference has its own account usage.",
+    "A frozen older bridge must be updated separately or invoked through the updated same-chat relay; existing analytical outputs need no restart."
+  ]
+}

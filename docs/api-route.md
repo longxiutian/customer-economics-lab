@@ -11,6 +11,78 @@ The API project has its own locked dependencies under `api_bridge/`; the
 analytical environment and root lock remain separate. No student model server,
 network listener, scheduled task or always-on background process is installed.
 
+## Continue an existing project
+
+You can use UNC model access to build a dashboard, write or debug code, create
+interactive charts, explore alternative analyses or improve an existing Studio
+North report. Your original report can have been generated with personal tokens.
+You stay in the same chat and keep the existing analysis; no lesson restart or
+new report is required. Use [this continuation prompt](unc-api-project-prompt.txt).
+
+The coding agent identifies the existing analytical checkout (`CHECKOUT`) and
+output folder (`OUTPUT`). It installs the latest `api_bridge/` from a separately
+pinned tool checkout (`TOOLS`) if the current bridge lacks `project` intent.
+Keep the original analytical release and its fits unchanged. In these examples,
+replace the uppercase path labels with actual absolute paths and quote paths
+containing spaces. Reuse an existing managed `CONFIG` and its ledger. For a new
+connection, run:
+
+```text
+uv sync --project TOOLS/api_bridge --frozen --extra keyring
+uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --harness "Claude Code" --project
+```
+
+Use the actual harness name. `connect --project` does not start a lesson, refit
+models or overwrite an existing personal usage session. Secure device credentials,
+automatic server-side subscription assignment and confirmed-headroom rollover
+are the same as for the guided route. No student API key or BlueChip step is needed.
+
+Create a small, credential-free argument JSON file, then preview and ask through
+the actual MCP relay (or equivalent updated native `unc_sol` tools):
+
+```json
+{
+  "intent": "project",
+  "learner_text": "THE LEARNER'S LITERAL STUDIO NORTH PROJECT REQUEST",
+  "artifact_ids": ["tables/cohort_valuation_by_segment.csv", "tables/channel_cac_current.csv"],
+  "note": "Brief task context, actual file/schema observations or a focused error excerpt."
+}
+```
+
+```text
+uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge relay --config CONFIG --tool sol_preview --arguments PREVIEW_JSON
+uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge relay --config CONFIG --tool sol_ask --arguments ASK_JSON
+```
+
+The ask file adds a unique `request_id`. Pass actual learner words unchanged,
+not the placeholder. Sol receives bounded real-table/schema/source excerpts and
+can return a concrete plan, code and checks. The native coding agent then writes
+and tests the requested dashboard in `OUTPUT/dashboard/`, reporting actual results
+in subsequent compact packets as needed. It should complete the requested local
+work, rather than simply display code and wait for `next step`. A new project
+task is distinct from advancing the guided lab. Static HTML/JS, Python, React and
+other local implementations are supported; no particular dashboard framework is
+required by the bridge.
+
+The finite artifact registry is [project.json](../api_bridge/admission/project.json).
+Alongside those named lab sources and outputs, safe `.py`, `.js`, `.ts`, `.jsx`,
+`.tsx`, `.html`, `.css`, `.sql`, `.csv`, `.json`, `.md` and `.txt` files under this
+run's `dashboard/` can be excerpted. Absolute paths, traversal, escaping links,
+credential files, instructor feedback, usage files and dependency trees are
+excluded. Select only files that exist. The learner request is capped at 4096
+UTF-8 bytes, the task/error note at 2048, and the entire contract/evidence packet
+at 16,000 bytes. Project code has a fixed 6,000-token output ceiling, including
+reasoning, fully reserved before dispatch; guided teaching retains 3,000.
+All reservation and ambiguous-outcome guards remain. Reuse the request ID to retrieve the original result after a lost
+reply; this does not send changed files or repeat inference.
+
+If an earlier session has ended, use the existing local `continue lab` control
+before more work; handle pending instructor feedback locally first. Never send
+feedback for Jev classification. Project calls do not generate a usage report.
+When the learner later ends the session and answers/skips the feedback question,
+use the normal personal-debrief workflow, including the additional API receipts.
+Work without guided state is honestly labeled project work, not guided completion.
+
 ## Setup and one opening
 
 Use Python 3.12 and uv. From the pinned lab checkout:

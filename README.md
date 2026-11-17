@@ -18,6 +18,8 @@ An MCP connection supplies tools and services; it does not automatically fund th
 
 For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. The bridge checks lab relevance with Jev and assigns model access in the background. No separate sign-in or API key is needed. Follow [the UNC API subskill](skills/unc-api/SKILL.md), one checkpoint at a time; retain your current app and sign-in.
 
+Already made your Studio North report with your own tokens? Paste [the project continuation prompt](docs/unc-api-project-prompt.txt) to use the UNC API for a dashboard, interactive charts, coding or debugging in the same chat. Keep your existing report and fitted results; you do not need to repeat the guided lab.
+
 ## Browser scenario: BlueChip + Longleaf
 
 Use BlueChip during the service window announced for your session. You need your UNC BlueChip account and a web browser. Nothing needs to be installed.

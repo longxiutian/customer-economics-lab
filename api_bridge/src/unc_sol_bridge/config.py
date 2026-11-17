@@ -10,6 +10,13 @@ from pathlib import Path
 MODEL = "gpt-6.1-sol"
 EFFORT = "medium"
 MAX_OUTPUT_TOKENS = 3000  # visible output plus reasoning
+PROJECT_OUTPUT_TOKENS = 6000  # code needs more space; still reserved fully before each dispatch
+
+
+def output_limit(intent):
+    return PROJECT_OUTPUT_TOKENS if intent == "project" else MAX_OUTPUT_TOKENS
+
+
 ALLOCATION_LIMIT = 400_000
 MANAGED_ALLOCATION_LIMIT = 127 * ALLOCATION_LIMIT  # local ceiling only; central admission owns the actual pool
 PHASES = {"startup": (10_000, 5_000), "pilot": (100_000, 16_000), "full": (ALLOCATION_LIMIT, 16_000)}  # stage cap, packet bytes
@@ -17,7 +24,7 @@ MANAGED_PHASES = {**PHASES, "full": (MANAGED_ALLOCATION_LIMIT, 16_000)}
 RELEASE_PHASES = frozenset({"startup", "full"})
 REQUIRED = {"schema_version", "source_root", "run_dir", "state_dir", "subscription_label", "period_id", "baseline_tokens",
             "baseline_source", "allocation_cap", "phase", "stage_cap", "source_fingerprint", "credential_ref"}
-OPTIONAL = {"data_dir", "packet_max_bytes"}
+OPTIONAL = {"data_dir", "packet_max_bytes", "project_only"}
 GATEWAY_FIELDS = {"mode", "device_id"}
 KEY_SHAPED = re.compile(r"\bsk-[A-Za-z0-9_-]{8,}|(?i:bearer)\s+\S{8,}|\beyJ[A-Za-z0-9_-]{8,}|(?<![A-Fa-f0-9])[A-Fa-f0-9]{32}(?![A-Fa-f0-9])")
 SECRETISH = re.compile(KEY_SHAPED.pattern + r"|[A-Za-z0-9+/_=-]{48,}")
@@ -50,6 +57,7 @@ class BridgeConfig:
     credential_ref: dict
     mode: str = "direct"
     device_id: str = ""
+    project_only: bool = False
 
 
 def _text(raw, key, pattern, limit=64):
@@ -116,6 +124,8 @@ def load_config(path) -> BridgeConfig:
         credential = {"kind": "keyring", "service": _text(ref, "service", r"[A-Za-z0-9_.-]{1,64}"),
                       "name": _text(ref, "name", r"[A-Za-z0-9_.@-]{1,64}")}
     period = _text(raw, "period_id", r"\d{4}-(0[1-9]|1[0-2])")
+    if "project_only" in raw and type(raw["project_only"]) is not bool:
+        raise BridgeError("config_invalid", "project_only must be a boolean.")
     if period != time.strftime("%Y-%m", time.gmtime()):
         raise BridgeError("config_invalid", "Use the current UTC month for new calls. Prior-period ledgers remain preserved.")
     return BridgeConfig(
@@ -125,4 +135,5 @@ def load_config(path) -> BridgeConfig:
         baseline_source=_text(raw, "baseline_source", r"[^\x00-\x1f]{8,200}", limit=200),
         allocation_cap=cap, phase=phase, stage_cap=_integer(raw, "stage_cap", 1, min(stage_limit, cap)),
         packet_max_bytes=_integer(raw, "packet_max_bytes", 2_000, packet_limit) if "packet_max_bytes" in raw else min(packet_limit, 8_000),
-        source_fingerprint=fingerprint, credential_ref=credential, mode=mode, device_id=device_id)
+        source_fingerprint=fingerprint, credential_ref=credential, mode=mode, device_id=device_id,
+        project_only=raw.get("project_only", False))
