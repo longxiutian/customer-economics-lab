@@ -19,6 +19,16 @@ North report. Your original report can have been generated with personal tokens.
 You stay in the same chat and keep the existing analysis; no lesson restart or
 new report is required. Use [this continuation prompt](unc-api-project-prompt.txt).
 
+### FAQ 8 LTV holdout challenge
+
+Paste this into the chat where you worked on Studio North.
+
+> Continue my Studio North lab. Use my UNC token allocation for FAQ 8, “Can our model win the holdout challenge?” Follow `skills/model-challenge/SKILL.md`. Help me choose a forecasting model, backtest it on the public data, and build and validate the separate Python submission repository. Keep my existing report and fits.
+
+The coding agent uses `intent="project"` for UNC reasoning and runs the Python work locally. The team’s submitted prediction code must run offline. The instructor scores it against the private 2026 outcomes. If you ended Day 1, `continue lab` reopens your saved session.
+
+### Connect your coding agent
+
 The coding agent identifies the existing analytical checkout (`CHECKOUT`) and
 output folder (`OUTPUT`). It installs the latest `api_bridge/` from a separately
 pinned tool checkout (`TOOLS`) if the current bridge lacks `project` intent.

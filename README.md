@@ -20,6 +20,8 @@ For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt
 
 Already made your Studio North report with your own tokens? Paste [the project continuation prompt](docs/unc-api-project-prompt.txt) to use the UNC API for a dashboard, interactive charts, coding or debugging in the same chat. Keep your existing report and fitted results; you do not need to repeat the guided lab.
 
+For the Day 2 LTV forecasting competition, paste the [FAQ 8 prompt for the UNC API](docs/api-route.md#faq-8-ltv-holdout-challenge) into your existing coding-agent chat.
+
 ## Browser scenario: BlueChip + Longleaf
 
 Use BlueChip during the service window announced for your session. You need your UNC BlueChip account and a web browser. Nothing needs to be installed.

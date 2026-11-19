@@ -1,6 +1,7 @@
 """Existing personal-token projects can use UNC implementation reasoning without a guided restart."""
 import asyncio
 import json
+from shutil import copyfile
 
 import httpx
 import pytest
@@ -10,7 +11,7 @@ from unc_sol_bridge.config import BridgeError, load_config
 from unc_sol_bridge.packets import compile_packet
 from unc_sol_bridge.packets import source_fingerprint
 from unc_sol_bridge.projects import dashboard_artifact
-from test_bridge import make_config, seed, CHOICES
+from test_bridge import make_config, seed, CHOICES, REPO
 from test_gateway import DEVICE, SECRET, OUTCOME
 
 REQUEST = "I used my personal Claude tokens to generate the Studio North report. Use the UNC API to build an interactive dashboard from my existing results."
@@ -26,6 +27,27 @@ def project_file(config):
     path.parent.mkdir(parents=True)
     path.write_text("def chart(df):\n    return df.groupby('segment')['ltv'].mean()\n", encoding="utf-8")
     return path
+
+
+def test_faq8_uses_published_challenge_evidence_without_a_guided_restart(tmp_path):
+    config = config_for(tmp_path)
+    paths = ["skills/model-challenge/SKILL.md", "docs/model-challenge.md",
+             "challenge/submission-contract.json", "challenge/template/main.py"]
+    for name in paths:
+        destination = config.source_root / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        copyfile(REPO / name, destination)
+
+    packet = compile_packet(config, "project", "Help me do FAQ 8.", ["@" + name for name in paths])
+    evidence = json.loads(packet.text)["evidence"]
+    assert [entry["id"] for entry in evidence] == ["@" + name for name in paths]
+    assert all("content" in entry for entry in evidence)
+    assert "January" in packet.instructions and "December 2026" in packet.instructions
+    assert packet.input_bytes <= config.packet_max_bytes
+    assert not (config.run_dir / "lesson_state.json").exists()
+    with pytest.raises(BridgeError) as failure:
+        compile_packet(config, "project", "Help me do FAQ 8.", ["@challenge/private-answers.csv"])
+    assert failure.value.kind == "artifact_rejected"
 
 
 def test_project_packet_works_without_lesson_state_and_allows_code(tmp_path):

@@ -3,7 +3,9 @@ name: studio-north-model-challenge
 description: Build a reproducible public team forecasting repository when a learner requests the optional Studio North private-holdout challenge after completing the guided lab. Does not advance the lesson or access private outcomes.
 ---
 
-Read this component only for the requested challenge. Keep the ordinary lesson's stop-and-go procedure and completed report intact. Confirm checkpoint 18 is complete before creating the team project. Explain the difference between the report's first-twelve-receipts LTV and the challenge's remaining contribution during January–December 2026.
+Read this component for FAQ 8, Day 2 Path B, or a request for the Studio North LTV holdout challenge. Confirm the baseline from checkpoint 18 or the report the learner already generated on another route. Explain the difference between the report's first-twelve-receipts LTV and the challenge's remaining contribution during January–December 2026.
+
+Students may use their UNC allocation to design, implement and debug the entry. Follow the [UNC API project instructions](../unc-api/SKILL.md#continue-an-existing-studio-north-project) when they select that route. Their submitted prediction program runs offline on the public inputs.
 
 Use December 2026 as the common calendar endpoint. Since all cohorts are observed through December 2025, each has twelve future months, at different cohort ages. Younger cohorts have less observed history and a larger forecast share of their trajectory's months; do not claim that they have more future periods in this calendar-window challenge.
 
