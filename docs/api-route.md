@@ -1,6 +1,6 @@
 # UNC API route in one chat
 
-Codex, Claude Code or an agent in VS Code runs the released Python, DuckDB,
+Codex, Claude Code, Claude Desktop with local coding tools, or an agent in VS Code runs the released Python, DuckDB,
 statistical fits, figures and PDF locally. An optional stdio MCP sends one
 checkpoint's evidence to UNC **gpt-6.1-sol** for teaching and interpretation.
 The native agent presents the answer and performs authorized local actions.
@@ -13,39 +13,28 @@ network listener, scheduled task or always-on background process is installed.
 
 ## Continue an existing project
 
-You can use UNC model access to build a dashboard, write or debug code, create
-interactive charts, explore alternative analyses or improve an existing Studio
-North report. Your original report can have been generated with personal tokens.
-You stay in the same chat and keep the existing analysis; no lesson restart or
-new report is required. Use [this continuation prompt](unc-api-project-prompt.txt).
+UNC model access covers any work broadly connected to Studio North. You can pursue your own question, learn a method, fix a coding or setup problem, prepare a presentation, or build on an analysis you ran with personal tokens. Short follow-ups work in context. To build a dashboard from an existing report, use the [project continuation prompt](unc-api-project-prompt.txt).
 
 ### FAQ 8 LTV holdout challenge
 
-Paste this into the chat where you worked on Studio North.
+Paste this into your original coding-agent chat or a new one with local file and command access.
 
-> Continue my Studio North lab. Use my UNC token allocation for FAQ 8, “Can our model win the holdout challenge?” Follow `skills/model-challenge/SKILL.md`. Help me choose a forecasting model, backtest it on the public data, and build and validate the separate Python submission repository. Keep my existing report and fits.
+> Help me do Studio North FAQ 8, “Can our model win the holdout challenge?” Use my UNC course allocation in this chat. Get the current main release from https://github.com/longxiutian/customer-economics-lab in a separate tools folder, record its commit, and follow the UNC API and model-challenge skills there. Start from the public data and benchmark in a fresh project workspace if needed. Leave my old reports and pilot folders alone. Help me choose a model, backtest it, and build and validate our team’s Python submission. Show me what will be public and ask me before publishing it to GitHub.
 
-The coding agent uses `intent="project"` for UNC reasoning and runs the Python work locally. The team’s submitted prediction code must run offline. The instructor scores it against the private 2026 outcomes. If you ended Day 1, `continue lab` reopens your saved session.
+Your agent can start from the eight public tables, forecast grid and published benchmark with no Day 1 chat or report. The instructor scores the finished forecast against the privately held 2026 outcomes. If you want to compare with a personal report later, give the agent its exact path then.
 
 ### Connect your coding agent
 
-The coding agent identifies the existing analytical checkout (`CHECKOUT`) and
-output folder (`OUTPUT`). It installs the latest `api_bridge/` from a separately
-pinned tool checkout (`TOOLS`) if the current bridge lacks `project` intent.
-Keep the original analytical release and its fits unchanged. In these examples,
-replace the uppercase path labels with actual absolute paths and quote paths
-containing spaces. Reuse an existing managed `CONFIG` and its ledger. For a new
-connection, run:
+For FAQ 8, resolve the public repository’s current `main` to a full commit SHA. Use a separate checkout at that SHA as `TOOLS`. Read the challenge skill, contract and data from that checkout. This also works for early pilot checkouts that predate the challenge.
+
+Reuse a working managed `CONFIG` and its ledger when available. Source and run paths are pinned in that configuration. If the pinned source predates a challenge file, read the current public file from `TOOLS` and pass a short excerpt in the project note. For a first connection, set `SOURCE` to `TOOLS` and `OUTPUT` to a fresh writable project folder. A dashboard using a known report can instead use its original source and output. Keep `CONFIG` in an owner-local path outside the checkout and output. Substitute quoted absolute paths in these commands.
 
 ```text
 uv sync --project TOOLS/api_bridge --frozen --extra keyring
-uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --harness "Claude Code" --project
+uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root SOURCE --run-dir OUTPUT --harness "Claude Code" --project
 ```
 
-Use the actual harness name. `connect --project` does not start a lesson, refit
-models or overwrite an existing personal usage session. Secure device credentials,
-automatic server-side subscription assignment and confirmed-headroom rollover
-are the same as for the guided route. No student API key or BlueChip step is needed.
+Use the actual harness name, including `"Claude Desktop"` when applicable. `connect --project` prepares the local workspace and saves a device credential in the OS keyring. The OS may ask you to allow keyring access. The first permitted model request automatically uses the UNC course subscription. Your native app accounts for its own inference separately. You can scaffold the team project and run its local checks while setting up the bridge.
 
 Create a small, credential-free argument JSON file, then preview and ask through
 the actual MCP relay (or equivalent updated native `unc_sol` tools):
@@ -86,9 +75,7 @@ reasoning, fully reserved before dispatch; guided teaching retains 3,000.
 All reservation and ambiguous-outcome guards remain. Reuse the request ID to retrieve the original result after a lost
 reply; this does not send changed files or repeat inference.
 
-If an earlier session has ended, use the existing local `continue lab` control
-before more work; handle pending instructor feedback locally first. Never send
-feedback for Jev classification. Project calls do not generate a usage report.
+If you choose to reuse a closed Day 1 workspace, handle any pending feedback locally and use `continue lab` to reopen it. A fresh project workspace starts directly in project mode. Keep instructor feedback local to the closing workflow. Project calls do not generate a usage report.
 When the learner later ends the session and answers/skips the feedback question,
 use the normal personal-debrief workflow, including the additional API receipts.
 Work without guided state is honestly labeled project work, not guided completion.
@@ -113,7 +100,7 @@ configuration outside the checkout, then runs:
 uv run --project api_bridge --frozen --extra keyring python -m unc_sol_bridge connect --config CONFIG --source-root CHECKOUT --run-dir OUTPUT --harness Codex
 ```
 
-Use `Codex`, `"Claude Code"` or `"VS Code"` for the actual harness. Preparation
+Use `Codex`, `"Claude Code"`, `"Claude Desktop"` or `"VS Code"` for the actual harness. Preparation
 is entirely local: create a random device credential in the secure OS keyring,
 run `student.py start`, and initialize debrief logging. Re-running `connect`
 resumes that configuration. The first opening registers the device automatically;
@@ -133,12 +120,7 @@ uv run --project api_bridge --frozen python -m unc_sol_bridge relay --config CON
 `OPEN_PREVIEW_JSON` contains `{"intent":"open","learner_text":"THE LITERAL STARTING REQUEST"}`.
 `OPEN_ASK_JSON` contains the same literal text plus a unique `request_id`.
 Use the actual student message, not the placeholder or an agent-composed request.
-The starting request must fit 4096 UTF-8 bytes; oversized text is rejected, never
-silently truncated. It is sent separately to Venice-hosted **Jev** for two typed
-judgments: lab purpose and an explicit request to bypass access rules. The
-gateway applies the frozen policy in `api_bridge/admission/relevance-policy.json`.
-An uncertain, rejected or unavailable check does not allocate a student key or
-call Sol. No alternate classifier is called. The opening packet sent to Sol
+The starting request must fit 4096 UTF-8 bytes. Venice-hosted **Jev** answers one funding question about whether the requested work is clearly outside Studio North. The gateway admits plausible and ambiguous requests. A valid score of 0.85 or higher for “clearly outside” declines UNC funding. A service error is reported separately. The published rule is in [relevance-policy.json](../api_bridge/admission/relevance-policy.json). The opening packet sent to Sol
 must match the released hash exactly; the literal starting request cannot
 override its instructions. Both stages have durable request IDs and separate
 usage receipts. Repeat IDs retrieve results without repeating either inference.

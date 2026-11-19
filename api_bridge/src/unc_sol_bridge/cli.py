@@ -16,6 +16,7 @@ from .bridge import Bridge, failure
 from .config import BridgeConfig, BridgeError, load_config
 from .credentials import check_key, store_key
 from .packets import source_fingerprint
+from .setup import HARNESSES
 
 SERVER_NAME = "unc_sol"
 CLIENTS = {"codex": "codex.config.toml", "claude-code": "claude-code.mcp.json", "vscode": "vscode.mcp.json"}
@@ -171,8 +172,8 @@ def main(argv=None) -> int:
     parsers["prepare"].add_argument("--harness", required=True)
     parsers["connect"].add_argument("--source-root", required=True)
     parsers["connect"].add_argument("--run-dir", required=True)
-    parsers["connect"].add_argument("--harness", required=True, choices=("Codex", "Claude Code", "VS Code"))
-    parsers["connect"].add_argument("--project", action="store_true", help="Attach to existing Studio North work without starting the guided lesson.")
+    parsers["connect"].add_argument("--harness", required=True, choices=HARNESSES)
+    parsers["connect"].add_argument("--project", action="store_true", help="Start or resume Studio North project work independently of the guided lesson.")
     args = parser.parse_args(argv)
     try:
         return _run(args)

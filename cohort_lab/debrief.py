@@ -29,11 +29,13 @@ def write(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
 
-def initialize(output, *, route, harness):
+def initialize(output, *, route, harness, project=False):
     output = Path(output).resolve()
     if route not in ROUTES or not isinstance(harness, str) or not harness.strip():
         raise ValueError("Choose personal, university_mcp or longleaf and name the actual harness.")
-    if not any((output / name).is_file() for name in ("lesson_state.json", "lab_state.json", "automatic_run.json")):
+    if project and route != "university_mcp":
+        raise ValueError("Project-only logging uses the UNC course route.")
+    if not project and not any((output / name).is_file() for name in ("lesson_state.json", "lab_state.json", "automatic_run.json")):
         raise ValueError("Start the lesson first, then initialize logging in that same output folder.")
     path = output / "usage/session.json"
     if path.exists():
@@ -301,12 +303,13 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     commands = p.add_subparsers(dest="command", required=True)
     init = commands.add_parser("init"); init.add_argument("--route", choices=sorted(ROUTES), required=True); init.add_argument("--harness", required=True)
+    init.add_argument("--project", action="store_true", help="Initialize UNC project usage without starting a guided lesson.")
     rec = commands.add_parser("record"); rec.add_argument("--file", type=Path, required=True)
     commands.add_parser("prepare")
     finish = commands.add_parser("render"); finish.add_argument("--snapshot", type=Path, required=True); finish.add_argument("--response", type=Path, required=True); finish.add_argument("--model", required=True)
     a = p.parse_args()
     if a.command == "init":
-        initialize(a.output, route=a.route, harness=a.harness); result = {"initialized": True, "route": a.route, "harness": a.harness}
+        initialize(a.output, route=a.route, harness=a.harness, project=a.project); result = {"initialized": True, "route": a.route, "harness": a.harness}
     elif a.command == "record": result = {"appended": record(a.output, read(a.file))}
     elif a.command == "prepare": result = prepare(a.output)
     else:

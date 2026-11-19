@@ -16,11 +16,11 @@ All three scenarios use the same guided skill and end with an executive report *
 
 An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
 
-For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt) into your current coding-agent chat. The bridge checks lab relevance with Jev and assigns model access in the background. No separate sign-in or API key is needed. Follow [the UNC API subskill](skills/unc-api/SKILL.md), one checkpoint at a time; retain your current app and sign-in.
+For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt) into your coding-agent chat. The course allocation covers work broadly related to Studio North, including your own questions and project ideas. The bridge connects in the background using your current app. Follow [the UNC API subskill](skills/unc-api/SKILL.md) for the guided checkpoints.
 
 Already made your Studio North report with your own tokens? Paste [the project continuation prompt](docs/unc-api-project-prompt.txt) to use the UNC API for a dashboard, interactive charts, coding or debugging in the same chat. Keep your existing report and fitted results; you do not need to repeat the guided lab.
 
-For the Day 2 LTV forecasting competition, paste the [FAQ 8 prompt for the UNC API](docs/api-route.md#faq-8-ltv-holdout-challenge) into your existing coding-agent chat.
+For the Day 2 LTV forecasting competition, start in your original chat or open a new coding-agent chat. The public data and benchmark are enough to begin. Paste the [FAQ 8 prompt for the UNC API](docs/api-route.md#faq-8-ltv-holdout-challenge).
 
 ## Browser scenario: BlueChip + Longleaf
 

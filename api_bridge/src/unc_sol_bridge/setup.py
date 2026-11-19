@@ -13,6 +13,7 @@ from .credentials import _keyring, check_key
 from .packets import source_fingerprint
 
 RECORD_FIELDS = {"subscription", "period_id", "baseline_tokens", "baseline_source", "primary_key"}
+HARNESSES = ("Codex", "Claude Code", "Claude Desktop", "VS Code")
 
 
 def credential_record(path, source_root, run_dir):
@@ -96,8 +97,8 @@ async def connect(*, config_path, source_root, run_dir, harness, project=False, 
         return {**Bridge(config).status(), "connection": "prepared_locally"}
     if path.is_relative_to(root) or path.is_relative_to(run):
         raise BridgeError("config_location", "Keep device configuration outside the repository and run folder.")
-    if harness not in {"Codex", "Claude Code", "VS Code"}:
-        raise BridgeError("invalid_arguments", "Use Codex, Claude Code or VS Code for the harness label.")
+    if harness not in HARNESSES:
+        raise BridgeError("invalid_arguments", "Choose the current coding harness from " + ", ".join(HARNESSES) + ".")
     keyring = _keyring()
     secret, device_id = new_secret(), secrets.token_urlsafe(18)
     reference = {"kind": "keyring", "service": "unc-sol-device", "name": device_id}
@@ -116,12 +117,16 @@ async def connect(*, config_path, source_root, run_dir, harness, project=False, 
         load_config(candidate)
     finally:
         candidate.unlink(missing_ok=True)
-    keyring.set_password(reference["service"], reference["name"], secret)
     if not project:
         _local(root, ["student.py", "--output", str(run), "start"])
     # A personal-token report may already have its own session and usage. Never relabel or reset it.
     if not (run / "usage/session.json").exists():
-        _local(root, ["-m", "cohort_lab.debrief", "--output", str(run), "init", "--route", "university_mcp", "--harness", harness])
+        args = ["-m", "cohort_lab.debrief", "--output", str(run), "init", "--route", "university_mcp", "--harness", harness]
+        # Older releases with a saved lesson already support their original init command.
+        if project and not any((run / name).is_file() for name in ("lesson_state.json", "lab_state.json", "automatic_run.json")):
+            args.append("--project")
+        _local(root, args)
+    keyring.set_password(reference["service"], reference["name"], secret)
     path.write_text(json.dumps(raw, indent=2)+"\n", encoding="utf-8")
     return {**Bridge(load_config(path)).status(), "connection": "prepared_locally",
             "next": ("Preview intent=project with the learner's literal Studio North request and selected existing artifacts. No opening or guided checkpoint is required."

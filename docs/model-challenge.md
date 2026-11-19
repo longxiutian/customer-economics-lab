@@ -26,7 +26,7 @@ The instructor has now reconciled and sealed an answer file for exactly the **5,
 
 ## Team repository and prediction interface
 
-After completing the guided lab, ask your agent to use [the challenge skill](../skills/model-challenge/SKILL.md). It can create a separate team project with:
+You can start FAQ 8 in a new or existing chat using the public tables, forecast grid and benchmark. Your agent can create a separate team project with the following command from the current lab checkout. [Challenge skill](../skills/model-challenge/SKILL.md)
 
 ```text
 uv run --frozen python scripts/create_challenge_repository.py --destination ../studio-north-team-model
@@ -55,7 +55,9 @@ The common budget is **60 minutes, four CPU cores and 16 GiB memory**, using Pyt
 
 ## Reproducible baseline and submission
 
-After the SQL stage, create the blank template:
+For a fresh project, use the published [baseline forecasts](../examples/reference/challenge/baseline_predictions.csv) and [baseline manifest](../examples/reference/challenge/baseline_manifest.json). The scaffold includes the public forecast grid. You can backtest your approach on the historical data immediately.
+
+If you are also working in a guided run, its SQL stage can generate a blank template.
 
 ```text
 uv run --frozen python lab.py challenge-template

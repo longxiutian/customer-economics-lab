@@ -66,7 +66,7 @@ def build_server(config_path) -> MCPServer:
 
     @server.tool(annotations=READ_ONLY)
     async def sol_preview(intent: Intent, learner_text: str = "", artifact_ids: list[str] = [], note: str = "") -> CallToolResult:  # noqa: B006
-        """Zero-cost dry run for a saved checkpoint or existing Studio North project. Report packet size, sources, omissions and reservation."""
+        """Zero-cost preview for a guided checkpoint or any Studio North project, including a new one. Report packet size, sources, omissions and reservation."""
         return guarded(lambda: bridge().preview(
             {"intent": intent, "learner_text": learner_text, "artifact_ids": list(artifact_ids), "note": note}))
 
@@ -77,7 +77,7 @@ def build_server(config_path) -> MCPServer:
 
     @server.tool(annotations=PAID)
     async def sol_ask(request_id: str, intent: Intent, learner_text: str = "", artifact_ids: list[str] = [], note: str = "") -> CallToolResult:  # noqa: B006
-        """One metered UNC gpt-6.1-sol call. Use project for Studio North dashboards, code and the FAQ 8 LTV holdout challenge. Other intents teach the saved checkpoint.
+        """One metered UNC gpt-6.1-sol call. Use project for any task broadly related to Studio North, including new ideas and short follow-ups. Other intents teach the saved checkpoint.
         Pass a new unique request_id per learner turn; learner_text must be the learner's literal words. A repeated
         request_id returns the recorded answer without a new call. For a managed opening, learner_text is the
         literal starting request sent separately to Jev for lab-purpose admission. Never retry a failed call on your own."""

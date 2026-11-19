@@ -200,3 +200,42 @@ def test_project_does_not_create_early_debrief_or_classify_feedback(tmp_path):
         compile_packet(c, "project", REQUEST)
     assert failure.value.kind == "lab_closing"
     assert not (c.run_dir / "debrief").exists()
+
+
+def test_new_chat_can_connect_and_preview_faq8_without_any_day1_files(tmp_path, monkeypatch, capsys):
+    from pathlib import Path
+    from unc_sol_bridge import cli, setup
+    from unc_sol_bridge.gateway import GatewayClient
+
+    class LocalKeyring:
+        def __init__(self):
+            self.writes = 0
+
+        def set_password(self, service, name, secret):
+            assert service == "unc-sol-device" and name and secret
+            self.writes += 1
+
+    def unexpected_http(*args, **kwargs):
+        pytest.fail("Project setup and preview must work offline.")
+
+    keyring = LocalKeyring()
+    monkeypatch.setattr(setup, "_keyring", lambda: keyring)
+    monkeypatch.setattr(GatewayClient, "_request", unexpected_http)
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path / "home"))
+    config_path, run = tmp_path / "private" / "bridge.json", tmp_path / "faq8"
+    args = ["connect", "--project", "--config", str(config_path), "--source-root", str(REPO),
+            "--run-dir", str(run), "--harness", "Claude Desktop"]
+    assert cli.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["checkpoint"] is None
+    session_file = run / "usage/session.json"
+    original = session_file.read_bytes()
+    session = json.loads(original)
+    assert (session["route"], session["harness"]) == ("university_mcp", "Claude Desktop")
+    config = load_config(config_path)
+    assert config.project_only
+    preview = Bridge(config).preview({"intent": "project", "learner_text": "Help me do FAQ 8.",
+                                      "artifact_ids": ["@challenge/submission-contract.json"]})
+    assert preview["ok"] and preview["packet"]["guided_completion_claimed"] is False
+    assert cli.main(args) == 0
+    assert keyring.writes == 1 and session_file.read_bytes() == original
+    assert not (run / "lesson_state.json").exists() and not (run / "debrief").exists()

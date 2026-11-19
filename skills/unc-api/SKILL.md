@@ -1,6 +1,6 @@
 ---
 name: unc-api
-description: Use the UNC gpt-6.1-sol MCP in the current coding-agent chat for the guided Studio North lab, dashboard development or the FAQ 8 LTV holdout challenge.
+description: Use the UNC gpt-6.1-sol MCP in a coding-agent chat for the guided lab or any project broadly related to Studio North, including a fresh-chat start on FAQ 8.
 ---
 
 # UNC API route
@@ -11,11 +11,11 @@ Use the operating system's native Python and credential store, with native Node.
 
 ## Continue an existing Studio North project
 
-Dashboard creation, interactive charts, SQL, code changes, debugging, model exploration and report improvements for Studio North are instructor-authorized uses of this API. A learner may generate the baseline report using personal tokens and switch to UNC for this work. Do not restart the lesson, regenerate the report or require guided checkpoints to enable implementation.
+UNC funding covers any work broadly connected to Studio North. Use project mode for open-ended learning, setup, research, coding, debugging, presentation and student-proposed extensions. Jev declines only a clearly outside purpose. Carry context into short follow-ups. A new chat, an unfamiliar method or a report produced using personal tokens can all start project work.
 
-For this request, follow [existing-project setup](../../docs/api-route.md#continue-an-existing-project). Preserve the analytical checkout, output folder, report identity, fits, judgments, prior usage and device connection. Install the updated bridge separately if necessary. Reuse a valid managed configuration; otherwise use `connect --project` with the existing source and output paths. This does not run `student.py start` or assert lesson completion. Native Windows, macOS and Linux are supported.
+Follow [project setup](../../docs/api-route.md#connect-your-coding-agent). Reuse the learner’s working managed connection and ledger. For a first connection use `connect --project`. It creates the local credential and usage record. The first admitted UNC request handles course subscription assignment. A real OS keyring prompt may need the learner’s attention. Keep any original analysis and report intact.
 
-**FAQ 8 or Day 2 Path B** means the [Studio North LTV holdout challenge](../model-challenge/SKILL.md). Use `intent="project"` to select, implement and backtest the model and prepare the team’s separate submission repository. Preserve the learner’s literal request. Identify the challenge in the project note on short follow-ups. The current bridge accepts `@skills/model-challenge/SKILL.md`, `@docs/model-challenge.md`, `@challenge/submission-contract.json`, `@challenge/prediction_grid.csv` and `@challenge/template/main.py`. With an older project bridge, read these public files locally and pass the relevant details in the note. Use a focused note for excerpts from the separate team repository. If Day 1 was closed, the learner’s `continue lab` reopens the existing session. A new learner message after a confirmed scope denial gets a new request ID.
+**FAQ 8 or Day 2 Path B** means the [LTV holdout challenge](../model-challenge/SKILL.md). Pin current public `main` in a separate tools checkout and read the challenge there. A first-time connection can use that checkout and a fresh run directory. Start with the public benchmark, including when multiple pilot reports exist. Use `intent="project"` with the learner’s literal request and the relevant skill, contract, grid or template. If the connected analytical checkout is older, read those files from the pinned tools checkout and supply focused excerpts in the note. Only use `continue lab` when reopening an existing closed workspace. A fresh project starts directly. A new message after a confirmed scope denial gets a new request ID.
 
 Use `sol_preview` and `sol_ask` with `intent="project"`, the learner's literal request, selected registered artifacts, and a focused `note` for current task/schema/errors. Project requests allow 4096 UTF-8 bytes of learner text, 2048 bytes of context and twelve artifacts within the same 16,000-byte packet cap. Send only relevant excerpts, never the transcript. Use the published analytical tables and sources. Dashboard code belongs under the existing output's `dashboard/` folder. The bridge rejects secrets, private usage/feedback files and escaping paths. Include current task context for short follow-ups. Jev receives it as untrusted context and still checks the actual request.
 
