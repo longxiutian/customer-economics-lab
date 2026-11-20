@@ -1,5 +1,7 @@
 # Three ways to run Studio North
 
+These are the Day 1 routes. On Day 2, take the PDF from any route into a coding-agent chat and choose the dashboard or LTV model bakeoff. The optional UNC MCP covers project model calls. The coding agent reads the attachment and runs the project locally or in its cloud workspace. [Day 2 project prompts](../README.md#day-2-choose-your-project)
+
 The learning task, eight datasets, guided checkpoints, analysis skill and two final
 artifacts stay the same. What changes is where the agent and computation run and
 whose account supplies model access.
@@ -31,10 +33,7 @@ background rollover to another approved subscription. The bridge reserves budget
 before dispatch and records actual receipts. All statistical computation and
 report generation still run in the coding agent's local/cloud workspace.
 
-You may also [continue an existing Studio North project](api-route.md#continue-an-existing-project)
-through this connection: dashboards, interactive charts, coding and debugging
-are supported even when your baseline report used personal tokens. The project
-continuation prompt preserves your results and avoids repeating the guided lab.
+You may also use the connection in a fresh project workspace for dashboards, forecasting, coding and debugging. The project prompt works with the attached PDF even when another app generated it. [UNC project instructions](api-route.md#continue-an-existing-project)
 
 MCP exposes tools and information. It does not by itself replace or pay for the
 client's own conversational inference. A model served through an MCP tool and the

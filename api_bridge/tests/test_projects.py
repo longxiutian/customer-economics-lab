@@ -239,3 +239,77 @@ def test_new_chat_can_connect_and_preview_faq8_without_any_day1_files(tmp_path, 
     assert cli.main(args) == 0
     assert keyring.writes == 1 and session_file.read_bytes() == original
     assert not (run / "lesson_state.json").exists() and not (run / "debrief").exists()
+
+
+@pytest.mark.parametrize(("close_state","project_text"), [
+    ("ended","Build FAQ 4, a Studio North dashboard from my uploaded report."),
+    ("awaiting_feedback","Build FAQ 8, the Studio North LTV bakeoff from my uploaded report."),
+])
+def test_day2_reuses_device_and_budget_without_day1_replay(tmp_path, monkeypatch, close_state, project_text):
+    from unc_sol_bridge import cli, setup
+    day1 = make_config(tmp_path, schema_version=2, mode="gateway", device_id=DEVICE,
+                       phase="full", stage_cap=400000, packet_max_bytes=16000)
+    seed(day1, 18, choices=CHOICES)
+    closing = day1.run_dir / "usage/lab-close.json"
+    closing.parent.mkdir(exist_ok=True)
+    closing.write_text(json.dumps({"state":close_state,"feedback":{"text":"private Day 1 feedback"}}))
+    before = {p:p.read_bytes() for p in (closing,day1.path,day1.run_dir/"lesson_state.json",day1.run_dir/"learner_choices.json")}
+    old = Bridge(day1); old._budget()
+    old.ledger.reserve(request_id="day1-usage-fixture", allocation=day1.subscription_label, period=day1.period_id,
+                       run=old.run_id, stage=day1.phase, stage_cap=day1.stage_cap, single_call=False,
+                       packet_sha="a"*64, step=18, input_bound=1000, max_output=3000)
+    old.ledger.finish("day1-usage-fixture","settled",input_tokens=100,output_tokens=20,total_tokens=120)
+    monkeypatch.setattr(setup,"_keyring",lambda:pytest.fail("Reusing a device must not create or read a credential during setup."))
+    day2, out = tmp_path/"project.json", tmp_path/"day-2"
+    args = ["connect","--project","--config",str(day2),"--reuse-config",str(day1.path),"--source-root",str(REPO),
+            "--run-dir",str(out),"--harness","Claude Code"]
+    assert cli.main(args) == 0 and cli.main(args) == 0
+    config = load_config(day2)
+    assert config.project_only and (config.device_id, config.credential_ref, config.state_dir, config.subscription_label) == (
+        day1.device_id, day1.credential_ref, day1.state_dir, day1.subscription_label)
+    calls = []
+    note = "Uploaded report, p. 4: compare acquisition channels using incremental CAC."
+    def send(request):
+        data = json.loads(request.content)
+        assert request.headers["X-Sol-Device"] == DEVICE+"."+SECRET and data["intent"]=="project"
+        assert note in data["packet"] and "private Day 1 feedback" not in data["packet"]
+        calls.append(request.method)
+        return httpx.Response(200,json={"ok":True,"outcome":{**OUTCOME,"text":"Use the acquisition-channel comparison."}})
+    bridge=Bridge(config,api_key=SECRET,transport=httpx.MockTransport(send))
+    assert bridge.status()["checkpoint"] is None and bridge.status()["budget"]["stage_used"]==120
+    for intent in ("open","teach","question"):
+        with pytest.raises(BridgeError,match="intent=project"):
+            bridge.preview({"intent":intent,"learner_text":project_text})
+    result=asyncio.run(bridge.ask({"intent":"project","learner_text":project_text,"request_id":"day2-first-request",
+                                   "artifact_ids":["@docs/data_dictionary.md"],"note":note}))
+    assert result["ok"] and calls==["POST"] and result["checkpoint"]==-1
+    assert old.status()["budget"]["stage_used"]==120+OUTCOME["total_tokens"]
+    assert not (out/"lesson_state.json").exists() and not (out/"personal-debrief").exists()
+    assert all(p.read_bytes()==b for p,b in before.items())
+
+
+def test_stale_day1_checkout_or_month_does_not_block_device_reuse(tmp_path, monkeypatch):
+    from unc_sol_bridge import setup
+    day1=make_config(tmp_path,schema_version=2,mode="gateway",device_id=DEVICE,phase="full",stage_cap=400000)
+    original=tmp_path/"day2.candidate.json"
+    day1.path.rename(original)
+    old=json.loads(original.read_text())
+    old.update(source_root=str(tmp_path/"removed-pilot-checkout"), period_id="2000-01")
+    original.write_text(json.dumps(old))
+    monkeypatch.setattr(setup,"_keyring",lambda:pytest.fail("Must reuse the registered device."))
+    day2=tmp_path/"day2.json"
+    args=dict(config_path=day2, source_root=REPO,run_dir=tmp_path/"new-day",harness="Codex",project=True,reuse_config=original)
+    assert asyncio.run(setup.connect(**args))["problems"]==[]
+    c=load_config(day2)
+    assert c.device_id==DEVICE and c.period_id==day1.period_id and c.source_root==REPO
+    assert json.loads(original.read_text()) == old
+    with pytest.raises(BridgeError,match="separate Day 2"):
+        asyncio.run(setup.connect(**{**args,"run_dir":day1.run_dir}))
+    with pytest.raises(BridgeError,match="separate configs"):
+        asyncio.run(setup.connect(**{**args,"project":False,"reuse_config":None}))
+    with pytest.raises(BridgeError,match="managed config|--project"):
+        asyncio.run(setup.connect(**{**args,"project":False}))
+    persisted=json.loads(day2.read_text());persisted["device_id"]="different-device-fixture"
+    day2.write_text(json.dumps(persisted))
+    with pytest.raises(BridgeError,match="another device"):
+        asyncio.run(setup.connect(**args))

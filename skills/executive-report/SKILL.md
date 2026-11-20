@@ -5,6 +5,8 @@ description: Format and verify the final executive report at checkpoint 18 of th
 
 # Executive customer-economics report
 
+An uploaded executive report for the Day 2 dashboard or LTV bakeoff is an input to the [Day 2 project](../../SKILL.md#day-2-projects). Follow that project directly. The reporting checkpoint and compilation instructions below apply only to generating a Day 1 report.
+
 Use this supporting skill when the guided state machine reaches reporting checkpoint 18 after the learner has supplied the final verdict, recommended action and explicit **next step**. If invoked earlier, return to the [main guided skill](../../SKILL.md) and resume the student's current checkpoint. Do not run earlier stages or create judgments to satisfy a gate. The student does not need the author's private skills, private source documents, a Git installation, or an external report template. Resolve all paths from the repository root.
 
 Compile and render with the learner's native Python, Node.js/Chromium, and TeX tools; follow [setup](../../docs/setup.md) for platform details.

@@ -1,5 +1,7 @@
 # Student workflow and atomicity audit
 
+Day 1 uses the checkpoints below. For Day 2, attach the executive PDF and choose the dashboard or LTV model bakeoff. Either project can start in a new chat with the released data, including when Day 1 ran on a different computer. [Day 2 project instructions](../README.md#day-2-choose-your-project)
+
 The student-facing skill is [`skills/student-teacher/SKILL.md`](../skills/student-teacher/SKILL.md). It teaches the root analytical skill through `student.py`. The root skill remains the method contract, and the executive-report skill controls the final document. This is a teaching interface over the same calculations, not a second analysis.
 
 The audit found that the original eight computational stages combined several learning objectives: stage 1 combined business, sources and architecture; stage 2 combined UCV and segmentation; stage 4 combined cohort, segment, journey and company evidence; stage 6 combined model explanation, estimation, validation, value and decisions. Those computations remain reusable, while the student interface separates their interpretation into 19 checkpoints. A checkpoint may reuse previously computed tables; no future report is compiled in the background.

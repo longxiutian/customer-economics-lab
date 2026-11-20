@@ -2,9 +2,25 @@
 
 Use AI to turn eight customer-data tables into a recommendation for Studio North, a fictional membership business. You guide the reasoning; the connected computation environment handles the code.
 
-**The student edition is interactive only.** Your AI shows the evidence and waits at every checkpoint. It advances one step when you say **next step**, and produces the report after your own final recommendation.
+**Day 1** is the guided lab. Your AI shows the evidence, waits for **next step**, and produces your executive report after your final recommendation. Download that PDF for Day 2.
 
-## Choose the route supplied for your session
+## Day 2: Choose your project
+
+Open a new or existing chat in **Codex, Claude Code, or a VS Code coding agent**. **Attach your Day 1 Studio North executive PDF** and paste one of the prompts below. If your app takes files by path, put the PDF in your project folder and give the chat its filename. The PDF is the only file you need to bring, wherever you made it. The agent gets the public data and code from GitHub.
+
+**FAQ 4 · Build a dashboard**
+
+> Use my attached Studio North executive report as the baseline. Use the public data at https://github.com/longxiutian/customer-economics-lab to build a browser dashboard I can step through month by month. Show retention, the four acquisition segments, LTV, CAC and payback using only information available by each month. Distinguish observations from forecasts. Check the latest month against my PDF, explain any differences, and give me the working dashboard. Start directly with this Day 2 project.
+
+**FAQ 8 · Enter the LTV model bakeoff**
+
+> Use my attached Studio North executive report to identify the baseline model. Use the public data, forecast grid and model-challenge skill at https://github.com/longxiutian/customer-economics-lab. Help my team choose a competing model, compare it with the published benchmark on chronological backtests, then build and validate our 2026 forecast submission. Ask before publishing our team repository. Start directly with this Day 2 project.
+
+**Want to use course tokens?** Add this sentence to either prompt: **“Use the UNC API MCP in project mode for this task.”** The bridge funds the UNC model calls for planning, coding help and debugging. Your coding app still runs and tests the project and accounts separately for its own model calls. You can also do either project using your usual coding agent alone. Neither project requires your original chat, output folder, personal debrief or another pass through the checkpoints.
+
+<a id="choose-the-route-supplied-for-your-session"></a>
+
+## Day 1: Choose the route supplied for your session
 
 All three scenarios use the same guided skill and end with an executive report **and your personal learning debrief**. The instructor will confirm which routes are available for class.
 
@@ -17,10 +33,6 @@ All three scenarios use the same guided skill and end with an executive report *
 An MCP connection supplies tools and services; it does not automatically fund the coding agent's own model calls. See [execution paths](docs/execution-paths.md) for the exact distinction and [personal debriefs](docs/personal-debrief.md) for what each route records.
 
 For the UNC API route, paste [the guided prompt](docs/unc-api-startup-prompt.txt) into your coding-agent chat. The course allocation covers work broadly related to Studio North, including your own questions and project ideas. The bridge connects in the background using your current app. Follow [the UNC API subskill](skills/unc-api/SKILL.md) for the guided checkpoints.
-
-Already made your Studio North report with your own tokens? Paste [the project continuation prompt](docs/unc-api-project-prompt.txt) to use the UNC API for a dashboard, interactive charts, coding or debugging in the same chat. Keep your existing report and fitted results; you do not need to repeat the guided lab.
-
-For the Day 2 LTV forecasting competition, start in your original chat or open a new coding-agent chat. The public data and benchmark are enough to begin. Paste the [FAQ 8 prompt for the UNC API](docs/api-route.md#faq-8-ltv-holdout-challenge).
 
 ## Browser scenario: BlueChip + Longleaf
 
@@ -97,7 +109,7 @@ Useful background: [Studio North business brief](docs/business_brief.md) · [Dat
 <details>
 <summary>Instructor and technical reference</summary>
 
-The guided edition uses three core skills: the root `SKILL.md` defines the analysis, `skills/student-teacher/SKILL.md` teaches it through explicit checkpoints, and `skills/executive-report/SKILL.md` specifies the final document. The atomic-step audit is in `docs/student-workflow.md`. A separate deferred challenge skill is loaded only for an explicitly requested modeling extension after the lesson.
+The guided edition uses three core skills: the root `SKILL.md` defines the analysis, `skills/student-teacher/SKILL.md` teaches it through explicit checkpoints, and `skills/executive-report/SKILL.md` specifies the final document. The atomic-step audit is in `docs/student-workflow.md`. The standalone challenge skill supplies the Day 2 forecasting assignment.
 
 The agent runs the following commands from the guided edition's root. Students can use the natural-language prompt above.
 

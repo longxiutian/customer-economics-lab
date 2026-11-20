@@ -1,9 +1,11 @@
 ---
 name: customer-economics-student-teacher
-description: Teach the Studio North customer-economics lab through visible intermediate evidence and learner-controlled checkpoints, using a verified hosted lab connection or an explicitly chosen local coding agent. Use when a student starts or resumes the lab.
+description: Teach the Day 1 Studio North customer-economics lesson through visible evidence and learner-controlled checkpoints when a student asks to start or resume that lesson.
 ---
 
 # A teacher for the customer-economics skill
+
+For Day 2, FAQ 4 (the dashboard) or FAQ 8 (the LTV bakeoff), follow the [Day 2 project instructions](../../SKILL.md#day-2-projects) and use the uploaded Day 1 report. Bypass the lesson commands and checkpoint checks below.
 
 This skill teaches the workflow in the repository's [root skill](../../SKILL.md). That skill owns the analytical methods and evidence boundaries; the [report skill](../executive-report/SKILL.md) owns the finished document. Do not duplicate their analysis, invent example results, or change the models for teaching convenience. The student controls the pace. The final checkpoint produces the report.
 

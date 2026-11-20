@@ -82,7 +82,7 @@ def compile_project(config, lessons, fingerprint, learner_text, artifact_ids, no
     # Preserve the existing end/feedback protocol, including already frozen debriefs.
     closing = closing_state(config)
     if closing["state"] != "active":
-        raise PacketError("lab_closing", "Answer or skip pending feedback first, then use continue lab to reopen before project work. No report or lesson needs restarting.")
+        raise PacketError("lab_closing", "For Day 2, create a separate project folder and config with connect --project --reuse-config pointing to the managed config. The saved session and instructor feedback stay in their original workspace.")
     if learner_text.strip().casefold().rstrip(".!?").strip() in {"end lab", "end simulation", "skip feedback"}:
         raise PacketError("local_control_required", "Handle ending and instructor feedback with the local closing workflow, not a project inference call.")
     allowed = registered_artifacts(lessons)

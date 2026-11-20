@@ -26,7 +26,9 @@ The instructor has now reconciled and sealed an answer file for exactly the **5,
 
 ## Team repository and prediction interface
 
-You can start FAQ 8 in a new or existing chat using the public tables, forecast grid and benchmark. Your agent can create a separate team project with the following command from the current lab checkout. [Challenge skill](../skills/model-challenge/SKILL.md)
+To start Day 2, attach your Studio North executive PDF in a new or existing coding-agent chat. Use it to identify the baseline and the assumptions you want to challenge. The public tables, grid and benchmark supply the model inputs. You can work with your usual coding agent or add the optional UNC connection for project reasoning and coding help. Go straight to the team project. [Day 2 prompts](../README.md#day-2-choose-your-project) · [Challenge skill](../skills/model-challenge/SKILL.md)
+
+Your agent can create a separate team project with the following command from the current lab checkout.
 
 ```text
 uv run --frozen python scripts/create_challenge_repository.py --destination ../studio-north-team-model

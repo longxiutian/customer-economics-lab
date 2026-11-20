@@ -339,6 +339,8 @@ def compile_packet(config: BridgeConfig, intent: str, learner_text: str = "", ar
     if intent == "project":
         from .projects import compile_project
         return compile_project(config, lessons, fingerprint, learner_text, artifact_ids, note)
+    if config.project_only and (intent != "debrief" or not (config.run_dir / "lesson_state.json").is_file()):
+        raise PacketError("project_intent_required", "Use intent=project for Day 2 dashboard or LTV work. This workspace starts directly from the report and public data.")
     state, state_sha = load_state(config, lessons)
     step, last = state["completed_step"], len(lessons) - 1
     lesson = lessons[step]

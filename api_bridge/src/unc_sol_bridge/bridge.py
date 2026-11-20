@@ -62,7 +62,7 @@ class Bridge:
         literal=args["learner_text"]
         if managed_open and (not literal.strip() or len(literal.encode("utf-8"))>4096 or KEY_SHAPED.search(literal)):
             raise BridgeError("learner_text_required", "Pass the learner's literal starting request, at most 4096 UTF-8 bytes, with no credentials. It goes to Jev for the lab-purpose check.")
-        if managed_open and args['intent']=='teach' and literal.strip().casefold()!='next step':
+        if managed_open and not self.config.project_only and args['intent']=='teach' and literal.strip().casefold()!='next step':
             raise BridgeError('learner_consent_required','Teaching an advanced checkpoint requires the actual next step message.')
         if managed_open and args['intent']=='debrief' and literal.strip().casefold().rstrip('.!?').strip() not in {'end lab','end simulation'}:
             raise BridgeError('end_command_required','Use the saved actual end command, without instructor feedback text.')
@@ -84,10 +84,12 @@ class Bridge:
                         central_admission=True, rollover_managed=True)
         return view
 
-    def _checkpoint(self) -> dict:
+    def _checkpoint(self, *, for_status=False) -> dict | None:
         lessons = load_lessons(self.config.source_root)
         if source_fingerprint(self.config.source_root, lessons) != self.config.source_fingerprint:
             raise BridgeError("source_fingerprint_mismatch", "Lesson sources differ from the fingerprint pinned in the bridge configuration.")
+        if for_status and self.config.project_only:
+            return None
         state, _ = load_state(self.config, lessons)
         return {"step": state["completed_step"], "last": len(lessons) - 1, "title": lessons[state["completed_step"]].title}
 
@@ -106,14 +108,12 @@ class Bridge:
         payload["route"] = "managed_unc_pool" if c.mode == "gateway" else "individual_subscription"
         payload["project_work_available"] = True
         payload["project_max_output_tokens"] = PROJECT_OUTPUT_TOKENS
-        for name, probe in (("checkpoint", self._checkpoint), ("budget", self._budget)):
+        if c.project_only:
+            payload["project"] = {"basis": "existing_project", "intent": "project", "guided_completion_claimed": False}
+        for name, probe in (("checkpoint", lambda: self._checkpoint(for_status=True)), ("budget", self._budget)):
             try:
                 payload[name] = probe()
             except BridgeError as error:
-                if name == "checkpoint" and c.project_only and error.kind == "lesson_not_started":
-                    payload["checkpoint"] = None
-                    payload["project"] = {"basis": "existing_project", "guided_completion_claimed": False}
-                    continue
                 payload["problems"].append({"kind": error.kind, "message": error.message})
         return payload
 

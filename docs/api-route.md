@@ -13,21 +13,23 @@ network listener, scheduled task or always-on background process is installed.
 
 ## Continue an existing project
 
-UNC model access covers any work broadly connected to Studio North. You can pursue your own question, learn a method, fix a coding or setup problem, prepare a presentation, or build on an analysis you ran with personal tokens. Short follow-ups work in context. To build a dashboard from an existing report, use the [project continuation prompt](unc-api-project-prompt.txt).
+For Day 2, attach your Day 1 executive PDF in a new or existing coding-agent chat. Pick the dashboard or the forecasting bakeoff and add “Use the UNC API MCP in project mode for this task” to the prompt. Your agent reads the PDF locally, gets the public data and starts the chosen project in a separate folder. The MCP provides UNC-funded reasoning and coding help. Your app handles files and runs the code. [Day 2 project prompts](../README.md#day-2-choose-your-project) · [Dashboard prompt with UNC tokens](unc-api-project-prompt.txt)
+
+The UNC allocation also supports other questions, code and analyses broadly connected to Studio North.
 
 ### FAQ 8 LTV holdout challenge
 
-Paste this into your original coding-agent chat or a new one with local file and command access.
+Attach your PDF and paste this in a coding-agent chat with local file and command access.
 
-> Help me do Studio North FAQ 8, “Can our model win the holdout challenge?” Use my UNC course allocation in this chat. Get the current main release from https://github.com/longxiutian/customer-economics-lab in a separate tools folder, record its commit, and follow the UNC API and model-challenge skills there. Start from the public data and benchmark in a fresh project workspace if needed. Leave my old reports and pilot folders alone. Help me choose a model, backtest it, and build and validate our team’s Python submission. Show me what will be public and ask me before publishing it to GitHub.
+> Help my team do the Studio North Day 2 LTV bakeoff. Read the baseline model and forecast assumptions from my attached executive PDF. Use the public data, forecast grid, benchmark and model-challenge skill at https://github.com/longxiutian/customer-economics-lab. Use the UNC API MCP in project mode for this task. Help us choose and backtest a competing model, then build and validate our Python submission. Show me what will be public and ask before publishing it to GitHub.
 
-Your agent can start from the eight public tables, forecast grid and published benchmark with no Day 1 chat or report. The instructor scores the finished forecast against the privately held 2026 outcomes. If you want to compare with a personal report later, give the agent its exact path then.
+The public forecast grid and benchmark provide the machine-readable inputs. The instructor scores the finished forecast against privately held 2026 outcomes.
 
 ### Connect your coding agent
 
-For FAQ 8, resolve the public repository’s current `main` to a full commit SHA. Use a separate checkout at that SHA as `TOOLS`. Read the challenge skill, contract and data from that checkout. This also works for early pilot checkouts that predate the challenge.
+For either project, resolve the public repository’s current `main` to a full commit SHA. Use a separate checkout at that SHA as `TOOLS` and `SOURCE`. Read the public inputs there. Use the attached PDF for the student's own findings. For a dashboard, derive any missing views from released records or use matching published reference outputs with their source identified. For the bakeoff, use the challenge skill and submission contract.
 
-Reuse a working managed `CONFIG` and its ledger when available. Source and run paths are pinned in that configuration. If the pinned source predates a challenge file, read the current public file from `TOOLS` and pass a short excerpt in the project note. For a first connection, set `SOURCE` to `TOOLS` and `OUTPUT` to a fresh writable project folder. A dashboard using a known report can instead use its original source and output. Keep `CONFIG` in an owner-local path outside the checkout and output. Substitute quoted absolute paths in these commands.
+Use a fresh writable Day 2 folder as `OUTPUT` and an owner-local path outside both folders as `CONFIG`. Reuse that Day 2 configuration when returning to the project. If a managed Day 1 connection is already known on this computer, add `--reuse-config DAY1_CONFIG` to the connect command to keep the device and its accounting while giving Day 2 its own workspace. First-time users can run the command as shown. An old chat, output folder or credential search is unnecessary. Substitute quoted absolute paths and the actual harness name.
 
 ```text
 uv sync --project TOOLS/api_bridge --frozen --extra keyring
@@ -43,8 +45,8 @@ the actual MCP relay (or equivalent updated native `unc_sol` tools):
 {
   "intent": "project",
   "learner_text": "THE LEARNER'S LITERAL STUDIO NORTH PROJECT REQUEST",
-  "artifact_ids": ["tables/cohort_valuation_by_segment.csv", "tables/channel_cac_current.csv"],
-  "note": "Brief task context, actual file/schema observations or a focused error excerpt."
+  "artifact_ids": [],
+  "note": "A short relevant finding or assumption read locally from the attached executive PDF."
 }
 ```
 
@@ -53,7 +55,7 @@ uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bri
 uv run --project TOOLS/api_bridge --frozen --extra keyring python -m unc_sol_bridge relay --config CONFIG --tool sol_ask --arguments ASK_JSON
 ```
 
-The ask file adds a unique `request_id`. Pass actual learner words unchanged,
+No saved Day 1 artifacts are needed for the first call. Select registered sources from the public checkout as needed. The PDF itself stays in the coding app. The ask file adds a unique `request_id`. Pass actual learner words unchanged,
 not the placeholder. Sol receives bounded real-table/schema/source excerpts and
 can return a concrete plan, code and checks. The native coding agent then writes
 and tests the requested dashboard in `OUTPUT/dashboard/`, reporting actual results
@@ -75,10 +77,8 @@ reasoning, fully reserved before dispatch; guided teaching retains 3,000.
 All reservation and ambiguous-outcome guards remain. Reuse the request ID to retrieve the original result after a lost
 reply; this does not send changed files or repeat inference.
 
-If you choose to reuse a closed Day 1 workspace, handle any pending feedback locally and use `continue lab` to reopen it. A fresh project workspace starts directly in project mode. Keep instructor feedback local to the closing workflow. Project calls do not generate a usage report.
-When the learner later ends the session and answers/skips the feedback question,
-use the normal personal-debrief workflow, including the additional API receipts.
-Work without guided state is honestly labeled project work, not guided completion.
+Day 2 project calls start directly in the project workspace, including when Day 1 ended or feedback is still pending there. Day 1 closing and personal-debrief records stay with that session. Project calls do not generate a usage report.
+The bridge records Day 2 usage as project work. Students can open the dashboard or validate the forecast submission as soon as it is ready.
 
 ## Setup and one opening
 

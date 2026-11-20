@@ -104,7 +104,7 @@ def _run(args) -> int:
     if args.command == "connect":
         from .setup import connect
         result = asyncio.run(connect(config_path=args.config, source_root=args.source_root,
-                                     run_dir=args.run_dir, harness=args.harness, project=args.project))
+                                     run_dir=args.run_dir, harness=args.harness, project=args.project, reuse_config=args.reuse_config))
         print(json.dumps(result, indent=2))
         return 0 if result["ok"] and not result["problems"] else 1
     config = load_config(args.config)
@@ -174,6 +174,7 @@ def main(argv=None) -> int:
     parsers["connect"].add_argument("--run-dir", required=True)
     parsers["connect"].add_argument("--harness", required=True, choices=HARNESSES)
     parsers["connect"].add_argument("--project", action="store_true", help="Start or resume Studio North project work independently of the guided lesson.")
+    parsers["connect"].add_argument("--reuse-config", help="Use an existing managed device and token ledger in a separate project workspace.")
     args = parser.parse_args(argv)
     try:
         return _run(args)

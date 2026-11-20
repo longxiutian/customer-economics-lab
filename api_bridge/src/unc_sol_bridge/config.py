@@ -84,7 +84,7 @@ def _directory(raw, key):
     return path
 
 
-def load_config(path) -> BridgeConfig:
+def load_config(path, *, reuse_managed_device=False) -> BridgeConfig:
     path = Path(path).resolve()
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
@@ -107,7 +107,10 @@ def load_config(path) -> BridgeConfig:
     cap = _integer(raw, "allocation_cap", 1, MANAGED_ALLOCATION_LIMIT if mode == "gateway" else ALLOCATION_LIMIT)
     source_root, run_dir, state_dir = (_directory(raw, key) for key in ("source_root", "run_dir", "state_dir"))
     data_dir = _directory(raw, "data_dir") if "data_dir" in raw else (source_root / "data").resolve()
-    if not (source_root / "cohort_lab" / "student.py").is_file():
+    # Device reuse validates identity, limits and ledger paths, independently of
+    # the former session's checkout and month. Normal execution needs both.
+    reusing = reuse_managed_device and mode == "gateway"
+    if not reusing and not (source_root / "cohort_lab" / "student.py").is_file():
         raise BridgeError("config_invalid", "source_root is not a Studio North lab checkout.")
     if state_dir.is_relative_to(source_root) or state_dir.is_relative_to(run_dir) or source_root.is_relative_to(run_dir):
         raise BridgeError("config_invalid", "state_dir must sit outside the checkout and the run folder; run_dir may not contain the checkout.")
@@ -126,7 +129,7 @@ def load_config(path) -> BridgeConfig:
     period = _text(raw, "period_id", r"\d{4}-(0[1-9]|1[0-2])")
     if "project_only" in raw and type(raw["project_only"]) is not bool:
         raise BridgeError("config_invalid", "project_only must be a boolean.")
-    if period != time.strftime("%Y-%m", time.gmtime()):
+    if not reusing and period != time.strftime("%Y-%m", time.gmtime()):
         raise BridgeError("config_invalid", "Use the current UTC month for new calls. Prior-period ledgers remain preserved.")
     return BridgeConfig(
         path=path, source_root=source_root, data_dir=data_dir, run_dir=run_dir, state_dir=state_dir,

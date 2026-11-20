@@ -26,7 +26,7 @@ End the deck with the following FAQ section. These are prompts students can copy
 
 4. **Replay the report as a month-by-month dashboard.**
 
-   “Turn this run's report into a simple, self-contained dashboard file I can open in a browser and step through one month at a time from January 2024 onward. Reuse this run's saved exports, SQL and code. Do not regenerate data; keep the PDF unchanged as the baseline.
+   “Use my attached Studio North executive PDF as the baseline. Build a self-contained dashboard file I can open in a browser and step through one month at a time from January 2024 onward. Get the public data, SQL and code from the course repository. Work in a new project folder. Use matching saved exports if I supplied them.
 
    For each labeled as-of month, show only what Studio North could have known by that month's end: the retention triangle, each joining cohort's mix across the four channel-by-need segments, and contribution LTV, CAC and payback as the report defines them. Hide later months and cohorts that had not yet joined.
 
@@ -56,7 +56,7 @@ End the deck with the following FAQ section. These are prompts students can copy
 
 8. **Enter the private-holdout model challenge.**
 
-   “Read the model-challenge skill and submission contract. Help our team build a separate reproducible model project that forecasts retained members, net revenue and contribution for the existing cohorts through December 2026. Propose chronological validation using only released history. Preserve the standard prediction interface and grid, explain why cohorts are forecast at different customer ages, and prepare the code, lockfile, validation and GitHub commit for submission. Keep instructor-held future outcomes private.”
+   “Use my attached Studio North executive PDF to identify the baseline. Read the public model-challenge skill and submission contract. Help our team build a separate reproducible model project that forecasts retained members, net revenue and contribution for the existing cohorts through December 2026. Propose chronological validation using only released history. Preserve the standard prediction interface and grid, explain why cohorts are forecast at different customer ages, and prepare the code, lockfile, validation and GitHub commit for submission. Ask before making our work public.”
 
 9. **Find a more useful segmentation strategy.**
 
